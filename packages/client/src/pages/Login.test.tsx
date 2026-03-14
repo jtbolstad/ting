@@ -37,7 +37,8 @@ describe('Login Component', () => {
     renderLogin();
 
     expect(screen.getByText('Login to Ting')).toBeInTheDocument();
-    expect(screen.getByRole('textbox', { name: /email/i })).toBeInTheDocument();
+    expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
   });
 
@@ -48,14 +49,14 @@ describe('Login Component', () => {
     fireEvent.click(submitButton);
 
     // HTML5 validation will prevent submission
-    const emailInput = screen.getByRole('textbox', { name: /email/i }) as HTMLInputElement;
+    const emailInput = screen.getByLabelText(/email/i) as HTMLInputElement;
     expect(emailInput.validity.valid).toBe(false);
   });
 
   it('should accept email and password input', () => {
     renderLogin();
 
-    const emailInput = screen.getByRole('textbox', { name: /email/i }) as HTMLInputElement;
+    const emailInput = screen.getByLabelText(/email/i) as HTMLInputElement;
     const passwordInput = screen.getByLabelText(/password/i) as HTMLInputElement;
 
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
@@ -68,7 +69,7 @@ describe('Login Component', () => {
   it('should show loading state when submitting', async () => {
     renderLogin();
 
-    const emailInput = screen.getByRole('textbox', { name: /email/i });
+    const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/password/i);
     const submitButton = screen.getByRole('button', { name: /login/i });
 
