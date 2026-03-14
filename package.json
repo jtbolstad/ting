@@ -1,0 +1,32 @@
+{
+  "name": "ting",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Community tool lending service",
+  "workspaces": [
+    "packages/shared",
+    "packages/server",
+    "packages/client"
+  ],
+  "scripts": {
+    "dev:server": "pnpm --filter @ting/server dev",
+    "dev:client": "pnpm --filter @ting/client dev",
+    "dev:all": "concurrently \"pnpm run dev:server\" \"pnpm run dev:client\" --names \"server,client\" --prefix-colors \"blue,green\"",
+    "build": "pnpm --filter \"./packages/*\" build",
+    "lint": "pnpm --filter \"./packages/*\" lint",
+    "test:server": "pnpm --filter @ting/server test",
+    "test:client": "pnpm --filter @ting/client test",
+    "test": "pnpm --filter \"./packages/*\" test",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "node-gyp": "^12.2.0",
+    "@playwright/test": "^1.48.0",
+    "concurrently": "^9.1.0"
+  }
+}

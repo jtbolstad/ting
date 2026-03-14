@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  passwordHash String
+  name         String
+  role         String        @default("MEMBER")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  reservations Reservation[]
+  loans        Loan[]
+}
+
+model Category {
+  id          String     @id @default(cuid())
+  name        String
+  description String?
+  parentId    String?
+  parent      Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryHierarchy")
+  items       Item[]
+}
+
+model Item {
+  id           String        @id @default(cuid())
+  name         String
+  description  String?
+  categoryId   String
+  category     Category      @relation(fields: [categoryId], references: [id])
+  status       String        @default("AVAILABLE")
+  imageUrl     String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  reservations Reservation[]
+  loans        Loan[]
+}
+
+model Reservation {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  itemId    String
+  item      Item     @relation(fields: [itemId], references: [id])
+  startDate DateTime
+  endDate   DateTime
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+  loan      Loan?
+}
+
+model Loan {
+  id            String       @id @default(cuid())
+  userId        String
+  user          User         @relation(fields: [userId], references: [id])
+  itemId        String
+  item          Item         @relation(fields: [itemId], references: [id])
+  reservationId String?      @unique
+  reservation   Reservation? @relation(fields: [reservationId], references: [id])
+  checkedOutAt  DateTime     @default(now())
+  dueDate       DateTime
+  returnedAt    DateTime?
+}

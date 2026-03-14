@@ -1,0 +1,234 @@
+import { Router } from 'express';
+import type { Response } from 'express';
+import { prisma } from '../prisma.js';
+import { authenticate, requireAdmin, type AuthRequest } from '../middleware/auth.js';
+import type { Loan, CheckoutInput, CheckinInput, ApiResponse } from '@ting/shared';
+
+const router = Router();
+
+router.use(authenticate);
+
+function serializeLoan(loan: any): Loan {
+  return {
+    id: loan.id,
+    userId: loan.userId,
+    user: loan.user,
+    itemId: loan.itemId,
+    item: loan.item,
+    reservationId: loan.reservationId,
+    reservation: loan.reservation,
+    checkedOutAt: loan.checkedOutAt.toISOString(),
+    dueDate: loan.dueDate.toISOString(),
+    returnedAt: loan.returnedAt ? loan.returnedAt.toISOString() : null,
+  };
+}
+
+// List loans
+router.get('/', async (req: AuthRequest, res: Response) => {
+  try {
+    const { active, overdue, userId } = req.query as any;
+
+    // Non-admins can only see their own loans
+    const userFilter = req.user!.role === 'ADMIN' && userId 
+      ? userId 
+      : req.user!.role !== 'ADMIN' 
+        ? req.user!.id 
+        : undefined;
+
+    const where: any = {};
+    if (userFilter) where.userId = userFilter;
+    if (active === 'true') where.returnedAt = null;
+    if (overdue === 'true') {
+      where.returnedAt = null;
+      where.dueDate = { lt: new Date() };
+    }
+
+    const loans = await prisma.loan.findMany({
+      where,
+      include: {
+        item: { include: { category: true } },
+        user: true,
+        reservation: true,
+      },
+      orderBy: { checkedOutAt: 'desc' },
+    });
+
+    const response: ApiResponse<Loan[]> = {
+      success: true,
+      data: loans.map(serializeLoan),
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error('List loans error:', error);
+    res.status(500).json({ success: false, error: 'Failed to fetch loans' });
+  }
+});
+
+// Get overdue loans (admin only)
+router.get('/overdue', requireAdmin, async (req: AuthRequest, res: Response) => {
+  try {
+    const loans = await prisma.loan.findMany({
+      where: {
+        returnedAt: null,
+        dueDate: { lt: new Date() },
+      },
+      include: {
+        item: { include: { category: true } },
+        user: true,
+      },
+      orderBy: { dueDate: 'asc' },
+    });
+
+    const response: ApiResponse<Loan[]> = {
+      success: true,
+      data: loans.map(serializeLoan),
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error('List overdue loans error:', error);
+    res.status(500).json({ success: false, error: 'Failed to fetch overdue loans' });
+  }
+});
+
+// Checkout item (admin only, or user with valid reservation)
+router.post('/checkout', async (req: AuthRequest, res: Response) => {
+  try {
+    const { itemId, userId, reservationId, dueDate } = req.body as CheckoutInput;
+
+    if (!itemId || !dueDate) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'itemId and dueDate are required' 
+      });
+    }
+
+    // Determine the user for checkout
+    const checkoutUserId = req.user!.role === 'ADMIN' && userId ? userId : req.user!.id;
+
+    // Check if item exists
+    const item = await prisma.item.findUnique({ where: { id: itemId } });
+    if (!item) {
+      return res.status(404).json({ success: false, error: 'Item not found' });
+    }
+
+    // Check if item is already checked out
+    const existingLoan = await prisma.loan.findFirst({
+      where: {
+        itemId,
+        returnedAt: null,
+      },
+    });
+
+    if (existingLoan) {
+      return res.status(409).json({ 
+        success: false, 
+        error: 'Item is already checked out' 
+      });
+    }
+
+    // If reservationId provided, verify it belongs to the user
+    if (reservationId) {
+      const reservation = await prisma.reservation.findUnique({
+        where: { id: reservationId },
+      });
+
+      if (!reservation || reservation.userId !== checkoutUserId) {
+        return res.status(404).json({ 
+          success: false, 
+          error: 'Reservation not found or does not belong to user' 
+        });
+      }
+    }
+
+    // Create loan and update item status
+    const [loan] = await Promise.all([
+      prisma.loan.create({
+        data: {
+          userId: checkoutUserId,
+          itemId,
+          reservationId: reservationId || null,
+          dueDate: new Date(dueDate),
+        },
+        include: {
+          item: { include: { category: true } },
+          user: true,
+          reservation: true,
+        },
+      }),
+      prisma.item.update({
+        where: { id: itemId },
+        data: { status: 'CHECKED_OUT' },
+      }),
+      reservationId ? prisma.reservation.update({
+        where: { id: reservationId },
+        data: { status: 'COMPLETED' },
+      }) : null,
+    ]);
+
+    const response: ApiResponse<Loan> = {
+      success: true,
+      data: serializeLoan(loan),
+    };
+
+    res.status(201).json(response);
+  } catch (error) {
+    console.error('Checkout error:', error);
+    res.status(500).json({ success: false, error: 'Failed to checkout item' });
+  }
+});
+
+// Checkin item (return)
+router.post('/:id/checkin', async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const loan = await prisma.loan.findUnique({
+      where: { id },
+      include: { item: true },
+    });
+
+    if (!loan) {
+      return res.status(404).json({ success: false, error: 'Loan not found' });
+    }
+
+    if (loan.returnedAt) {
+      return res.status(400).json({ success: false, error: 'Item already returned' });
+    }
+
+    // Only admins or the user who checked it out can return
+    if (loan.userId !== req.user!.id && req.user!.role !== 'ADMIN') {
+      return res.status(403).json({ success: false, error: 'Forbidden' });
+    }
+
+    // Update loan and item status
+    const [updated] = await Promise.all([
+      prisma.loan.update({
+        where: { id },
+        data: { returnedAt: new Date() },
+        include: {
+          item: { include: { category: true } },
+          user: true,
+          reservation: true,
+        },
+      }),
+      prisma.item.update({
+        where: { id: loan.itemId },
+        data: { status: 'AVAILABLE' },
+      }),
+    ]);
+
+    const response: ApiResponse<Loan> = {
+      success: true,
+      data: serializeLoan(updated),
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error('Checkin error:', error);
+    res.status(500).json({ success: false, error: 'Failed to checkin item' });
+  }
+});
+
+export default router;
