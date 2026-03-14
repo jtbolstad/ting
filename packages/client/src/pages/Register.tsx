@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 
 export function Register() {
@@ -10,6 +11,7 @@ export function Register() {
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +31,7 @@ export function Register() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
-        <h2 className="text-3xl font-bold text-center mb-6">Register for Ting</h2>
+        <h2 className="text-3xl font-bold text-center mb-6">{t('auth.register.title')}</h2>
 
         {error && (
           <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
@@ -40,7 +42,7 @@ export function Register() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Name
+              {t('auth.register.name')}
             </label>
             <input
               type="text"
@@ -53,7 +55,7 @@ export function Register() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
+              {t('auth.register.email')}
             </label>
             <input
               type="email"
@@ -66,7 +68,7 @@ export function Register() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
+              {t('auth.register.password')}
             </label>
             <input
               type="password"
@@ -83,14 +85,14 @@ export function Register() {
             disabled={loading}
             className="w-full py-2 px-4 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-400"
           >
-            {loading ? 'Registering...' : 'Register'}
+            {loading ? t('auth.register.registering') : t('auth.register.submit')}
           </button>
         </form>
 
         <p className="mt-4 text-center text-sm text-gray-600">
-          Already have an account?{' '}
+          {t('auth.register.hasAccount')}{' '}
           <Link to="/login" className="text-indigo-600 hover:text-indigo-800">
-            Login here
+            {t('auth.register.loginLink')}
           </Link>
         </p>
       </div>

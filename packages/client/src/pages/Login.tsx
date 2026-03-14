@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 
 export function Login() {
@@ -9,6 +10,7 @@ export function Login() {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +30,7 @@ export function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
-        <h2 className="text-3xl font-bold text-center mb-6">Login to Ting</h2>
+        <h2 className="text-3xl font-bold text-center mb-6">{t('auth.login.title')}</h2>
 
         {error && (
           <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
@@ -39,7 +41,7 @@ export function Login() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email
+              {t('auth.login.email')}
             </label>
             <input
               type="email"
@@ -52,7 +54,7 @@ export function Login() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
+              {t('auth.login.password')}
             </label>
             <input
               type="password"
@@ -68,14 +70,14 @@ export function Login() {
             disabled={loading}
             className="w-full py-2 px-4 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-400"
           >
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? t('auth.login.loggingIn') : t('auth.login.submit')}
           </button>
         </form>
 
         <p className="mt-4 text-center text-sm text-gray-600">
-          Don't have an account?{' '}
+          {t('auth.login.noAccount')}{' '}
           <Link to="/register" className="text-indigo-600 hover:text-indigo-800">
-            Register here
+            {t('auth.login.registerLink')}
           </Link>
         </p>
       </div>

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { apiClient } from '../api/client';
 import type { Reservation, Loan } from '@ting/shared';
 
 export function Dashboard() {
+  const { t } = useTranslation();
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loans, setLoans] = useState<Loan[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,49 +29,49 @@ export function Dashboard() {
   };
 
   const handleCancelReservation = async (id: string) => {
-    if (!confirm('Are you sure you want to cancel this reservation?')) return;
+    if (!confirm(t('dashboard.confirmCancel'))) return;
 
     try {
       await apiClient.cancelReservation(id);
       await loadData();
     } catch (error: any) {
-      alert(error.message || 'Failed to cancel reservation');
+      alert(error.message || t('errors.cancelFailed'));
     }
   };
 
   const handleReturnItem = async (loanId: string) => {
-    if (!confirm('Confirm item return?')) return;
+    if (!confirm(t('dashboard.confirmReturn'))) return;
 
     try {
       await apiClient.checkin(loanId);
       await loadData();
     } catch (error: any) {
-      alert(error.message || 'Failed to return item');
+      alert(error.message || t('errors.returnFailed'));
     }
   };
 
   if (loading) {
-    return <div className="text-center py-12">Loading...</div>;
+    return <div className="text-center py-12">{t('dashboard.loading')}</div>;
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8">My Dashboard</h1>
+      <h1 className="text-4xl font-bold mb-8">{t('dashboard.title')}</h1>
 
       {/* Current Loans */}
       <div className="mb-12">
-        <h2 className="text-2xl font-bold mb-4">Current Loans</h2>
+        <h2 className="text-2xl font-bold mb-4">{t('dashboard.loans.title')}</h2>
         {loans.length === 0 ? (
-          <p className="text-gray-500">No active loans</p>
+          <p className="text-gray-500">{t('dashboard.loans.noLoans')}</p>
         ) : (
           <div className="bg-white rounded-lg shadow overflow-hidden">
             <table className="min-w-full">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Item</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Checked Out</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Due Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('dashboard.loans.item')}</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('dashboard.loans.checkedOut')}</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('dashboard.loans.dueDate')}</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('dashboard.loans.actions')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -81,7 +83,9 @@ export function Dashboard() {
                     <tr key={loan.id}>
                       <td className="px-6 py-4">
                         <div className="font-medium">{loan.item?.name}</div>
-                        <div className="text-sm text-gray-500">{loan.item?.category?.name}</div>
+                        <div className="text-sm text-gray-500">
+                          {loan.item?.category?.name ? t(`categories.${loan.item.category.name}`, loan.item.category.name) : ''}
+                        </div>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500">
                         {new Date(loan.checkedOutAt).toLocaleDateString()}
@@ -89,7 +93,7 @@ export function Dashboard() {
                       <td className="px-6 py-4">
                         <span className={isOverdue ? 'text-red-600 font-bold' : 'text-gray-900'}>
                           {dueDate.toLocaleDateString()}
-                          {isOverdue && ' (Overdue)'}
+                          {isOverdue && ` (${t('dashboard.loans.overdue')})`}
                         </span>
                       </td>
                       <td className="px-6 py-4">
@@ -97,7 +101,7 @@ export function Dashboard() {
                           onClick={() => handleReturnItem(loan.id)}
                           className="text-indigo-600 hover:text-indigo-900"
                         >
-                          Return
+                          {t('dashboard.loans.return')}
                         </button>
                       </td>
                     </tr>
@@ -111,19 +115,19 @@ export function Dashboard() {
 
       {/* Reservations */}
       <div>
-        <h2 className="text-2xl font-bold mb-4">My Reservations</h2>
+        <h2 className="text-2xl font-bold mb-4">{t('dashboard.reservations.title')}</h2>
         {reservations.length === 0 ? (
-          <p className="text-gray-500">No active reservations</p>
+          <p className="text-gray-500">{t('dashboard.reservations.noReservations')}</p>
         ) : (
           <div className="bg-white rounded-lg shadow overflow-hidden">
             <table className="min-w-full">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Item</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Start Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">End Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('dashboard.reservations.item')}</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('dashboard.reservations.startDate')}</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('dashboard.reservations.endDate')}</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('dashboard.reservations.status')}</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('dashboard.reservations.actions')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -131,7 +135,9 @@ export function Dashboard() {
                   <tr key={reservation.id}>
                     <td className="px-6 py-4">
                       <div className="font-medium">{reservation.item?.name}</div>
-                      <div className="text-sm text-gray-500">{reservation.item?.category?.name}</div>
+                      <div className="text-sm text-gray-500">
+                        {reservation.item?.category?.name ? t(`categories.${reservation.item.category.name}`, reservation.item.category.name) : ''}
+                      </div>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-500">
                       {new Date(reservation.startDate).toLocaleDateString()}
@@ -141,7 +147,7 @@ export function Dashboard() {
                     </td>
                     <td className="px-6 py-4">
                       <span className="px-2 py-1 text-xs rounded bg-blue-100 text-blue-800">
-                        {reservation.status}
+                        {t(`dashboard.reservations.statusValues.${reservation.status.toLowerCase()}`)}
                       </span>
                     </td>
                     <td className="px-6 py-4">
@@ -150,7 +156,7 @@ export function Dashboard() {
                           onClick={() => handleCancelReservation(reservation.id)}
                           className="text-red-600 hover:text-red-900"
                         >
-                          Cancel
+                          {t('dashboard.reservations.cancel')}
                         </button>
                       )}
                     </td>

@@ -1,0 +1,41 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - link "Ting" [ref=e8] [cursor=pointer]:
+          - /url: /
+        - link "Catalog" [ref=e9] [cursor=pointer]:
+          - /url: /catalog
+        - link "My Dashboard" [ref=e10] [cursor=pointer]:
+          - /url: /dashboard
+      - generic [ref=e11]:
+        - button "Change language" [ref=e13] [cursor=pointer]:
+          - generic [ref=e14]: 🇬🇧
+          - generic [ref=e15]: English
+          - img [ref=e16]
+        - generic [ref=e18]: Hello, Test User
+        - button "Logout" [ref=e19] [cursor=pointer]
+  - generic [ref=e20]:
+    - heading "Catalog" [level=1] [ref=e21]
+    - generic [ref=e22]:
+      - generic [ref=e24]:
+        - heading "Categories" [level=3] [ref=e25]
+        - generic [ref=e26]:
+          - button "All Items" [ref=e27] [cursor=pointer]
+          - button "Camping & Outdoor (10)" [ref=e28] [cursor=pointer]
+          - button "Electronics (8)" [ref=e29] [cursor=pointer]
+          - button "Gardening (12)" [active] [ref=e30] [cursor=pointer]
+          - button "Hand Tools (8)" [ref=e31] [cursor=pointer]
+          - button "Kitchen Appliances (8)" [ref=e32] [cursor=pointer]
+          - button "Party & Events (8)" [ref=e33] [cursor=pointer]
+          - button "Power Tools (10)" [ref=e34] [cursor=pointer]
+          - button "Sports Equipment (12)" [ref=e35] [cursor=pointer]
+      - generic [ref=e36]:
+        - generic [ref=e38]:
+          - textbox "Search items..." [ref=e39]
+          - button "Search" [ref=e40] [cursor=pointer]
+        - generic [ref=e41]: No items found
+```

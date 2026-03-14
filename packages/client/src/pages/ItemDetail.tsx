@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { apiClient } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import type { Item } from '@ting/shared';
 
 export function ItemDetail() {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const [item, setItem] = useState<Item | null>(null);
   const [loading, setLoading] = useState(true);
@@ -48,23 +50,23 @@ export function ItemDetail() {
         startDate,
         endDate,
       });
-      setSuccess('Reservation created successfully!');
+      setSuccess(t('messages.reservationSuccess'));
       setStartDate('');
       setEndDate('');
       setTimeout(() => navigate('/dashboard'), 2000);
     } catch (err: any) {
-      setError(err.message || 'Failed to create reservation');
+      setError(err.message || t('errors.reservationFailed'));
     } finally {
       setReserving(false);
     }
   };
 
   if (loading) {
-    return <div className="text-center py-12">Loading...</div>;
+    return <div className="text-center py-12">{t('item.loading')}</div>;
   }
 
   if (!item) {
-    return <div className="text-center py-12">Item not found</div>;
+    return <div className="text-center py-12">{t('item.notFound')}</div>;
   }
 
   return (
@@ -82,7 +84,9 @@ export function ItemDetail() {
 
             <div className="md:w-1/2 p-8">
               <h1 className="text-3xl font-bold mb-2">{item.name}</h1>
-              <p className="text-gray-600 mb-4">{item.category?.name}</p>
+              <p className="text-gray-600 mb-4">
+                {item.category?.name ? t(`categories.${item.category.name}`, item.category.name) : ''}
+              </p>
 
               <div className="mb-6">
                 <span
@@ -92,15 +96,15 @@ export function ItemDetail() {
                       : 'bg-red-100 text-red-800'
                   }`}
                 >
-                  {item.status}
+                  {t(`catalog.status.${item.status.toLowerCase()}`)}
                 </span>
               </div>
 
-              <p className="text-gray-700 mb-8">{item.description || 'No description available.'}</p>
+              <p className="text-gray-700 mb-8">{item.description || t('item.noDescription')}</p>
 
               {item.status === 'AVAILABLE' && isAuthenticated && (
                 <div className="border-t pt-6">
-                  <h3 className="font-bold text-lg mb-4">Reserve this item</h3>
+                  <h3 className="font-bold text-lg mb-4">{t('item.reserve.title')}</h3>
 
                   {error && (
                     <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
@@ -117,7 +121,7 @@ export function ItemDetail() {
                   <form onSubmit={handleReservation} className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Start Date
+                        {t('item.reserve.startDate')}
                       </label>
                       <input
                         type="date"
@@ -131,7 +135,7 @@ export function ItemDetail() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        End Date
+                        {t('item.reserve.endDate')}
                       </label>
                       <input
                         type="date"
@@ -148,7 +152,7 @@ export function ItemDetail() {
                       disabled={reserving}
                       className="w-full py-3 px-4 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-400"
                     >
-                      {reserving ? 'Creating Reservation...' : 'Reserve Now'}
+                      {reserving ? t('item.reserve.creating') : t('item.reserve.submit')}
                     </button>
                   </form>
                 </div>
@@ -157,7 +161,10 @@ export function ItemDetail() {
               {!isAuthenticated && (
                 <div className="border-t pt-6">
                   <p className="text-gray-600">
-                    Please <button onClick={() => navigate('/login')} className="text-indigo-600 hover:underline">login</button> to reserve this item.
+                    {t('item.reserve.loginRequired')}{' '}
+                    <button onClick={() => navigate('/login')} className="text-indigo-600 hover:underline">
+                      {t('item.reserve.loginLink')}
+                    </button>
                   </p>
                 </div>
               )}

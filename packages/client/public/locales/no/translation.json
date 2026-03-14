@@ -1,0 +1,153 @@
+{
+  "app": {
+    "title": "Ting",
+    "subtitle": "Fellesskapets Utlånstjeneste"
+  },
+  "nav": {
+    "catalog": "Katalog",
+    "dashboard": "Min Oversikt",
+    "admin": "Admin",
+    "login": "Logg Inn",
+    "register": "Registrer",
+    "logout": "Logg Ut",
+    "hello": "Hei, {{name}}"
+  },
+  "auth": {
+    "loginTitle": "Logg Inn på Ting",
+    "registerTitle": "Registrer for Ting",
+    "email": "E-post",
+    "password": "Passord",
+    "name": "Navn",
+    "loginButton": "Logg Inn",
+    "registerButton": "Registrer",
+    "loggingIn": "Logger inn...",
+    "registering": "Registrerer...",
+    "alreadyHaveAccount": "Har du allerede en konto?",
+    "dontHaveAccount": "Har du ikke en konto?",
+    "loginHere": "Logg inn her",
+    "registerHere": "Registrer her"
+  },
+  "catalog": {
+    "title": "Katalog",
+    "searchPlaceholder": "Søk ting...",
+    "search": "Søk",
+    "searchButton": "Søk",
+    "categories": "Kategorier",
+    "allItems": "Alle Ting",
+    "loading": "Laster katalog...",
+    "noItems": "Ingen ting funnet",
+    "status": {
+      "available": "Tilgjengelig",
+      "checkedOut": "Utlånt",
+      "maintenance": "Vedlikehold",
+      "retired": "Utgått"
+    }
+  },
+  "categories": {
+    "Power Tools": "Elektroverktøy",
+    "Hand Tools": "Håndverktøy",
+    "Gardening": "Hagearbeid",
+    "Camping & Outdoor": "Camping og Friluft",
+    "Sports Equipment": "Sportsutstyr",
+    "Electronics": "Elektronikk",
+    "Party & Events": "Fest og Arrangementer",
+    "Kitchen Appliances": "Kjøkkenutstyr"
+  },
+  "item": {
+    "details": "Detaljer",
+    "description": "Beskrivelse",
+    "category": "Kategori",
+    "status": "Status",
+    "noDescription": "Ingen beskrivelse tilgjengelig.",
+    "reserve": "Reserver dette verktøyet",
+    "reserveNow": "Reserver Nå",
+    "reserving": "Oppretter reservasjon...",
+    "startDate": "Startdato",
+    "endDate": "Sluttdato",
+    "loginToReserve": "Vennligst logg inn for å reservere dette verktøyet"
+  },
+  "dashboard": {
+    "title": "Min Oversikt",
+    "currentLoans": "Aktive Utlån",
+    "myReservations": "Mine Reservasjoner",
+    "noLoans": "Ingen aktive utlån",
+    "noReservations": "Ingen aktive reservasjoner",
+    "item": "Verktøy",
+    "checkedOut": "Utlånt",
+    "dueDate": "Forfallsdato",
+    "overdue": "FORSINKET",
+    "return": "Lever",
+    "cancel": "Avbryt",
+    "actions": "Handlinger",
+    "loanHistory": "Utlånshistorikk"
+  },
+  "admin": {
+    "title": "Administrasjonspanel",
+    "stats": {
+      "totalItems": "Totalt Verktøy",
+      "available": "Tilgjengelig",
+      "activeLoans": "Aktive Utlån",
+      "overdue": "Forsinkede"
+    },
+    "tabs": {
+      "loans": "Utlån",
+      "items": "Verktøy",
+      "users": "Brukere"
+    },
+    "loans": {
+      "activeLoans": "Aktive Utlån",
+      "checkoutItem": "Lån Ut Verktøy",
+      "checkin": "Lever Inn"
+    },
+    "items": {
+      "title": "Verktøy",
+      "addItem": "Legg Til Verktøy",
+      "newItem": "Legg Til Nytt Verktøy",
+      "name": "Navn",
+      "category": "Kategori",
+      "description": "Beskrivelse",
+      "selectCategory": "Velg en kategori",
+      "delete": "Slett"
+    },
+    "users": {
+      "title": "Brukere",
+      "role": "Rolle",
+      "joined": "Ble Medlem"
+    },
+    "checkout": {
+      "title": "Lån Ut Verktøy",
+      "selectItem": "Velg et verktøy",
+      "selectUser": "Velg en bruker",
+      "submit": "Lån Ut",
+      "cancel": "Avbryt"
+    }
+  },
+  "common": {
+    "loading": "Laster...",
+    "error": "Feil",
+    "success": "Suksess",
+    "close": "Lukk",
+    "save": "Lagre",
+    "delete": "Slett",
+    "edit": "Rediger",
+    "cancel": "Avbryt",
+    "confirm": "Bekreft",
+    "yes": "Ja",
+    "no": "Nei"
+  },
+  "errors": {
+    "loginFailed": "Innlogging mislyktes",
+    "registerFailed": "Registrering mislyktes",
+    "invalidCredentials": "Ugyldige påloggingsopplysninger",
+    "required": "Dette feltet er påkrevd",
+    "emailInvalid": "Ugyldig e-postadresse"
+  },
+  "messages": {
+    "reservationSuccess": "Reservasjon opprettet!",
+    "reservationCancelled": "Reservasjon avbrutt",
+    "itemReturned": "Verktøy levert inn",
+    "confirmCancel": "Er du sikker på at du vil avbryte denne reservasjonen?",
+    "confirmReturn": "Bekreft innlevering?",
+    "confirmDelete": "Er du sikker på at du vil slette dette verktøyet?"
+  }
+}

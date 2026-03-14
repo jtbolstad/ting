@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { apiClient } from '../../api/client';
 import type { Item, Category, Loan, User } from '@ting/shared';
-
+
 export function AdminDashboard() {
+  const { t } = useTranslation();
   const [loans, setLoans] = useState<Loan[]>([]);
   const [overdueLoans, setOverdueLoans] = useState<Loan[]>([]);
   const [items, setItems] = useState<Item[]>([]);
@@ -96,32 +98,32 @@ export function AdminDashboard() {
   };
 
   if (loading) {
-    return <div className="text-center py-12">Loading...</div>;
+    return <div className="text-center py-12">{t('admin.loading')}</div>;
   }
 
   const availableItems = items.filter(i => i.status === 'AVAILABLE');
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8">Admin Dashboard</h1>
+      <h1 className="text-4xl font-bold mb-8">{t('admin.title')}</h1>
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div className="bg-white p-6 rounded-lg shadow">
           <div className="text-3xl font-bold text-indigo-600">{items.length}</div>
-          <div className="text-gray-600">Total Items</div>
+          <div className="text-gray-600">{t('admin.stats.totalItems')}</div>
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <div className="text-3xl font-bold text-green-600">{availableItems.length}</div>
-          <div className="text-gray-600">Available</div>
+          <div className="text-gray-600">{t('admin.stats.available')}</div>
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <div className="text-3xl font-bold text-blue-600">{loans.length}</div>
-          <div className="text-gray-600">Active Loans</div>
+          <div className="text-gray-600">{t('admin.stats.activeLoans')}</div>
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <div className="text-3xl font-bold text-red-600">{overdueLoans.length}</div>
-          <div className="text-gray-600">Overdue</div>
+          <div className="text-gray-600">{t('admin.stats.overdue')}</div>
         </div>
       </div>
 
@@ -136,7 +138,7 @@ export function AdminDashboard() {
                 : 'text-gray-500'
             }`}
           >
-            Loans
+            {t('admin.tabs.loans')}
           </button>
           <button
             onClick={() => setActiveTab('items')}
@@ -146,7 +148,7 @@ export function AdminDashboard() {
                 : 'text-gray-500'
             }`}
           >
-            Items
+            {t('admin.tabs.items')}
           </button>
           <button
             onClick={() => setActiveTab('users')}
@@ -156,7 +158,7 @@ export function AdminDashboard() {
                 : 'text-gray-500'
             }`}
           >
-            Users
+            {t('admin.tabs.users')}
           </button>
         </div>
       </div>

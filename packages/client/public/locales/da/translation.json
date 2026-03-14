@@ -1,0 +1,153 @@
+{
+  "app": {
+    "title": "Ting",
+    "subtitle": "Fællesskabets Udlånstjeneste"
+  },
+  "nav": {
+    "catalog": "Katalog",
+    "dashboard": "Min Oversigt",
+    "admin": "Admin",
+    "login": "Log Ind",
+    "register": "Tilmeld",
+    "logout": "Log Ud",
+    "hello": "Hej, {{name}}"
+  },
+  "auth": {
+    "loginTitle": "Log Ind på Ting",
+    "registerTitle": "Tilmeld Ting",
+    "email": "E-mail",
+    "password": "Adgangskode",
+    "name": "Navn",
+    "loginButton": "Log Ind",
+    "registerButton": "Tilmeld",
+    "loggingIn": "Logger ind...",
+    "registering": "Tilmelder...",
+    "alreadyHaveAccount": "Har du allerede en konto?",
+    "dontHaveAccount": "Har du ikke en konto?",
+    "loginHere": "Log ind her",
+    "registerHere": "Tilmeld her"
+  },
+  "catalog": {
+    "title": "Katalog",
+    "searchPlaceholder": "Søg ting...",
+    "search": "Søg",
+    "searchButton": "Søg",
+    "categories": "Kategorier",
+    "allItems": "Alle Ting",
+    "loading": "Indlæser katalog...",
+    "noItems": "Ingen ting fundet",
+    "status": {
+      "available": "Tilgængelig",
+      "checkedOut": "Udlånt",
+      "maintenance": "Vedligeholdelse",
+      "retired": "Udgået"
+    }
+  },
+  "categories": {
+    "Power Tools": "Elværktøj",
+    "Hand Tools": "Håndværktøj",
+    "Gardening": "Havearbejde",
+    "Camping & Outdoor": "Camping og Friluft",
+    "Sports Equipment": "Sportsudstyr",
+    "Electronics": "Elektronik",
+    "Party & Events": "Fest og Begivenheder",
+    "Kitchen Appliances": "Køkkenudstyr"
+  },
+  "item": {
+    "details": "Detaljer",
+    "description": "Beskrivelse",
+    "category": "Kategori",
+    "status": "Status",
+    "noDescription": "Ingen beskrivelse tilgængelig.",
+    "reserve": "Reserver dette værktøj",
+    "reserveNow": "Reserver Nu",
+    "reserving": "Opretter reservation...",
+    "startDate": "Startdato",
+    "endDate": "Slutdato",
+    "loginToReserve": "Log venligst ind for at reservere dette værktøj"
+  },
+  "dashboard": {
+    "title": "Min Oversigt",
+    "currentLoans": "Aktive Udlån",
+    "myReservations": "Mine Reservationer",
+    "noLoans": "Ingen aktive udlån",
+    "noReservations": "Ingen aktive reservationer",
+    "item": "Værktøj",
+    "checkedOut": "Udlånt",
+    "dueDate": "Forfaldsdato",
+    "overdue": "FORSINKET",
+    "return": "Lever",
+    "cancel": "Annuller",
+    "actions": "Handlinger",
+    "loanHistory": "Udlånshistorik"
+  },
+  "admin": {
+    "title": "Administrationspanel",
+    "stats": {
+      "totalItems": "Totalt Værktøjer",
+      "available": "Tilgængelige",
+      "activeLoans": "Aktive Udlån",
+      "overdue": "Forsinkede"
+    },
+    "tabs": {
+      "loans": "Udlån",
+      "items": "Værktøjer",
+      "users": "Brugere"
+    },
+    "loans": {
+      "activeLoans": "Aktive Udlån",
+      "checkoutItem": "Udlån Værktøj",
+      "checkin": "Lever Ind"
+    },
+    "items": {
+      "title": "Værktøjer",
+      "addItem": "Tilføj Værktøj",
+      "newItem": "Tilføj Nyt Værktøj",
+      "name": "Navn",
+      "category": "Kategori",
+      "description": "Beskrivelse",
+      "selectCategory": "Vælg en kategori",
+      "delete": "Slet"
+    },
+    "users": {
+      "title": "Brugere",
+      "role": "Rolle",
+      "joined": "Blev Medlem"
+    },
+    "checkout": {
+      "title": "Udlån Værktøj",
+      "selectItem": "Vælg et værktøj",
+      "selectUser": "Vælg en bruger",
+      "submit": "Udlån",
+      "cancel": "Annuller"
+    }
+  },
+  "common": {
+    "loading": "Indlæser...",
+    "error": "Fejl",
+    "success": "Succes",
+    "close": "Luk",
+    "save": "Gem",
+    "delete": "Slet",
+    "edit": "Rediger",
+    "cancel": "Annuller",
+    "confirm": "Bekræft",
+    "yes": "Ja",
+    "no": "Nej"
+  },
+  "errors": {
+    "loginFailed": "Login mislykkedes",
+    "registerFailed": "Tilmelding mislykkedes",
+    "invalidCredentials": "Ugyldige loginoplysninger",
+    "required": "Dette felt er påkrævet",
+    "emailInvalid": "Ugyldig e-mailadresse"
+  },
+  "messages": {
+    "reservationSuccess": "Reservation oprettet!",
+    "reservationCancelled": "Reservation annulleret",
+    "itemReturned": "Værktøj leveret ind",
+    "confirmCancel": "Er du sikker på, at du vil annullere denne reservation?",
+    "confirmReturn": "Bekræft indlevering?",
+    "confirmDelete": "Er du sikker på, at du vil slette dette værktøj?"
+  }
+}
