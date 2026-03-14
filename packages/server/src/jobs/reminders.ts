@@ -82,8 +82,9 @@ export async function runDailyReminders() {
   console.log('✅ Daily reminders complete');
 }
 
-// If running as a standalone script
-if (import.meta.url === `file://${process.argv[1]}`) {
+// If running as a standalone script (via tsx)
+// Note: import.meta is not available in CommonJS, but tsx handles this
+if (require.main === module) {
   runDailyReminders()
     .catch(console.error)
     .finally(() => prisma.$disconnect());

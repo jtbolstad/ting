@@ -2,7 +2,6 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { Navbar } from './Navbar';
-import { AuthProvider } from '../context/AuthContext';
 
 // Mock i18next
 vi.mock('react-i18next', () => ({
@@ -27,7 +26,7 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
-const renderNavbar = (authState = { isAuthenticated: false, isAdmin: false, user: null }) => {
+const renderNavbar = (authState: any = { isAuthenticated: false, isAdmin: false, user: null }) => {
   // Mock useAuth
   vi.mock('../context/AuthContext', () => ({
     useAuth: () => authState,

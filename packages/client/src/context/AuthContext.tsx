@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import type { User, AuthResponse } from '@ting/shared';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import type { User } from '@ting/shared';
 import { apiClient } from '../api/client';
 
 interface AuthContextType {
