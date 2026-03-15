@@ -3,6 +3,7 @@ import type { Response } from 'express';
 import { prisma } from '../prisma.js';
 import { authenticate, requireAdmin, type AuthRequest } from '../middleware/auth.js';
 import { serializeUser } from '../services/auth.js';
+import { withOrganizationContext, requireOrgRole } from '../middleware/organization.js';
 import type { ApiResponse, PaginatedResponse } from '@ting/shared';
 
 const router = Router();
@@ -10,16 +11,26 @@ const router = Router();
 // All user routes require authentication
 router.use(authenticate);
 
-// List all users (admin only)
-router.get('/', requireAdmin, async (req: AuthRequest, res: Response) => {
+// List all users within the active organization (org manager+)
+router.get('/', withOrganizationContext(), requireOrgRole('MANAGER'), async (req: AuthRequest, res: Response) => {
   try {
-    const users = await prisma.user.findMany({
+    const memberships = await prisma.membership.findMany({
+      where: {
+        organizationId: req.organization!.id,
+      },
+      include: {
+        user: true,
+        groups: {
+          include: { group: true },
+        },
+        organization: true,
+      },
       orderBy: { createdAt: 'desc' },
     });
 
     const response: ApiResponse<any[]> = {
       success: true,
-      data: users.map(serializeUser),
+      data: memberships.map((membership) => serializeUser(membership.user, [membership])),
     };
 
     res.json(response);
@@ -45,9 +56,19 @@ router.get('/:id', async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ success: false, error: 'User not found' });
     }
 
+    const memberships = await prisma.membership.findMany({
+      where: { userId: user.id, status: 'ACTIVE' },
+      include: {
+        organization: true,
+        groups: {
+          include: { group: true },
+        },
+      },
+    });
+
     const response: ApiResponse<any> = {
       success: true,
-      data: serializeUser(user),
+      data: serializeUser(user, memberships),
     };
 
     res.json(response);

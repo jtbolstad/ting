@@ -1,12 +1,14 @@
 import { Router } from 'express';
 import type { Response } from 'express';
 import { prisma } from '../prisma.js';
-import { authenticate, requireAdmin, type AuthRequest } from '../middleware/auth.js';
+import { authenticate, type AuthRequest } from '../middleware/auth.js';
+import { withOrganizationContext, requireOrgRole, hasOrgRole } from '../middleware/organization.js';
 import type { Loan, CheckoutInput, CheckinInput, ApiResponse } from '@ting/shared';
 
 const router = Router();
 
 router.use(authenticate);
+router.use(withOrganizationContext());
 
 function serializeLoan(loan: any): Loan {
   return {
@@ -28,15 +30,17 @@ router.get('/', async (req: AuthRequest, res: Response) => {
   try {
     const { active, overdue, userId } = req.query as any;
 
-    // Non-admins can only see their own loans
-    const userFilter = req.user!.role === 'ADMIN' && userId 
-      ? userId 
-      : req.user!.role !== 'ADMIN' 
-        ? req.user!.id 
-        : undefined;
-
-    const where: any = {};
-    if (userFilter) where.userId = userFilter;
+    const canViewAll = req.user!.role === 'ADMIN' || hasOrgRole(req, 'MANAGER');
+    const where: any = {
+      organizationId: req.organization!.id,
+    };
+    if (canViewAll) {
+      if (userId) {
+        where.userId = userId;
+      }
+    } else {
+      where.userId = req.user!.id;
+    }
     if (active === 'true') where.returnedAt = null;
     if (overdue === 'true') {
       where.returnedAt = null;
@@ -65,11 +69,12 @@ router.get('/', async (req: AuthRequest, res: Response) => {
   }
 });
 
-// Get overdue loans (admin only)
-router.get('/overdue', requireAdmin, async (req: AuthRequest, res: Response) => {
+// Get overdue loans (org manager+)
+router.get('/overdue', requireOrgRole('MANAGER'), async (req: AuthRequest, res: Response) => {
   try {
     const loans = await prisma.loan.findMany({
       where: {
+        organizationId: req.organization!.id,
         returnedAt: null,
         dueDate: { lt: new Date() },
       },
@@ -105,18 +110,23 @@ router.post('/checkout', async (req: AuthRequest, res: Response) => {
     }
 
     // Determine the user for checkout
-    const checkoutUserId = req.user!.role === 'ADMIN' && userId ? userId : req.user!.id;
+    const canCheckoutForOthers = req.user!.role === 'ADMIN' || hasOrgRole(req, 'MANAGER');
+    const checkoutUserId = canCheckoutForOthers && userId ? userId : req.user!.id;
 
     // Check if item exists
     const item = await prisma.item.findUnique({ where: { id: itemId } });
     if (!item) {
       return res.status(404).json({ success: false, error: 'Item not found' });
     }
+    if (item.organizationId !== req.organization!.id) {
+      return res.status(403).json({ success: false, error: 'Item does not belong to this organization' });
+    }
 
     // Check if item is already checked out
     const existingLoan = await prisma.loan.findFirst({
       where: {
         itemId,
+        organizationId: req.organization!.id,
         returnedAt: null,
       },
     });
@@ -134,7 +144,7 @@ router.post('/checkout', async (req: AuthRequest, res: Response) => {
         where: { id: reservationId },
       });
 
-      if (!reservation || reservation.userId !== checkoutUserId) {
+      if (!reservation || reservation.userId !== checkoutUserId || reservation.organizationId !== req.organization!.id) {
         return res.status(404).json({ 
           success: false, 
           error: 'Reservation not found or does not belong to user' 
@@ -146,6 +156,7 @@ router.post('/checkout', async (req: AuthRequest, res: Response) => {
     const [loan] = await Promise.all([
       prisma.loan.create({
         data: {
+          organizationId: req.organization!.id,
           userId: checkoutUserId,
           itemId,
           reservationId: reservationId || null,
@@ -193,12 +204,16 @@ router.post('/:id/checkin', async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ success: false, error: 'Loan not found' });
     }
 
+    if (loan.organizationId !== req.organization!.id) {
+      return res.status(404).json({ success: false, error: 'Loan not found in this organization' });
+    }
+
     if (loan.returnedAt) {
       return res.status(400).json({ success: false, error: 'Item already returned' });
     }
 
     // Only admins or the user who checked it out can return
-    if (loan.userId !== req.user!.id && req.user!.role !== 'ADMIN') {
+    if (loan.userId !== req.user!.id && !(req.user!.role === 'ADMIN' || hasOrgRole(req, 'MANAGER'))) {
       return res.status(403).json({ success: false, error: 'Forbidden' });
     }
 

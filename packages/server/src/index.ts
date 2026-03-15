@@ -6,6 +6,7 @@ import categoriesRoutes from './routes/categories.js';
 import itemsRoutes from './routes/items.js';
 import reservationsRoutes from './routes/reservations.js';
 import loansRoutes from './routes/loans.js';
+import organizationsRoutes from './routes/organizations.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -20,6 +21,7 @@ app.use('/api/categories', categoriesRoutes);
 app.use('/api/items', itemsRoutes);
 app.use('/api/reservations', reservationsRoutes);
 app.use('/api/loans', loansRoutes);
+app.use('/api/organizations', organizationsRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });

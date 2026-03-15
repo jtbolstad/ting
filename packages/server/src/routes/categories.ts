@@ -1,15 +1,19 @@
 import { Router } from 'express';
 import type { Response } from 'express';
 import { prisma } from '../prisma.js';
-import { authenticate, requireAdmin, type AuthRequest } from '../middleware/auth.js';
+import { authenticate, type AuthRequest } from '../middleware/auth.js';
+import { resolveOrganizationPublic, withOrganizationContext, requireOrgRole } from '../middleware/organization.js';
 import type { Category, CreateCategoryInput, UpdateCategoryInput, ApiResponse } from '@ting/shared';
 
 const router = Router();
 
 // List all categories (public)
-router.get('/', async (req, res: Response) => {
+router.get('/', resolveOrganizationPublic, async (req: AuthRequest, res: Response) => {
   try {
     const categories = await prisma.category.findMany({
+      where: {
+        organizationId: req.organization!.id,
+      },
       include: {
         _count: {
           select: { items: true },
@@ -39,12 +43,12 @@ router.get('/', async (req, res: Response) => {
 });
 
 // Get category by ID (public)
-router.get('/:id', async (req, res: Response) => {
+router.get('/:id', resolveOrganizationPublic, async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
 
-    const category = await prisma.category.findUnique({
-      where: { id },
+    const category = await prisma.category.findFirst({
+      where: { id, organizationId: req.organization!.id },
       include: {
         children: true,
         parent: true,
@@ -79,8 +83,8 @@ router.get('/:id', async (req, res: Response) => {
   }
 });
 
-// Create category (admin only)
-router.post('/', authenticate, requireAdmin, async (req: AuthRequest, res: Response) => {
+// Create category (org manager+)
+router.post('/', authenticate, withOrganizationContext(), requireOrgRole('MANAGER'), async (req: AuthRequest, res: Response) => {
   try {
     const { name, description, parentId } = req.body as CreateCategoryInput;
 
@@ -88,8 +92,18 @@ router.post('/', authenticate, requireAdmin, async (req: AuthRequest, res: Respo
       return res.status(400).json({ success: false, error: 'Name is required' });
     }
 
+    if (parentId) {
+      const parent = await prisma.category.findFirst({
+        where: { id: parentId, organizationId: req.organization!.id },
+      });
+      if (!parent) {
+        return res.status(404).json({ success: false, error: 'Parent category not found in this organization' });
+      }
+    }
+
     const category = await prisma.category.create({
       data: {
+        organizationId: req.organization!.id,
         name,
         description: description || null,
         parentId: parentId || null,
@@ -108,8 +122,8 @@ router.post('/', authenticate, requireAdmin, async (req: AuthRequest, res: Respo
   }
 });
 
-// Update category (admin only)
-router.patch('/:id', authenticate, requireAdmin, async (req: AuthRequest, res: Response) => {
+// Update category (org manager+)
+router.patch('/:id', authenticate, withOrganizationContext(), requireOrgRole('MANAGER'), async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     const { name, description, parentId } = req.body as UpdateCategoryInput;
@@ -118,6 +132,20 @@ router.patch('/:id', authenticate, requireAdmin, async (req: AuthRequest, res: R
     if (name) updateData.name = name;
     if (description !== undefined) updateData.description = description || null;
     if (parentId !== undefined) updateData.parentId = parentId || null;
+
+    const existing = await prisma.category.findUnique({ where: { id } });
+    if (!existing || existing.organizationId !== req.organization!.id) {
+      return res.status(404).json({ success: false, error: 'Category not found in this organization' });
+    }
+
+    if (parentId) {
+      const parent = await prisma.category.findFirst({
+        where: { id: parentId, organizationId: req.organization!.id },
+      });
+      if (!parent) {
+        return res.status(404).json({ success: false, error: 'Parent category not found in this organization' });
+      }
+    }
 
     const category = await prisma.category.update({
       where: { id },
@@ -136,8 +164,8 @@ router.patch('/:id', authenticate, requireAdmin, async (req: AuthRequest, res: R
   }
 });
 
-// Delete category (admin only)
-router.delete('/:id', authenticate, requireAdmin, async (req: AuthRequest, res: Response) => {
+// Delete category (org admin+)
+router.delete('/:id', authenticate, withOrganizationContext(), requireOrgRole('ADMIN'), async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -147,7 +175,7 @@ router.delete('/:id', authenticate, requireAdmin, async (req: AuthRequest, res: 
       include: { _count: { select: { items: true } } },
     });
 
-    if (!category) {
+    if (!category || category.organizationId !== req.organization!.id) {
       return res.status(404).json({ success: false, error: 'Category not found' });
     }
 

@@ -12,59 +12,156 @@ model User {
   email        String        @unique
   passwordHash String
   name         String
-  role         String        @default("MEMBER")
+  role         String        @default("MEMBER") // platform role (e.g. SUPERADMIN)
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   reservations Reservation[]
   loans        Loan[]
+  memberships  Membership[]
+  auditLogs    AuditLog[]    @relation("AuditActor")
+}
+
+model Organization {
+  id          String        @id @default(cuid())
+  name        String
+  slug        String        @unique
+  description String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  memberships Membership[]
+  groups      MemberGroup[]
+  categories  Category[]
+  items       Item[]
+  reservations Reservation[]
+  loans        Loan[]
+  auditLogs    AuditLog[]
+}
+
+model Membership {
+  id             String                  @id @default(cuid())
+  userId         String
+  organizationId String
+  role           String                  @default("MEMBER") // ORG_ADMIN, MANAGER, MEMBER
+  status         String                  @default("ACTIVE")
+  isDefault      Boolean                 @default(false)
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+
+  user         User         @relation(fields: [userId], references: [id])
+  organization Organization @relation(fields: [organizationId], references: [id])
+  groups       MemberGroupMembership[]
+
+  @@unique([userId, organizationId])
+  @@index([organizationId])
+}
+
+model MemberGroup {
+  id             String                   @id @default(cuid())
+  organizationId String
+  name           String
+  description    String?
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @updatedAt
+
+  organization Organization           @relation(fields: [organizationId], references: [id])
+  memberships  MemberGroupMembership[]
+
+  @@index([organizationId])
+}
+
+model MemberGroupMembership {
+  id           String      @id @default(cuid())
+  membershipId String
+  groupId      String
+  createdAt    DateTime    @default(now())
+
+  membership Membership @relation(fields: [membershipId], references: [id])
+  group       MemberGroup @relation(fields: [groupId], references: [id])
+
+  @@unique([membershipId, groupId])
+  @@index([groupId])
 }
 
 model Category {
-  id          String     @id @default(cuid())
-  name        String
-  description String?
-  parentId    String?
-  parent      Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
-  children    Category[] @relation("CategoryHierarchy")
-  items       Item[]
+  id             String     @id @default(cuid())
+  organizationId String
+  name           String
+  description    String?
+  parentId       String?
+  parent         Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children       Category[] @relation("CategoryHierarchy")
+  items          Item[]
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId])
 }
 
 model Item {
-  id           String        @id @default(cuid())
-  name         String
-  description  String?
-  categoryId   String
-  category     Category      @relation(fields: [categoryId], references: [id])
-  status       String        @default("AVAILABLE")
-  imageUrl     String?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  reservations Reservation[]
-  loans        Loan[]
+  id             String        @id @default(cuid())
+  organizationId String
+  name           String
+  description    String?
+  categoryId     String
+  category       Category      @relation(fields: [categoryId], references: [id])
+  organization   Organization  @relation(fields: [organizationId], references: [id])
+  status         String        @default("AVAILABLE")
+  imageUrl       String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  reservations   Reservation[]
+  loans          Loan[]
+
+  @@index([organizationId])
 }
 
 model Reservation {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  itemId    String
-  item      Item     @relation(fields: [itemId], references: [id])
-  startDate DateTime
-  endDate   DateTime
-  status    String   @default("PENDING")
-  createdAt DateTime @default(now())
-  loan      Loan?
+  id             String       @id @default(cuid())
+  organizationId String
+  userId         String
+  user           User         @relation(fields: [userId], references: [id])
+  itemId         String
+  item           Item         @relation(fields: [itemId], references: [id])
+  startDate      DateTime
+  endDate        DateTime
+  status         String       @default("PENDING")
+  createdAt      DateTime     @default(now())
+  loan           Loan?
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId])
 }
 
 model Loan {
-  id            String       @id @default(cuid())
-  userId        String
-  user          User         @relation(fields: [userId], references: [id])
-  itemId        String
-  item          Item         @relation(fields: [itemId], references: [id])
-  reservationId String?      @unique
-  reservation   Reservation? @relation(fields: [reservationId], references: [id])
-  checkedOutAt  DateTime     @default(now())
-  dueDate       DateTime
-  returnedAt    DateTime?
+  id             String       @id @default(cuid())
+  organizationId String
+  userId         String
+  user           User         @relation(fields: [userId], references: [id])
+  itemId         String
+  item           Item         @relation(fields: [itemId], references: [id])
+  reservationId  String?      @unique
+  reservation    Reservation? @relation(fields: [reservationId], references: [id])
+  checkedOutAt   DateTime     @default(now())
+  dueDate        DateTime
+  returnedAt     DateTime?
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId])
+}
+
+model AuditLog {
+  id             String       @id @default(cuid())
+  organizationId String
+  actorUserId    String?
+  action         String
+  entityType     String
+  entityId       String?
+  description    String?
+  metadata       String?
+  createdAt      DateTime     @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+  actor        User?        @relation("AuditActor", fields: [actorUserId], references: [id])
+
+  @@index([organizationId, createdAt])
 }

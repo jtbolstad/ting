@@ -1,12 +1,14 @@
 import { Router } from 'express';
 import type { Response } from 'express';
 import { prisma } from '../prisma.js';
-import { authenticate, requireAdmin, type AuthRequest } from '../middleware/auth.js';
+import { authenticate, type AuthRequest } from '../middleware/auth.js';
+import { withOrganizationContext, hasOrgRole } from '../middleware/organization.js';
 import type { Reservation, CreateReservationInput, UpdateReservationInput, ApiResponse } from '@ting/shared';
 
 const router = Router();
 
 router.use(authenticate);
+router.use(withOrganizationContext());
 
 function serializeReservation(reservation: any): Reservation {
   return {
@@ -39,10 +41,19 @@ router.get('/availability/:itemId', async (req: AuthRequest, res: Response) => {
     const end = new Date(endDate);
 
     // Find conflicting reservations or loans
+    const item = await prisma.item.findFirst({
+      where: { id: itemId, organizationId: req.organization!.id },
+    });
+
+    if (!item) {
+      return res.status(404).json({ success: false, error: 'Item not found in this organization' });
+    }
+
     const [reservations, loans] = await Promise.all([
       prisma.reservation.findMany({
         where: {
           itemId,
+          organizationId: req.organization!.id,
           status: { in: ['PENDING', 'CONFIRMED'] },
           OR: [
             {
@@ -57,6 +68,7 @@ router.get('/availability/:itemId', async (req: AuthRequest, res: Response) => {
       prisma.loan.findMany({
         where: {
           itemId,
+          organizationId: req.organization!.id,
           returnedAt: null,
           OR: [
             {
@@ -90,10 +102,15 @@ router.get('/availability/:itemId', async (req: AuthRequest, res: Response) => {
 // List user's reservations
 router.get('/', async (req: AuthRequest, res: Response) => {
   try {
-    const userId = req.user!.role === 'ADMIN' ? req.query.userId as string : req.user!.id;
+    const requestedUserId = req.query.userId as string | undefined;
+    const canViewAll = req.user!.role === 'ADMIN' || hasOrgRole(req, 'MANAGER');
+    const userId = canViewAll ? requestedUserId : req.user!.id;
 
     const reservations = await prisma.reservation.findMany({
-      where: userId ? { userId } : undefined,
+      where: {
+        organizationId: req.organization!.id,
+        ...(userId ? { userId } : {}),
+      },
       include: {
         item: { include: { category: true } },
         user: true,
@@ -134,11 +151,15 @@ router.post('/', async (req: AuthRequest, res: Response) => {
     if (!item) {
       return res.status(404).json({ success: false, error: 'Item not found' });
     }
+    if (item.organizationId !== req.organization!.id) {
+      return res.status(403).json({ success: false, error: 'Item does not belong to this organization' });
+    }
 
     // Check for conflicts
     const conflicts = await prisma.reservation.findMany({
       where: {
         itemId,
+        organizationId: req.organization!.id,
         status: { in: ['PENDING', 'CONFIRMED'] },
         OR: [
           {
@@ -160,6 +181,7 @@ router.post('/', async (req: AuthRequest, res: Response) => {
 
     const reservation = await prisma.reservation.create({
       data: {
+        organizationId: req.organization!.id,
         userId,
         itemId,
         startDate: start,
@@ -197,6 +219,10 @@ router.patch('/:id', async (req: AuthRequest, res: Response) => {
 
     if (!reservation) {
       return res.status(404).json({ success: false, error: 'Reservation not found' });
+    }
+
+    if (reservation.organizationId !== req.organization!.id) {
+      return res.status(404).json({ success: false, error: 'Reservation not found in this organization' });
     }
 
     // Users can only update their own reservations, admins can update any
@@ -239,6 +265,10 @@ router.delete('/:id', async (req: AuthRequest, res: Response) => {
 
     if (!reservation) {
       return res.status(404).json({ success: false, error: 'Reservation not found' });
+    }
+
+    if (reservation.organizationId !== req.organization!.id) {
+      return res.status(404).json({ success: false, error: 'Reservation not found in this organization' });
     }
 
     // Users can only cancel their own reservations, admins can cancel any

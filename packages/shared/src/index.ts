@@ -12,3 +12,6 @@ export * from './types/loan.js';
 
 // API types
 export * from './types/api.js';
+
+// Organization & membership types
+export * from './types/organization.js';

@@ -1,5 +1,17 @@
 import type { Request, Response, NextFunction } from 'express';
+import type { Prisma, Organization } from '@prisma/client';
 import { verifyToken } from '../services/auth.js';
+
+export type MembershipWithOrg = Prisma.MembershipGetPayload<{
+  include: {
+    organization: true;
+    groups: {
+      include: {
+        group: true;
+      };
+    };
+  };
+}>;
 
 export interface AuthRequest extends Request {
   user?: {
@@ -7,6 +19,8 @@ export interface AuthRequest extends Request {
     email: string;
     role: string;
   };
+  organization?: Organization;
+  membership?: MembershipWithOrg | null;
 }
 
 export function authenticate(req: AuthRequest, res: Response, next: NextFunction) {

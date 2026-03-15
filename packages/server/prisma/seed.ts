@@ -3,251 +3,369 @@ import bcryptjs from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
-async function main() {
-  console.log('🌱 Seeding database...');
+type OrgKey = 'oslo' | 'bergen';
 
-  // Clear existing data
+const ORG_DEFINITIONS: Record<OrgKey, { name: string; slug: string; description: string }> = {
+  oslo: {
+    name: 'Oslo Tool Library',
+    slug: 'oslo-tool-library',
+    description: 'Flagship Ting community lending hub in Oslo.',
+  },
+  bergen: {
+    name: 'Bergen Community Lending',
+    slug: 'bergen-community-lending',
+    description: 'West-coast collective focused on outdoor and maker gear.',
+  },
+};
+
+const GROUP_SEEDS: Record<OrgKey, Array<{ key: string; name: string; description: string }>> = {
+  oslo: [
+    { key: 'volunteers', name: 'Front Desk Volunteers', description: 'Members who help with daily operations.' },
+    { key: 'garden', name: 'Garden Collective', description: 'Folks focused on gardening tools & workshops.' },
+  ],
+  bergen: [
+    { key: 'makers', name: 'Makers Collective', description: 'Woodshop mentors and workshop leads.' },
+    { key: 'mobility', name: 'Mobility Crew', description: 'Members responsible for bikes & transport gear.' },
+  ],
+};
+
+const CATEGORY_SEEDS: Record<OrgKey, Array<{ key: string; name: string; description: string }>> = {
+  oslo: [
+    { key: 'power', name: 'Power Tools', description: 'Corded and cordless power equipment.' },
+    { key: 'garden', name: 'Garden & Outdoor', description: 'Everything for outdoor maintenance.' },
+    { key: 'events', name: 'Events & Party', description: 'Event, party, and pop-up equipment.' },
+  ],
+  bergen: [
+    { key: 'woodshop', name: 'Woodshop', description: 'Benchtop and handheld woodworking tools.' },
+    { key: 'electronics', name: 'Electronics', description: 'AV gear, projectors, and sensors.' },
+    { key: 'mobility', name: 'Mobility', description: 'Bikes, cargo trailers, and related gear.' },
+  ],
+};
+
+const ITEM_SEEDS: Record<
+  OrgKey,
+  Array<{ key: string; name: string; description: string; categoryKey: string; status?: string }>
+> = {
+  oslo: [
+    { key: 'drill', name: '18V Cordless Drill', description: 'Drill/driver with 2 batteries + charger.', categoryKey: 'power' },
+    { key: 'impact-driver', name: 'Impact Driver', description: 'Compact impact driver for heavy screws.', categoryKey: 'power', status: 'CHECKED_OUT' },
+    { key: 'sander', name: 'Orbital Sander', description: '5" orbital sander w/ dust bag.', categoryKey: 'power' },
+    { key: 'pressure-washer', name: 'Pressure Washer', description: '1800 PSI electric washer.', categoryKey: 'garden' },
+    { key: 'hedge-trimmer', name: 'Hedge Trimmer', description: 'Cordless trimmer with 24" blade.', categoryKey: 'garden' },
+    { key: 'party-lights', name: 'String Lights Kit', description: '20m warm LED string lights.', categoryKey: 'events' },
+    { key: 'folding-tables', name: 'Folding Tables (2)', description: 'Two 180cm tables for events.', categoryKey: 'events', status: 'MAINTENANCE' },
+  ],
+  bergen: [
+    { key: 'planer', name: 'Benchtop Planer', description: '12" planer for lumber prep.', categoryKey: 'woodshop' },
+    { key: 'jigsaw', name: 'Jigsaw', description: 'Variable speed jigsaw with blades.', categoryKey: 'woodshop' },
+    { key: 'projector', name: 'Portable Projector', description: '1080p projector w/ HDMI & case.', categoryKey: 'electronics', status: 'CHECKED_OUT' },
+    { key: 'field-recorder', name: 'Field Recorder', description: 'Zoom H5 recorder with mics.', categoryKey: 'electronics' },
+    { key: 'cargo-bike', name: 'Cargo Bike', description: 'Two-wheel cargo bike with child bench.', categoryKey: 'mobility' },
+    { key: 'bike-trailer', name: 'Bike Trailer', description: 'Flatbed trailer for hauling gear.', categoryKey: 'mobility' },
+  ],
+};
+
+type UserSeed = {
+  key: string;
+  email: string;
+  name: string;
+  password: string;
+  role: 'ADMIN' | 'MEMBER';
+  memberships: Array<{
+    orgKey: OrgKey;
+    role: string;
+    isDefault?: boolean;
+    groups?: string[];
+  }>;
+};
+
+const USER_SEEDS: UserSeed[] = [
+  {
+    key: 'admin',
+    email: 'admin@ting.com',
+    name: 'Platform Admin',
+    password: 'admin123',
+    role: 'ADMIN',
+    memberships: [
+      { orgKey: 'oslo', role: 'OWNER', isDefault: true, groups: ['volunteers'] },
+      { orgKey: 'bergen', role: 'ADMIN', groups: ['makers'] },
+    ],
+  },
+  {
+    key: 'emma',
+    email: 'emma@ting.com',
+    name: 'Emma Hansen',
+    password: 'user123',
+    role: 'MEMBER',
+    memberships: [{ orgKey: 'oslo', role: 'MANAGER', isDefault: true, groups: ['garden'] }],
+  },
+  {
+    key: 'lars',
+    email: 'lars@ting.com',
+    name: 'Lars Nilsen',
+    password: 'user123',
+    role: 'MEMBER',
+    memberships: [{ orgKey: 'oslo', role: 'MEMBER', isDefault: true }],
+  },
+  {
+    key: 'maria',
+    email: 'maria@ting.com',
+    name: 'Maria Solheim',
+    password: 'user123',
+    role: 'MEMBER',
+    memberships: [{ orgKey: 'bergen', role: 'MANAGER', isDefault: true, groups: ['makers'] }],
+  },
+  {
+    key: 'svein',
+    email: 'svein@ting.com',
+    name: 'Svein Arnesen',
+    password: 'user123',
+    role: 'MEMBER',
+    memberships: [
+      { orgKey: 'bergen', role: 'MEMBER', isDefault: true, groups: ['mobility'] },
+      { orgKey: 'oslo', role: 'MEMBER' },
+    ],
+  },
+];
+
+type ReservationSeed = {
+  key: string;
+  orgKey: OrgKey;
+  itemKey: string;
+  userKey: string;
+  startInDays: number;
+  durationDays: number;
+  status?: string;
+};
+
+const RESERVATION_SEEDS: ReservationSeed[] = [
+  {
+    key: 'oslo-garden',
+    orgKey: 'oslo',
+    itemKey: 'hedge-trimmer',
+    userKey: 'emma',
+    startInDays: 2,
+    durationDays: 3,
+    status: 'CONFIRMED',
+  },
+  {
+    key: 'bergen-maker',
+    orgKey: 'bergen',
+    itemKey: 'planer',
+    userKey: 'maria',
+    startInDays: -5,
+    durationDays: 5,
+    status: 'COMPLETED',
+  },
+];
+
+type LoanSeed = {
+  orgKey: OrgKey;
+  itemKey: string;
+  userKey: string;
+  checkedOutDaysAgo: number;
+  dueInDays: number;
+  reservationKey?: string;
+};
+
+const LOAN_SEEDS: LoanSeed[] = [
+  {
+    orgKey: 'oslo',
+    itemKey: 'impact-driver',
+    userKey: 'lars',
+    checkedOutDaysAgo: 3,
+    dueInDays: 4,
+  },
+  {
+    orgKey: 'bergen',
+    itemKey: 'projector',
+    userKey: 'maria',
+    checkedOutDaysAgo: 5,
+    dueInDays: -1, // overdue
+    reservationKey: 'bergen-maker',
+  },
+];
+
+function addDays(date: Date, days: number) {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
+async function main() {
+  console.log('🌱 Seeding Ting multi-tenant data...');
+
+  await prisma.auditLog.deleteMany();
   await prisma.loan.deleteMany();
   await prisma.reservation.deleteMany();
   await prisma.item.deleteMany();
   await prisma.category.deleteMany();
+  await prisma.memberGroupMembership.deleteMany();
+  await prisma.memberGroup.deleteMany();
+  await prisma.membership.deleteMany();
+  await prisma.organization.deleteMany();
   await prisma.user.deleteMany();
-  console.log('🗑️  Cleared existing data');
+  console.log('🗑️  Cleared existing records');
 
-  // Create admin user
-  const adminPassword = await bcryptjs.hash('admin123', 10);
-  const admin = await prisma.user.create({
-    data: {
-      email: 'admin@ting.com',
-      passwordHash: adminPassword,
-      name: 'Admin User',
-      role: 'ADMIN',
-    },
-  });
+  const orgMap: Record<OrgKey, Awaited<ReturnType<typeof prisma.organization.create>>> = {
+    oslo: await prisma.organization.create({ data: ORG_DEFINITIONS.oslo }),
+    bergen: await prisma.organization.create({ data: ORG_DEFINITIONS.bergen }),
+  };
+  console.log('🏢 Created organizations:', Object.values(orgMap).map(o => o.name).join(', '));
 
-  // Create multiple test users
-  const userPassword = await bcryptjs.hash('user123', 10);
-  const users = await Promise.all([
-    prisma.user.create({
-      data: {
-        email: 'user@ting.com',
-        passwordHash: userPassword,
-        name: 'Test User',
-        role: 'MEMBER',
-      },
-    }),
-    prisma.user.create({
-      data: {
-        email: 'emma@example.com',
-        passwordHash: userPassword,
-        name: 'Emma Hansen',
-        role: 'MEMBER',
-      },
-    }),
-    prisma.user.create({
-      data: {
-        email: 'lars@example.com',
-        passwordHash: userPassword,
-        name: 'Lars Nielsen',
-        role: 'MEMBER',
-      },
-    }),
-    prisma.user.create({
-      data: {
-        email: 'sofia@example.com',
-        passwordHash: userPassword,
-        name: 'Sofia Andersen',
-        role: 'MEMBER',
-      },
-    }),
-    prisma.user.create({
-      data: {
-        email: 'mikkel@example.com',
-        passwordHash: userPassword,
-        name: 'Mikkel Jensen',
-        role: 'MEMBER',
-      },
-    }),
-  ]);
-  console.log('✅ Created admin and 5 users');
-
-  // Create diverse categories
-  const categories = {
-    powerTools: await prisma.category.create({
-      data: {
-        id: 'cat-power-tools',
-        name: 'Power Tools',
-        description: 'Electric and battery-powered tools',
-      },
-    }),
-    handTools: await prisma.category.create({
-      data: {
-        id: 'cat-hand-tools',
-        name: 'Hand Tools',
-        description: 'Manual tools and equipment',
-      },
-    }),
-    gardening: await prisma.category.create({
-      data: {
-        id: 'cat-gardening',
-        name: 'Gardening',
-        description: 'Tools for outdoor and garden work',
-      },
-    }),
-    camping: await prisma.category.create({
-      data: {
-        id: 'cat-camping',
-        name: 'Camping & Outdoor',
-        description: 'Camping gear and outdoor equipment',
-      },
-    }),
-    sports: await prisma.category.create({
-      data: {
-        id: 'cat-sports',
-        name: 'Sports Equipment',
-        description: 'Sports and recreation equipment',
-      },
-    }),
-    electronics: await prisma.category.create({
-      data: {
-        id: 'cat-electronics',
-        name: 'Electronics',
-        description: 'Cameras, projectors, and tech equipment',
-      },
-    }),
-    party: await prisma.category.create({
-      data: {
-        id: 'cat-party',
-        name: 'Party & Events',
-        description: 'Party supplies and event equipment',
-      },
-    }),
-    kitchen: await prisma.category.create({
-      data: {
-        id: 'cat-kitchen',
-        name: 'Kitchen Appliances',
-        description: 'Specialized kitchen equipment',
-      },
-    }),
+  const groupMap: Record<OrgKey, Record<string, Awaited<ReturnType<typeof prisma.memberGroup.create>>>> = {
+    oslo: {},
+    bergen: {},
   };
 
-  console.log('✅ Created 8 categories');
+  for (const orgKey of Object.keys(GROUP_SEEDS) as OrgKey[]) {
+    for (const groupSeed of GROUP_SEEDS[orgKey]) {
+      const group = await prisma.memberGroup.create({
+        data: {
+          organizationId: orgMap[orgKey].id,
+          name: groupSeed.name,
+          description: groupSeed.description,
+        },
+      });
+      groupMap[orgKey][groupSeed.key] = group;
+    }
+  }
+  console.log('👥 Created member groups');
 
-  // Create many diverse items
-  const items = await prisma.item.createMany({
-    data: [
-      // Power Tools (10 items)
-      { name: 'Cordless Drill 18V', description: 'Milwaukee 18V cordless drill with 2 batteries and charger', categoryId: categories.powerTools.id, status: 'AVAILABLE' },
-      { name: 'Circular Saw', description: '7-1/4" circular saw with laser guide and dust collection', categoryId: categories.powerTools.id, status: 'AVAILABLE' },
-      { name: 'Jigsaw', description: 'Variable speed jigsaw with orbital action and LED light', categoryId: categories.powerTools.id, status: 'AVAILABLE' },
-      { name: 'Impact Driver', description: '20V MAX impact driver with quick-change chuck', categoryId: categories.powerTools.id, status: 'AVAILABLE' },
-      { name: 'Angle Grinder', description: '4.5" angle grinder with safety guard', categoryId: categories.powerTools.id, status: 'CHECKED_OUT' },
-      { name: 'Random Orbital Sander', description: '5" sander with dust bag and multiple grits', categoryId: categories.powerTools.id, status: 'AVAILABLE' },
-      { name: 'Router', description: 'Plunge router with variable speed control', categoryId: categories.powerTools.id, status: 'AVAILABLE' },
-      { name: 'Nail Gun', description: 'Pneumatic brad nailer with carrying case', categoryId: categories.powerTools.id, status: 'AVAILABLE' },
-      { name: 'Belt Sander', description: '3x21" belt sander with dust collection', categoryId: categories.powerTools.id, status: 'AVAILABLE' },
-      { name: 'Miter Saw', description: '10" compound miter saw with laser guide', categoryId: categories.powerTools.id, status: 'AVAILABLE' },
+  const categoryMap: Record<OrgKey, Record<string, Awaited<ReturnType<typeof prisma.category.create>>>> = {
+    oslo: {},
+    bergen: {},
+  };
+  for (const orgKey of Object.keys(CATEGORY_SEEDS) as OrgKey[]) {
+    for (const categorySeed of CATEGORY_SEEDS[orgKey]) {
+      const category = await prisma.category.create({
+        data: {
+          organizationId: orgMap[orgKey].id,
+          name: categorySeed.name,
+          description: categorySeed.description,
+        },
+      });
+      categoryMap[orgKey][categorySeed.key] = category;
+    }
+  }
+  console.log('🗂️  Created categories');
 
-      // Hand Tools (8 items)
-      { name: 'Hammer Set', description: 'Claw hammer, rubber mallet, and ball-peen hammer', categoryId: categories.handTools.id, status: 'AVAILABLE' },
-      { name: 'Screwdriver Set', description: '24-piece screwdriver set with magnetic tips', categoryId: categories.handTools.id, status: 'AVAILABLE' },
-      { name: 'Socket Wrench Set', description: '108-piece socket and ratchet set with case', categoryId: categories.handTools.id, status: 'AVAILABLE' },
-      { name: 'Pipe Wrench', description: '14" heavy-duty pipe wrench', categoryId: categories.handTools.id, status: 'AVAILABLE' },
-      { name: 'Level Set', description: 'Torpedo level, 24" level, and laser level', categoryId: categories.handTools.id, status: 'AVAILABLE' },
-      { name: 'Utility Knife Set', description: 'Retractable utility knives with extra blades', categoryId: categories.handTools.id, status: 'AVAILABLE' },
-      { name: 'Pliers Set', description: 'Needle-nose, slip-joint, and locking pliers', categoryId: categories.handTools.id, status: 'CHECKED_OUT' },
-      { name: 'Measuring Tape Set', description: '25ft and 12ft measuring tapes', categoryId: categories.handTools.id, status: 'AVAILABLE' },
+  const itemMap: Record<OrgKey, Record<string, Awaited<ReturnType<typeof prisma.item.create>>>> = {
+    oslo: {},
+    bergen: {},
+  };
+  for (const orgKey of Object.keys(ITEM_SEEDS) as OrgKey[]) {
+    for (const itemSeed of ITEM_SEEDS[orgKey]) {
+      const item = await prisma.item.create({
+        data: {
+          organizationId: orgMap[orgKey].id,
+          name: itemSeed.name,
+          description: itemSeed.description,
+          categoryId: categoryMap[orgKey][itemSeed.categoryKey].id,
+          status: itemSeed.status ?? 'AVAILABLE',
+        },
+      });
+      itemMap[orgKey][itemSeed.key] = item;
+    }
+  }
+  console.log('📦 Created inventory items');
 
-      // Gardening (12 items)
-      { name: 'Lawn Mower', description: 'Gas-powered self-propelled lawn mower', categoryId: categories.gardening.id, status: 'AVAILABLE' },
-      { name: 'Hedge Trimmer', description: 'Electric hedge trimmer with 24" dual-action blade', categoryId: categories.gardening.id, status: 'AVAILABLE' },
-      { name: 'Garden Tools Set', description: 'Shovel, rake, hoe, trowel, and hand fork', categoryId: categories.gardening.id, status: 'AVAILABLE' },
-      { name: 'Leaf Blower', description: 'Gas-powered backpack leaf blower', categoryId: categories.gardening.id, status: 'AVAILABLE' },
-      { name: 'Chainsaw', description: '16" gas chainsaw with safety gear', categoryId: categories.gardening.id, status: 'AVAILABLE' },
-      { name: 'Pressure Washer', description: '2000 PSI electric pressure washer with attachments', categoryId: categories.gardening.id, status: 'CHECKED_OUT' },
-      { name: 'Wheelbarrow', description: 'Heavy-duty steel wheelbarrow with pneumatic tire', categoryId: categories.gardening.id, status: 'AVAILABLE' },
-      { name: 'Pruning Shears', description: 'Professional bypass pruning shears', categoryId: categories.gardening.id, status: 'AVAILABLE' },
-      { name: 'Garden Hose & Reel', description: '100ft garden hose with wall-mount reel', categoryId: categories.gardening.id, status: 'AVAILABLE' },
-      { name: 'Lawn Aerator', description: 'Manual spike lawn aerator', categoryId: categories.gardening.id, status: 'AVAILABLE' },
-      { name: 'Tiller', description: 'Gas-powered garden tiller with adjustable tines', categoryId: categories.gardening.id, status: 'AVAILABLE' },
-      { name: 'Edger', description: 'Gas-powered lawn edger with adjustable depth', categoryId: categories.gardening.id, status: 'AVAILABLE' },
+  const userMap: Record<string, Awaited<ReturnType<typeof prisma.user.create>>> = {};
+  const membershipMap: Record<string, Awaited<ReturnType<typeof prisma.membership.create>>> = {};
 
-      // Camping & Outdoor (10 items)
-      { name: 'Family Tent 6-Person', description: 'Waterproof tent with rain fly and storage bag', categoryId: categories.camping.id, status: 'AVAILABLE' },
-      { name: 'Sleeping Bags (4)', description: 'Set of 4 three-season sleeping bags', categoryId: categories.camping.id, status: 'AVAILABLE' },
-      { name: 'Camping Stove', description: 'Two-burner propane camping stove', categoryId: categories.camping.id, status: 'AVAILABLE' },
-      { name: 'Cooler 48-Quart', description: 'Insulated cooler keeps ice for 3 days', categoryId: categories.camping.id, status: 'AVAILABLE' },
-      { name: 'Camping Chairs (6)', description: 'Set of 6 folding camping chairs with cup holders', categoryId: categories.camping.id, status: 'AVAILABLE' },
-      { name: 'Backpacking Tent 2-Person', description: 'Lightweight tent with footprint', categoryId: categories.camping.id, status: 'AVAILABLE' },
-      { name: 'Hiking Backpack 65L', description: 'Internal frame backpack with rain cover', categoryId: categories.camping.id, status: 'CHECKED_OUT' },
-      { name: 'Camping Cookware Set', description: 'Pots, pans, and utensils for 4 people', categoryId: categories.camping.id, status: 'AVAILABLE' },
-      { name: 'Headlamps (4)', description: 'Set of 4 LED headlamps with batteries', categoryId: categories.camping.id, status: 'AVAILABLE' },
-      { name: 'Portable Fire Pit', description: 'Collapsible fire pit with carrying case', categoryId: categories.camping.id, status: 'AVAILABLE' },
+  for (const userSeed of USER_SEEDS) {
+    const passwordHash = await bcryptjs.hash(userSeed.password, 10);
+    const user = await prisma.user.create({
+      data: {
+        email: userSeed.email,
+        passwordHash,
+        name: userSeed.name,
+        role: userSeed.role,
+      },
+    });
+    userMap[userSeed.key] = user;
 
-      // Sports Equipment (12 items)
-      { name: 'Kayak Single', description: 'Sit-on-top kayak with paddle and life vest', categoryId: categories.sports.id, status: 'AVAILABLE' },
-      { name: 'Kayak Tandem', description: 'Two-person kayak with 2 paddles and vests', categoryId: categories.sports.id, status: 'AVAILABLE' },
-      { name: 'Stand-Up Paddleboard', description: 'Inflatable SUP with pump and paddle', categoryId: categories.sports.id, status: 'AVAILABLE' },
-      { name: 'Bike Adult (2)', description: 'Set of 2 adult mountain bikes with helmets', categoryId: categories.sports.id, status: 'AVAILABLE' },
-      { name: 'Kids Bikes (4)', description: 'Set of 4 children\'s bikes (various sizes)', categoryId: categories.sports.id, status: 'AVAILABLE' },
-      { name: 'Bike Rack 4-Bike', description: 'Hitch-mount bike rack for 4 bikes', categoryId: categories.sports.id, status: 'AVAILABLE' },
-      { name: 'Soccer Goals (Portable)', description: 'Pop-up soccer goals with stakes', categoryId: categories.sports.id, status: 'CHECKED_OUT' },
-      { name: 'Badminton Set', description: 'Net, rackets, and shuttlecocks', categoryId: categories.sports.id, status: 'AVAILABLE' },
-      { name: 'Volleyball Set', description: 'Net, ball, and boundary markers', categoryId: categories.sports.id, status: 'AVAILABLE' },
-      { name: 'Croquet Set', description: 'Complete croquet set for 6 players', categoryId: categories.sports.id, status: 'AVAILABLE' },
-      { name: 'Bocce Ball Set', description: 'Professional bocce ball set with carrying case', categoryId: categories.sports.id, status: 'AVAILABLE' },
-      { name: 'Cornhole Boards', description: 'Regulation cornhole boards with bags', categoryId: categories.sports.id, status: 'AVAILABLE' },
+    for (const membershipSeed of userSeed.memberships) {
+      const membership = await prisma.membership.create({
+        data: {
+          userId: user.id,
+          organizationId: orgMap[membershipSeed.orgKey].id,
+          role: membershipSeed.role,
+          status: 'ACTIVE',
+          isDefault: membershipSeed.isDefault ?? false,
+        },
+      });
+      membershipMap[`${userSeed.key}-${membershipSeed.orgKey}`] = membership;
 
-      // Electronics (8 items)
-      { name: 'Projector & Screen', description: '1080p projector with 100" portable screen', categoryId: categories.electronics.id, status: 'AVAILABLE' },
-      { name: 'PA System', description: 'Portable PA system with 2 wireless microphones', categoryId: categories.electronics.id, status: 'AVAILABLE' },
-      { name: 'DSLR Camera Kit', description: 'Canon DSLR with 3 lenses and tripod', categoryId: categories.electronics.id, status: 'AVAILABLE' },
-      { name: 'GoPro Action Camera', description: 'GoPro with mounts and waterproof case', categoryId: categories.electronics.id, status: 'CHECKED_OUT' },
-      { name: 'Karaoke Machine', description: 'Wireless karaoke system with 2 microphones', categoryId: categories.electronics.id, status: 'AVAILABLE' },
-      { name: 'Light Kit Photography', description: 'Professional lighting kit with stands', categoryId: categories.electronics.id, status: 'AVAILABLE' },
-      { name: 'Metal Detector', description: 'Professional metal detector with headphones', categoryId: categories.electronics.id, status: 'AVAILABLE' },
-      { name: 'Drone with Camera', description: 'Quadcopter drone with 4K camera', categoryId: categories.electronics.id, status: 'AVAILABLE' },
+      if (membershipSeed.groups) {
+        for (const groupKey of membershipSeed.groups) {
+          const group = groupMap[membershipSeed.orgKey][groupKey];
+          await prisma.memberGroupMembership.create({
+            data: {
+              membershipId: membership.id,
+              groupId: group.id,
+            },
+          });
+        }
+      }
+    }
+  }
+  console.log('🙋 Created users & memberships');
 
-      // Party & Events (8 items)
-      { name: 'Folding Tables (4)', description: 'Set of 4 6ft folding tables', categoryId: categories.party.id, status: 'AVAILABLE' },
-      { name: 'Folding Chairs (24)', description: 'Set of 24 metal folding chairs', categoryId: categories.party.id, status: 'AVAILABLE' },
-      { name: 'Canopy Tent 10x10', description: 'Pop-up canopy with sidewalls', categoryId: categories.party.id, status: 'AVAILABLE' },
-      { name: 'Chocolate Fountain', description: '3-tier chocolate fountain with fondue set', categoryId: categories.party.id, status: 'AVAILABLE' },
-      { name: 'Popcorn Machine', description: 'Commercial-style popcorn maker', categoryId: categories.party.id, status: 'AVAILABLE' },
-      { name: 'Snow Cone Machine', description: 'Electric snow cone maker with syrups', categoryId: categories.party.id, status: 'AVAILABLE' },
-      { name: 'String Lights 100ft', description: 'Outdoor string lights with bulbs', categoryId: categories.party.id, status: 'AVAILABLE' },
-      { name: 'Giant Yard Games', description: 'Jenga, Connect Four, and Tic-Tac-Toe', categoryId: categories.party.id, status: 'CHECKED_OUT' },
+  const reservationMap: Record<string, Awaited<ReturnType<typeof prisma.reservation.create>>> = {};
+  const now = new Date();
+  for (const reservationSeed of RESERVATION_SEEDS) {
+    const startDate = addDays(now, reservationSeed.startInDays);
+    const endDate = addDays(startDate, reservationSeed.durationDays);
+    const reservation = await prisma.reservation.create({
+      data: {
+        organizationId: orgMap[reservationSeed.orgKey].id,
+        userId: userMap[reservationSeed.userKey].id,
+        itemId: itemMap[reservationSeed.orgKey][reservationSeed.itemKey].id,
+        startDate,
+        endDate,
+        status: reservationSeed.status ?? 'CONFIRMED',
+      },
+    });
+    reservationMap[reservationSeed.key] = reservation;
+  }
+  console.log('🗓️  Created reservations');
 
-      // Kitchen Appliances (8 items)
-      { name: 'Stand Mixer', description: 'KitchenAid stand mixer with attachments', categoryId: categories.kitchen.id, status: 'AVAILABLE' },
-      { name: 'Food Processor', description: '12-cup food processor with multiple blades', categoryId: categories.kitchen.id, status: 'AVAILABLE' },
-      { name: 'Bread Maker', description: 'Automatic bread maker with 12 settings', categoryId: categories.kitchen.id, status: 'AVAILABLE' },
-      { name: 'Ice Cream Maker', description: 'Electric ice cream maker 2-quart', categoryId: categories.kitchen.id, status: 'AVAILABLE' },
-      { name: 'Pasta Maker', description: 'Manual pasta roller and cutter set', categoryId: categories.kitchen.id, status: 'AVAILABLE' },
-      { name: 'Waffle Maker', description: 'Belgian waffle maker with removable plates', categoryId: categories.kitchen.id, status: 'AVAILABLE' },
-      { name: 'Slow Cooker 7-Quart', description: 'Programmable slow cooker with timer', categoryId: categories.kitchen.id, status: 'AVAILABLE' },
-      { name: 'Vacuum Sealer', description: 'Food vacuum sealer with bags', categoryId: categories.kitchen.id, status: 'AVAILABLE' },
-    ],
-  });
+  for (const loanSeed of LOAN_SEEDS) {
+    const checkedOutAt = addDays(now, -loanSeed.checkedOutDaysAgo);
+    const dueDate = addDays(now, loanSeed.dueInDays);
+    const reservation = loanSeed.reservationKey ? reservationMap[loanSeed.reservationKey] : undefined;
 
-  console.log('✅ Created 86 items across 8 categories');
+    await prisma.loan.create({
+      data: {
+        organizationId: orgMap[loanSeed.orgKey].id,
+        userId: userMap[loanSeed.userKey].id,
+        itemId: itemMap[loanSeed.orgKey][loanSeed.itemKey].id,
+        reservationId: reservation?.id ?? null,
+        checkedOutAt,
+        dueDate,
+      },
+    });
+
+    await prisma.item.update({
+      where: { id: itemMap[loanSeed.orgKey][loanSeed.itemKey].id },
+      data: { status: 'CHECKED_OUT' },
+    });
+  }
+  console.log('📚 Created sample loans');
 
   console.log('🎉 Seeding complete!');
-  console.log('\n📊 Summary:');
-  console.log('- 1 Admin user');
-  console.log('- 5 Member users');
-  console.log('- 8 Categories');
-  console.log('- 86 Items (78 available, 8 checked out)');
-  console.log('\n🔑 Test accounts:');
-  console.log('Admin: admin@ting.com / admin123');
-  console.log('User: user@ting.com / user123');
-  console.log('Other users: emma@example.com, lars@example.com, sofia@example.com, mikkel@example.com');
-  console.log('All user passwords: user123');
+  console.log('- Organizations:', Object.values(orgMap).length);
+  console.log('- Users:', Object.values(userMap).length);
+  console.log('- Memberships:', Object.values(membershipMap).length);
+  console.log('- Items:', Object.values(itemMap.oslo).length + Object.values(itemMap.bergen).length);
+  console.log('- Reservations:', Object.values(reservationMap).length);
+  console.log('- Loans:', LOAN_SEEDS.length);
 }
 
 main()
-  .catch((e) => {
-    console.error(e);
+  .catch((error) => {
+    console.error(error);
     process.exit(1);
   })
   .finally(async () => {

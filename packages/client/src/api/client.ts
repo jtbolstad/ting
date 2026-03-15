@@ -1,13 +1,41 @@
-import type { ApiResponse, AuthResponse, User, Item, Category, Reservation, Loan, PaginatedResponse } from '@ting/shared';
+import type {
+  ApiResponse,
+  AuthResponse,
+  User,
+  Item,
+  Category,
+  Reservation,
+  Loan,
+  PaginatedResponse,
+  Organization,
+  Membership,
+  MemberGroup,
+} from '@ting/shared';
 
 const API_BASE_URL = 'http://localhost:3001/api';
 
 class ApiClient {
+  private activeOrganizationId: string | null;
+
+  constructor() {
+    this.activeOrganizationId = localStorage.getItem('activeOrganizationId');
+  }
+
+  setActiveOrganizationId(organizationId: string | null) {
+    this.activeOrganizationId = organizationId;
+    if (organizationId) {
+      localStorage.setItem('activeOrganizationId', organizationId);
+    } else {
+      localStorage.removeItem('activeOrganizationId');
+    }
+  }
+
   private getHeaders(): HeadersInit {
     const token = localStorage.getItem('token');
     return {
       'Content-Type': 'application/json',
       ...(token && { Authorization: `Bearer ${token}` }),
+      ...(this.activeOrganizationId && { 'X-Organization-Id': this.activeOrganizationId }),
     };
   }
 
@@ -27,10 +55,10 @@ class ApiClient {
   }
 
   // Auth
-  async register(email: string, password: string, name: string): Promise<AuthResponse> {
+  async register(email: string, password: string, name: string, organizationId: string): Promise<AuthResponse> {
     return this.request<AuthResponse>('/auth/register', {
       method: 'POST',
-      body: JSON.stringify({ email, password, name }),
+      body: JSON.stringify({ email, password, name, organizationId }),
     });
   }
 
@@ -46,14 +74,15 @@ class ApiClient {
   }
 
   // Items
-  async getItems(params?: {
+  async getItems(params: {
+    organizationId: string;
     q?: string;
     categoryId?: string;
     status?: string;
     page?: number;
     limit?: number;
   }): Promise<PaginatedResponse<Item>> {
-    const query = new URLSearchParams(params as any).toString();
+    const query = new URLSearchParams(params as Record<string, string>).toString();
     return this.request<PaginatedResponse<Item>>(`/items${query ? `?${query}` : ''}`);
   }
 
@@ -80,8 +109,8 @@ class ApiClient {
   }
 
   // Categories
-  async getCategories(): Promise<Category[]> {
-    return this.request<Category[]>('/categories');
+  async getCategories(organizationId: string): Promise<Category[]> {
+    return this.request<Category[]>(`/categories?organizationId=${organizationId}`);
   }
 
   async createCategory(data: { name: string; description?: string; parentId?: string }): Promise<Category> {
@@ -133,14 +162,66 @@ class ApiClient {
   }
 
   // Users
-  async getUsers(): Promise<User[]> {
-    return this.request<User[]>('/users');
+  async getUsers(): Promise<Array<{ membership: Membership; user: User }>> {
+    return this.request<Array<{ membership: Membership; user: User }>>('/organizations/members');
   }
 
   async updateUser(id: string, data: Partial<User>): Promise<User> {
     return this.request<User>(`/users/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
+    });
+  }
+
+  // Organizations
+  async getPublicOrganizations(): Promise<Organization[]> {
+    return this.request<Organization[]>('/organizations/public');
+  }
+
+  async getMyMemberships(): Promise<Membership[]> {
+    return this.request<Membership[]>('/organizations/me');
+  }
+
+  async createOrganization(data: { name: string; slug?: string; description?: string }): Promise<{ organization: Organization; membership: Membership }> {
+    return this.request<{ organization: Organization; membership: Membership }>('/organizations', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getOrganizationMembers(): Promise<Array<{ membership: Membership; user: User }>> {
+    return this.request<Array<{ membership: Membership; user: User }>>('/organizations/members');
+  }
+
+  async addOrganizationMember(payload: { email: string; role?: string }): Promise<Membership> {
+    return this.request<Membership>('/organizations/members', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async updateMembership(membershipId: string, payload: Partial<Membership>): Promise<Membership> {
+    return this.request<Membership>(`/organizations/members/${membershipId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async getGroups(): Promise<Array<MemberGroup & { memberCount: number }>> {
+    return this.request<Array<MemberGroup & { memberCount: number }>>('/organizations/groups');
+  }
+
+  async createGroup(data: { name: string; description?: string }): Promise<MemberGroup> {
+    return this.request<MemberGroup>('/organizations/groups', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async assignGroupMember(groupId: string, membershipId: string): Promise<void> {
+    return this.request<void>(`/organizations/groups/${groupId}/members`, {
+      method: 'POST',
+      body: JSON.stringify({ membershipId }),
     });
   }
 }

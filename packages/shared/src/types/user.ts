@@ -1,3 +1,5 @@
+import type { Membership } from './organization.js';
+
 export type UserRole = 'ADMIN' | 'MEMBER';
 
 export interface User {
@@ -7,12 +9,14 @@ export interface User {
   role: UserRole;
   createdAt: string;
   updatedAt: string;
+  memberships?: Membership[];
 }
 
 export interface CreateUserInput {
   email: string;
   password: string;
   name: string;
+  organizationId?: string;
 }
 
 export interface UpdateUserInput {
@@ -29,4 +33,6 @@ export interface LoginInput {
 export interface AuthResponse {
   user: User;
   token: string;
+  memberships?: Membership[];
+  activeMembershipId?: string | null;
 }

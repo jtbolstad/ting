@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import type { Response } from 'express';
 import { prisma } from '../prisma.js';
-import { authenticate, requireAdmin, type AuthRequest } from '../middleware/auth.js';
+import { authenticate, type AuthRequest } from '../middleware/auth.js';
+import { resolveOrganizationPublic, withOrganizationContext, requireOrgRole } from '../middleware/organization.js';
 import type { Item, CreateItemInput, UpdateItemInput, ItemSearchParams, ApiResponse, PaginatedResponse } from '@ting/shared';
 
 const router = Router();
@@ -20,12 +21,14 @@ function serializeItem(item: any): Item {
   };
 }
 
-// List/search items (public)
-router.get('/', async (req, res: Response) => {
+// List/search items (requires organization context, public access allowed)
+router.get('/', resolveOrganizationPublic, async (req: AuthRequest, res: Response) => {
   try {
     const { q, categoryId, status, page = 1, limit = 20 } = req.query as any;
 
-    const where: any = {};
+    const where: any = {
+      organizationId: req.organization!.id,
+    };
     
     if (q) {
       where.OR = [
@@ -75,12 +78,12 @@ router.get('/', async (req, res: Response) => {
 });
 
 // Get item by ID (public)
-router.get('/:id', async (req, res: Response) => {
+router.get('/:id', resolveOrganizationPublic, async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
 
-    const item = await prisma.item.findUnique({
-      where: { id },
+    const item = await prisma.item.findFirst({
+      where: { id, organizationId: req.organization!.id },
       include: { category: true },
     });
 
@@ -100,8 +103,8 @@ router.get('/:id', async (req, res: Response) => {
   }
 });
 
-// Create item (admin only)
-router.post('/', authenticate, requireAdmin, async (req: AuthRequest, res: Response) => {
+// Create item (org manager+)
+router.post('/', authenticate, withOrganizationContext(), requireOrgRole('MANAGER'), async (req: AuthRequest, res: Response) => {
   try {
     const { name, description, categoryId, imageUrl } = req.body as CreateItemInput;
 
@@ -112,8 +115,18 @@ router.post('/', authenticate, requireAdmin, async (req: AuthRequest, res: Respo
       });
     }
 
+    // Ensure category belongs to organization
+    const category = await prisma.category.findFirst({
+      where: { id: categoryId, organizationId: req.organization!.id },
+    });
+
+    if (!category) {
+      return res.status(404).json({ success: false, error: 'Category not found in this organization' });
+    }
+
     const item = await prisma.item.create({
       data: {
+        organizationId: req.organization!.id,
         name,
         description: description || null,
         categoryId,
@@ -135,8 +148,8 @@ router.post('/', authenticate, requireAdmin, async (req: AuthRequest, res: Respo
   }
 });
 
-// Update item (admin only)
-router.patch('/:id', authenticate, requireAdmin, async (req: AuthRequest, res: Response) => {
+// Update item (org manager+)
+router.patch('/:id', authenticate, withOrganizationContext(), requireOrgRole('MANAGER'), async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     const { name, description, categoryId, status, imageUrl } = req.body as UpdateItemInput;
@@ -147,6 +160,21 @@ router.patch('/:id', authenticate, requireAdmin, async (req: AuthRequest, res: R
     if (categoryId) updateData.categoryId = categoryId;
     if (status) updateData.status = status;
     if (imageUrl !== undefined) updateData.imageUrl = imageUrl || null;
+
+    const existing = await prisma.item.findUnique({ where: { id } });
+
+    if (!existing || existing.organizationId !== req.organization!.id) {
+      return res.status(404).json({ success: false, error: 'Item not found in this organization' });
+    }
+
+    if (categoryId) {
+      const category = await prisma.category.findFirst({
+        where: { id: categoryId, organizationId: req.organization!.id },
+      });
+      if (!category) {
+        return res.status(404).json({ success: false, error: 'Category not found in this organization' });
+      }
+    }
 
     const item = await prisma.item.update({
       where: { id },
@@ -166,10 +194,15 @@ router.patch('/:id', authenticate, requireAdmin, async (req: AuthRequest, res: R
   }
 });
 
-// Delete item (admin only)
-router.delete('/:id', authenticate, requireAdmin, async (req: AuthRequest, res: Response) => {
+// Delete item (org admin+)
+router.delete('/:id', authenticate, withOrganizationContext(), requireOrgRole('ADMIN'), async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
+
+    const existing = await prisma.item.findUnique({ where: { id } });
+    if (!existing || existing.organizationId !== req.organization!.id) {
+      return res.status(404).json({ success: false, error: 'Item not found in this organization' });
+    }
 
     await prisma.item.delete({ where: { id } });
 

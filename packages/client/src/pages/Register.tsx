@@ -1,25 +1,40 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
+import { useOrganization } from '../context/OrganizationContext';
 
 export function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [organizationId, setOrganizationId] = useState<string | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
+  const { organizations, activeOrganizationId, isLoading: organizationsLoading } = useOrganization();
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  useEffect(() => {
+    if (!organizationId && activeOrganizationId) {
+      setOrganizationId(activeOrganizationId);
+    }
+  }, [activeOrganizationId, organizationId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (!organizationId) {
+      setError('Please select an organization to join');
+      return;
+    }
+
     setLoading(true);
 
     try {
-      await register(email, password, name);
+      await register(email, password, name, organizationId);
       navigate('/catalog');
     } catch (err: any) {
       setError(err.message || 'Registration failed');
@@ -80,9 +95,31 @@ export function Register() {
             />
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Organization
+            </label>
+            <select
+              value={organizationId ?? ''}
+              onChange={(e) => setOrganizationId(e.target.value || null)}
+              required
+              disabled={organizationsLoading || organizations.length === 0}
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              <option value="" disabled>
+                {organizationsLoading ? 'Loading organizations...' : 'Select an organization'}
+              </option>
+              {organizations.map((org) => (
+                <option key={org.id} value={org.id}>
+                  {org.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || organizationsLoading}
             className="w-full py-2 px-4 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-400"
           >
             {loading ? t('auth.register.registering') : t('auth.register.submit')}
