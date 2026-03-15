@@ -157,7 +157,8 @@
     "tabs": {
       "loans": "Loans",
       "items": "Items",
-      "users": "Users"
+      "users": "Users",
+      "categories": "Categories"
     },
     "loans": {
       "activeLoans": "Active Loans",
@@ -185,6 +186,19 @@
       "selectUser": "Select a user",
       "submit": "Checkout",
       "cancel": "Cancel"
+    },
+    "categories": {
+      "title": "Categories",
+      "addCategory": "Add Category",
+      "editCategory": "Edit Category",
+      "name": "Name",
+      "description": "Description",
+      "itemCount": "Items",
+      "actions": "Actions",
+      "edit": "Edit",
+      "delete": "Delete",
+      "create": "Create Category",
+      "update": "Update Category"
     }
   },
   "comments": {

@@ -139,6 +139,19 @@ class ApiClient {
     });
   }
 
+  async updateCategory(id: string, data: { name?: string; description?: string; parentId?: string }): Promise<Category> {
+    return this.request<Category>(`/categories/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteCategory(id: string): Promise<void> {
+    await this.request<void>(`/categories/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
   // Reservations
   async getReservations(userId?: string): Promise<Reservation[]> {
     const query = userId ? `?userId=${userId}` : '';

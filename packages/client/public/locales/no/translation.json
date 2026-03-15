@@ -157,7 +157,8 @@
     "tabs": {
       "loans": "Utlån",
       "items": "Verktøy",
-      "users": "Brukere"
+      "users": "Brukere",
+      "categories": "Kategorier"
     },
     "loans": {
       "activeLoans": "Aktive Utlån",

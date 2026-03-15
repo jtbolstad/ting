@@ -157,7 +157,8 @@
     "tabs": {
       "loans": "Udlån",
       "items": "Værktøjer",
-      "users": "Brugere"
+      "users": "Brugere",
+      "categories": "Kategorier"
     },
     "loans": {
       "activeLoans": "Aktive Udlån",

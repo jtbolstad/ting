@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { apiClient } from '../../api/client';
 import type { Item, Category, Loan, User } from '@ting/shared';
-
+
+
 export function AdminDashboard() {
   const { t } = useTranslation();
   const [loans, setLoans] = useState<Loan[]>([]);
@@ -11,7 +12,7 @@ export function AdminDashboard() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'loans' | 'items' | 'users'>('loans');
+  const [activeTab, setActiveTab] = useState<'loans' | 'items' | 'users' | 'categories'>('loans');
 
   // Checkout modal state
   const [showCheckout, setShowCheckout] = useState(false);
@@ -22,6 +23,12 @@ export function AdminDashboard() {
   // Add item modal state
   const [showAddItem, setShowAddItem] = useState(false);
   const [newItem, setNewItem] = useState({ name: '', description: '', categoryId: '' });
+
+  // Category modal state
+  const [showAddCategory, setShowAddCategory] = useState(false);
+  const [showEditCategory, setShowEditCategory] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [categoryForm, setCategoryForm] = useState({ name: '', description: '' });
 
   useEffect(() => {
     loadData();
@@ -97,6 +104,48 @@ export function AdminDashboard() {
     }
   };
 
+  const handleAddCategory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await apiClient.createCategory(categoryForm);
+      setShowAddCategory(false);
+      setCategoryForm({ name: '', description: '' });
+      await loadData();
+    } catch (error: any) {
+      alert(error.message || 'Failed to create category');
+    }
+  };
+
+  const handleEditCategory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingCategory) return;
+    try {
+      await apiClient.updateCategory(editingCategory.id, categoryForm);
+      setShowEditCategory(false);
+      setEditingCategory(null);
+      setCategoryForm({ name: '', description: '' });
+      await loadData();
+    } catch (error: any) {
+      alert(error.message || 'Failed to update category');
+    }
+  };
+
+  const openEditCategory = (category: Category) => {
+    setEditingCategory(category);
+    setCategoryForm({ name: category.name, description: category.description || '' });
+    setShowEditCategory(true);
+  };
+
+  const handleDeleteCategory = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this category? This will fail if the category has items.')) return;
+    try {
+      await apiClient.deleteCategory(id);
+      await loadData();
+    } catch (error: any) {
+      alert(error.message || 'Failed to delete category');
+    }
+  };
+
   if (loading) {
     return <div className="text-center py-12">{t('admin.loading')}</div>;
   }
@@ -159,6 +208,16 @@ export function AdminDashboard() {
             }`}
           >
             {t('admin.tabs.users')}
+          </button>
+          <button
+            onClick={() => setActiveTab('categories')}
+            className={`pb-4 px-1 ${
+              activeTab === 'categories'
+                ? 'border-b-2 border-indigo-600 text-indigo-600 font-medium'
+                : 'text-gray-500'
+            }`}
+          >
+            {t('admin.tabs.categories')}
           </button>
         </div>
       </div>
@@ -306,6 +365,57 @@ export function AdminDashboard() {
         </div>
       )}
 
+      {/* Categories Tab */}
+      {activeTab === 'categories' && (
+        <div>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold">{t('admin.categories.title')}</h2>
+            <button
+              onClick={() => setShowAddCategory(true)}
+              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+            >
+              {t('admin.categories.addCategory')}
+            </button>
+          </div>
+
+          <div className="bg-white rounded-lg shadow overflow-hidden">
+            <table className="min-w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('admin.categories.name')}</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('admin.categories.description')}</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('admin.categories.itemCount')}</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('admin.categories.actions')}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {categories.map(category => (
+                  <tr key={category.id}>
+                    <td className="px-6 py-4 font-medium">{category.name}</td>
+                    <td className="px-6 py-4 text-gray-600">{category.description || '-'}</td>
+                    <td className="px-6 py-4">{items.filter(i => i.categoryId === category.id).length}</td>
+                    <td className="px-6 py-4 space-x-3">
+                      <button
+                        onClick={() => openEditCategory(category)}
+                        className="text-indigo-600 hover:text-indigo-900"
+                      >
+                        {t('admin.categories.edit')}
+                      </button>
+                      <button
+                        onClick={() => handleDeleteCategory(category.id)}
+                        className="text-red-600 hover:text-red-900"
+                      >
+                        {t('admin.categories.delete')}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
       {/* Checkout Modal */}
       {showCheckout && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -423,6 +533,100 @@ export function AdminDashboard() {
                   className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
                 >
                   Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Add Category Modal */}
+      {showAddCategory && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full">
+            <h3 className="text-2xl font-bold mb-4">{t('admin.categories.addCategory')}</h3>
+            <form onSubmit={handleAddCategory} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">{t('admin.categories.name')}</label>
+                <input
+                  type="text"
+                  value={categoryForm.name}
+                  onChange={(e) => setCategoryForm({ ...categoryForm, name: e.target.value })}
+                  required
+                  className="w-full px-3 py-2 border rounded"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">{t('admin.categories.description')}</label>
+                <textarea
+                  value={categoryForm.description}
+                  onChange={(e) => setCategoryForm({ ...categoryForm, description: e.target.value })}
+                  className="w-full px-3 py-2 border rounded"
+                  rows={3}
+                />
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                >
+                  {t('admin.categories.create')}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowAddCategory(false)}
+                  className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                >
+                  {t('common.cancel')}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Category Modal */}
+      {showEditCategory && editingCategory && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full">
+            <h3 className="text-2xl font-bold mb-4">{t('admin.categories.editCategory')}</h3>
+            <form onSubmit={handleEditCategory} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">{t('admin.categories.name')}</label>
+                <input
+                  type="text"
+                  value={categoryForm.name}
+                  onChange={(e) => setCategoryForm({ ...categoryForm, name: e.target.value })}
+                  required
+                  className="w-full px-3 py-2 border rounded"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">{t('admin.categories.description')}</label>
+                <textarea
+                  value={categoryForm.description}
+                  onChange={(e) => setCategoryForm({ ...categoryForm, description: e.target.value })}
+                  className="w-full px-3 py-2 border rounded"
+                  rows={3}
+                />
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                >
+                  {t('admin.categories.update')}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowEditCategory(false);
+                    setEditingCategory(null);
+                    setCategoryForm({ name: '', description: '' });
+                  }}
+                  className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                >
+                  {t('common.cancel')}
                 </button>
               </div>
             </form>
