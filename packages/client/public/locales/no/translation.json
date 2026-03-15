@@ -8,6 +8,7 @@
     "addItem": "Legg til verktøy",
     "dashboard": "Min Oversikt",
     "admin": "Admin",
+    "terms": "Medlemsavtale",
     "login": "Logg Inn",
     "register": "Registrer",
     "logout": "Logg Ut",
@@ -44,7 +45,10 @@
       "registering": "Registrerer...",
       "submit": "Registrer",
       "hasAccount": "Har du allerede en konto?",
-      "loginLink": "Logg inn her"
+      "loginLink": "Logg inn her",
+      "acceptTerms": "Jeg har lest og aksepterer",
+      "termsLink": "Medlemsavtalen",
+      "termsRequired": "Du må akseptere medlemsavtalen for å registrere deg"
     }
   },
   "catalog": {

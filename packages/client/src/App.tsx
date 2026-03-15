@@ -11,6 +11,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { AddItem } from "./pages/AddItem";
 import { EditItem } from "./pages/EditItem";
 import { AdminDashboard } from "./pages/admin/AdminDashboard";
+import { TermsOfService } from "./pages/TermsOfService";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
               <Route path="/" element={<Navigate to="/catalog" replace />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/terms" element={<TermsOfService />} />
               <Route path="/catalog" element={<Catalog />} />
               <Route
                 path="/items/add"

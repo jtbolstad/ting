@@ -8,6 +8,7 @@
     "addItem": "Tilføj værktøj",
     "dashboard": "Min Oversigt",
     "admin": "Admin",
+    "terms": "Medlemsaftale",
     "login": "Log Ind",
     "register": "Tilmeld",
     "logout": "Log Ud",
@@ -44,7 +45,10 @@
       "registering": "Tilmelder...",
       "submit": "Tilmeld",
       "hasAccount": "Har du allerede en konto?",
-      "loginLink": "Log ind her"
+      "loginLink": "Log ind her",
+      "acceptTerms": "Jeg har læst og accepterer",
+      "termsLink": "Medlemsaftalen",
+      "termsRequired": "Du skal acceptere medlemsaftalen for at registrere dig"
     }
   },
   "catalog": {

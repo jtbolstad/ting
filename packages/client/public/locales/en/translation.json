@@ -8,6 +8,7 @@
     "addItem": "Add Item",
     "dashboard": "My Dashboard",
     "admin": "Admin",
+    "terms": "Terms of Service",
     "login": "Login",
     "register": "Register",
     "logout": "Logout",
@@ -44,7 +45,10 @@
       "registering": "Registering...",
       "submit": "Register",
       "hasAccount": "Already have an account?",
-      "loginLink": "Login here"
+      "loginLink": "Login here",
+      "acceptTerms": "I have read and accept the",
+      "termsLink": "Terms of Service",
+      "termsRequired": "You must accept the terms of service to register"
     }
   },
   "catalog": {
