@@ -5,6 +5,7 @@
   },
   "nav": {
     "catalog": "Catalog",
+    "addItem": "Add Item",
     "dashboard": "My Dashboard",
     "admin": "Admin",
     "login": "Login",
@@ -179,6 +180,40 @@
       "cancel": "Cancel"
     }
   },
+  "comments": {
+    "title": "Comments",
+    "placeholder": "Add a comment...",
+    "submit": "Post Comment",
+    "submitting": "Posting...",
+    "noComments": "No comments yet. Be the first to comment!",
+    "loginRequired": "Please log in to leave a comment.",
+    "confirmDelete": "Are you sure you want to delete this comment?",
+    "edited": "edited",
+    "justNow": "just now",
+    "minutesAgo": "{{count}} minute ago",
+    "minutesAgo_plural": "{{count}} minutes ago",
+    "hoursAgo": "{{count}} hour ago",
+    "hoursAgo_plural": "{{count}} hours ago",
+    "daysAgo": "{{count}} day ago",
+    "daysAgo_plural": "{{count}} days ago"
+  },
+  "addItem": {
+    "title": "Add New Item",
+    "description": "Share a tool or item with your community",
+    "name": "Item Name",
+    "namePlaceholder": "e.g., Electric Drill, Camping Tent, etc.",
+    "category": "Category",
+    "selectCategory": "Select a category",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Describe the item, its condition, and any important details...",
+    "imageUrl": "Image URL (optional)",
+    "imageUrlPlaceholder": "https://example.com/image.jpg",
+    "imageUrlHint": "Provide a link to an image of the item",
+    "submit": "Add Item",
+    "creating": "Adding...",
+    "selectOrganization": "Please select an organization first",
+    "loadCategoriesError": "Failed to load categories"
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",
@@ -200,7 +235,11 @@
     "emailInvalid": "Invalid email address",
     "reservationFailed": "Failed to create reservation",
     "cancelFailed": "Failed to cancel reservation",
-    "returnFailed": "Failed to return item"
+    "returnFailed": "Failed to return item",
+    "commentFailed": "Failed to post comment",
+    "updateCommentFailed": "Failed to update comment",
+    "deleteCommentFailed": "Failed to delete comment",
+    "createItemFailed": "Failed to create item"
   },
   "messages": {
     "reservationSuccess": "Reservation created successfully!",

@@ -5,6 +5,7 @@
   },
   "nav": {
     "catalog": "Katalog",
+    "addItem": "Legg til verktøy",
     "dashboard": "Min Oversikt",
     "admin": "Admin",
     "login": "Logg Inn",
@@ -179,6 +180,40 @@
       "cancel": "Avbryt"
     }
   },
+  "comments": {
+    "title": "Kommentarer",
+    "placeholder": "Legg til en kommentar...",
+    "submit": "Publiser kommentar",
+    "submitting": "Publiserer...",
+    "noComments": "Ingen kommentarer ennå. Vær den første til å kommentere!",
+    "loginRequired": "Vennligst logg inn for å legge igjen en kommentar.",
+    "confirmDelete": "Er du sikker på at du vil slette denne kommentaren?",
+    "edited": "redigert",
+    "justNow": "akkurat nå",
+    "minutesAgo": "{{count}} minutt siden",
+    "minutesAgo_plural": "{{count}} minutter siden",
+    "hoursAgo": "{{count}} time siden",
+    "hoursAgo_plural": "{{count}} timer siden",
+    "daysAgo": "{{count}} dag siden",
+    "daysAgo_plural": "{{count}} dager siden"
+  },
+  "addItem": {
+    "title": "Legg til nytt verktøy",
+    "description": "Del et verktøy eller gjenstand med fellesskapet",
+    "name": "Verktøynavn",
+    "namePlaceholder": "f.eks., Elektrisk drill, Campingtelt, osv.",
+    "category": "Kategori",
+    "selectCategory": "Velg en kategori",
+    "descriptionLabel": "Beskrivelse",
+    "descriptionPlaceholder": "Beskriv verktøyet, tilstand og viktige detaljer...",
+    "imageUrl": "Bilde-URL (valgfritt)",
+    "imageUrlPlaceholder": "https://eksempel.no/bilde.jpg",
+    "imageUrlHint": "Oppgi en lenke til et bilde av verktøyet",
+    "submit": "Legg til verktøy",
+    "creating": "Legger til...",
+    "selectOrganization": "Vennligst velg en organisasjon først",
+    "loadCategoriesError": "Kunne ikke laste kategorier"
+  },
   "common": {
     "loading": "Laster...",
     "error": "Feil",
@@ -200,7 +235,11 @@
     "emailInvalid": "Ugyldig e-postadresse",
     "reservationFailed": "Kunne ikke opprette reservasjon",
     "cancelFailed": "Kunne ikke avbryte reservasjon",
-    "returnFailed": "Kunne ikke levere inn verktøy"
+    "returnFailed": "Kunne ikke levere inn verktøy",
+    "commentFailed": "Kunne ikke publisere kommentar",
+    "updateCommentFailed": "Kunne ikke oppdatere kommentar",
+    "deleteCommentFailed": "Kunne ikke slette kommentar",
+    "createItemFailed": "Kunne ikke opprette verktøy"
   },
   "messages": {
     "reservationSuccess": "Reservasjon opprettet!",

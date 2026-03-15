@@ -17,3 +17,8 @@ export interface ApiError {
   code?: string;
   details?: Record<string, string[]>;
 }
+
+export interface ImageUploadResponse {
+  url: string;
+  thumbnail: string;
+}

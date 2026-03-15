@@ -6,10 +6,12 @@ import type {
   Category,
   Reservation,
   Loan,
+  Comment,
   PaginatedResponse,
   Organization,
   Membership,
   MemberGroup,
+  ImageUploadResponse,
 } from '@ting/shared';
 
 const API_BASE_URL = 'http://localhost:3001/api';
@@ -240,6 +242,56 @@ class ApiClient {
       method: 'POST',
       body: JSON.stringify({ membershipId }),
     });
+  }
+
+  // Uploads
+  async uploadImage(file: File): Promise<ImageUploadResponse> {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const token = localStorage.getItem('token');
+    const headers: HeadersInit = {
+      ...(token && { Authorization: `Bearer ${token}` }),
+      ...(this.activeOrganizationId && { 'X-Organization-Id': this.activeOrganizationId }),
+    };
+    // Note: Do NOT set Content-Type header - browser will set it with boundary
+
+    const response = await fetch(`${API_BASE_URL}/uploads/image`, {
+      method: 'POST',
+      headers,
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: 'Upload failed' }));
+      throw new Error(errorData.error || 'Failed to upload image');
+    }
+
+    const data = await response.json();
+    return data;
+  }
+
+  // Comments
+  async getItemComments(itemId: string): Promise<Comment[]> {
+    return this.request<Comment[]>(`/comments/item/${itemId}`);
+  }
+
+  async createComment(data: { itemId: string; content: string }): Promise<Comment> {
+    return this.request<Comment>('/comments', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateComment(id: string, content: string): Promise<Comment> {
+    return this.request<Comment>(`/comments/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ content }),
+    });
+  }
+
+  async deleteComment(id: string): Promise<void> {
+    return this.request<void>(`/comments/${id}`, { method: 'DELETE' });
   }
 }
 

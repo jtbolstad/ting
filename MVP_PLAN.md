@@ -82,8 +82,14 @@
 
 #### 2.1 Item Management
 
+- [x] Image upload functionality with optimization
+  - Users can upload images or provide external URLs
+  - Automatic resize to max 1200px width
+  - WebP conversion for better performance
+  - Thumbnail generation (300px)
+  - Organization-isolated storage
+  - 10MB max file size
 - [ ] Ensure item creation includes categoryId validation
-- [ ] Add image upload or URL validation
 - [ ] Status transitions (AVAILABLE → CHECKED_OUT → MAINTENANCE → RETIRED)
 - [ ] Item search works across name + description
 

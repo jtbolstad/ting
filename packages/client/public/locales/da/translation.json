@@ -5,6 +5,7 @@
   },
   "nav": {
     "catalog": "Katalog",
+    "addItem": "Tilføj værktøj",
     "dashboard": "Min Oversigt",
     "admin": "Admin",
     "login": "Log Ind",
@@ -179,6 +180,40 @@
       "cancel": "Annuller"
     }
   },
+  "comments": {
+    "title": "Kommentarer",
+    "placeholder": "Tilføj en kommentar...",
+    "submit": "Udgiv kommentar",
+    "submitting": "Udgiver...",
+    "noComments": "Ingen kommentarer endnu. Vær den første til at kommentere!",
+    "loginRequired": "Log venligst ind for at efterlade en kommentar.",
+    "confirmDelete": "Er du sikker på, at du vil slette denne kommentar?",
+    "edited": "redigeret",
+    "justNow": "lige nu",
+    "minutesAgo": "{{count}} minut siden",
+    "minutesAgo_plural": "{{count}} minutter siden",
+    "hoursAgo": "{{count}} time siden",
+    "hoursAgo_plural": "{{count}} timer siden",
+    "daysAgo": "{{count}} dag siden",
+    "daysAgo_plural": "{{count}} dage siden"
+  },
+  "addItem": {
+    "title": "Tilføj nyt værktøj",
+    "description": "Del et værktøj eller genstand med fællesskabet",
+    "name": "Værktøjsnavn",
+    "namePlaceholder": "f.eks., Elektrisk bor, Campingtelt, osv.",
+    "category": "Kategori",
+    "selectCategory": "Vælg en kategori",
+    "descriptionLabel": "Beskrivelse",
+    "descriptionPlaceholder": "Beskriv værktøjet, tilstand og vigtige detaljer...",
+    "imageUrl": "Billed-URL (valgfrit)",
+    "imageUrlPlaceholder": "https://eksempel.dk/billede.jpg",
+    "imageUrlHint": "Angiv et link til et billede af værktøjet",
+    "submit": "Tilføj værktøj",
+    "creating": "Tilføjer...",
+    "selectOrganization": "Vælg venligst en organisation først",
+    "loadCategoriesError": "Kunne ikke indlæse kategorier"
+  },
   "common": {
     "loading": "Indlæser...",
     "error": "Fejl",
@@ -200,7 +235,11 @@
     "emailInvalid": "Ugyldig e-mailadresse",
     "reservationFailed": "Kunne ikke oprette reservation",
     "cancelFailed": "Kunne ikke annullere reservation",
-    "returnFailed": "Kunne ikke levere værktøj ind"
+    "returnFailed": "Kunne ikke levere værktøj ind",
+    "commentFailed": "Kunne ikke udgive kommentar",
+    "updateCommentFailed": "Kunne ikke opdatere kommentar",
+    "deleteCommentFailed": "Kunne ikke slette kommentar",
+    "createItemFailed": "Kunne ikke oprette værktøj"
   },
   "messages": {
     "reservationSuccess": "Reservation oprettet!",

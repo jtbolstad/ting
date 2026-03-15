@@ -115,6 +115,16 @@ ting/
 - `POST /api/loans/checkout` - Checkout item
 - `POST /api/loans/:id/checkin` - Return item
 
+### Uploads
+- `POST /api/uploads/image` - Upload an image for an item
+  - **Request**: `multipart/form-data` with `image` field
+  - **Response**: `{ url: string, thumbnail: string }`
+  - **Requirements**: Authentication, organization context
+  - **Limits**: 10MB max, JPEG/PNG/GIF/WebP only
+  - **Processing**: Auto-resizes to max 1200px width, converts to WebP, generates 300px thumbnail
+  - **Storage**: Local filesystem at `server/uploads/{organizationId}/`
+  - **Access**: Images served publicly at `/uploads/{organizationId}/{filename}`
+
 ## Email Notifications
 
 The system can send automated email reminders for:

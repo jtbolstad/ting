@@ -1,2 +1,6 @@
 test.db
 test.db-journal
+
+# Uploaded files
+uploads/*
+!uploads/.gitkeep

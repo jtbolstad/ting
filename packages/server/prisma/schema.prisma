@@ -19,6 +19,7 @@ model User {
   loans        Loan[]
   memberships  Membership[]
   auditLogs    AuditLog[]    @relation("AuditActor")
+  comments     Comment[]
 }
 
 model Organization {
@@ -35,6 +36,7 @@ model Organization {
   items       Item[]
   reservations Reservation[]
   loans        Loan[]
+  comments     Comment[]
   auditLogs    AuditLog[]
 }
 
@@ -111,6 +113,7 @@ model Item {
   updatedAt      DateTime      @updatedAt
   reservations   Reservation[]
   loans          Loan[]
+  comments       Comment[]
 
   @@index([organizationId])
 }
@@ -146,6 +149,23 @@ model Loan {
   returnedAt     DateTime?
   organization   Organization @relation(fields: [organizationId], references: [id])
 
+  @@index([organizationId])
+}
+
+model Comment {
+  id             String       @id @default(cuid())
+  organizationId String
+  itemId         String
+  userId         String
+  content        String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  item         Item         @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id])
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@index([itemId])
   @@index([organizationId])
 }
 

@@ -103,8 +103,8 @@ router.get('/:id', resolveOrganizationPublic, async (req: AuthRequest, res: Resp
   }
 });
 
-// Create item (org manager+)
-router.post('/', authenticate, withOrganizationContext(), requireOrgRole('MANAGER'), async (req: AuthRequest, res: Response) => {
+// Create item (all authenticated organization members)
+router.post('/', authenticate, withOrganizationContext(), requireOrgRole('MEMBER'), async (req: AuthRequest, res: Response) => {
   try {
     const { name, description, categoryId, imageUrl } = req.body as CreateItemInput;
 
@@ -148,8 +148,8 @@ router.post('/', authenticate, withOrganizationContext(), requireOrgRole('MANAGE
   }
 });
 
-// Update item (org manager+)
-router.patch('/:id', authenticate, withOrganizationContext(), requireOrgRole('MANAGER'), async (req: AuthRequest, res: Response) => {
+// Update item (all authenticated organization members)
+router.patch('/:id', authenticate, withOrganizationContext(), requireOrgRole('MEMBER'), async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     const { name, description, categoryId, status, imageUrl } = req.body as UpdateItemInput;

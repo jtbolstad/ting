@@ -1,14 +1,16 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import { OrganizationProvider } from './context/OrganizationContext';
-import { ProtectedRoute } from './components/ProtectedRoute';
-import { Navbar } from './components/Navbar';
-import { Login } from './pages/Login';
-import { Register } from './pages/Register';
-import { Catalog } from './pages/Catalog';
-import { ItemDetail } from './pages/ItemDetail';
-import { Dashboard } from './pages/Dashboard';
-import { AdminDashboard } from './pages/admin/AdminDashboard';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import { OrganizationProvider } from "./context/OrganizationContext";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { Navbar } from "./components/Navbar";
+import { Login } from "./pages/Login";
+import { Register } from "./pages/Register";
+import { Catalog } from "./pages/Catalog";
+import { ItemDetail } from "./pages/ItemDetail";
+import { Dashboard } from "./pages/Dashboard";
+import { AddItem } from "./pages/AddItem";
+import { EditItem } from "./pages/EditItem";
+import { AdminDashboard } from "./pages/admin/AdminDashboard";
 
 function App() {
   return (
@@ -22,6 +24,22 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/catalog" element={<Catalog />} />
+              <Route
+                path="/items/add"
+                element={
+                  <ProtectedRoute>
+                    <AddItem />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/items/:id/edit"
+                element={
+                  <ProtectedRoute>
+                    <EditItem />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="/items/:id" element={<ItemDetail />} />
               <Route
                 path="/dashboard"

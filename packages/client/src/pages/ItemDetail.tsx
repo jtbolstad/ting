@@ -5,6 +5,7 @@ import { apiClient } from "../api/client";
 import { useAuth } from "../context/AuthContext";
 import { ItemAvailabilityCalendar } from "../components/calendar/ItemAvailabilityCalendar";
 import { AvailabilityTimeline } from "../components/calendar/AvailabilityTimeline";
+import { ItemComments } from "../components/ItemComments";
 import type { Item } from "@ting/shared";
 
 export function ItemDetail() {
@@ -119,6 +120,17 @@ export function ItemDetail() {
               <p className="text-gray-700 mb-8">
                 {item.description || t("item.noDescription")}
               </p>
+
+              {isAuthenticated && (
+                <div className="flex space-x-3">
+                  <button
+                    onClick={() => navigate(`/items/${id}/edit`)}
+                    className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
+                  >
+                    {t("item.edit")}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -235,6 +247,11 @@ export function ItemDetail() {
             )}
           </div>
         )}
+
+        {/* Comments Section */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <ItemComments itemId={id!} />
+        </div>
       </div>
     </div>
   );
