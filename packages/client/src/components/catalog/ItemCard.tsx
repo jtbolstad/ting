@@ -1,0 +1,50 @@
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import type { Item } from "@ting/shared";
+
+interface ItemCardProps {
+  item: Item;
+}
+
+export function ItemCard({ item }: ItemCardProps) {
+  const { t } = useTranslation();
+
+  return (
+    <Link
+      to={`/items/${item.id}`}
+      className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow overflow-hidden"
+    >
+      <div className="h-48 bg-gray-200 flex items-center justify-center">
+        {item.imageUrl ? (
+          <img
+            src={item.imageUrl}
+            alt={item.name}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <span className="text-gray-400 text-4xl">📦</span>
+        )}
+      </div>
+      <div className="p-4">
+        <h3 className="font-bold text-lg mb-1">{item.name}</h3>
+        <p className="text-sm text-gray-600 mb-2">
+          {item.category?.name
+            ? t(`categories.${item.category.name}`, item.category.name)
+            : ""}
+        </p>
+        <p className="text-sm text-gray-700 line-clamp-2">{item.description}</p>
+        <div className="mt-3">
+          <span
+            className={`inline-block px-2 py-1 text-xs rounded ${
+              item.status === "AVAILABLE"
+                ? "bg-green-100 text-green-800"
+                : "bg-red-100 text-red-800"
+            }`}
+          >
+            {t(`catalog.status.${item.status.toLowerCase()}`)}
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
+}
