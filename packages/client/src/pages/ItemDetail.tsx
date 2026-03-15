@@ -138,7 +138,7 @@ export function ItemDetail() {
         {/* Availability Timeline */}
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold mb-4">
-            Availability (Next 60 Days)
+            {t("item.availability.title", { days: 60 })}
           </h2>
           <AvailabilityTimeline itemId={id!} daysAhead={60} />
         </div>
@@ -147,13 +147,17 @@ export function ItemDetail() {
         {item.status === "AVAILABLE" && (
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">Reserve This Item</h2>
+              <h2 className="text-xl font-semibold">
+                {t("item.reserve.title")}
+              </h2>
               <button
                 type="button"
                 onClick={() => setShowCalendar(!showCalendar)}
                 className="text-indigo-600 hover:underline text-sm"
               >
-                {showCalendar ? "Hide Calendar" : "Show Calendar"}
+                {showCalendar
+                  ? t("item.reserve.hideCalendar")
+                  : t("item.reserve.showCalendar")}
               </button>
             </div>
 

@@ -18,6 +18,10 @@
 - ✅ Email reminder service
 - ✅ Audit logging system
 - ✅ Test seed data for Oslo & Bergen organizations
+- ✅ Image upload API with multer and sharp
+- ✅ Image processing (resize, WebP conversion, thumbnails)
+- ✅ Static file serving for uploads
+- ✅ Organization-isolated image storage
 
 ### Frontend (Client)
 
@@ -29,6 +33,13 @@
 - ✅ LanguageSwitcher component
 - ✅ Basic pages: Login, Register, Catalog, ItemDetail, Dashboard, AdminDashboard
 - ✅ Responsive design with TailwindCSS
+- ✅ ImageInput component (upload or URL modes)
+- ✅ Image preview with upload progress
+- ✅ Vite proxy configuration for image serving
+- ✅ Register page with organization selection
+- ✅ All pages scoped to active organization context
+- ✅ Calendar components (ItemAvailabilityCalendar, DateRangePicker, AvailabilityTimeline)
+- ✅ Calendar integrated into ItemDetail page
 
 ### Testing
 
@@ -45,21 +56,21 @@
 
 #### 1.1 Update Registration Flow
 
-- [ ] Add organization selection to Register page
+- ✅ Add organization selection to Register page
   - Show list of public organizations
   - Or allow creating a new organization
   - Default: join existing organization as MEMBER
-- [ ] Update register API call to include `organizationId`
-- [ ] Update seed data to match new flow
+- ✅ Update register API call to include `organizationId`
+- ✅ Update seed data to match new flow
 
 #### 1.2 Fix API Calls with Organization Context
 
-- [ ] Audit all `apiClient` calls in components
-- [ ] Ensure `organizationId` is passed where required
-- [ ] Update Catalog page to use active organization
-- [ ] Update ItemDetail page to use active organization
-- [ ] Update Dashboard to filter by active organization
-- [ ] Update AdminDashboard to scope by active organization
+- ✅ Audit all `apiClient` calls in components
+- ✅ Ensure `organizationId` is passed where required (via X-Organization-Id header)
+- ✅ Update Catalog page to use active organization
+- ✅ Update ItemDetail page to use active organization
+- ✅ Update Dashboard to filter by active organization
+- ✅ Update AdminDashboard to scope by active organization
 
 #### 1.3 Organization Isolation Testing
 
@@ -82,7 +93,7 @@
 
 #### 2.1 Item Management
 
-- [x] Image upload functionality with optimization
+- ✅ Image upload functionality with optimization
   - Users can upload images or provide external URLs
   - Automatic resize to max 1200px width
   - WebP conversion for better performance
@@ -104,22 +115,22 @@
 
 **See detailed spec:** [CALENDAR_SPEC.md](CALENDAR_SPEC.md)
 
-- [ ] Install calendar dependencies (react-big-calendar, date-fns, react-day-picker)
-- [ ] Create `ItemAvailabilityCalendar` component
+- ✅ Install calendar dependencies (react-big-calendar, date-fns, react-day-picker)
+- ✅ Create `ItemAvailabilityCalendar` component
   - Visual month view showing available/blocked dates
   - Fetch and display existing reservations + active loans
   - Color-code: available (green), reserved (amber), checked out (red)
-- [ ] Create `DateRangePicker` component
+- ✅ Create `DateRangePicker` component
   - Replace basic date inputs with calendar picker
   - Show availability feedback in real-time
   - Prevent selecting blocked dates
-- [ ] Create `AvailabilityTimeline` component
+- ✅ Create `AvailabilityTimeline` component
   - Horizontal timeline (60 days ahead)
   - Show upcoming reservations/loans as blocks
   - Compact version for catalog cards
-- [ ] Integrate calendar into ItemDetail page
+- ✅ Integrate calendar into ItemDetail page
   - Add availability calendar above reservation form
-  - Use DateRangePicker for date selection
+  - ~~Use DateRangePicker for date selection~~ (using basic inputs + calendar for now)
   - Show conflicts with helpful messages
 - [ ] Create `ReservationCalendar` for Dashboard
   - Month/week view of user's reservations
@@ -131,24 +142,24 @@
 - [ ] Mobile-responsive calendar design
 - [ ] Translations for calendar UI (en, no, da)
 
-**Estimated time:** 11 hours (see CALENDAR_SPEC.md for breakdown)
+**Estimated time remaining:** 4-5 hours
 
 #### 2.4 Loan Checkout/Check-in
 
-- [ ] Checkout flow in AdminDashboard
-- [ ] Set due date based on organization policy (default: 7 days)
-- [ ] Check-in flow (return item, update status)
-- [ ] Overdue loan highlighting
+- ✅ Checkout flow in AdminDashboard
+- [ ] Set due date based on organization policy (default: 7 days) - _Manual date entry only_
+- ✅ Check-in flow (return item, update status)
+- ✅ Overdue loan highlighting
 - [ ] Block checkout if item has active reservation
 
 #### 2.5 User Dashboard
 
-- [ ] Show user's active loans with due dates
-- [ ] Show user's upcoming reservations
-- [ ] Show overdue status prominently
-- [ ] Quick actions: extend loan, cancel reservation
+- ✅ Show user's active loans with due dates
+- ✅ Show user's upcoming reservations
+- ✅ Show overdue status prominently
+- [ ] Quick actions: extend loan, cancel reservation - _Only cancel implemented_
 - [ ] Show membership info for active organization
-- [ ] Calendar view tab (from 2.3)
+- [ ] Calendar view tab (from 2.3) - _Components built, not integrated_
 
 ---
 
@@ -156,22 +167,22 @@
 
 #### 3.1 Admin Dashboard Enhancements
 
-- [ ] Stats cards: total items, active loans, overdue loans, members
+- ✅ Stats cards: total items, active loans, overdue loans, members - _Missing member count_
 - [ ] Filter loans by status (active, returned, overdue)
 - [ ] Filter items by category and status
-- [ ] User management: view members, change roles
-- [ ] Quick checkout from admin panel
+- [ ] User management: view members, change roles - _Users tab exists, role change endpoint exists_
+- ✅ Quick checkout from admin panel
 
 #### 3.2 Category Management
 
-- [ ] Create/edit/delete categories
-- [ ] Move items between categories
+- ✅ Create/edit/delete categories - _Backend endpoints complete_
+- ✅ Move items between categories - _Via edit item form_
 - [ ] Category hierarchy (optional for MVP)
 
 #### 3.3 Organization Management (for OWNER/ADMIN)
 
 - [ ] View/edit organization details
-- [ ] Manage member groups
+- [ ] Manage member groups - _Backend endpoints exist_
 - [ ] Assign members to groups
 - [ ] Invite new members (email-based)
 
@@ -181,7 +192,9 @@
 
 #### 4.1 i18n Coverage
 
-- [ ] Translate all pages to Norwegian and Danish
+- ✅ Translate image upload UI (en, no, da)
+- ✅ Translate editItem page (en, no, da)
+- [ ] Translate all remaining pages to Norwegian and Danish
 - [ ] Translate error messages
 - [ ] Translate email templates
 - [ ] Test language switching across all pages
@@ -213,27 +226,26 @@
 
 ### Must Have (P0)
 
-- [x] Multi-tenant architecture
-- [ ] User registration with organization
-- [ ] User login
-- [ ] Organization switcher (for multi-org members)
-- [ ] Browse items by organization
-- [ ] **Visual availability calendar for items** ⭐ NEW
-- [ ] **Calendar-based date picker for reservations** ⭐ NEW
-- [ ] View item details
-- [ ] Reserve items (with conflict detection)
-- [ ] User dashboard (my loans, my reservations)
+- ✅ Multi-tenant architecture
+- ✅ User registration with organization
+- ✅ User login
+- ✅ Organization switcher (for multi-org members)
+- ✅ Browse items by organization
+- ✅ **Visual availability calendar for items** ⭐ NEW
+- [ ] **Calendar-based date picker for reservations** ⭐ NEW (component built, needs integration)
+- ✅ View item details
+- ✅ Reserve items (with conflict detection)
+- ✅ User dashboard (my loans, my reservations)
 - [ ] Admin: Checkout items
 - [ ] Admin: Check-in items
-- [ ] Admin: Add/edit/delete items
+- ✅ Admin: Add/edit/delete items
 - [ ] Admin: View all loans
-- [ ] Data isolation between organizations
+- ✅ Data isolation between organizations
 
-### Sh**Calendar view in user dashboard** ⭐ NEW
+### Should Have (P1)
 
+- [ ] **Calendar view in user dashboard** ⭐ NEW
 - [ ] **Availability timeline on catalog cards** ⭐ NEW
-- [ ] ould Have (P1)
-
 - [ ] Email reminders (due tomorrow, overdue)
 - [ ] Admin: Manage categories
 - [ ] Admin: View users
@@ -245,11 +257,11 @@
 
 ### Nice to Have (P2)
 
+- ✅ Item images with upload
 - [ ] Admin: Promote users to MANAGER/ADMIN
 - [ ] Member groups with permissions
 - [ ] Reservation approval workflow
 - [ ] Extend loan duration
-- [ ] Item images
 - [ ] Late fees calculation
 - [ ] Export reports (CSV)
 - [ ] Audit log viewer
@@ -294,7 +306,7 @@ Before declaring MVP complete:
 
 ### V1.1 - Enhanced Tools
 
-- Photo upload for items with image optimization
+- ✅ Photo upload for items with image optimization (COMPLETED - moved to MVP)
 - QR code generation for items
 - Barcode scanning for quick checkout
 - Item maintenance history
@@ -330,18 +342,16 @@ Before declaring MVP complete:
 
 1. **Prisma client sync** - Need to regenerate after stopping dev servers
 2. **Category filter test failing** - Multi-tenant context issue in e2e
-3. **Register flow** - Needs organization selection UI
-4. **API client** - Some calls missing organizationId parameter
+3. ~~**Register flow** - Needs organization selection UI~~ ✅ FIXED
+4. ~~**API client** - Some calls missing organizationId parameter~~ ✅ FIXED (uses header)
 5. **Email service** - Only logs to console in dev mode
 
-### Option A: Multi-tenant Core (2 hours)
+### Next Steps
 
-1. **Fix Registration** (30 min)
-   - Add org selector dropdown to Register page
-   - Default to Oslo or Bergen from seed
-2. **Fix Catalog** (20 min)
-   - Ensure items filtered by active organization
-   - Add organization name to page header
+#### Option A: Complete Multi-tenant Testing (1-2 hours)
+
+1. ~~**Fix Registration**~~ ✅ DONE
+2. ~~**Fix Catalog**~~ ✅ DONE
 3. **Fix E2E Tests** (45 min)
    - Add org context to test setup
    - Update selectors for multi-org UI

@@ -87,7 +87,13 @@
     "endDate": "Sluttdato",
     "loginToReserve": "Vennligst logg inn for å reservere dette verktøyet",
     "edit": "Rediger Verktøy",
+    "availability": {
+      "title": "Tilgjengelighet (Neste {{days}} Dager)"
+    },
     "reserve": {
+      "title": "Reserver Dette Verktøyet",
+      "showCalendar": "Vis Kalender",
+      "hideCalendar": "Skjul Kalender",
       "loginRequired": "Vennligst logg inn for å reservere dette verktøyet.",
       "loginLink": "Logg inn her",
       "startDate": "Startdato",
@@ -265,5 +271,40 @@
     "confirmCancel": "Er du sikker på at du vil avbryte denne reservasjonen?",
     "confirmReturn": "Bekreft innlevering?",
     "confirmDelete": "Er du sikker på at du vil slette dette verktøyet?"
+  },
+  "calendar": {
+    "loading": "Laster tilgjengelighet...",
+    "availableNow": "Tilgjengelig nå",
+    "nextAvailable": "Neste tilgjengelig: {{date}}",
+    "fullyBooked": "Fulltbestilt ({{days}} dager)",
+    "nextDays": "Neste {{days}} dager",
+    "today": "I dag",
+    "available": "Tilgjengelig",
+    "reserved": "Reservert",
+    "checkedOut": "Utlånt",
+    "selected": "Valgt",
+    "checkingAvailability": "Sjekker tilgjengelighet...",
+    "availableForDates": "Tilgjengelig for valgte datoer",
+    "notAvailable": "Ikke tilgjengelig - konflikt med eksisterende reservasjon eller utlån",
+    "clickToStart": "Klikk en dato for å starte, deretter klikk en annen dato for å fullføre valget",
+    "grayedOutInfo": "Utgråede datoer er allerede reservert eller utlånt",
+    "maxBooking": "Maksimal booking: {{days}} dager frem",
+    "completeSelection": "Klikk en annen tilgjengelig dato for å fullføre valget",
+    "weekdays": {
+      "sun": "Søn",
+      "mon": "Man",
+      "tue": "Tir",
+      "wed": "Ons",
+      "thu": "Tor",
+      "fri": "Fre",
+      "sat": "Lør"
+    },
+    "legend": {
+      "available": "Tilgjengelig",
+      "reserved": "Reservert",
+      "checkedOut": "Utlånt",
+      "selected": "Valgt",
+      "today": "I dag"
+    }
   }
 }

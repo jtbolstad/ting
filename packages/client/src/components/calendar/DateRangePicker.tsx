@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { DayPicker, DateRange } from "react-day-picker";
 import "react-day-picker/dist/style.css";
+import { useTranslation } from "react-i18next";
 import { apiClient } from "../../api/client";
 
 interface DateRangePickerProps {
@@ -16,6 +17,7 @@ export function DateRangePicker({
   minDate,
   maxDate,
 }: DateRangePickerProps) {
+  const { t } = useTranslation();
   const [range, setRange] = useState<DateRange | undefined>();
 
   const [disabledDays, setDisabledDays] = useState<Date[]>([]);
@@ -89,12 +91,10 @@ export function DateRangePicker({
       );
 
       if (result.available) {
-        setAvailabilityMessage("✅ Available for selected dates");
+        setAvailabilityMessage("✅ " + t("calendar.availableForDates"));
         onSelect(start, end);
       } else {
-        setAvailabilityMessage(
-          "❌ Not available - conflicts with existing reservation or loan",
-        );
+        setAvailabilityMessage("❌ " + t("calendar.notAvailable"));
       }
     } catch (error: any) {
       setAvailabilityMessage(`⚠️ ${error.message}`);
@@ -137,7 +137,7 @@ export function DateRangePicker({
 
       {checking && (
         <div className="text-center text-sm text-gray-600">
-          Checking availability...
+          {t("calendar.checkingAvailability")}
         </div>
       )}
 
@@ -154,17 +154,16 @@ export function DateRangePicker({
       )}
 
       <div className="text-xs text-gray-500 space-y-1">
+        <p>• {t("calendar.clickToStart")}</p>
+        <p>• {t("calendar.grayedOutInfo")}</p>
         <p>
-          • Click a date to start, then click another date to complete selection
-        </p>
-        <p>• Grayed out dates are already reserved or checked out</p>
-        <p>
-          • Maximum booking:{" "}
-          {Math.floor(
-            (effectiveMaxDate.getTime() - effectiveMinDate.getTime()) /
-              (1000 * 60 * 60 * 24),
-          )}{" "}
-          days ahead
+          •{" "}
+          {t("calendar.maxBooking", {
+            days: Math.floor(
+              (effectiveMaxDate.getTime() - effectiveMinDate.getTime()) /
+                (1000 * 60 * 60 * 24),
+            ),
+          })}
         </p>
       </div>
     </div>

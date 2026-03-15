@@ -87,7 +87,13 @@
     "endDate": "End Date",
     "loginToReserve": "Please log in to reserve this item",
     "edit": "Edit Item",
+    "availability": {
+      "title": "Availability (Next {{days}} Days)"
+    },
     "reserve": {
+      "title": "Reserve This Item",
+      "showCalendar": "Show Calendar",
+      "hideCalendar": "Hide Calendar",
       "loginRequired": "Please log in to reserve this item.",
       "loginLink": "Log in here",
       "startDate": "Start Date",
@@ -265,5 +271,40 @@
     "confirmCancel": "Are you sure you want to cancel this reservation?",
     "confirmReturn": "Confirm item return?",
     "confirmDelete": "Are you sure you want to delete this item?"
+  },
+  "calendar": {
+    "loading": "Loading availability...",
+    "availableNow": "Available now",
+    "nextAvailable": "Next available: {{date}}",
+    "fullyBooked": "Fully booked ({{days}} days)",
+    "nextDays": "Next {{days}} days",
+    "today": "Today",
+    "available": "Available",
+    "reserved": "Reserved",
+    "checkedOut": "Checked Out",
+    "selected": "Selected",
+    "checkingAvailability": "Checking availability...",
+    "availableForDates": "Available for selected dates",
+    "notAvailable": "Not available - conflicts with existing reservation or loan",
+    "clickToStart": "Click a date to start, then click another date to complete selection",
+    "grayedOutInfo": "Grayed out dates are already reserved or checked out",
+    "maxBooking": "Maximum booking: {{days}} days ahead",
+    "completeSelection": "Click another available date to complete your selection",
+    "weekdays": {
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat"
+    },
+    "legend": {
+      "available": "Available",
+      "reserved": "Reserved",
+      "checkedOut": "Checked Out",
+      "selected": "Selected",
+      "today": "Today"
+    }
   }
 }

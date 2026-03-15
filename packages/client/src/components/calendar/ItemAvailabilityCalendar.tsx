@@ -11,6 +11,7 @@ import {
   startOfWeek,
   endOfWeek,
 } from "date-fns";
+import { useTranslation } from "react-i18next";
 import { apiClient } from "../../api/client";
 import type { Reservation, Loan } from "@ting/shared";
 
@@ -35,6 +36,7 @@ export function ItemAvailabilityCalendar({
   selectedStart,
   selectedEnd,
 }: ItemAvailabilityCalendarProps) {
+  const { t } = useTranslation();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loans, setLoans] = useState<Loan[]>([]);
@@ -185,12 +187,12 @@ export function ItemAvailabilityCalendar({
 
         {/* Weekday Headers */}
         <div className="grid grid-cols-7 gap-1 mb-2">
-          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+          {["sun", "mon", "tue", "wed", "thu", "fri", "sat"].map((day) => (
             <div
               key={day}
               className="text-center text-xs font-medium text-gray-500 py-2"
             >
-              {day}
+              {t(`calendar.weekdays.${day}`)}
             </div>
           ))}
         </div>
@@ -242,12 +244,12 @@ export function ItemAvailabilityCalendar({
                 `}
                 title={
                   status.type === "loan"
-                    ? "Checked out"
+                    ? t("calendar.legend.checkedOut")
                     : status.type === "reservation"
-                      ? "Reserved"
+                      ? t("calendar.legend.reserved")
                       : status.available
-                        ? "Available"
-                        : "Not available"
+                        ? t("calendar.legend.available")
+                        : ""
                 }
               >
                 {format(day, "d")}
@@ -260,29 +262,29 @@ export function ItemAvailabilityCalendar({
         <div className="mt-4 flex flex-wrap gap-4 text-xs">
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-green-50 border border-green-200 rounded"></div>
-            <span>Available</span>
+            <span>{t("calendar.legend.available")}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-amber-100 border border-amber-200 rounded"></div>
-            <span>Reserved</span>
+            <span>{t("calendar.legend.reserved")}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-red-100 border border-red-200 rounded"></div>
-            <span>Checked Out</span>
+            <span>{t("calendar.legend.checkedOut")}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-indigo-500 rounded"></div>
-            <span>Selected</span>
+            <span>{t("calendar.legend.selected")}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 ring-2 ring-blue-500 rounded"></div>
-            <span>Today</span>
+            <span>{t("calendar.legend.today")}</span>
           </div>
         </div>
 
         {selectingStart && (
           <div className="mt-3 p-2 bg-blue-50 border border-blue-200 rounded text-sm text-blue-800">
-            Click another available date to complete your selection
+            {t("calendar.completeSelection")}
           </div>
         )}
       </div>
@@ -292,7 +294,7 @@ export function ItemAvailabilityCalendar({
   if (loading) {
     return (
       <div className="p-8 text-center text-gray-500">
-        Loading availability...
+        {t("calendar.loading")}
       </div>
     );
   }
