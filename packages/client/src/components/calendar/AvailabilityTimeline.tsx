@@ -200,7 +200,7 @@ export function AvailabilityTimeline({
         </div>
 
         {/* Legend and status */}
-        <div className="flex items-center justify-between text-xs text-gray-600">
+        <div className="flex items-center justify-center text-xs text-gray-600">
           <div className="flex gap-3">
             <div className="flex items-center gap-1">
               <div className="w-3 h-3 bg-green-50 border border-green-200 rounded"></div>

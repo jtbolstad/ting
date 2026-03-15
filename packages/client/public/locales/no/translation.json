@@ -59,6 +59,7 @@
     "status": {
       "available": "Tilgjengelig",
       "checkedOut": "Utlånt",
+      "checked_out": "Utlånt",
       "maintenance": "Vedlikehold",
       "retired": "Utgått"
     }
@@ -88,12 +89,12 @@
     "loginToReserve": "Vennligst logg inn for å reservere dette verktøyet",
     "edit": "Rediger Verktøy",
     "availability": {
-      "title": "Tilgjengelighet (Neste {{days}} Dager)"
+      "title": "Tilgjengelighet (neste {{days}} dager)"
     },
     "reserve": {
-      "title": "Reserver Dette Verktøyet",
-      "showCalendar": "Vis Kalender",
-      "hideCalendar": "Skjul Kalender",
+      "title": "Reserver dette verktøyet",
+      "showCalendar": "Vis kalender",
+      "hideCalendar": "Skjul kalender",
       "loginRequired": "Vennligst logg inn for å reservere dette verktøyet.",
       "loginLink": "Logg inn her",
       "startDate": "Startdato",
@@ -103,12 +104,12 @@
     }
   },
   "dashboard": {
-    "title": "Min Oversikt",
+    "title": "Min oversikt",
     "loading": "Laster oversikt...",
     "confirmCancel": "Er du sikker på at du vil avbryte denne reservasjonen?",
     "confirmReturn": "Bekreft innlevering?",
-    "currentLoans": "Aktive Utlån",
-    "myReservations": "Mine Reservasjoner",
+    "currentLoans": "Aktive utlån",
+    "myReservations": "Mine reservasjoner",
     "noLoans": "Ingen aktive utlån",
     "noReservations": "Ingen aktive reservasjoner",
     "item": "Verktøy",
@@ -120,7 +121,7 @@
     "actions": "Handlinger",
     "loanHistory": "Utlånshistorikk",
     "loans": {
-      "title": "Aktive Utlån",
+      "title": "Aktive utlån",
       "noLoans": "Du har ingen aktive utlån",
       "item": "Verktøy",
       "checkedOut": "Lånt ut",
@@ -130,7 +131,7 @@
       "actions": "Handlinger"
     },
     "reservations": {
-      "title": "Mine Reservasjoner",
+      "title": "Mine reservasjoner",
       "noReservations": "Du har ingen aktive reservasjoner",
       "item": "Verktøy",
       "startDate": "Startdato",
@@ -149,9 +150,9 @@
   "admin": {
     "title": "Administrasjonspanel",
     "stats": {
-      "totalItems": "Totalt Verktøy",
+      "totalItems": "Totalt verktøy",
       "available": "Tilgjengelig",
-      "activeLoans": "Aktive Utlån",
+      "activeLoans": "Aktive utlån",
       "overdue": "Forsinkede"
     },
     "tabs": {
@@ -161,31 +162,59 @@
       "categories": "Kategorier"
     },
     "loans": {
-      "activeLoans": "Aktive Utlån",
-      "checkoutItem": "Lån Ut Verktøy",
-      "checkin": "Lever Inn"
+      "title": "Aktive utlån",
+      "checkoutItem": "Lån ut verktøy",
+      "item": "Verktøy",
+      "user": "Bruker",
+      "checkedOut": "Lånt ut",
+      "dueDate": "Forfallsdato",
+      "actions": "Handlinger",
+      "checkin": "Lever inn",
+      "confirmCheckin": "Bekreft innlevering?"
     },
     "items": {
       "title": "Verktøy",
-      "addItem": "Legg Til Verktøy",
-      "newItem": "Legg Til Nytt Verktøy",
+      "addItem": "Legg til verktøy",
+      "newItem": "Legg til nytt verktøy",
       "name": "Navn",
       "category": "Kategori",
       "description": "Beskrivelse",
+      "status": "Status",
+      "actions": "Handlinger",
       "selectCategory": "Velg en kategori",
-      "delete": "Slett"
+      "delete": "Slett",
+      "confirmDelete": "Er du sikker på at du vil slette dette verktøyet?"
     },
     "users": {
       "title": "Brukere",
+      "name": "Navn",
+      "email": "E-post",
       "role": "Rolle",
-      "joined": "Ble Medlem"
+      "joined": "Ble medlem"
     },
     "checkout": {
-      "title": "Lån Ut Verktøy",
+      "title": "Lån ut verktøy",
+      "itemLabel": "Verktøy",
+      "userLabel": "Bruker",
+      "dueDate": "Forfallsdato",
       "selectItem": "Velg et verktøy",
       "selectUser": "Velg en bruker",
-      "submit": "Lån Ut",
+      "submit": "Lån ut",
       "cancel": "Avbryt"
+    },
+    "categories": {
+      "title": "Kategorier",
+      "addCategory": "Legg til kategori",
+      "editCategory": "Rediger kategori",
+      "name": "Navn",
+      "description": "Beskrivelse",
+      "itemCount": "Verktøy",
+      "actions": "Handlinger",
+      "edit": "Rediger",
+      "delete": "Slett",
+      "create": "Opprett kategori",
+      "update": "Oppdater kategori",
+      "confirmDelete": "Er du sikker på at du vil slette denne kategorien? Dette vil feile hvis kategorien har verktøy."
     }
   },
   "comments": {
@@ -223,7 +252,7 @@
     "loadCategoriesError": "Kunne ikke laste kategorier"
   },
   "editItem": {
-    "title": "Rediger Verktøy",
+    "title": "Rediger verktøy",
     "description": "Oppdater verktøydetaljer",
     "name": "Verktøynavn",
     "category": "Kategori",
@@ -232,7 +261,7 @@
     "descriptionLabel": "Beskrivelse",
     "descriptionPlaceholder": "Beskriv verktøyet, tilstand og viktige detaljer...",
     "imageUrl": "Bilde",
-    "submit": "Lagre Endringer",
+    "submit": "Lagre endringer",
     "updating": "Oppdaterer...",
     "selectOrganization": "Vennligst velg en organisasjon først",
     "loadError": "Kunne ikke laste verktøy"

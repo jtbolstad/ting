@@ -161,9 +161,15 @@
       "categories": "Kategorier"
     },
     "loans": {
-      "activeLoans": "Aktive Udlån",
+      "title": "Aktive Udlån",
       "checkoutItem": "Udlån Værktøj",
-      "checkin": "Lever Ind"
+      "item": "Værktøj",
+      "user": "Bruger",
+      "checkedOut": "Udlånt",
+      "dueDate": "Forfaldsdato",
+      "actions": "Handlinger",
+      "checkin": "Lever Ind",
+      "confirmCheckin": "Bekræft indlevering?"
     },
     "items": {
       "title": "Værktøjer",
@@ -172,20 +178,42 @@
       "name": "Navn",
       "category": "Kategori",
       "description": "Beskrivelse",
+      "status": "Status",
+      "actions": "Handlinger",
       "selectCategory": "Vælg en kategori",
-      "delete": "Slet"
+      "delete": "Slet",
+      "confirmDelete": "Er du sikker på, at du vil slette dette værktøj?"
     },
     "users": {
       "title": "Brugere",
+      "name": "Navn",
+      "email": "E-mail",
       "role": "Rolle",
       "joined": "Blev Medlem"
     },
     "checkout": {
       "title": "Udlån Værktøj",
+      "itemLabel": "Værktøj",
+      "userLabel": "Bruger",
+      "dueDate": "Forfaldsdato",
       "selectItem": "Vælg et værktøj",
       "selectUser": "Vælg en bruger",
       "submit": "Udlån",
       "cancel": "Annuller"
+    },
+    "categories": {
+      "title": "Kategorier",
+      "addCategory": "Tilføj Kategori",
+      "editCategory": "Rediger Kategori",
+      "name": "Navn",
+      "description": "Beskrivelse",
+      "itemCount": "Værktøjer",
+      "actions": "Handlinger",
+      "edit": "Rediger",
+      "delete": "Slet",
+      "create": "Opret Kategori",
+      "update": "Opdater Kategori",
+      "confirmDelete": "Er du sikker på, at du vil slette denne kategori? Dette vil fejle, hvis kategorien har værktøjer."
     }
   },
   "comments": {

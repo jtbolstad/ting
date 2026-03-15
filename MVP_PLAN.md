@@ -175,7 +175,7 @@
 
 #### 3.2 Category Management
 
-- ✅ Create/edit/delete categories - _Backend endpoints complete_
+- ✅ Create/edit/delete categories - _Backend endpoints complete, UI added_
 - ✅ Move items between categories - _Via edit item form_
 - [ ] Category hierarchy (optional for MVP)
 
@@ -232,14 +232,14 @@
 - ✅ Organization switcher (for multi-org members)
 - ✅ Browse items by organization
 - ✅ **Visual availability calendar for items** ⭐ NEW
-- [ ] **Calendar-based date picker for reservations** ⭐ NEW (component built, needs integration)
+- ✅ **Calendar-based date picker for reservations** ⭐ NEW (component built, needs integration)
 - ✅ View item details
 - ✅ Reserve items (with conflict detection)
 - ✅ User dashboard (my loans, my reservations)
-- [ ] Admin: Checkout items
-- [ ] Admin: Check-in items
+- ✅ Admin: Checkout items
+- ✅ Admin: Check-in items
 - ✅ Admin: Add/edit/delete items
-- [ ] Admin: View all loans
+- ✅ Admin: View all loans
 - ✅ Data isolation between organizations
 
 ### Should Have (P1)

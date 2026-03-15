@@ -161,9 +161,15 @@
       "categories": "Categories"
     },
     "loans": {
-      "activeLoans": "Active Loans",
+      "title": "Active Loans",
       "checkoutItem": "Checkout Item",
-      "checkin": "Checkin"
+      "item": "Item",
+      "user": "User",
+      "checkedOut": "Checked Out",
+      "dueDate": "Due Date",
+      "actions": "Actions",
+      "checkin": "Checkin",
+      "confirmCheckin": "Confirm item checkin?"
     },
     "items": {
       "title": "Items",
@@ -172,16 +178,24 @@
       "name": "Name",
       "category": "Category",
       "description": "Description",
+      "status": "Status",
+      "actions": "Actions",
       "selectCategory": "Select a category",
-      "delete": "Delete"
+      "delete": "Delete",
+      "confirmDelete": "Are you sure you want to delete this item?"
     },
     "users": {
       "title": "Users",
+      "name": "Name",
+      "email": "Email",
       "role": "Role",
       "joined": "Joined"
     },
     "checkout": {
       "title": "Checkout Item",
+      "itemLabel": "Item",
+      "userLabel": "User",
+      "dueDate": "Due Date",
       "selectItem": "Select an item",
       "selectUser": "Select a user",
       "submit": "Checkout",
@@ -198,7 +212,8 @@
       "edit": "Edit",
       "delete": "Delete",
       "create": "Create Category",
-      "update": "Update Category"
+      "update": "Update Category",
+      "confirmDelete": "Are you sure you want to delete this category? This will fail if the category has items."
     }
   },
   "comments": {
