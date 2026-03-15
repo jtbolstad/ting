@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
+import { ReviewStars } from "../ReviewStars";
 import type { Item } from "@ting/shared";
 
 interface ItemDetailsCardProps {
@@ -34,6 +35,18 @@ export function ItemDetailsCard({ item }: ItemDetailsCardProps) {
               ? t(`categories.${item.category.name}`, item.category.name)
               : ""}
           </p>
+
+          {item.reviewCount !== undefined && item.reviewCount > 0 && (
+            <div className="mb-4">
+              <ReviewStars
+                rating={Math.round(item.averageRating || 0)}
+                readonly
+                size="md"
+                showCount
+                count={item.reviewCount}
+              />
+            </div>
+          )}
 
           <div className="mb-6">
             <span

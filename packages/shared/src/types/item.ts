@@ -31,6 +31,8 @@ export interface Item {
   imageUrl: string | null;
   createdAt: string;
   updatedAt: string;
+  averageRating?: number;
+  reviewCount?: number;
 }
 
 export interface CreateItemInput {

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { ReviewStars } from "../ReviewStars";
 import type { Item } from "@ting/shared";
 
 interface ItemCardProps {
@@ -33,6 +34,17 @@ export function ItemCard({ item }: ItemCardProps) {
             : ""}
         </p>
         <p className="text-sm text-gray-700 line-clamp-2">{item.description}</p>
+        {item.reviewCount !== undefined && item.reviewCount > 0 && (
+          <div className="mt-2">
+            <ReviewStars
+              rating={Math.round(item.averageRating || 0)}
+              readonly
+              size="sm"
+              showCount
+              count={item.reviewCount}
+            />
+          </div>
+        )}
         <div className="mt-3">
           <span
             className={`inline-block px-2 py-1 text-xs rounded ${

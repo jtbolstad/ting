@@ -8,6 +8,9 @@ import type { Item, CreateItemInput, UpdateItemInput, ItemSearchParams, ApiRespo
 const router = Router();
 
 function serializeItem(item: any): Item {
+  const averageRating = item._avg?.rating || item.averageRating;
+  const reviewCount = item._count?.reviews || item.reviewCount;
+
   return {
     id: item.id,
     name: item.name,
@@ -18,6 +21,8 @@ function serializeItem(item: any): Item {
     imageUrl: item.imageUrl,
     createdAt: item.createdAt.toISOString(),
     updatedAt: item.updatedAt.toISOString(),
+    averageRating: averageRating ? Number(averageRating.toFixed(1)) : undefined,
+    reviewCount: reviewCount || undefined,
   };
 }
 
@@ -51,7 +56,12 @@ router.get('/', resolveOrganizationPublic, async (req: AuthRequest, res: Respons
     const [items, total] = await Promise.all([
       prisma.item.findMany({
         where,
-        include: { category: true },
+        include: {
+          category: true,
+          _count: {
+            select: { reviews: true },
+          },
+        },
         skip,
         take,
         orderBy: { createdAt: 'desc' },
@@ -59,10 +69,27 @@ router.get('/', resolveOrganizationPublic, async (req: AuthRequest, res: Respons
       prisma.item.count({ where }),
     ]);
 
+    // Fetch average ratings for all items
+    const itemIds = items.map(item => item.id);
+    const reviewAggregates = await prisma.review.groupBy({
+      by: ['itemId'],
+      where: { itemId: { in: itemIds } },
+      _avg: { rating: true },
+    });
+
+    const reviewMap = new Map(reviewAggregates.map(agg => [agg.itemId, agg._avg.rating]));
+
+    // Add review stats to items
+    const itemsWithStats = items.map(item => ({
+      ...item,
+      averageRating: reviewMap.get(item.id),
+      reviewCount: item._count.reviews,
+    }));
+
     const response: ApiResponse<PaginatedResponse<Item>> = {
       success: true,
       data: {
-        items: items.map(serializeItem),
+        items: itemsWithStats.map(serializeItem),
         total,
         page: parseInt(page),
         limit: parseInt(limit),
@@ -82,18 +109,35 @@ router.get('/:id', resolveOrganizationPublic, async (req: AuthRequest, res: Resp
   try {
     const { id } = req.params;
 
-    const item = await prisma.item.findFirst({
-      where: { id, organizationId: req.organization!.id },
-      include: { category: true },
-    });
+    const [item, reviewAggregate] = await Promise.all([
+      prisma.item.findFirst({
+        where: { id, organizationId: req.organization!.id },
+        include: {
+          category: true,
+          _count: {
+            select: { reviews: true },
+          },
+        },
+      }),
+      prisma.review.aggregate({
+        where: { itemId: id },
+        _avg: { rating: true },
+      }),
+    ]);
 
     if (!item) {
       return res.status(404).json({ success: false, error: 'Item not found' });
     }
 
+    const itemWithStats = {
+      ...item,
+      averageRating: reviewAggregate._avg.rating,
+      reviewCount: item._count.reviews,
+    };
+
     const response: ApiResponse<Item> = {
       success: true,
-      data: serializeItem(item),
+      data: serializeItem(itemWithStats),
     };
 
     res.json(response);
