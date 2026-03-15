@@ -94,7 +94,40 @@
 - [ ] Convert reservation to loan on checkout
 - [ ] Cancel reservation flow in dashboard
 
-#### 2.3 Loan Checkout/Check-in
+#### 2.3 Calendar & Availability (HIGH PRIORITY - NEW)
+
+**See detailed spec:** [CALENDAR_SPEC.md](CALENDAR_SPEC.md)
+
+- [ ] Install calendar dependencies (react-big-calendar, date-fns, react-day-picker)
+- [ ] Create `ItemAvailabilityCalendar` component
+  - Visual month view showing available/blocked dates
+  - Fetch and display existing reservations + active loans
+  - Color-code: available (green), reserved (amber), checked out (red)
+- [ ] Create `DateRangePicker` component
+  - Replace basic date inputs with calendar picker
+  - Show availability feedback in real-time
+  - Prevent selecting blocked dates
+- [ ] Create `AvailabilityTimeline` component
+  - Horizontal timeline (60 days ahead)
+  - Show upcoming reservations/loans as blocks
+  - Compact version for catalog cards
+- [ ] Integrate calendar into ItemDetail page
+  - Add availability calendar above reservation form
+  - Use DateRangePicker for date selection
+  - Show conflicts with helpful messages
+- [ ] Create `ReservationCalendar` for Dashboard
+  - Month/week view of user's reservations
+  - Click events to view/cancel
+  - Toggle between list and calendar view
+- [ ] Add availability preview to Catalog
+  - Show "Available now" vs "Next available: [date]"
+  - Optional: compact timeline on item cards
+- [ ] Mobile-responsive calendar design
+- [ ] Translations for calendar UI (en, no, da)
+
+**Estimated time:** 11 hours (see CALENDAR_SPEC.md for breakdown)
+
+#### 2.4 Loan Checkout/Check-in
 
 - [ ] Checkout flow in AdminDashboard
 - [ ] Set due date based on organization policy (default: 7 days)
@@ -102,13 +135,14 @@
 - [ ] Overdue loan highlighting
 - [ ] Block checkout if item has active reservation
 
-#### 2.4 User Dashboard
+#### 2.5 User Dashboard
 
 - [ ] Show user's active loans with due dates
 - [ ] Show user's upcoming reservations
 - [ ] Show overdue status prominently
 - [ ] Quick actions: extend loan, cancel reservation
 - [ ] Show membership info for active organization
+- [ ] Calendar view tab (from 2.3)
 
 ---
 
@@ -178,6 +212,8 @@
 - [ ] User login
 - [ ] Organization switcher (for multi-org members)
 - [ ] Browse items by organization
+- [ ] **Visual availability calendar for items** ⭐ NEW
+- [ ] **Calendar-based date picker for reservations** ⭐ NEW
 - [ ] View item details
 - [ ] Reserve items (with conflict detection)
 - [ ] User dashboard (my loans, my reservations)
@@ -187,7 +223,10 @@
 - [ ] Admin: View all loans
 - [ ] Data isolation between organizations
 
-### Should Have (P1)
+### Sh**Calendar view in user dashboard** ⭐ NEW
+
+- [ ] **Availability timeline on catalog cards** ⭐ NEW
+- [ ] ould Have (P1)
 
 - [ ] Email reminders (due tomorrow, overdue)
 - [ ] Admin: Manage categories
@@ -289,9 +328,7 @@ Before declaring MVP complete:
 4. **API client** - Some calls missing organizationId parameter
 5. **Email service** - Only logs to console in dev mode
 
----
-
-## 💡 Quick Wins for Next Session
+### Option A: Multi-tenant Core (2 hours)
 
 1. **Fix Registration** (30 min)
    - Add org selector dropdown to Register page
@@ -307,14 +344,45 @@ Before declaring MVP complete:
    - Verify only Oslo items show
    - Switch to Bergen, verify Bergen items
 
-**Total: ~2 hours to validate core multi-tenant MVP**
+### Option B: Calendar Features (3-4 hours) ⭐ HIGH UX IMPACT
 
----
-
-## 📊 Progress Tracking
+1. **Install Dependencies** (5 min)
+   - `pnpm add react-big-calendar date-fns react-day-picker`
+2. **Build ItemAvailabilityCalendar** (90 min)
+   - Create component with month view
+   - Fetch item reservations and loans
+   - Color-code available/unavailable dates
+   - Add legend and current░░░░░░░ 30% - Core features built, calendar + org context needed
+     Phase 3 (Medium): ▓▓░░░░░░░░ 20% - Admin UI exists, needs org scoping
+     Phase 4 (Nice): ▓░░░░░░░░░ 10% - i18n setup, needs translations
 
 ```
-Phase 1 (Critical):     ▓▓▓▓▓▓░░░░  60% - Infrastructure done, integration needed
+
+**Overall MVP Completion: ~30%**
+
+**Estimated Time to MVP:** 19-23 hours of focused development
+  - Core multi-tenant integration: 8-12 hours
+  - Calendar features: 11 hours (see CALENDAR_SPEC.md)
+   - Block unavailable dates
+5. **Mobile Responsive** (30 min)
+   - Test on mobile viewport
+   - Adjust layout for small screens
+
+**Recommendation:** Start with Option B for immediate user value, then do Option A
+   - Verify only Oslo items show
+   - Switch to Bergen, verify Bergen items
+
+**Tot**Users can see item availability on a visual calendar** ⭐ NEW
+4. ✅ **Users can select dates using calendar picker** ⭐ NEW
+5. ✅ Users can reserve items with conflict detection
+6. ✅ **Users can view their reservations in calendar format** ⭐ NEW
+7. ✅ Admins can checkout/checkin items
+8. ✅ Admins can manage items and categories
+9. ✅ Organizations have complete data isolation
+10. ✅ E2E tests pass for core flows
+11. ✅ Application works on mobile devices
+12. ✅ No critical TypeScript/runtime errors
+13ase 1 (Critical):     ▓▓▓▓▓▓░░░░  60% - Infrastructure done, integration needed
 Phase 2 (High):         ▓▓▓▓░░░░░░  40% - Core features built, org context needed
 Phase 3 (Medium):       ▓▓░░░░░░░░  20% - Admin UI exists, needs org scoping
 Phase 4 (Nice):         ▓░░░░░░░░░  10% - i18n setup, needs translations
