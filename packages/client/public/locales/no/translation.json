@@ -234,6 +234,29 @@
     "daysAgo": "{{count}} dag siden",
     "daysAgo_plural": "{{count}} dager siden"
   },
+  "reviews": {
+    "title": "Anmeldelser",
+    "loading": "Laster anmeldelser...",
+    "writeReview": "Skriv en anmeldelse",
+    "yourRating": "Din vurdering",
+    "comment": "Kommentar",
+    "optional": "valgfritt",
+    "commentPlaceholder": "Del din erfaring med dette verktøyet...",
+    "submit": "Send inn anmeldelse",
+    "submitting": "Sender inn...",
+    "yourReview": "Din anmeldelse",
+    "allReviews": "Alle anmeldelser",
+    "noReviews": "Ingen anmeldelser ennå. Vær den første til å anmelde dette verktøyet!",
+    "anonymous": "Anonym",
+    "confirmDelete": "Er du sikker på at du vil slette din anmeldelse?",
+    "totalCount": "{{count}} anmeldelse",
+    "totalCount_plural": "{{count}} anmeldelser",
+    "errors": {
+      "ratingRequired": "Vennligst velg en vurdering",
+      "submitFailed": "Kunne ikke sende inn anmeldelse",
+      "deleteFailed": "Kunne ikke slette anmeldelse"
+    }
+  },
   "addItem": {
     "title": "Legg til nytt verktøy",
     "description": "Del et verktøy eller gjenstand med fellesskapet",

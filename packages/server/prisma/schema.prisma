@@ -20,6 +20,7 @@ model User {
   memberships  Membership[]
   auditLogs    AuditLog[]    @relation("AuditActor")
   comments     Comment[]
+  reviews      Review[]
 }
 
 model Organization {
@@ -37,6 +38,7 @@ model Organization {
   reservations Reservation[]
   loans        Loan[]
   comments     Comment[]
+  reviews      Review[]
   auditLogs    AuditLog[]
 }
 
@@ -114,6 +116,7 @@ model Item {
   reservations   Reservation[]
   loans          Loan[]
   comments       Comment[]
+  reviews        Review[]
 
   @@index([organizationId])
 }
@@ -165,6 +168,25 @@ model Comment {
   user         User         @relation(fields: [userId], references: [id])
   organization Organization @relation(fields: [organizationId], references: [id])
 
+  @@index([itemId])
+  @@index([organizationId])
+}
+
+model Review {
+  id             String       @id @default(cuid())
+  organizationId String
+  itemId         String
+  userId         String
+  rating         Int          // 1-5 stars
+  comment        String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  item         Item         @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id])
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@unique([userId, itemId]) // One review per user per item
   @@index([itemId])
   @@index([organizationId])
 }

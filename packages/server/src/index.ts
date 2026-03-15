@@ -10,6 +10,7 @@ import reservationsRoutes from './routes/reservations.js';
 import loansRoutes from './routes/loans.js';
 import organizationsRoutes from './routes/organizations.js';
 import commentsRoutes from './routes/comments.js';
+import reviewsRoutes from './routes/reviews.js';
 import uploadsRoutes from './routes/uploads.js';
 
 const app = express();
@@ -36,6 +37,7 @@ async function startServer() {
   app.use('/api/loans', loansRoutes);
   app.use('/api/organizations', organizationsRoutes);
   app.use('/api/comments', commentsRoutes);
+  app.use('/api/reviews', reviewsRoutes);
   app.use('/api/uploads', uploadsRoutes);
 
   app.get('/health', (req, res) => {

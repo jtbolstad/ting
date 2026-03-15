@@ -7,6 +7,8 @@ import type {
   Reservation,
   Loan,
   Comment,
+  Review,
+  ReviewStats,
   PaginatedResponse,
   Organization,
   Membership,
@@ -305,6 +307,26 @@ class ApiClient {
 
   async deleteComment(id: string): Promise<void> {
     return this.request<void>(`/comments/${id}`, { method: 'DELETE' });
+  }
+
+  // Reviews
+  async getItemReviews(itemId: string): Promise<Review[]> {
+    return this.request<Review[]>(`/reviews/item/${itemId}`);
+  }
+
+  async getItemReviewStats(itemId: string): Promise<ReviewStats> {
+    return this.request<ReviewStats>(`/reviews/item/${itemId}/stats`);
+  }
+
+  async createReview(data: { itemId: string; rating: number; comment?: string }): Promise<Review> {
+    return this.request<Review>('/reviews', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteReview(id: string): Promise<void> {
+    return this.request<void>(`/reviews/${id}`, { method: 'DELETE' });
   }
 }
 

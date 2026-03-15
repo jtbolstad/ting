@@ -13,6 +13,9 @@ export * from './types/loan.js';
 // Comment types
 export * from './types/comment.js';
 
+// Review types
+export * from './types/review.js';
+
 // API types
 export * from './types/api.js';
 

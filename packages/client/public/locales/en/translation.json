@@ -233,6 +233,29 @@
     "daysAgo": "{{count}} day ago",
     "daysAgo_plural": "{{count}} days ago"
   },
+  "reviews": {
+    "title": "Reviews",
+    "loading": "Loading reviews...",
+    "writeReview": "Write a Review",
+    "yourRating": "Your Rating",
+    "comment": "Comment",
+    "optional": "optional",
+    "commentPlaceholder": "Share your experience with this item...",
+    "submit": "Submit Review",
+    "submitting": "Submitting...",
+    "yourReview": "Your Review",
+    "allReviews": "All Reviews",
+    "noReviews": "No reviews yet. Be the first to review this item!",
+    "anonymous": "Anonymous",
+    "confirmDelete": "Are you sure you want to delete your review?",
+    "totalCount": "{{count}} review",
+    "totalCount_plural": "{{count}} reviews",
+    "errors": {
+      "ratingRequired": "Please select a rating",
+      "submitFailed": "Failed to submit review",
+      "deleteFailed": "Failed to delete review"
+    }
+  },
   "addItem": {
     "title": "Add New Item",
     "description": "Share a tool or item with your community",

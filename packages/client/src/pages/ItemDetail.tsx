@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import { ItemAvailabilityCalendar } from "../components/calendar/ItemAvailabilityCalendar";
 import { AvailabilityTimeline } from "../components/calendar/AvailabilityTimeline";
 import { ItemComments } from "../components/ItemComments";
+import { ItemReviews } from "../components/ItemReviews";
 import type { Item } from "@ting/shared";
 
 export function ItemDetail() {
@@ -255,6 +256,11 @@ export function ItemDetail() {
         {/* Comments Section */}
         <div className="bg-white rounded-lg shadow p-6">
           <ItemComments itemId={id!} />
+        </div>
+
+        {/* Reviews Section */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <ItemReviews itemId={id!} />
         </div>
       </div>
     </div>
