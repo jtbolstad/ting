@@ -25,7 +25,26 @@
     "alreadyHaveAccount": "Already have an account?",
     "dontHaveAccount": "Don't have an account?",
     "loginHere": "Login here",
-    "registerHere": "Register here"
+    "registerHere": "Register here",
+    "login": {
+      "title": "Login to Ting",
+      "email": "Email",
+      "password": "Password",
+      "loggingIn": "Logging in...",
+      "submit": "Login",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Register here"
+    },
+    "register": {
+      "title": "Register for Ting",
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "registering": "Registering...",
+      "submit": "Register",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Login here"
+    }
   },
   "catalog": {
     "title": "Catalog",
@@ -58,16 +77,28 @@
     "description": "Description",
     "category": "Category",
     "status": "Status",
+    "loading": "Loading item...",
+    "notFound": "Item not found",
     "noDescription": "No description available.",
-    "reserve": "Reserve this item",
     "reserveNow": "Reserve Now",
-    "reserving": "Creating Reservation...",
+    "reserving": "Creating reservation...",
     "startDate": "Start Date",
     "endDate": "End Date",
-    "loginToReserve": "Please login to reserve this item"
+    "loginToReserve": "Please log in to reserve this item",
+    "reserve": {
+      "loginRequired": "Please log in to reserve this item.",
+      "loginLink": "Log in here",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "creating": "Creating reservation...",
+      "submit": "Reserve Item"
+    }
   },
   "dashboard": {
     "title": "My Dashboard",
+    "loading": "Loading dashboard...",
+    "confirmCancel": "Are you sure you want to cancel this reservation?",
+    "confirmReturn": "Confirm item return?",
     "currentLoans": "Current Loans",
     "myReservations": "My Reservations",
     "noLoans": "No active loans",
@@ -79,7 +110,33 @@
     "return": "Return",
     "cancel": "Cancel",
     "actions": "Actions",
-    "loanHistory": "Loan History"
+    "loanHistory": "Loan History",
+    "loans": {
+      "title": "Current Loans",
+      "noLoans": "You have no active loans",
+      "item": "Item",
+      "checkedOut": "Checked Out",
+      "dueDate": "Due Date",
+      "overdue": "OVERDUE",
+      "return": "Return",
+      "actions": "Actions"
+    },
+    "reservations": {
+      "title": "My Reservations",
+      "noReservations": "You have no active reservations",
+      "item": "Item",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "status": "Status",
+      "actions": "Actions",
+      "cancel": "Cancel",
+      "statusValues": {
+        "pending": "Pending",
+        "confirmed": "Confirmed",
+        "cancelled": "Cancelled",
+        "completed": "Completed"
+      }
+    }
   },
   "admin": {
     "title": "Admin Dashboard",
@@ -140,7 +197,10 @@
     "registerFailed": "Registration failed",
     "invalidCredentials": "Invalid credentials",
     "required": "This field is required",
-    "emailInvalid": "Invalid email address"
+    "emailInvalid": "Invalid email address",
+    "reservationFailed": "Failed to create reservation",
+    "cancelFailed": "Failed to cancel reservation",
+    "returnFailed": "Failed to return item"
   },
   "messages": {
     "reservationSuccess": "Reservation created successfully!",

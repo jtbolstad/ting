@@ -25,7 +25,26 @@
     "alreadyHaveAccount": "Har du allerede en konto?",
     "dontHaveAccount": "Har du ikke en konto?",
     "loginHere": "Logg inn her",
-    "registerHere": "Registrer her"
+    "registerHere": "Registrer her",
+    "login": {
+      "title": "Logg Inn på Ting",
+      "email": "E-post",
+      "password": "Passord",
+      "loggingIn": "Logger inn...",
+      "submit": "Logg Inn",
+      "noAccount": "Har du ikke en konto?",
+      "registerLink": "Registrer her"
+    },
+    "register": {
+      "title": "Registrer for Ting",
+      "name": "Navn",
+      "email": "E-post",
+      "password": "Passord",
+      "registering": "Registrerer...",
+      "submit": "Registrer",
+      "hasAccount": "Har du allerede en konto?",
+      "loginLink": "Logg inn her"
+    }
   },
   "catalog": {
     "title": "Katalog",
@@ -58,16 +77,28 @@
     "description": "Beskrivelse",
     "category": "Kategori",
     "status": "Status",
+    "loading": "Laster verktøy...",
+    "notFound": "Verktøy ikke funnet",
     "noDescription": "Ingen beskrivelse tilgjengelig.",
-    "reserve": "Reserver dette verktøyet",
     "reserveNow": "Reserver Nå",
     "reserving": "Oppretter reservasjon...",
     "startDate": "Startdato",
     "endDate": "Sluttdato",
-    "loginToReserve": "Vennligst logg inn for å reservere dette verktøyet"
+    "loginToReserve": "Vennligst logg inn for å reservere dette verktøyet",
+    "reserve": {
+      "loginRequired": "Vennligst logg inn for å reservere dette verktøyet.",
+      "loginLink": "Logg inn her",
+      "startDate": "Startdato",
+      "endDate": "Sluttdato",
+      "creating": "Oppretter reservasjon...",
+      "submit": "Reserver verktøy"
+    }
   },
   "dashboard": {
     "title": "Min Oversikt",
+    "loading": "Laster oversikt...",
+    "confirmCancel": "Er du sikker på at du vil avbryte denne reservasjonen?",
+    "confirmReturn": "Bekreft innlevering?",
     "currentLoans": "Aktive Utlån",
     "myReservations": "Mine Reservasjoner",
     "noLoans": "Ingen aktive utlån",
@@ -79,7 +110,33 @@
     "return": "Lever",
     "cancel": "Avbryt",
     "actions": "Handlinger",
-    "loanHistory": "Utlånshistorikk"
+    "loanHistory": "Utlånshistorikk",
+    "loans": {
+      "title": "Aktive Utlån",
+      "noLoans": "Du har ingen aktive utlån",
+      "item": "Verktøy",
+      "checkedOut": "Lånt ut",
+      "dueDate": "Forfallsdato",
+      "overdue": "FORSINKET",
+      "return": "Lever inn",
+      "actions": "Handlinger"
+    },
+    "reservations": {
+      "title": "Mine Reservasjoner",
+      "noReservations": "Du har ingen aktive reservasjoner",
+      "item": "Verktøy",
+      "startDate": "Startdato",
+      "endDate": "Sluttdato",
+      "status": "Status",
+      "actions": "Handlinger",
+      "cancel": "Slett reservasjon",
+      "statusValues": {
+        "pending": "Venter",
+        "confirmed": "Bekreftet",
+        "cancelled": "Avbrutt",
+        "completed": "Fullført"
+      }
+    }
   },
   "admin": {
     "title": "Administrasjonspanel",
@@ -140,7 +197,10 @@
     "registerFailed": "Registrering mislyktes",
     "invalidCredentials": "Ugyldige påloggingsopplysninger",
     "required": "Dette feltet er påkrevd",
-    "emailInvalid": "Ugyldig e-postadresse"
+    "emailInvalid": "Ugyldig e-postadresse",
+    "reservationFailed": "Kunne ikke opprette reservasjon",
+    "cancelFailed": "Kunne ikke avbryte reservasjon",
+    "returnFailed": "Kunne ikke levere inn verktøy"
   },
   "messages": {
     "reservationSuccess": "Reservasjon opprettet!",

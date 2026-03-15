@@ -25,7 +25,26 @@
     "alreadyHaveAccount": "Har du allerede en konto?",
     "dontHaveAccount": "Har du ikke en konto?",
     "loginHere": "Log ind her",
-    "registerHere": "Tilmeld her"
+    "registerHere": "Tilmeld her",
+    "login": {
+      "title": "Log Ind på Ting",
+      "email": "E-mail",
+      "password": "Adgangskode",
+      "loggingIn": "Logger ind...",
+      "submit": "Log Ind",
+      "noAccount": "Har du ikke en konto?",
+      "registerLink": "Tilmeld her"
+    },
+    "register": {
+      "title": "Tilmeld Ting",
+      "name": "Navn",
+      "email": "E-mail",
+      "password": "Adgangskode",
+      "registering": "Tilmelder...",
+      "submit": "Tilmeld",
+      "hasAccount": "Har du allerede en konto?",
+      "loginLink": "Log ind her"
+    }
   },
   "catalog": {
     "title": "Katalog",
@@ -58,16 +77,28 @@
     "description": "Beskrivelse",
     "category": "Kategori",
     "status": "Status",
+    "loading": "Indlæser værktøj...",
+    "notFound": "Værktøj ikke fundet",
     "noDescription": "Ingen beskrivelse tilgængelig.",
-    "reserve": "Reserver dette værktøj",
     "reserveNow": "Reserver Nu",
     "reserving": "Opretter reservation...",
     "startDate": "Startdato",
     "endDate": "Slutdato",
-    "loginToReserve": "Log venligst ind for at reservere dette værktøj"
+    "loginToReserve": "Log venligst ind for at reservere dette værktøj",
+    "reserve": {
+      "loginRequired": "Log venligst ind for at reservere dette værktøj.",
+      "loginLink": "Log ind her",
+      "startDate": "Startdato",
+      "endDate": "Slutdato",
+      "creating": "Opretter reservation...",
+      "submit": "Reserver værktøj"
+    }
   },
   "dashboard": {
     "title": "Min Oversigt",
+    "loading": "Indlæser oversigt...",
+    "confirmCancel": "Er du sikker på, at du vil annullere denne reservation?",
+    "confirmReturn": "Bekræft indlevering?",
     "currentLoans": "Aktive Udlån",
     "myReservations": "Mine Reservationer",
     "noLoans": "Ingen aktive udlån",
@@ -79,7 +110,33 @@
     "return": "Lever",
     "cancel": "Annuller",
     "actions": "Handlinger",
-    "loanHistory": "Udlånshistorik"
+    "loanHistory": "Udlånshistorik",
+    "loans": {
+      "title": "Aktive Udlån",
+      "noLoans": "Du har ingen aktive udlån",
+      "item": "Værktøj",
+      "checkedOut": "Udlånt",
+      "dueDate": "Forfaldsdato",
+      "overdue": "FORSINKET",
+      "return": "Lever ind",
+      "actions": "Handlinger"
+    },
+    "reservations": {
+      "title": "Mine Reservationer",
+      "noReservations": "Du har ingen aktive reservationer",
+      "item": "Værktøj",
+      "startDate": "Startdato",
+      "endDate": "Slutdato",
+      "status": "Status",
+      "actions": "Handlinger",
+      "cancel": "Annuller",
+      "statusValues": {
+        "pending": "Afventer",
+        "confirmed": "Bekræftet",
+        "cancelled": "Annulleret",
+        "completed": "Fuldført"
+      }
+    }
   },
   "admin": {
     "title": "Administrationspanel",
@@ -140,7 +197,10 @@
     "registerFailed": "Tilmelding mislykkedes",
     "invalidCredentials": "Ugyldige loginoplysninger",
     "required": "Dette felt er påkrævet",
-    "emailInvalid": "Ugyldig e-mailadresse"
+    "emailInvalid": "Ugyldig e-mailadresse",
+    "reservationFailed": "Kunne ikke oprette reservation",
+    "cancelFailed": "Kunne ikke annullere reservation",
+    "returnFailed": "Kunne ikke levere værktøj ind"
   },
   "messages": {
     "reservationSuccess": "Reservation oprettet!",
