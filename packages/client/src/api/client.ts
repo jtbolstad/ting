@@ -91,7 +91,15 @@ class ApiClient {
     page?: number;
     limit?: number;
   }): Promise<PaginatedResponse<Item>> {
-    const query = new URLSearchParams(params as Record<string, string>).toString();
+    // Filter out undefined values and organizationId (sent via header instead)
+    const queryParams: Record<string, string> = {};
+    if (params.q) queryParams.q = params.q;
+    if (params.categoryId) queryParams.categoryId = params.categoryId;
+    if (params.status) queryParams.status = params.status;
+    if (params.page) queryParams.page = params.page.toString();
+    if (params.limit) queryParams.limit = params.limit.toString();
+    
+    const query = new URLSearchParams(queryParams).toString();
     return this.request<PaginatedResponse<Item>>(`/items${query ? `?${query}` : ''}`);
   }
 
