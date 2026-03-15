@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Calendar Styles */
+.rdp {
+  --rdp-cell-size: 40px;
+  --rdp-accent-color: #6366f1;
+  --rdp-background-color: #eef2ff;
+  font-family: inherit;
+}
+
+.rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
+  background-color: #f3f4f6;
+}
+
+.rdp-day_selected {
+  background-color: var(--rdp-accent-color);
+  color: white;
+}
+
+.rdp-day_disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

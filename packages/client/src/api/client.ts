@@ -45,6 +45,15 @@ class ApiClient {
       headers: this.getHeaders(),
     });
 
+    // Check if response has content
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+      throw new Error('Server returned non-JSON response');
+    }
+
     const data: ApiResponse<T> = await response.json();
 
     if (!response.ok || !data.success) {
