@@ -74,7 +74,7 @@ export function EditItem() {
         name: formData.name,
         description: formData.description || undefined,
         categoryId: formData.categoryId,
-        imageUrl: formData.imageUrl || undefined,
+        imageUrl: formData.imageUrl || null,
         status: formData.status,
       });
 

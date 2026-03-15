@@ -1,4 +1,4 @@
-import { useState, useRef, ChangeEvent } from "react";
+import { useState, useRef, useEffect, ChangeEvent } from "react";
 import { apiClient } from "../api/client";
 
 interface ImageInputProps {
@@ -20,6 +20,14 @@ export function ImageInput({
   const [error, setError] = useState<string | null>(null);
   const [urlInput, setUrlInput] = useState(value || "");
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Sync preview with value prop changes
+  useEffect(() => {
+    if (value !== preview) {
+      setPreview(value || null);
+      setUrlInput(value || "");
+    }
+  }, [value]);
 
   const handleFileSelect = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

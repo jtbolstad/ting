@@ -86,6 +86,7 @@
     "startDate": "Startdato",
     "endDate": "Slutdato",
     "loginToReserve": "Log venligst ind for at reservere dette værktøj",
+    "edit": "Rediger Værktøj",
     "reserve": {
       "loginRequired": "Log venligst ind for at reservere dette værktøj.",
       "loginLink": "Log ind her",
@@ -214,6 +215,21 @@
     "selectOrganization": "Vælg venligst en organisation først",
     "loadCategoriesError": "Kunne ikke indlæse kategorier"
   },
+  "editItem": {
+    "title": "Rediger Værktøj",
+    "description": "Opdater værktøjsdetaljer",
+    "name": "Værktøjsnavn",
+    "category": "Kategori",
+    "selectCategory": "Vælg en kategori",
+    "status": "Status",
+    "descriptionLabel": "Beskrivelse",
+    "descriptionPlaceholder": "Beskriv værktøjet, tilstand og vigtige detaljer...",
+    "imageUrl": "Billede",
+    "submit": "Gem Ændringer",
+    "updating": "Opdaterer...",
+    "selectOrganization": "Vælg venligst en organisation først",
+    "loadError": "Kunne ikke indlæse værktøj"
+  },
   "common": {
     "loading": "Indlæser...",
     "error": "Fejl",
@@ -239,7 +255,8 @@
     "commentFailed": "Kunne ikke udgive kommentar",
     "updateCommentFailed": "Kunne ikke opdatere kommentar",
     "deleteCommentFailed": "Kunne ikke slette kommentar",
-    "createItemFailed": "Kunne ikke oprette værktøj"
+    "createItemFailed": "Kunne ikke oprette værktøj",
+    "updateItemFailed": "Kunne ikke opdatere værktøj"
   },
   "messages": {
     "reservationSuccess": "Reservation oprettet!",

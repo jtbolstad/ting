@@ -57,7 +57,7 @@ export function AddItem() {
         name: formData.name,
         description: formData.description || undefined,
         categoryId: formData.categoryId,
-        imageUrl: formData.imageUrl || undefined,
+        imageUrl: formData.imageUrl || null,
       });
 
       // Navigate to the new item's detail page

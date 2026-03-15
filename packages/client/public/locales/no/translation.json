@@ -86,6 +86,7 @@
     "startDate": "Startdato",
     "endDate": "Sluttdato",
     "loginToReserve": "Vennligst logg inn for å reservere dette verktøyet",
+    "edit": "Rediger Verktøy",
     "reserve": {
       "loginRequired": "Vennligst logg inn for å reservere dette verktøyet.",
       "loginLink": "Logg inn her",
@@ -214,6 +215,21 @@
     "selectOrganization": "Vennligst velg en organisasjon først",
     "loadCategoriesError": "Kunne ikke laste kategorier"
   },
+  "editItem": {
+    "title": "Rediger Verktøy",
+    "description": "Oppdater verktøydetaljer",
+    "name": "Verktøynavn",
+    "category": "Kategori",
+    "selectCategory": "Velg en kategori",
+    "status": "Status",
+    "descriptionLabel": "Beskrivelse",
+    "descriptionPlaceholder": "Beskriv verktøyet, tilstand og viktige detaljer...",
+    "imageUrl": "Bilde",
+    "submit": "Lagre Endringer",
+    "updating": "Oppdaterer...",
+    "selectOrganization": "Vennligst velg en organisasjon først",
+    "loadError": "Kunne ikke laste verktøy"
+  },
   "common": {
     "loading": "Laster...",
     "error": "Feil",
@@ -239,7 +255,8 @@
     "commentFailed": "Kunne ikke publisere kommentar",
     "updateCommentFailed": "Kunne ikke oppdatere kommentar",
     "deleteCommentFailed": "Kunne ikke slette kommentar",
-    "createItemFailed": "Kunne ikke opprette verktøy"
+    "createItemFailed": "Kunne ikke opprette verktøy",
+    "updateItemFailed": "Kunne ikke oppdatere verktøy"
   },
   "messages": {
     "reservationSuccess": "Reservasjon opprettet!",

@@ -86,6 +86,7 @@
     "startDate": "Start Date",
     "endDate": "End Date",
     "loginToReserve": "Please log in to reserve this item",
+    "edit": "Edit Item",
     "reserve": {
       "loginRequired": "Please log in to reserve this item.",
       "loginLink": "Log in here",
@@ -214,6 +215,21 @@
     "selectOrganization": "Please select an organization first",
     "loadCategoriesError": "Failed to load categories"
   },
+  "editItem": {
+    "title": "Edit Item",
+    "description": "Update item details",
+    "name": "Item Name",
+    "category": "Category",
+    "selectCategory": "Select a category",
+    "status": "Status",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Describe the item, its condition, and any important details...",
+    "imageUrl": "Image",
+    "submit": "Save Changes",
+    "updating": "Updating...",
+    "selectOrganization": "Please select an organization first",
+    "loadError": "Failed to load item"
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",
@@ -239,7 +255,8 @@
     "commentFailed": "Failed to post comment",
     "updateCommentFailed": "Failed to update comment",
     "deleteCommentFailed": "Failed to delete comment",
-    "createItemFailed": "Failed to create item"
+    "createItemFailed": "Failed to create item",
+    "updateItemFailed": "Failed to update item"
   },
   "messages": {
     "reservationSuccess": "Reservation created successfully!",

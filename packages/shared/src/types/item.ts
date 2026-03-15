@@ -37,7 +37,7 @@ export interface CreateItemInput {
   name: string;
   description?: string;
   categoryId: string;
-  imageUrl?: string;
+  imageUrl?: string | null;
 }
 
 export interface UpdateItemInput {
@@ -45,7 +45,7 @@ export interface UpdateItemInput {
   description?: string;
   categoryId?: string;
   status?: ItemStatus;
-  imageUrl?: string;
+  imageUrl?: string | null;
 }
 
 export interface ItemSearchParams {
