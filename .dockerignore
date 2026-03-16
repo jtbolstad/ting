@@ -1,13 +1,29 @@
-node_modules
+# Version control
 .git
 .gitignore
-*.md
+.gitattributes
+.github
+
+# Dependencies
+node_modules
+package-lock.json
+
+# Environment files
 .env
 .env.local
+.env*.local
+
+# Build outputs
 dist
+.vite
 coverage
+
+# IDE
 .vscode
 .idea
+*.swp
+*.swo
+*~
 
 # Deployment files
 deploy.sh
@@ -16,26 +32,29 @@ deploy.ps1
 .fly
 fly.toml
 
+# Documentation
+*.md
+
 # Test files
 *.test.ts
 *.test.tsx
+*.test.js
+*.test.jsx
 *.spec.ts
 *.spec.tsx
 test-results
 playwright-report
 e2e
 
-# Development files
+# Development databases
 packages/server/prisma/dev.db
 packages/server/prisma/dev.db-journal
 packages/server/test.db
 packages/server/test.db-journal
+
+# Uploads (local development)
 packages/server/uploads/*
 !packages/server/uploads/.gitkeep
-
-# Client dev files
-packages/client/.vite
-packages/client/node_modules
 
 # Logs
 *.log
@@ -43,3 +62,4 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+lerna-debug.log*
