@@ -9,6 +9,13 @@ coverage
 .vscode
 .idea
 
+# Deployment files
+deploy.sh
+deploy.ps1
+.flyignore
+.fly
+fly.toml
+
 # Test files
 *.test.ts
 *.test.tsx
