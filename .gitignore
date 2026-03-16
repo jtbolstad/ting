@@ -1,5 +1,36 @@
+# Environment variables
 .env
+.env.local
+.env.*.local
+
+# Dependencies
 node_modules/
+
+# Build outputs
 dist/
+
+# Database files
 *.db
 *.db-journal
+
+# Test results
+test-results/
+playwright-report/
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Fly.io
+.fly/
+fly.toml.local

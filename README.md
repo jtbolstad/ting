@@ -30,11 +30,13 @@ A full-stack tool library management system for community makerspaces, built wit
 ### Installation
 
 1. **Install dependencies**:
+
    ```bash
    pnpm install
    ```
 
 2. **Set up the database**:
+
    ```bash
    cd packages/server
    pnpm run db:migrate
@@ -42,13 +44,15 @@ A full-stack tool library management system for community makerspaces, built wit
    ```
 
 3. **Start the development servers**:
-   
+
    In one terminal (backend):
+
    ```bash
    pnpm run dev:server
    ```
-   
+
    In another terminal (frontend):
+
    ```bash
    pnpm run dev:client
    ```
@@ -89,11 +93,13 @@ ting/
 ## API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/register` - Register new user
 - `POST /api/auth/login` - Login
 - `GET /api/auth/me` - Get current user
 
 ### Items
+
 - `GET /api/items` - List items (with search & filters)
 - `GET /api/items/:id` - Get item details
 - `POST /api/items` - Create item (admin)
@@ -101,21 +107,25 @@ ting/
 - `DELETE /api/items/:id` - Delete item (admin)
 
 ### Categories
+
 - `GET /api/categories` - List all categories
 - `POST /api/categories` - Create category (admin)
 
 ### Reservations
+
 - `GET /api/reservations` - List user's reservations
 - `GET /api/reservations/availability/:itemId` - Check availability
 - `POST /api/reservations` - Create reservation
 - `DELETE /api/reservations/:id` - Cancel reservation
 
 ### Loans
+
 - `GET /api/loans` - List loans
 - `POST /api/loans/checkout` - Checkout item
 - `POST /api/loans/:id/checkin` - Return item
 
 ### Uploads
+
 - `POST /api/uploads/image` - Upload an image for an item
   - **Request**: `multipart/form-data` with `image` field
   - **Response**: `{ url: string, thumbnail: string }`
@@ -128,6 +138,7 @@ ting/
 ## Email Notifications
 
 The system can send automated email reminders for:
+
 - Items due tomorrow
 - Overdue items
 
@@ -187,31 +198,56 @@ pnpm run db:seed
 
 ## Production Deployment
 
-1. **Build the frontend**:
+### Quick Deploy to Fly.io
+
+Ting is ready to deploy to Fly.io with a single command:
+
+```bash
+# Install Fly CLI and login
+fly auth login
+
+# Deploy (includes database setup)
+fly launch
+```
+
+For detailed deployment instructions including:
+
+- SQLite vs PostgreSQL options
+- Environment variable configuration
+- Custom domain setup
+- Monitoring and troubleshooting
+
+See **[DEPLOYMENT.md](./DEPLOYMENT.md)** for the complete guide.
+
+### Manual Deployment
+
+1. **Build all packages**:
+
    ```bash
-   cd packages/client
    pnpm run build
    ```
 
-2. **Build the backend**:
+2. **Set production environment variables** in `packages/server/.env`:
+
+   ```env
+   NODE_ENV=production
+   DATABASE_URL="file:/data/db.sqlite"
+   JWT_SECRET="your-secure-random-secret"
+   ```
+
+3. **Run migrations**:
+
    ```bash
    cd packages/server
-   pnpm run build
+   pnpm db:migrate deploy
    ```
 
-3. **Set production environment variables**
-
-4. **Run migrations**:
-   ```bash
-   pnpm run db:migrate
-   ```
-
-5. **Start the server**:
+4. **Start the server**:
    ```bash
    pnpm start
    ```
 
-6. **Serve the frontend** using nginx or similar
+The server will automatically serve the built frontend from `packages/client/dist` in production mode.
 
 ## License
 

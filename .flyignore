@@ -1,0 +1,49 @@
+# Development files
+node_modules
+.git
+.gitignore
+.env
+.env.local
+.vscode
+.idea
+
+# Documentation (use .dockerignore for these)
+*.md
+!DEPLOYMENT.md
+
+# Test files
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+test-results
+playwright-report
+e2e
+coverage
+
+# Development databases
+packages/server/prisma/dev.db
+packages/server/prisma/dev.db-journal
+packages/server/test.db
+packages/server/test.db-journal
+
+# Local uploads
+packages/server/uploads/*
+!packages/server/uploads/.gitkeep
+
+# Build artifacts (will be rebuilt in Docker)
+dist
+.vite
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Deployment scripts (not needed in container)
+deploy.sh
+deploy.ps1

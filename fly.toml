@@ -1,0 +1,55 @@
+# fly.toml app configuration file
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+# To customize before deploying:
+# 1. Change app name below
+# 2. Choose your preferred region (ams, ord, lhr, etc.)
+# 3. Set secrets: fly secrets set JWT_SECRET="..." DATABASE_URL="file:/data/db.sqlite"
+
+app = "ting"  # Change this to your desired app name
+primary_region = "ams" # Change to your preferred region (ams = Amsterdam)
+
+[build]
+
+[deploy]
+  release_command = "cd packages/server && npx prisma migrate deploy"
+
+[env]
+  PORT = "8080"
+  NODE_ENV = "production"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+  [[http_service.checks]]
+    grace_period = "10s"
+    interval = "30s"
+    method = "GET"
+    timeout = "5s"
+    path = "/health"
+
+[[vm]]
+  memory = "1gb"
+  cpu_kind = "shared"
+  cpus = 1
+
+# Persistent volume for SQLite database and uploads
+[[mounts]]
+  source = "ting_data"
+  destination = "/data"
+  initial_size = "1gb"
+
+# For production, consider using Postgres instead of SQLite
+# [[services.ports]]
+#   handlers = ["http"]
+#   port = 80
+# 
+# [[services.ports]]
+#   handlers = ["tls", "http"]
+#   port = 443

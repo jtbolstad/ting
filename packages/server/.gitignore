@@ -1,5 +1,12 @@
+# Environment files
+.env
+.env.local
+
+# Database files
 test.db
 test.db-journal
+prisma/dev.db
+prisma/dev.db-journal
 
 # Uploaded files
 uploads/*

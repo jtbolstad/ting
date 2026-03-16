@@ -1,0 +1,38 @@
+node_modules
+.git
+.gitignore
+*.md
+.env
+.env.local
+dist
+coverage
+.vscode
+.idea
+
+# Test files
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+test-results
+playwright-report
+e2e
+
+# Development files
+packages/server/prisma/dev.db
+packages/server/prisma/dev.db-journal
+packages/server/test.db
+packages/server/test.db-journal
+packages/server/uploads/*
+!packages/server/uploads/.gitkeep
+
+# Client dev files
+packages/client/.vite
+packages/client/node_modules
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
