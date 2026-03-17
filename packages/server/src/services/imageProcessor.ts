@@ -83,6 +83,8 @@ export async function processImage(
       .webp({ quality: WEBP_QUALITY })
       .toFile(mainPath);
 
+    console.log(`✓ Main image written: ${mainPath}`);
+
     // Generate thumbnail
     await sharp(buffer)
       .resize(THUMBNAIL_WIDTH, null, {
@@ -92,6 +94,19 @@ export async function processImage(
       })
       .webp({ quality: WEBP_QUALITY })
       .toFile(thumbnailPath);
+
+    console.log(`✓ Thumbnail written: ${thumbnailPath}`);
+
+    // Verify files exist
+    const mainExists = await fs
+      .access(mainPath)
+      .then(() => true)
+      .catch(() => false);
+    const thumbExists = await fs
+      .access(thumbnailPath)
+      .then(() => true)
+      .catch(() => false);
+    console.log(`✓ Files on disk: main=${mainExists}, thumb=${thumbExists}`);
 
     // Return relative URLs for serving via Express static
     return {

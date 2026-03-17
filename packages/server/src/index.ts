@@ -69,6 +69,33 @@ async function startServer() {
     res.json({ status: "ok" });
   });
 
+  // Debug endpoint for checking uploads directory
+  app.get("/api/debug/uploads", async (req, res) => {
+    try {
+      const files = await fs.readdir(UPLOADS_DIR, {
+        recursive: true,
+        withFileTypes: true,
+      });
+      const fileList = files
+        .filter((f) => f.isFile())
+        .map((f) =>
+          path.join(f.path || f.parentPath, f.name).replace(UPLOADS_DIR, ""),
+        );
+
+      res.json({
+        uploadsDir: UPLOADS_DIR,
+        totalFiles: fileList.length,
+        files: fileList.slice(0, 20), // First 20 files
+        diskMounted: await fs
+          .access(UPLOADS_DIR)
+          .then(() => true)
+          .catch(() => false),
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message, uploadsDir: UPLOADS_DIR });
+    }
+  });
+
   // In production, serve the built client app
   if (IS_PRODUCTION) {
     app.use(express.static(clientDistPath));

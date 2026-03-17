@@ -45,6 +45,7 @@ router.post(
         req.file.originalname,
       );
 
+      console.log(`✅ Image uploaded successfully:`, result);
       return res.status(200).json(result);
     } catch (error) {
       console.error("Image upload error:", error);
