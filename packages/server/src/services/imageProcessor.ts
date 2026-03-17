@@ -8,10 +8,10 @@ const MAX_WIDTH = 1200;
 const THUMBNAIL_WIDTH = 300;
 const WEBP_QUALITY = 85;
 
-// Base upload directory - use /data in production for Fly.io volume
+// Base upload directory - use /var/data in production for Render persistent disk
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 const UPLOAD_BASE_DIR = IS_PRODUCTION
-  ? path.join("/data", "uploads")
+  ? path.join("/var/data", "uploads")
   : path.join(process.cwd(), "uploads");
 
 export interface ProcessedImage {

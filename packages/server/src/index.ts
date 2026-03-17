@@ -21,7 +21,7 @@ const IS_PRODUCTION = process.env.NODE_ENV === "production";
 async function startServer() {
   // Ensure uploads directory exists
   const UPLOADS_DIR = IS_PRODUCTION
-    ? path.join("/data", "uploads")
+    ? path.join("/var/data", "uploads")
     : path.join(process.cwd(), "uploads");
   await fs.mkdir(UPLOADS_DIR, { recursive: true });
 
