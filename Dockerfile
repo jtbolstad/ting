@@ -19,6 +19,10 @@ RUN pnpm --filter @ting/client build
 # Generate Prisma Client and build server
 WORKDIR /app/packages/server
 RUN pnpm db:generate
+
+# Compile seed script
+RUN pnpm exec tsc prisma/seed.ts --outDir prisma --esModuleInterop --resolveJsonModule --skipLibCheck --module commonjs --target es2020
+
 WORKDIR /app
 RUN pnpm --filter @ting/server build
 
