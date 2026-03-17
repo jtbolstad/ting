@@ -31,10 +31,12 @@ RUN pnpm build
 
 # Build server
 WORKDIR /app/packages/server
-RUN pnpm build
 
-# Generate Prisma Client
+# Generate Prisma Client BEFORE building
 RUN pnpm db:generate
+
+# Now build the server
+RUN pnpm build
 
 # Production stage
 FROM node:20-alpine

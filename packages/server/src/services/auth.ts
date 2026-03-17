@@ -102,7 +102,7 @@ export function serializeMembership(
     isDefault: membership.isDefault,
     createdAt: membership.createdAt.toISOString(),
     updatedAt: membership.updatedAt.toISOString(),
-    groups: membership.groups.map((groupMembership) =>
+    groups: membership.groups.map((groupMembership: any) =>
       serializeMemberGroup(groupMembership.group),
     ),
   };

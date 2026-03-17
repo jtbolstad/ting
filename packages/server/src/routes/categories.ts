@@ -33,7 +33,7 @@ router.get(
         orderBy: { name: "asc" },
       });
 
-      const serialized = categories.map((cat) => ({
+      const serialized = categories.map((cat: any) => ({
         id: cat.id,
         name: cat.name,
         description: cat.description,

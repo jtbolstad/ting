@@ -100,15 +100,16 @@ router.get(
       const totalReviews = reviews.length;
       const averageRating =
         totalReviews > 0
-          ? reviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews
+          ? reviews.reduce((sum: number, r: any) => sum + r.rating, 0) /
+            totalReviews
           : 0;
 
       const ratingDistribution = {
-        1: reviews.filter((r) => r.rating === 1).length,
-        2: reviews.filter((r) => r.rating === 2).length,
-        3: reviews.filter((r) => r.rating === 3).length,
-        4: reviews.filter((r) => r.rating === 4).length,
-        5: reviews.filter((r) => r.rating === 5).length,
+        1: reviews.filter((r: any) => r.rating === 1).length,
+        2: reviews.filter((r: any) => r.rating === 2).length,
+        3: reviews.filter((r: any) => r.rating === 3).length,
+        4: reviews.filter((r: any) => r.rating === 4).length,
+        5: reviews.filter((r: any) => r.rating === 5).length,
       };
 
       const stats: ReviewStats = {

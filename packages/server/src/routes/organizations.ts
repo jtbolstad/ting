@@ -168,7 +168,7 @@ router.get(
 
       const response: ApiResponse<any[]> = {
         success: true,
-        data: memberships.map((membership) => ({
+        data: memberships.map((membership: any) => ({
           membership: serializeMembership(membership),
           user: serializeUser(membership.user, [membership]),
         })),
@@ -343,7 +343,7 @@ router.get(
         Array<MemberGroup & { memberCount: number }>
       > = {
         success: true,
-        data: groups.map((group) => ({
+        data: groups.map((group: any) => ({
           ...serializeMemberGroup(group),
           memberCount: group._count.memberships,
         })),

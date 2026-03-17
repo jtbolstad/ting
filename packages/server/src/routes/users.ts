@@ -41,7 +41,7 @@ router.get(
 
       const response: ApiResponse<any[]> = {
         success: true,
-        data: memberships.map((membership) =>
+        data: memberships.map((membership: any) =>
           serializeUser(membership.user, [membership]),
         ),
       };

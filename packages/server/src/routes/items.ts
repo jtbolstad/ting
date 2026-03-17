@@ -91,11 +91,11 @@ router.get(
       });
 
       const reviewMap = new Map(
-        reviewAggregates.map((agg) => [agg.itemId, agg._avg.rating]),
+        reviewAggregates.map((agg: any) => [agg.itemId, agg._avg.rating]),
       );
 
       // Add review stats to items
-      const itemsWithStats = items.map((item) => ({
+      const itemsWithStats = items.map((item: any) => ({
         ...item,
         averageRating: reviewMap.get(item.id),
         reviewCount: item._count.reviews,

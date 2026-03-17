@@ -198,7 +198,9 @@ router.get("/me", authenticate, async (req: AuthRequest, res: Response) => {
     const serializedUser = serializeUser(user, membershipsData);
     const serializedMemberships = membershipsData.map(serializeMembership);
     const activeMembership =
-      membershipsData.find((m) => m.isDefault) ?? membershipsData[0] ?? null;
+      membershipsData.find((m: any) => m.isDefault) ??
+      membershipsData[0] ??
+      null;
 
     const response: ApiResponse<any> = {
       success: true,
