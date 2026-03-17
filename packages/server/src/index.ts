@@ -50,7 +50,16 @@ async function startServer() {
 
   // In production, serve the built client app
   if (IS_PRODUCTION) {
-    const clientDistPath = path.join(__dirname, "..", "..", "client", "dist");
+    // __dirname is /app/packages/server/dist/src in production
+    // We need to go up to /app/packages/client/dist
+    const clientDistPath = path.join(
+      __dirname,
+      "..",
+      "..",
+      "..",
+      "client",
+      "dist",
+    );
     app.use(express.static(clientDistPath));
 
     // Serve index.html for all non-API routes (SPA fallback)
