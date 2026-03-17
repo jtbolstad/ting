@@ -9,7 +9,8 @@ const THUMBNAIL_WIDTH = 300;
 const WEBP_QUALITY = 85;
 
 // Base upload directory - use /var/data in production for Render persistent disk
-const IS_PRODUCTION = process.env.NODE_ENV === "production";
+const IS_PRODUCTION =
+  process.env.NODE_ENV === "production" || process.env.RENDER === "true";
 const UPLOAD_BASE_DIR = IS_PRODUCTION
   ? path.join("/var/data", "uploads")
   : path.join(process.cwd(), "uploads");
@@ -27,7 +28,9 @@ async function ensureUploadDirectory(organizationId: string): Promise<string> {
 
   try {
     await fs.mkdir(orgDir, { recursive: true });
+    console.log(`✓ Upload directory ready: ${orgDir}`);
   } catch (error) {
+    console.error(`✗ Failed to create upload directory ${orgDir}:`, error);
     throw new Error(`Failed to create upload directory: ${error}`);
   }
 

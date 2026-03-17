@@ -27,6 +27,7 @@ async function startServer() {
     ? path.join("/var/data", "uploads")
     : path.join(process.cwd(), "uploads");
   await fs.mkdir(UPLOADS_DIR, { recursive: true });
+  console.log(`📁 Uploads directory: ${UPLOADS_DIR}`);
 
   app.use(cors());
   app.use(express.json());

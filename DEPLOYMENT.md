@@ -1,8 +1,93 @@
-# Deploying Ting to Fly.io
+# Deploying Ting
 
-This guide walks you through deploying Ting to Fly.io with SQLite or PostgreSQL.
+This guide covers deployment to Render and Fly.io with persistent storage for SQLite and file uploads.
 
-## Prerequisites
+## Deploying to Render
+
+### Prerequisites
+
+1. Render account (free tier available)
+2. GitHub repository connected to Render
+3. Docker support enabled
+
+### 1. Create Web Service
+
+1. Go to [Render Dashboard](https://dashboard.render.com/)
+2. Click **New** → **Web Service**
+3. Connect your GitHub repository
+4. Configure:
+   - **Name**: `ting` (or your choice)
+   - **Environment**: `Docker`
+   - **Region**: Choose closest to users
+   - **Branch**: `main`
+   - **Instance Type**: `Free` or `Starter`
+
+### 2. Add Persistent Disk (CRITICAL for uploads & database)
+
+**This step is required for image uploads and SQLite database persistence!**
+
+1. In your service settings, go to **Disks**
+2. Click **Add Disk**
+3. Configure:
+   - **Name**: `ting-data`
+   - **Mount Path**: `/var/data` ⚠️ **Must be exactly this path**
+   - **Size**: 1 GB (increase as needed)
+4. Click **Create Disk**
+
+### 3. Set Environment Variables
+
+In your service's **Environment** tab, add:
+
+```
+DATABASE_URL=file:/var/data/db.sqlite
+JWT_SECRET=<generate-a-long-random-string>
+PORT=8080
+NODE_ENV=production
+```
+
+**Generate a secure JWT_SECRET:**
+
+```bash
+openssl rand -base64 32
+```
+
+### 4. Deploy
+
+1. Click **Manual Deploy** → **Deploy latest commit**
+2. Monitor build logs
+3. Once deployed, your app will be at `https://your-app.onrender.com`
+
+### 5. Verify Upload Functionality
+
+Check logs for:
+
+```
+📁 Uploads directory: /var/data/uploads
+```
+
+If you see errors about permissions or missing directories, the disk mount may not be configured correctly.
+
+### Troubleshooting Render
+
+**Images not uploading:**
+
+- Verify `/var/data` disk is mounted in service settings
+- Check logs for "Failed to create upload directory" errors
+- Ensure `NODE_ENV=production` or `RENDER=true` env var is set
+
+**Database wiped on redeploy:**
+
+- Add a persistent disk at `/var/data`
+- Verify `DATABASE_URL=file:/var/data/db.sqlite`
+
+**Cannot access uploaded images:**
+
+- Images are served at `/uploads/{organizationId}/{filename}`
+- Check that disk has write permissions (fixed in Dockerfile)
+
+---
+
+## Deploying to Fly.io
 
 1. Install the Fly CLI:
 

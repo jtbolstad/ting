@@ -56,8 +56,9 @@ COPY --from=builder /app/packages/server/uploads ./packages/server/uploads
 
 WORKDIR /app/packages/server
 
-# Create data directory for SQLite database and uploads
-RUN mkdir -p /var/data
+# Create data directory for SQLite database and uploads with proper permissions
+RUN mkdir -p /var/data/uploads && \
+    chmod -R 777 /var/data
 
 # Expose port
 EXPOSE 8080
