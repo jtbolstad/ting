@@ -124,11 +124,13 @@ export async function processImage(
  */
 export async function deleteImage(imageUrl: string): Promise<void> {
   try {
-    // Extract path from URL (e.g., /uploads/orgId/file.webp -> uploads/orgId/file.webp)
-    const relativePath = imageUrl.startsWith("/")
-      ? imageUrl.slice(1)
-      : imageUrl;
-    const fullPath = path.join(process.cwd(), relativePath);
+    // Extract just the filename portion after /uploads/
+    // e.g., /uploads/orgId/file.webp -> orgId/file.webp
+    const uploadsPrefix = "/uploads/";
+    const relativePath = imageUrl.startsWith(uploadsPrefix)
+      ? imageUrl.slice(uploadsPrefix.length)
+      : imageUrl.replace(/^\//, "");
+    const fullPath = path.join(UPLOAD_BASE_DIR, relativePath);
 
     // Delete main image
     await fs.unlink(fullPath);
