@@ -32,8 +32,25 @@ async function startServer() {
   app.use(cors());
   app.use(express.json());
 
-  // Serve uploaded files statically
-  app.use("/uploads", express.static(UPLOADS_DIR));
+  // Serve uploaded files statically - BEFORE other routes
+  app.use(
+    "/uploads",
+    express.static(UPLOADS_DIR, {
+      setHeaders: (res) => {
+        res.set("Cache-Control", "public, max-age=31536000");
+      },
+      fallthrough: true,
+    }),
+  );
+
+  // Debug logging for upload requests in production
+  if (IS_PRODUCTION) {
+    app.use("/uploads", (req, res, next) => {
+      console.log(`⚠️ Upload file not found: ${req.path}`);
+      console.log(`   Looking in: ${UPLOADS_DIR}`);
+      res.status(404).send("File not found");
+    });
+  }
 
   // API Routes
   app.use("/api/auth", authRoutes);
@@ -56,8 +73,13 @@ async function startServer() {
   if (IS_PRODUCTION) {
     app.use(express.static(clientDistPath));
 
-    // Serve index.html for all non-API routes (SPA fallback)
-    app.get("*", (req, res) => {
+    // Serve index.html for all non-API/non-upload routes (SPA fallback)
+    // This must NOT catch /api/* or /uploads/* routes
+    app.get("*", (req, res, next) => {
+      // Skip SPA fallback for API and upload routes
+      if (req.path.startsWith("/api") || req.path.startsWith("/uploads")) {
+        return next();
+      }
       res.sendFile(path.join(clientDistPath, "index.html"));
     });
   }
