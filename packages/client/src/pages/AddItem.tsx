@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import type { Category } from "@ting/shared";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { apiClient } from "../api/client";
+import { ImageInput } from "../components/ImageInput";
 import { useAuth } from "../context/AuthContext";
 import { useOrganization } from "../context/OrganizationContext";
-import { ImageInput } from "../components/ImageInput";
-import type { Category } from "@ting/shared";
 
 export function AddItem() {
   const { t } = useTranslation();
@@ -57,7 +57,7 @@ export function AddItem() {
         name: formData.name,
         description: formData.description || undefined,
         categoryId: formData.categoryId,
-        imageUrl: formData.imageUrl || null,
+        imageUrl: formData.imageUrl || undefined,
       });
 
       // Navigate to the new item's detail page

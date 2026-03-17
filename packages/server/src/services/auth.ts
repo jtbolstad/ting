@@ -1,10 +1,15 @@
-import bcryptjs from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import type { Prisma } from '@prisma/client';
-import type { User, Membership as SharedMembership, MemberGroup as SharedMemberGroup, Organization as SharedOrganization } from '@ting/shared';
+import type { Prisma } from "@prisma/client";
+import type {
+  MemberGroup as SharedMemberGroup,
+  Membership as SharedMembership,
+  Organization as SharedOrganization,
+  User,
+} from "@ting/shared";
+import bcryptjs from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const SALT_ROUNDS = 10;
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 
 type MembershipWithRelations = Prisma.MembershipGetPayload<{
   include: {
@@ -21,7 +26,10 @@ export async function hashPassword(password: string): Promise<string> {
   return bcryptjs.hash(password, SALT_ROUNDS);
 }
 
-export async function comparePassword(password: string, hash: string): Promise<boolean> {
+export async function comparePassword(
+  password: string,
+  hash: string,
+): Promise<boolean> {
   return bcryptjs.compare(password, hash);
 }
 
@@ -29,15 +37,30 @@ export function generateToken(user: User): string {
   return jwt.sign(
     { id: user.id, email: user.email, role: user.role },
     JWT_SECRET,
-    { expiresIn: '7d' }
+    { expiresIn: "7d" },
   );
 }
 
-export function verifyToken(token: string): { id: string; email: string; role: string } {
-  return jwt.verify(token, JWT_SECRET) as { id: string; email: string; role: string };
+export function verifyToken(token: string): {
+  id: string;
+  email: string;
+  role: string;
+} {
+  return jwt.verify(token, JWT_SECRET) as {
+    id: string;
+    email: string;
+    role: string;
+  };
 }
 
-export function serializeOrganization(org: { id: string; name: string; slug: string; description: string | null; createdAt: Date; updatedAt: Date }): SharedOrganization {
+export function serializeOrganization(org: {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}): SharedOrganization {
   return {
     id: org.id,
     name: org.name,
@@ -48,7 +71,14 @@ export function serializeOrganization(org: { id: string; name: string; slug: str
   };
 }
 
-export function serializeMemberGroup(group: { id: string; organizationId: string; name: string; description: string | null; createdAt: Date; updatedAt: Date }): SharedMemberGroup {
+export function serializeMemberGroup(group: {
+  id: string;
+  organizationId: string;
+  name: string;
+  description: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}): SharedMemberGroup {
   return {
     id: group.id,
     organizationId: group.organizationId,
@@ -59,22 +89,29 @@ export function serializeMemberGroup(group: { id: string; organizationId: string
   };
 }
 
-export function serializeMembership(membership: MembershipWithRelations): SharedMembership {
+export function serializeMembership(
+  membership: MembershipWithRelations,
+): SharedMembership {
   return {
     id: membership.id,
     organizationId: membership.organizationId,
     organization: serializeOrganization(membership.organization),
     userId: membership.userId,
-    role: membership.role as SharedMembership['role'],
-    status: membership.status as SharedMembership['status'],
+    role: membership.role as SharedMembership["role"],
+    status: membership.status as SharedMembership["status"],
     isDefault: membership.isDefault,
     createdAt: membership.createdAt.toISOString(),
     updatedAt: membership.updatedAt.toISOString(),
-    groups: membership.groups.map((groupMembership) => serializeMemberGroup(groupMembership.group)),
+    groups: membership.groups.map((groupMembership) =>
+      serializeMemberGroup(groupMembership.group),
+    ),
   };
 }
 
-export function serializeUser(user: any, memberships?: MembershipWithRelations[]): User {
+export function serializeUser(
+  user: any,
+  memberships?: MembershipWithRelations[],
+): User {
   return {
     id: user.id,
     email: user.email,

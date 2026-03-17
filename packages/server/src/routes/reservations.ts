@@ -1,11 +1,19 @@
-import { Router } from 'express';
-import type { Response } from 'express';
-import { prisma } from '../prisma.js';
-import { authenticate, type AuthRequest } from '../middleware/auth.js';
-import { withOrganizationContext, hasOrgRole } from '../middleware/organization.js';
-import type { Reservation, CreateReservationInput, UpdateReservationInput, ApiResponse } from '@ting/shared';
+import type {
+  ApiResponse,
+  CreateReservationInput,
+  Reservation,
+  UpdateReservationInput,
+} from "@ting/shared";
+import type { Router as ExpressRouter, Response } from "express";
+import { Router } from "express";
+import { authenticate, type AuthRequest } from "../middleware/auth.js";
+import {
+  hasOrgRole,
+  withOrganizationContext,
+} from "../middleware/organization.js";
+import { prisma } from "../prisma.js";
 
-const router = Router();
+const router: ExpressRouter = Router();
 
 router.use(authenticate);
 router.use(withOrganizationContext());
@@ -25,15 +33,15 @@ function serializeReservation(reservation: any): Reservation {
 }
 
 // Check item availability for a date range
-router.get('/availability/:itemId', async (req: AuthRequest, res: Response) => {
+router.get("/availability/:itemId", async (req: AuthRequest, res: Response) => {
   try {
     const { itemId } = req.params;
     const { startDate, endDate } = req.query as any;
 
     if (!startDate || !endDate) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'startDate and endDate are required' 
+      return res.status(400).json({
+        success: false,
+        error: "startDate and endDate are required",
       });
     }
 
@@ -46,7 +54,9 @@ router.get('/availability/:itemId', async (req: AuthRequest, res: Response) => {
     });
 
     if (!item) {
-      return res.status(404).json({ success: false, error: 'Item not found in this organization' });
+      return res
+        .status(404)
+        .json({ success: false, error: "Item not found in this organization" });
     }
 
     const [reservations, loans] = await Promise.all([
@@ -54,13 +64,10 @@ router.get('/availability/:itemId', async (req: AuthRequest, res: Response) => {
         where: {
           itemId,
           organizationId: req.organization!.id,
-          status: { in: ['PENDING', 'CONFIRMED'] },
+          status: { in: ["PENDING", "CONFIRMED"] },
           OR: [
             {
-              AND: [
-                { startDate: { lte: end } },
-                { endDate: { gte: start } },
-              ],
+              AND: [{ startDate: { lte: end } }, { endDate: { gte: start } }],
             },
           ],
         },
@@ -88,22 +95,26 @@ router.get('/availability/:itemId', async (req: AuthRequest, res: Response) => {
       success: true,
       data: {
         available,
-        conflicts: available ? undefined : [...reservations.map(serializeReservation), ...loans],
+        conflicts: available
+          ? undefined
+          : [...reservations.map(serializeReservation), ...loans],
       },
     };
 
     res.json(response);
   } catch (error) {
-    console.error('Check availability error:', error);
-    res.status(500).json({ success: false, error: 'Failed to check availability' });
+    console.error("Check availability error:", error);
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to check availability" });
   }
 });
 
 // List user's reservations
-router.get('/', async (req: AuthRequest, res: Response) => {
+router.get("/", async (req: AuthRequest, res: Response) => {
   try {
     const requestedUserId = req.query.userId as string | undefined;
-    const canViewAll = req.user!.role === 'ADMIN' || hasOrgRole(req, 'MANAGER');
+    const canViewAll = req.user!.role === "ADMIN" || hasOrgRole(req, "MANAGER");
     const userId = canViewAll ? requestedUserId : req.user!.id;
 
     const reservations = await prisma.reservation.findMany({
@@ -115,7 +126,7 @@ router.get('/', async (req: AuthRequest, res: Response) => {
         item: { include: { category: true } },
         user: true,
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
     });
 
     const response: ApiResponse<Reservation[]> = {
@@ -125,21 +136,23 @@ router.get('/', async (req: AuthRequest, res: Response) => {
 
     res.json(response);
   } catch (error) {
-    console.error('List reservations error:', error);
-    res.status(500).json({ success: false, error: 'Failed to fetch reservations' });
+    console.error("List reservations error:", error);
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to fetch reservations" });
   }
 });
 
 // Create reservation
-router.post('/', async (req: AuthRequest, res: Response) => {
+router.post("/", async (req: AuthRequest, res: Response) => {
   try {
     const { itemId, startDate, endDate } = req.body as CreateReservationInput;
     const userId = req.user!.id;
 
     if (!itemId || !startDate || !endDate) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'itemId, startDate, and endDate are required' 
+      return res.status(400).json({
+        success: false,
+        error: "itemId, startDate, and endDate are required",
       });
     }
 
@@ -149,10 +162,13 @@ router.post('/', async (req: AuthRequest, res: Response) => {
     // Check if item exists and is available
     const item = await prisma.item.findUnique({ where: { id: itemId } });
     if (!item) {
-      return res.status(404).json({ success: false, error: 'Item not found' });
+      return res.status(404).json({ success: false, error: "Item not found" });
     }
     if (item.organizationId !== req.organization!.id) {
-      return res.status(403).json({ success: false, error: 'Item does not belong to this organization' });
+      return res.status(403).json({
+        success: false,
+        error: "Item does not belong to this organization",
+      });
     }
 
     // Check for conflicts
@@ -160,22 +176,19 @@ router.post('/', async (req: AuthRequest, res: Response) => {
       where: {
         itemId,
         organizationId: req.organization!.id,
-        status: { in: ['PENDING', 'CONFIRMED'] },
+        status: { in: ["PENDING", "CONFIRMED"] },
         OR: [
           {
-            AND: [
-              { startDate: { lte: end } },
-              { endDate: { gte: start } },
-            ],
+            AND: [{ startDate: { lte: end } }, { endDate: { gte: start } }],
           },
         ],
       },
     });
 
     if (conflicts.length > 0) {
-      return res.status(409).json({ 
-        success: false, 
-        error: 'Item is not available for the selected dates' 
+      return res.status(409).json({
+        success: false,
+        error: "Item is not available for the selected dates",
       });
     }
 
@@ -186,7 +199,7 @@ router.post('/', async (req: AuthRequest, res: Response) => {
         itemId,
         startDate: start,
         endDate: end,
-        status: 'CONFIRMED',
+        status: "CONFIRMED",
       },
       include: {
         item: { include: { category: true } },
@@ -201,33 +214,40 @@ router.post('/', async (req: AuthRequest, res: Response) => {
 
     res.status(201).json(response);
   } catch (error) {
-    console.error('Create reservation error:', error);
-    res.status(500).json({ success: false, error: 'Failed to create reservation' });
+    console.error("Create reservation error:", error);
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to create reservation" });
   }
 });
 
 // Update reservation
-router.patch('/:id', async (req: AuthRequest, res: Response) => {
+router.patch("/:id", async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     const { startDate, endDate, status } = req.body as UpdateReservationInput;
 
-    const reservation = await prisma.reservation.findUnique({ 
+    const reservation = await prisma.reservation.findUnique({
       where: { id },
       include: { user: true },
     });
 
     if (!reservation) {
-      return res.status(404).json({ success: false, error: 'Reservation not found' });
+      return res
+        .status(404)
+        .json({ success: false, error: "Reservation not found" });
     }
 
     if (reservation.organizationId !== req.organization!.id) {
-      return res.status(404).json({ success: false, error: 'Reservation not found in this organization' });
+      return res.status(404).json({
+        success: false,
+        error: "Reservation not found in this organization",
+      });
     }
 
     // Users can only update their own reservations, admins can update any
-    if (reservation.userId !== req.user!.id && req.user!.role !== 'ADMIN') {
-      return res.status(403).json({ success: false, error: 'Forbidden' });
+    if (reservation.userId !== req.user!.id && req.user!.role !== "ADMIN") {
+      return res.status(403).json({ success: false, error: "Forbidden" });
     }
 
     const updateData: any = {};
@@ -251,40 +271,49 @@ router.patch('/:id', async (req: AuthRequest, res: Response) => {
 
     res.json(response);
   } catch (error) {
-    console.error('Update reservation error:', error);
-    res.status(500).json({ success: false, error: 'Failed to update reservation' });
+    console.error("Update reservation error:", error);
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to update reservation" });
   }
 });
 
 // Cancel reservation
-router.delete('/:id', async (req: AuthRequest, res: Response) => {
+router.delete("/:id", async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
 
     const reservation = await prisma.reservation.findUnique({ where: { id } });
 
     if (!reservation) {
-      return res.status(404).json({ success: false, error: 'Reservation not found' });
+      return res
+        .status(404)
+        .json({ success: false, error: "Reservation not found" });
     }
 
     if (reservation.organizationId !== req.organization!.id) {
-      return res.status(404).json({ success: false, error: 'Reservation not found in this organization' });
+      return res.status(404).json({
+        success: false,
+        error: "Reservation not found in this organization",
+      });
     }
 
     // Users can only cancel their own reservations, admins can cancel any
-    if (reservation.userId !== req.user!.id && req.user!.role !== 'ADMIN') {
-      return res.status(403).json({ success: false, error: 'Forbidden' });
+    if (reservation.userId !== req.user!.id && req.user!.role !== "ADMIN") {
+      return res.status(403).json({ success: false, error: "Forbidden" });
     }
 
     await prisma.reservation.update({
       where: { id },
-      data: { status: 'CANCELLED' },
+      data: { status: "CANCELLED" },
     });
 
     res.json({ success: true });
   } catch (error) {
-    console.error('Cancel reservation error:', error);
-    res.status(500).json({ success: false, error: 'Failed to cancel reservation' });
+    console.error("Cancel reservation error:", error);
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to cancel reservation" });
   }
 });
 

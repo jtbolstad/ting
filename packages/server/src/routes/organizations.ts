@@ -1,26 +1,43 @@
-import { Router } from 'express';
-import type { Response } from 'express';
-import { prisma } from '../prisma.js';
-import { authenticate, requireAdmin, type AuthRequest } from '../middleware/auth.js';
-import { withOrganizationContext, requireOrgRole } from '../middleware/organization.js';
-import { serializeOrganization, serializeMembership, serializeMemberGroup, serializeUser } from '../services/auth.js';
-import type { ApiResponse, Organization, Membership, MemberGroup } from '@ting/shared';
+import type {
+  ApiResponse,
+  MemberGroup,
+  Membership,
+  Organization,
+} from "@ting/shared";
+import type { Router as ExpressRouter, Response } from "express";
+import { Router } from "express";
+import {
+  authenticate,
+  requireAdmin,
+  type AuthRequest,
+} from "../middleware/auth.js";
+import {
+  requireOrgRole,
+  withOrganizationContext,
+} from "../middleware/organization.js";
+import { prisma } from "../prisma.js";
+import {
+  serializeMemberGroup,
+  serializeMembership,
+  serializeOrganization,
+  serializeUser,
+} from "../services/auth.js";
 
-const router = Router();
+const router: ExpressRouter = Router();
 
 function slugify(input: string) {
   return input
     .toLowerCase()
     .trim()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
     .slice(0, 64);
 }
 
-router.get('/public', async (_req, res: Response) => {
+router.get("/public", async (_req, res: Response) => {
   try {
     const organizations = await prisma.organization.findMany({
-      orderBy: { name: 'asc' },
+      orderBy: { name: "asc" },
     });
 
     const response: ApiResponse<Organization[]> = {
@@ -30,24 +47,26 @@ router.get('/public', async (_req, res: Response) => {
 
     res.json(response);
   } catch (error) {
-    console.error('List organizations error:', error);
-    res.status(500).json({ success: false, error: 'Failed to fetch organizations' });
+    console.error("List organizations error:", error);
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to fetch organizations" });
   }
 });
 
 router.use(authenticate);
 
-router.get('/me', async (req: AuthRequest, res: Response) => {
+router.get("/me", async (req: AuthRequest, res: Response) => {
   try {
     const memberships = await prisma.membership.findMany({
-      where: { userId: req.user!.id, status: 'ACTIVE' },
+      where: { userId: req.user!.id, status: "ACTIVE" },
       include: {
         organization: true,
         groups: {
           include: { group: true },
         },
       },
-      orderBy: { createdAt: 'asc' },
+      orderBy: { createdAt: "asc" },
     });
 
     const response: ApiResponse<Membership[]> = {
@@ -57,17 +76,25 @@ router.get('/me', async (req: AuthRequest, res: Response) => {
 
     res.json(response);
   } catch (error) {
-    console.error('List memberships error:', error);
-    res.status(500).json({ success: false, error: 'Failed to fetch memberships' });
+    console.error("List memberships error:", error);
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to fetch memberships" });
   }
 });
 
-router.post('/', requireAdmin, async (req: AuthRequest, res: Response) => {
+router.post("/", requireAdmin, async (req: AuthRequest, res: Response) => {
   try {
-    const { name, slug, description } = req.body as { name?: string; slug?: string; description?: string };
+    const { name, slug, description } = req.body as {
+      name?: string;
+      slug?: string;
+      description?: string;
+    };
 
     if (!name) {
-      return res.status(400).json({ success: false, error: 'Name is required' });
+      return res
+        .status(400)
+        .json({ success: false, error: "Name is required" });
     }
 
     const organization = await prisma.organization.create({
@@ -82,8 +109,8 @@ router.post('/', requireAdmin, async (req: AuthRequest, res: Response) => {
       data: {
         organizationId: organization.id,
         userId: req.user!.id,
-        role: 'OWNER',
-        status: 'ACTIVE',
+        role: "OWNER",
+        status: "ACTIVE",
         isDefault: true,
       },
       include: {
@@ -94,7 +121,10 @@ router.post('/', requireAdmin, async (req: AuthRequest, res: Response) => {
       },
     });
 
-    const response: ApiResponse<{ organization: Organization; membership: Membership }> = {
+    const response: ApiResponse<{
+      organization: Organization;
+      membership: Membership;
+    }> = {
       success: true,
       data: {
         organization: serializeOrganization(organization),
@@ -104,70 +134,144 @@ router.post('/', requireAdmin, async (req: AuthRequest, res: Response) => {
 
     res.status(201).json(response);
   } catch (error: any) {
-    console.error('Create organization error:', error);
-    if (error?.code === 'P2002') {
-      return res.status(409).json({ success: false, error: 'Organization slug already exists' });
+    console.error("Create organization error:", error);
+    if (error?.code === "P2002") {
+      return res
+        .status(409)
+        .json({ success: false, error: "Organization slug already exists" });
     }
-    res.status(500).json({ success: false, error: 'Failed to create organization' });
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to create organization" });
   }
 });
 
-router.get('/members', withOrganizationContext(), requireOrgRole('MANAGER'), async (req: AuthRequest, res: Response) => {
-  try {
-    const memberships = await prisma.membership.findMany({
-      where: {
-        organizationId: req.organization!.id,
-      },
-      include: {
-        user: true,
-        organization: true,
-        groups: {
-          include: { group: true },
+router.get(
+  "/members",
+  withOrganizationContext(),
+  requireOrgRole("MANAGER"),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const memberships = await prisma.membership.findMany({
+        where: {
+          organizationId: req.organization!.id,
         },
-      },
-      orderBy: { createdAt: 'desc' },
-    });
+        include: {
+          user: true,
+          organization: true,
+          groups: {
+            include: { group: true },
+          },
+        },
+        orderBy: { createdAt: "desc" },
+      });
 
-    const response: ApiResponse<any[]> = {
-      success: true,
-      data: memberships.map((membership) => ({
-        membership: serializeMembership(membership),
-        user: serializeUser(membership.user, [membership]),
-      })),
-    };
+      const response: ApiResponse<any[]> = {
+        success: true,
+        data: memberships.map((membership) => ({
+          membership: serializeMembership(membership),
+          user: serializeUser(membership.user, [membership]),
+        })),
+      };
 
-    res.json(response);
-  } catch (error) {
-    console.error('List members error:', error);
-    res.status(500).json({ success: false, error: 'Failed to fetch members' });
-  }
-});
-
-router.post('/members', withOrganizationContext(), requireOrgRole('ADMIN'), async (req: AuthRequest, res: Response) => {
-  try {
-    const { email, role = 'MEMBER' } = req.body as { email?: string; role?: string };
-
-    if (!email) {
-      return res.status(400).json({ success: false, error: 'Email is required' });
+      res.json(response);
+    } catch (error) {
+      console.error("List members error:", error);
+      res
+        .status(500)
+        .json({ success: false, error: "Failed to fetch members" });
     }
+  },
+);
 
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) {
-      return res.status(404).json({ success: false, error: 'User not found' });
+router.post(
+  "/members",
+  withOrganizationContext(),
+  requireOrgRole("ADMIN"),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { email, role = "MEMBER" } = req.body as {
+        email?: string;
+        role?: string;
+      };
+
+      if (!email) {
+        return res
+          .status(400)
+          .json({ success: false, error: "Email is required" });
+      }
+
+      const user = await prisma.user.findUnique({ where: { email } });
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, error: "User not found" });
+      }
+
+      const existing = await prisma.membership.findFirst({
+        where: {
+          userId: user.id,
+          organizationId: req.organization!.id,
+        },
+      });
+
+      let membership;
+      if (existing) {
+        membership = await prisma.membership.update({
+          where: { id: existing.id },
+          data: { role },
+          include: {
+            organization: true,
+            groups: {
+              include: { group: true },
+            },
+          },
+        });
+      } else {
+        membership = await prisma.membership.create({
+          data: {
+            organizationId: req.organization!.id,
+            userId: user.id,
+            role,
+            status: "ACTIVE",
+          },
+          include: {
+            organization: true,
+            groups: {
+              include: { group: true },
+            },
+          },
+        });
+      }
+
+      const response: ApiResponse<Membership> = {
+        success: true,
+        data: serializeMembership(membership),
+      };
+
+      res.status(existing ? 200 : 201).json(response);
+    } catch (error) {
+      console.error("Add member error:", error);
+      res.status(500).json({ success: false, error: "Failed to add member" });
     }
+  },
+);
 
-    const existing = await prisma.membership.findFirst({
-      where: {
-        userId: user.id,
-        organizationId: req.organization!.id,
-      },
-    });
+router.patch(
+  "/members/:membershipId",
+  withOrganizationContext(),
+  requireOrgRole("ADMIN"),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { membershipId } = req.params;
+      const { role, status, isDefault } = req.body as {
+        role?: string;
+        status?: string;
+        isDefault?: boolean;
+      };
 
-    let membership;
-    if (existing) {
-      membership = await prisma.membership.update({
-        where: { id: existing.id },
-        data: { role },
+      const membership = await prisma.membership.findUnique({
+        where: { id: membershipId },
         include: {
           organization: true,
           groups: {
@@ -175,184 +279,178 @@ router.post('/members', withOrganizationContext(), requireOrgRole('ADMIN'), asyn
           },
         },
       });
-    } else {
-      membership = await prisma.membership.create({
+
+      if (!membership || membership.organizationId !== req.organization!.id) {
+        return res
+          .status(404)
+          .json({ success: false, error: "Membership not found" });
+      }
+
+      if (isDefault) {
+        await prisma.membership.updateMany({
+          where: {
+            userId: membership.userId,
+          },
+          data: { isDefault: false },
+        });
+      }
+
+      const updated = await prisma.membership.update({
+        where: { id: membershipId },
+        data: {
+          role: role || membership.role,
+          status: status || membership.status,
+          isDefault: isDefault ?? membership.isDefault,
+        },
+        include: {
+          organization: true,
+          groups: {
+            include: { group: true },
+          },
+        },
+      });
+
+      const response: ApiResponse<Membership> = {
+        success: true,
+        data: serializeMembership(updated),
+      };
+
+      res.json(response);
+    } catch (error) {
+      console.error("Update membership error:", error);
+      res
+        .status(500)
+        .json({ success: false, error: "Failed to update membership" });
+    }
+  },
+);
+
+router.get(
+  "/groups",
+  withOrganizationContext(),
+  requireOrgRole("MANAGER"),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const groups = await prisma.memberGroup.findMany({
+        where: { organizationId: req.organization!.id },
+        include: {
+          _count: { select: { memberships: true } },
+        },
+        orderBy: { name: "asc" },
+      });
+
+      const response: ApiResponse<
+        Array<MemberGroup & { memberCount: number }>
+      > = {
+        success: true,
+        data: groups.map((group) => ({
+          ...serializeMemberGroup(group),
+          memberCount: group._count.memberships,
+        })),
+      };
+
+      res.json(response);
+    } catch (error) {
+      console.error("List groups error:", error);
+      res.status(500).json({ success: false, error: "Failed to fetch groups" });
+    }
+  },
+);
+
+router.post(
+  "/groups",
+  withOrganizationContext(),
+  requireOrgRole("ADMIN"),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { name, description } = req.body as {
+        name?: string;
+        description?: string;
+      };
+
+      if (!name) {
+        return res
+          .status(400)
+          .json({ success: false, error: "Name is required" });
+      }
+
+      const group = await prisma.memberGroup.create({
         data: {
           organizationId: req.organization!.id,
-          userId: user.id,
-          role,
-          status: 'ACTIVE',
+          name,
+          description: description || null,
         },
-        include: {
-          organization: true,
-          groups: {
-            include: { group: true },
+      });
+
+      const response: ApiResponse<MemberGroup> = {
+        success: true,
+        data: serializeMemberGroup(group),
+      };
+
+      res.status(201).json(response);
+    } catch (error) {
+      console.error("Create group error:", error);
+      res.status(500).json({ success: false, error: "Failed to create group" });
+    }
+  },
+);
+
+router.post(
+  "/groups/:groupId/members",
+  withOrganizationContext(),
+  requireOrgRole("MANAGER"),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { groupId } = req.params;
+      const { membershipId } = req.body as { membershipId?: string };
+
+      if (!membershipId) {
+        return res
+          .status(400)
+          .json({ success: false, error: "membershipId is required" });
+      }
+
+      const [group, membership] = await Promise.all([
+        prisma.memberGroup.findUnique({ where: { id: groupId } }),
+        prisma.membership.findUnique({ where: { id: membershipId } }),
+      ]);
+
+      if (!group || group.organizationId !== req.organization!.id) {
+        return res.status(404).json({
+          success: false,
+          error: "Group not found in this organization",
+        });
+      }
+
+      if (!membership || membership.organizationId !== req.organization!.id) {
+        return res.status(404).json({
+          success: false,
+          error: "Membership not found in this organization",
+        });
+      }
+
+      await prisma.memberGroupMembership.upsert({
+        where: {
+          membershipId_groupId: {
+            membershipId,
+            groupId,
           },
         },
-      });
-    }
-
-    const response: ApiResponse<Membership> = {
-      success: true,
-      data: serializeMembership(membership),
-    };
-
-    res.status(existing ? 200 : 201).json(response);
-  } catch (error) {
-    console.error('Add member error:', error);
-    res.status(500).json({ success: false, error: 'Failed to add member' });
-  }
-});
-
-router.patch('/members/:membershipId', withOrganizationContext(), requireOrgRole('ADMIN'), async (req: AuthRequest, res: Response) => {
-  try {
-    const { membershipId } = req.params;
-    const { role, status, isDefault } = req.body as { role?: string; status?: string; isDefault?: boolean };
-
-    const membership = await prisma.membership.findUnique({
-      where: { id: membershipId },
-      include: {
-        organization: true,
-        groups: {
-          include: { group: true },
-        },
-      },
-    });
-
-    if (!membership || membership.organizationId !== req.organization!.id) {
-      return res.status(404).json({ success: false, error: 'Membership not found' });
-    }
-
-    if (isDefault) {
-      await prisma.membership.updateMany({
-        where: {
-          userId: membership.userId,
-        },
-        data: { isDefault: false },
-      });
-    }
-
-    const updated = await prisma.membership.update({
-      where: { id: membershipId },
-      data: {
-        role: role || membership.role,
-        status: status || membership.status,
-        isDefault: isDefault ?? membership.isDefault,
-      },
-      include: {
-        organization: true,
-        groups: {
-          include: { group: true },
-        },
-      },
-    });
-
-    const response: ApiResponse<Membership> = {
-      success: true,
-      data: serializeMembership(updated),
-    };
-
-    res.json(response);
-  } catch (error) {
-    console.error('Update membership error:', error);
-    res.status(500).json({ success: false, error: 'Failed to update membership' });
-  }
-});
-
-router.get('/groups', withOrganizationContext(), requireOrgRole('MANAGER'), async (req: AuthRequest, res: Response) => {
-  try {
-    const groups = await prisma.memberGroup.findMany({
-      where: { organizationId: req.organization!.id },
-      include: {
-        _count: { select: { memberships: true } },
-      },
-      orderBy: { name: 'asc' },
-    });
-
-    const response: ApiResponse<Array<MemberGroup & { memberCount: number }>> = {
-      success: true,
-      data: groups.map((group) => ({
-        ...serializeMemberGroup(group),
-        memberCount: group._count.memberships,
-      })),
-    };
-
-    res.json(response);
-  } catch (error) {
-    console.error('List groups error:', error);
-    res.status(500).json({ success: false, error: 'Failed to fetch groups' });
-  }
-});
-
-router.post('/groups', withOrganizationContext(), requireOrgRole('ADMIN'), async (req: AuthRequest, res: Response) => {
-  try {
-    const { name, description } = req.body as { name?: string; description?: string };
-
-    if (!name) {
-      return res.status(400).json({ success: false, error: 'Name is required' });
-    }
-
-    const group = await prisma.memberGroup.create({
-      data: {
-        organizationId: req.organization!.id,
-        name,
-        description: description || null,
-      },
-    });
-
-    const response: ApiResponse<MemberGroup> = {
-      success: true,
-      data: serializeMemberGroup(group),
-    };
-
-    res.status(201).json(response);
-  } catch (error) {
-    console.error('Create group error:', error);
-    res.status(500).json({ success: false, error: 'Failed to create group' });
-  }
-});
-
-router.post('/groups/:groupId/members', withOrganizationContext(), requireOrgRole('MANAGER'), async (req: AuthRequest, res: Response) => {
-  try {
-    const { groupId } = req.params;
-    const { membershipId } = req.body as { membershipId?: string };
-
-    if (!membershipId) {
-      return res.status(400).json({ success: false, error: 'membershipId is required' });
-    }
-
-    const [group, membership] = await Promise.all([
-      prisma.memberGroup.findUnique({ where: { id: groupId } }),
-      prisma.membership.findUnique({ where: { id: membershipId } }),
-    ]);
-
-    if (!group || group.organizationId !== req.organization!.id) {
-      return res.status(404).json({ success: false, error: 'Group not found in this organization' });
-    }
-
-    if (!membership || membership.organizationId !== req.organization!.id) {
-      return res.status(404).json({ success: false, error: 'Membership not found in this organization' });
-    }
-
-    await prisma.memberGroupMembership.upsert({
-      where: {
-        membershipId_groupId: {
+        update: {},
+        create: {
           membershipId,
           groupId,
         },
-      },
-      update: {},
-      create: {
-        membershipId,
-        groupId,
-      },
-    });
+      });
 
-    res.json({ success: true });
-  } catch (error) {
-    console.error('Add group member error:', error);
-    res.status(500).json({ success: false, error: 'Failed to add member to group' });
-  }
-});
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Add group member error:", error);
+      res
+        .status(500)
+        .json({ success: false, error: "Failed to add member to group" });
+    }
+  },
+);
 
 export default router;

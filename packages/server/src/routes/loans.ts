@@ -1,11 +1,15 @@
-import { Router } from 'express';
-import type { Response } from 'express';
-import { prisma } from '../prisma.js';
-import { authenticate, type AuthRequest } from '../middleware/auth.js';
-import { withOrganizationContext, requireOrgRole, hasOrgRole } from '../middleware/organization.js';
-import type { Loan, CheckoutInput, CheckinInput, ApiResponse } from '@ting/shared';
+import type { ApiResponse, CheckoutInput, Loan } from "@ting/shared";
+import type { Router as ExpressRouter, Response } from "express";
+import { Router } from "express";
+import { authenticate, type AuthRequest } from "../middleware/auth.js";
+import {
+  hasOrgRole,
+  requireOrgRole,
+  withOrganizationContext,
+} from "../middleware/organization.js";
+import { prisma } from "../prisma.js";
 
-const router = Router();
+const router: ExpressRouter = Router();
 
 router.use(authenticate);
 router.use(withOrganizationContext());
@@ -26,11 +30,11 @@ function serializeLoan(loan: any): Loan {
 }
 
 // List loans
-router.get('/', async (req: AuthRequest, res: Response) => {
+router.get("/", async (req: AuthRequest, res: Response) => {
   try {
     const { active, overdue, userId } = req.query as any;
 
-    const canViewAll = req.user!.role === 'ADMIN' || hasOrgRole(req, 'MANAGER');
+    const canViewAll = req.user!.role === "ADMIN" || hasOrgRole(req, "MANAGER");
     const where: any = {
       organizationId: req.organization!.id,
     };
@@ -41,8 +45,8 @@ router.get('/', async (req: AuthRequest, res: Response) => {
     } else {
       where.userId = req.user!.id;
     }
-    if (active === 'true') where.returnedAt = null;
-    if (overdue === 'true') {
+    if (active === "true") where.returnedAt = null;
+    if (overdue === "true") {
       where.returnedAt = null;
       where.dueDate = { lt: new Date() };
     }
@@ -54,7 +58,7 @@ router.get('/', async (req: AuthRequest, res: Response) => {
         user: true,
         reservation: true,
       },
-      orderBy: { checkedOutAt: 'desc' },
+      orderBy: { checkedOutAt: "desc" },
     });
 
     const response: ApiResponse<Loan[]> = {
@@ -64,62 +68,74 @@ router.get('/', async (req: AuthRequest, res: Response) => {
 
     res.json(response);
   } catch (error) {
-    console.error('List loans error:', error);
-    res.status(500).json({ success: false, error: 'Failed to fetch loans' });
+    console.error("List loans error:", error);
+    res.status(500).json({ success: false, error: "Failed to fetch loans" });
   }
 });
 
 // Get overdue loans (org manager+)
-router.get('/overdue', requireOrgRole('MANAGER'), async (req: AuthRequest, res: Response) => {
-  try {
-    const loans = await prisma.loan.findMany({
-      where: {
-        organizationId: req.organization!.id,
-        returnedAt: null,
-        dueDate: { lt: new Date() },
-      },
-      include: {
-        item: { include: { category: true } },
-        user: true,
-      },
-      orderBy: { dueDate: 'asc' },
-    });
+router.get(
+  "/overdue",
+  requireOrgRole("MANAGER"),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const loans = await prisma.loan.findMany({
+        where: {
+          organizationId: req.organization!.id,
+          returnedAt: null,
+          dueDate: { lt: new Date() },
+        },
+        include: {
+          item: { include: { category: true } },
+          user: true,
+        },
+        orderBy: { dueDate: "asc" },
+      });
 
-    const response: ApiResponse<Loan[]> = {
-      success: true,
-      data: loans.map(serializeLoan),
-    };
+      const response: ApiResponse<Loan[]> = {
+        success: true,
+        data: loans.map(serializeLoan),
+      };
 
-    res.json(response);
-  } catch (error) {
-    console.error('List overdue loans error:', error);
-    res.status(500).json({ success: false, error: 'Failed to fetch overdue loans' });
-  }
-});
+      res.json(response);
+    } catch (error) {
+      console.error("List overdue loans error:", error);
+      res
+        .status(500)
+        .json({ success: false, error: "Failed to fetch overdue loans" });
+    }
+  },
+);
 
 // Checkout item (admin only, or user with valid reservation)
-router.post('/checkout', async (req: AuthRequest, res: Response) => {
+router.post("/checkout", async (req: AuthRequest, res: Response) => {
   try {
-    const { itemId, userId, reservationId, dueDate } = req.body as CheckoutInput;
+    const { itemId, userId, reservationId, dueDate } =
+      req.body as CheckoutInput;
 
     if (!itemId || !dueDate) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'itemId and dueDate are required' 
+      return res.status(400).json({
+        success: false,
+        error: "itemId and dueDate are required",
       });
     }
 
     // Determine the user for checkout
-    const canCheckoutForOthers = req.user!.role === 'ADMIN' || hasOrgRole(req, 'MANAGER');
-    const checkoutUserId = canCheckoutForOthers && userId ? userId : req.user!.id;
+    const canCheckoutForOthers =
+      req.user!.role === "ADMIN" || hasOrgRole(req, "MANAGER");
+    const checkoutUserId =
+      canCheckoutForOthers && userId ? userId : req.user!.id;
 
     // Check if item exists
     const item = await prisma.item.findUnique({ where: { id: itemId } });
     if (!item) {
-      return res.status(404).json({ success: false, error: 'Item not found' });
+      return res.status(404).json({ success: false, error: "Item not found" });
     }
     if (item.organizationId !== req.organization!.id) {
-      return res.status(403).json({ success: false, error: 'Item does not belong to this organization' });
+      return res.status(403).json({
+        success: false,
+        error: "Item does not belong to this organization",
+      });
     }
 
     // Check if item is already checked out
@@ -132,9 +148,9 @@ router.post('/checkout', async (req: AuthRequest, res: Response) => {
     });
 
     if (existingLoan) {
-      return res.status(409).json({ 
-        success: false, 
-        error: 'Item is already checked out' 
+      return res.status(409).json({
+        success: false,
+        error: "Item is already checked out",
       });
     }
 
@@ -144,10 +160,14 @@ router.post('/checkout', async (req: AuthRequest, res: Response) => {
         where: { id: reservationId },
       });
 
-      if (!reservation || reservation.userId !== checkoutUserId || reservation.organizationId !== req.organization!.id) {
-        return res.status(404).json({ 
-          success: false, 
-          error: 'Reservation not found or does not belong to user' 
+      if (
+        !reservation ||
+        reservation.userId !== checkoutUserId ||
+        reservation.organizationId !== req.organization!.id
+      ) {
+        return res.status(404).json({
+          success: false,
+          error: "Reservation not found or does not belong to user",
         });
       }
     }
@@ -170,12 +190,14 @@ router.post('/checkout', async (req: AuthRequest, res: Response) => {
       }),
       prisma.item.update({
         where: { id: itemId },
-        data: { status: 'CHECKED_OUT' },
+        data: { status: "CHECKED_OUT" },
       }),
-      reservationId ? prisma.reservation.update({
-        where: { id: reservationId },
-        data: { status: 'COMPLETED' },
-      }) : null,
+      reservationId
+        ? prisma.reservation.update({
+            where: { id: reservationId },
+            data: { status: "COMPLETED" },
+          })
+        : null,
     ]);
 
     const response: ApiResponse<Loan> = {
@@ -185,13 +207,13 @@ router.post('/checkout', async (req: AuthRequest, res: Response) => {
 
     res.status(201).json(response);
   } catch (error) {
-    console.error('Checkout error:', error);
-    res.status(500).json({ success: false, error: 'Failed to checkout item' });
+    console.error("Checkout error:", error);
+    res.status(500).json({ success: false, error: "Failed to checkout item" });
   }
 });
 
 // Checkin item (return)
-router.post('/:id/checkin', async (req: AuthRequest, res: Response) => {
+router.post("/:id/checkin", async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -201,20 +223,27 @@ router.post('/:id/checkin', async (req: AuthRequest, res: Response) => {
     });
 
     if (!loan) {
-      return res.status(404).json({ success: false, error: 'Loan not found' });
+      return res.status(404).json({ success: false, error: "Loan not found" });
     }
 
     if (loan.organizationId !== req.organization!.id) {
-      return res.status(404).json({ success: false, error: 'Loan not found in this organization' });
+      return res
+        .status(404)
+        .json({ success: false, error: "Loan not found in this organization" });
     }
 
     if (loan.returnedAt) {
-      return res.status(400).json({ success: false, error: 'Item already returned' });
+      return res
+        .status(400)
+        .json({ success: false, error: "Item already returned" });
     }
 
     // Only admins or the user who checked it out can return
-    if (loan.userId !== req.user!.id && !(req.user!.role === 'ADMIN' || hasOrgRole(req, 'MANAGER'))) {
-      return res.status(403).json({ success: false, error: 'Forbidden' });
+    if (
+      loan.userId !== req.user!.id &&
+      !(req.user!.role === "ADMIN" || hasOrgRole(req, "MANAGER"))
+    ) {
+      return res.status(403).json({ success: false, error: "Forbidden" });
     }
 
     // Update loan and item status
@@ -230,7 +259,7 @@ router.post('/:id/checkin', async (req: AuthRequest, res: Response) => {
       }),
       prisma.item.update({
         where: { id: loan.itemId },
-        data: { status: 'AVAILABLE' },
+        data: { status: "AVAILABLE" },
       }),
     ]);
 
@@ -241,8 +270,8 @@ router.post('/:id/checkin', async (req: AuthRequest, res: Response) => {
 
     res.json(response);
   } catch (error) {
-    console.error('Checkin error:', error);
-    res.status(500).json({ success: false, error: 'Failed to checkin item' });
+    console.error("Checkin error:", error);
+    res.status(500).json({ success: false, error: "Failed to checkin item" });
   }
 });
 

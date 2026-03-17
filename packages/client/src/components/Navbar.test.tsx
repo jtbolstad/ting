@@ -1,11 +1,11 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import { Navbar } from './Navbar';
+import { render, screen } from "@testing-library/react";
+import { BrowserRouter } from "react-router-dom";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { Navbar } from "./Navbar";
 
 // Mock the entire auth context module
 const mockLogout = vi.fn();
-let mockAuthState = {
+let mockAuthState: any = {
   isAuthenticated: false,
   isAdmin: false,
   user: null,
@@ -14,28 +14,28 @@ let mockAuthState = {
   register: vi.fn(),
 };
 
-vi.mock('../context/AuthContext', () => ({
+vi.mock("../context/AuthContext", () => ({
   useAuth: () => mockAuthState,
 }));
 
 // Mock i18next
-vi.mock('react-i18next', () => ({
+vi.mock("react-i18next", () => ({
   useTranslation: () => ({
     t: (key: string, options?: any) => {
       const translations: Record<string, string> = {
-        'app.title': 'Ting',
-        'nav.catalog': 'Catalog',
-        'nav.dashboard': 'My Dashboard',
-        'nav.admin': 'Admin',
-        'nav.login': 'Login',
-        'nav.register': 'Register',
-        'nav.logout': 'Logout',
-        'nav.hello': `Hello, ${options?.name || ''}`,
+        "app.title": "Ting",
+        "nav.catalog": "Catalog",
+        "nav.dashboard": "My Dashboard",
+        "nav.admin": "Admin",
+        "nav.login": "Login",
+        "nav.register": "Register",
+        "nav.logout": "Logout",
+        "nav.hello": `Hello, ${options?.name || ""}`,
       };
       return translations[key] || key;
     },
     i18n: {
-      language: 'en',
+      language: "en",
       changeLanguage: vi.fn(),
     },
   }),
@@ -45,11 +45,11 @@ const renderNavbar = () => {
   return render(
     <BrowserRouter>
       <Navbar />
-    </BrowserRouter>
+    </BrowserRouter>,
   );
 };
 
-describe('Navbar Component', () => {
+describe("Navbar Component", () => {
   beforeEach(() => {
     // Reset to default unauthenticated state
     mockAuthState = {
@@ -62,24 +62,29 @@ describe('Navbar Component', () => {
     };
   });
 
-  it('should render app title', () => {
+  it("should render app title", () => {
     renderNavbar();
-    expect(screen.getByText('Ting')).toBeInTheDocument();
+    expect(screen.getByText("Ting")).toBeInTheDocument();
   });
 
-  it('should show login and register for unauthenticated users', () => {
+  it("should show login and register for unauthenticated users", () => {
     renderNavbar();
-    
-    expect(screen.getByText('Login')).toBeInTheDocument();
-    expect(screen.getByText('Register')).toBeInTheDocument();
-    expect(screen.queryByText('Logout')).not.toBeInTheDocument();
+
+    expect(screen.getByText("Login")).toBeInTheDocument();
+    expect(screen.getByText("Register")).toBeInTheDocument();
+    expect(screen.queryByText("Logout")).not.toBeInTheDocument();
   });
 
-  it('should show navigation links for authenticated users', () => {
+  it("should show navigation links for authenticated users", () => {
     mockAuthState = {
       isAuthenticated: true,
       isAdmin: false,
-      user: { id: '1', email: 'user@test.com', name: 'Test User', role: 'MEMBER' },
+      user: {
+        id: "1",
+        email: "user@test.com",
+        name: "Test User",
+        role: "MEMBER",
+      },
       logout: mockLogout,
       login: vi.fn(),
       register: vi.fn(),
@@ -87,16 +92,21 @@ describe('Navbar Component', () => {
 
     renderNavbar();
 
-    expect(screen.getByText('Catalog')).toBeInTheDocument();
-    expect(screen.getByText('My Dashboard')).toBeInTheDocument();
-    expect(screen.getByText('Logout')).toBeInTheDocument();
+    expect(screen.getByText("Catalog")).toBeInTheDocument();
+    expect(screen.getByText("My Dashboard")).toBeInTheDocument();
+    expect(screen.getByText("Logout")).toBeInTheDocument();
   });
 
-  it('should show admin link for admin users', () => {
+  it("should show admin link for admin users", () => {
     mockAuthState = {
       isAuthenticated: true,
       isAdmin: true,
-      user: { id: '1', email: 'admin@test.com', name: 'Admin User', role: 'ADMIN' },
+      user: {
+        id: "1",
+        email: "admin@test.com",
+        name: "Admin User",
+        role: "ADMIN",
+      },
       logout: mockLogout,
       login: vi.fn(),
       register: vi.fn(),
@@ -104,14 +114,14 @@ describe('Navbar Component', () => {
 
     renderNavbar();
 
-    expect(screen.getByText('Admin')).toBeInTheDocument();
+    expect(screen.getByText("Admin")).toBeInTheDocument();
   });
 
-  it('should display language switcher', () => {
+  it("should display language switcher", () => {
     renderNavbar();
-    
+
     // Language switcher should have flag emojis
-    const navbar = screen.getByRole('navigation');
-    expect(navbar.textContent).toContain('🇬🇧');
+    const navbar = screen.getByRole("navigation");
+    expect(navbar.textContent).toContain("🇬🇧");
   });
 });

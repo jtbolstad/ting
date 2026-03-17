@@ -1,13 +1,13 @@
-import { useEffect, useState, useCallback } from "react";
-import { useSearchParams } from "react-router-dom";
+import type { Category, Item } from "@ting/shared";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 import { apiClient } from "../api/client";
-import { useOrganization } from "../context/OrganizationContext";
 import { CatalogHeader } from "../components/catalog/CatalogHeader";
-import { CategoriesSidebar } from "../components/catalog/CategoriesSidebar";
 import { CatalogSearchBar } from "../components/catalog/CatalogSearchBar";
+import { CategoriesSidebar } from "../components/catalog/CategoriesSidebar";
 import { ItemsGrid } from "../components/catalog/ItemsGrid";
-import type { Item, Category } from "@ting/shared";
+import { useOrganization } from "../context/OrganizationContext";
 
 export function Catalog() {
   const { t } = useTranslation();
@@ -84,7 +84,7 @@ export function Catalog() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <CatalogHeader organization={activeOrganization} />
+      <CatalogHeader organization={activeOrganization ?? null} />
 
       <div className="flex gap-8">
         <CategoriesSidebar

@@ -2,7 +2,6 @@ import cors from "cors";
 import express from "express";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import authRoutes from "./routes/auth.js";
 import categoriesRoutes from "./routes/categories.js";
 import commentsRoutes from "./routes/comments.js";
@@ -13,9 +12,6 @@ import reservationsRoutes from "./routes/reservations.js";
 import reviewsRoutes from "./routes/reviews.js";
 import uploadsRoutes from "./routes/uploads.js";
 import usersRoutes from "./routes/users.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
