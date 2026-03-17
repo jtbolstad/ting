@@ -15,7 +15,10 @@ import usersRoutes from "./routes/users.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-const IS_PRODUCTION = process.env.NODE_ENV === "production";
+// Check if client dist directory exists to determine if we're in production
+const clientDistPath = path.join(__dirname, "..", "..", "..", "client", "dist");
+const IS_PRODUCTION =
+  process.env.NODE_ENV === "production" || process.env.RENDER === "true";
 
 // Initialize server
 async function startServer() {
@@ -50,16 +53,6 @@ async function startServer() {
 
   // In production, serve the built client app
   if (IS_PRODUCTION) {
-    // __dirname is /app/packages/server/dist/src in production
-    // We need to go up to /app/packages/client/dist
-    const clientDistPath = path.join(
-      __dirname,
-      "..",
-      "..",
-      "..",
-      "client",
-      "dist",
-    );
     app.use(express.static(clientDistPath));
 
     // Serve index.html for all non-API routes (SPA fallback)
