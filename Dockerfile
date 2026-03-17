@@ -58,7 +58,6 @@ RUN pnpm install --prod --frozen-lockfile
 COPY --from=builder /app/packages/shared/dist ./packages/shared/dist
 COPY --from=builder /app/packages/server/dist ./packages/server/dist
 COPY --from=builder /app/packages/server/prisma ./packages/server/prisma
-COPY --from=builder /app/packages/server/node_modules/.prisma ./packages/server/node_modules/.prisma
 COPY --from=builder /app/packages/client/dist ./packages/client/dist
 
 # Copy uploads directory structure
