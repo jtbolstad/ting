@@ -87,6 +87,61 @@ class EmailService {
 
     await this.sendEmail({ to: userEmail, subject, text, html });
   }
+
+  async sendApprovalRequest(
+    adminEmails: string[],
+    submitterName: string,
+    itemName: string,
+    orgName: string,
+  ): Promise<void> {
+    const subject = `Nytt ting til godkjenning: ${itemName}`;
+    const text = `Hei,\n\n${submitterName} har lagt inn "${itemName}" i ${orgName} og venter på godkjenning.\n\nLogg inn i admin-panelet for å godkjenne eller avvise.\n\nHilsen Ting`;
+    const html = `
+      <h2>Nytt ting venter på godkjenning</h2>
+      <p><strong>${submitterName}</strong> har lagt inn følgende ting i <strong>${orgName}</strong>:</p>
+      <p style="font-size:1.1em; padding: 8px 16px; background:#f3f4f6; border-left: 4px solid #6366f1;">${itemName}</p>
+      <p>Logg inn i admin-panelet for å godkjenne eller avvise.</p>
+    `;
+
+    for (const email of adminEmails) {
+      await this.sendEmail({ to: email, subject, text, html });
+    }
+  }
+
+  async sendItemApproved(userEmail: string, userName: string, itemName: string, orgName: string): Promise<void> {
+    const subject = `"${itemName}" er godkjent!`;
+    const text = `Hei ${userName},\n\nTinget ditt "${itemName}" er nå godkjent og synlig i katalogen til ${orgName}.\n\nTakk for at du bidrar!\n\nHilsen Ting`;
+    const html = `
+      <h2 style="color: #16a34a;">Tinget ditt er godkjent!</h2>
+      <p>Hei ${userName},</p>
+      <p><strong>${itemName}</strong> er nå godkjent og synlig i katalogen til <strong>${orgName}</strong>.</p>
+      <p>Takk for at du bidrar til nabolaget!</p>
+    `;
+
+    await this.sendEmail({ to: userEmail, subject, text, html });
+  }
+
+  async sendItemRejected(
+    userEmail: string,
+    userName: string,
+    itemName: string,
+    orgName: string,
+    note?: string,
+  ): Promise<void> {
+    const subject = `"${itemName}" ble ikke godkjent`;
+    const noteText = note ? `\n\nBegrunnelse: ${note}` : '';
+    const text = `Hei ${userName},\n\nDessverre ble "${itemName}" ikke godkjent i ${orgName}.${noteText}\n\nTa kontakt med administrator hvis du har spørsmål.\n\nHilsen Ting`;
+    const noteHtml = note ? `<p><strong>Begrunnelse:</strong> ${note}</p>` : '';
+    const html = `
+      <h2 style="color: #dc2626;">Tinget ble ikke godkjent</h2>
+      <p>Hei ${userName},</p>
+      <p>Dessverre ble <strong>${itemName}</strong> ikke godkjent i <strong>${orgName}</strong>.</p>
+      ${noteHtml}
+      <p>Ta kontakt med administrator hvis du har spørsmål.</p>
+    `;
+
+    await this.sendEmail({ to: userEmail, subject, text, html });
+  }
 }
 
 export const emailService = new EmailService();

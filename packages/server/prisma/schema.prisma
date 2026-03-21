@@ -35,11 +35,27 @@ model Organization {
   groups      MemberGroup[]
   categories  Category[]
   items       Item[]
+  locations   Location[]
   reservations Reservation[]
   loans        Loan[]
   comments     Comment[]
   reviews      Review[]
   auditLogs    AuditLog[]
+}
+
+model Location {
+  id             String   @id @default(cuid())
+  organizationId String
+  name           String
+  address        String?
+  description    String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+  items        Item[]
+
+  @@index([organizationId])
 }
 
 model Membership {
@@ -111,14 +127,37 @@ model Item {
   organization   Organization  @relation(fields: [organizationId], references: [id])
   status         String        @default("AVAILABLE")
   imageUrl       String?
+  locationId     String?
+  location       Location?     @relation(fields: [locationId], references: [id])
+  ownerId        String?
+  ownerType      String        @default("ORGANIZATION") // "ORGANIZATION" | "MEMBER"
+  approvalStatus String        @default("APPROVED")     // "PENDING" | "APPROVED" | "REJECTED"
+  rejectionNote  String?
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
   reservations   Reservation[]
   loans          Loan[]
   comments       Comment[]
   reviews        Review[]
+  manuals        ItemManual[]
 
   @@index([organizationId])
+  @@index([ownerId])
+}
+
+model ItemManual {
+  id        String   @id @default(cuid())
+  itemId    String
+  type      String   // "PDF" | "LINK" | "TEXT"
+  label     String
+  url       String?
+  content   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([itemId])
 }
 
 model Reservation {

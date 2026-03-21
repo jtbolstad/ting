@@ -41,6 +41,18 @@ export function authenticate(req: AuthRequest, res: Response, next: NextFunction
   }
 }
 
+export function optionalAuthenticate(req: AuthRequest, _res: Response, next: NextFunction) {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    try {
+      req.user = verifyToken(authHeader.substring(7));
+    } catch {
+      // Invalid token – continue unauthenticated
+    }
+  }
+  next();
+}
+
 export function requireAdmin(req: AuthRequest, res: Response, next: NextFunction) {
   if (req.user?.role !== 'ADMIN') {
     return res.status(403).json({ success: false, error: 'Admin access required' });
