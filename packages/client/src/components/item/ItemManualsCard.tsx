@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { apiClient } from "../../api/client";
 import { useAuth } from "../../context/AuthContext";
+import { useToast } from "../ui/Toast";
+import { useConfirm } from "../ui/ConfirmModal";
 import type { ItemManual } from "@ting/shared";
 
 interface ItemManualsCardProps {
@@ -11,6 +13,8 @@ interface ItemManualsCardProps {
 export function ItemManualsCard({ itemId }: ItemManualsCardProps) {
   const { t } = useTranslation();
   const { isAdmin } = useAuth();
+  const toast = useToast();
+  const confirm = useConfirm();
   const [manuals, setManuals] = useState<ItemManual[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [type, setType] = useState<"PDF" | "LINK" | "TEXT">("LINK");
@@ -42,7 +46,7 @@ export function ItemManualsCard({ itemId }: ItemManualsCardProps) {
       const result = await apiClient.uploadManual(file);
       setUrl(result.url);
     } catch (err: any) {
-      alert(err.message || "Upload failed");
+      toast.error(err.message || "Upload failed");
     } finally {
       setUploading(false);
     }
@@ -65,19 +69,19 @@ export function ItemManualsCard({ itemId }: ItemManualsCardProps) {
       setShowForm(false);
       await loadManuals();
     } catch (err: any) {
-      alert(err.message || "Failed to add manual");
+      toast.error(err.message || "Failed to add manual");
     } finally {
       setSubmitting(false);
     }
   };
 
   const handleDelete = async (manualId: string) => {
-    if (!confirm(t("item.manuals.confirmDelete"))) return;
+    if (!await confirm(t("item.manuals.confirmDelete"))) return;
     try {
       await apiClient.deleteManual(itemId, manualId);
       await loadManuals();
     } catch (err: any) {
-      alert(err.message || "Failed to delete manual");
+      toast.error(err.message || "Failed to delete manual");
     }
   };
 

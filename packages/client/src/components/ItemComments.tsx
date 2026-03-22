@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { apiClient } from "../api/client";
 import { useAuth } from "../context/AuthContext";
+import { useConfirm } from "./ui/ConfirmModal";
 import type { Comment } from "@ting/shared";
 
 interface ItemCommentsProps {
@@ -11,6 +12,7 @@ interface ItemCommentsProps {
 export function ItemComments({ itemId }: ItemCommentsProps) {
   const { t } = useTranslation();
   const { isAuthenticated, user } = useAuth();
+  const confirm = useConfirm();
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [newComment, setNewComment] = useState("");
@@ -80,7 +82,7 @@ export function ItemComments({ itemId }: ItemCommentsProps) {
   };
 
   const handleDeleteComment = async (commentId: string) => {
-    if (!confirm(t("comments.confirmDelete"))) return;
+    if (!await confirm(t("comments.confirmDelete"))) return;
 
     try {
       await apiClient.deleteComment(commentId);

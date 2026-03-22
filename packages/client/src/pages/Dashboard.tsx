@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { apiClient } from '../api/client';
+import { useToast } from '../components/ui/Toast';
+import { useConfirm } from '../components/ui/ConfirmModal';
 import type { Reservation, Loan } from '@ting/shared';
 
 export function Dashboard() {
   const { t } = useTranslation();
+  const toast = useToast();
+  const confirm = useConfirm();
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loans, setLoans] = useState<Loan[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,24 +33,24 @@ export function Dashboard() {
   };
 
   const handleCancelReservation = async (id: string) => {
-    if (!confirm(t('dashboard.confirmCancel'))) return;
+    if (!await confirm(t('dashboard.confirmCancel'))) return;
 
     try {
       await apiClient.cancelReservation(id);
       await loadData();
     } catch (error: any) {
-      alert(error.message || t('errors.cancelFailed'));
+      toast.error(error.message || t('errors.cancelFailed'));
     }
   };
 
   const handleReturnItem = async (loanId: string) => {
-    if (!confirm(t('dashboard.confirmReturn'))) return;
+    if (!await confirm(t('dashboard.confirmReturn'))) return;
 
     try {
       await apiClient.checkin(loanId);
       await loadData();
     } catch (error: any) {
-      alert(error.message || t('errors.returnFailed'));
+      toast.error(error.message || t('errors.returnFailed'));
     }
   };
 

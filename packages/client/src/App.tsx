@@ -3,6 +3,8 @@ import { AuthProvider } from "./context/AuthContext";
 import { OrganizationProvider } from "./context/OrganizationContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Navbar } from "./components/Navbar";
+import { ToastProvider } from "./components/ui/Toast";
+import { ConfirmProvider } from "./components/ui/ConfirmModal";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { Catalog } from "./pages/Catalog";
@@ -12,12 +14,15 @@ import { AddItem } from "./pages/AddItem";
 import { EditItem } from "./pages/EditItem";
 import { AdminDashboard } from "./pages/admin/AdminDashboard";
 import { TermsOfService } from "./pages/TermsOfService";
+import { Profile } from "./pages/Profile";
 
 function App() {
   return (
     <BrowserRouter>
       <OrganizationProvider>
         <AuthProvider>
+          <ToastProvider>
+          <ConfirmProvider>
           <div className="min-h-screen bg-gray-50">
             <Navbar />
             <Routes>
@@ -59,8 +64,18 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
             </Routes>
           </div>
+          </ConfirmProvider>
+          </ToastProvider>
         </AuthProvider>
       </OrganizationProvider>
     </BrowserRouter>

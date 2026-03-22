@@ -3,11 +3,15 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { apiClient } from "../../api/client";
 import { useOrganization } from "../../context/OrganizationContext";
+import { useToast } from "../../components/ui/Toast";
+import { useConfirm } from "../../components/ui/ConfirmModal";
 import type { Item, Category, Loan, Location, User } from "@ting/shared";
 
 export function AdminDashboard() {
   const { t } = useTranslation();
   const { activeOrganizationId } = useOrganization();
+  const toast = useToast();
+  const confirm = useConfirm();
   const [loans, setLoans] = useState<Loan[]>([]);
   const [overdueLoans, setOverdueLoans] = useState<Loan[]>([]);
   const [items, setItems] = useState<Item[]>([]);
@@ -99,17 +103,17 @@ export function AdminDashboard() {
       setDueDate("");
       await loadData();
     } catch (error: any) {
-      alert(error.message || "Failed to checkout item");
+      toast.error(error.message || "Failed to checkout item");
     }
   };
 
   const handleCheckin = async (loanId: string) => {
-    if (!confirm(t("admin.loans.confirmCheckin"))) return;
+    if (!await confirm(t("admin.loans.confirmCheckin"))) return;
     try {
       await apiClient.checkin(loanId);
       await loadData();
     } catch (error: any) {
-      alert(error.message || "Failed to checkin item");
+      toast.error(error.message || "Failed to checkin item");
     }
   };
 
@@ -121,17 +125,17 @@ export function AdminDashboard() {
       setNewItem({ name: "", description: "", categoryId: "" });
       await loadData();
     } catch (error: any) {
-      alert(error.message || "Failed to create item");
+      toast.error(error.message || "Failed to create item");
     }
   };
 
   const handleDeleteItem = async (id: string) => {
-    if (!confirm(t("admin.items.confirmDelete"))) return;
+    if (!await confirm(t("admin.items.confirmDelete"))) return;
     try {
       await apiClient.deleteItem(id);
       await loadData();
     } catch (error: any) {
-      alert(error.message || "Failed to delete item");
+      toast.error(error.message || "Failed to delete item");
     }
   };
 
@@ -143,7 +147,7 @@ export function AdminDashboard() {
       setCategoryForm({ name: "", description: "" });
       await loadData();
     } catch (error: any) {
-      alert(error.message || "Failed to create category");
+      toast.error(error.message || "Failed to create category");
     }
   };
 
@@ -157,7 +161,7 @@ export function AdminDashboard() {
       setCategoryForm({ name: "", description: "" });
       await loadData();
     } catch (error: any) {
-      alert(error.message || "Failed to update category");
+      toast.error(error.message || "Failed to update category");
     }
   };
 
@@ -171,12 +175,12 @@ export function AdminDashboard() {
   };
 
   const handleDeleteCategory = async (id: string) => {
-    if (!confirm(t("admin.categories.confirmDelete"))) return;
+    if (!await confirm(t("admin.categories.confirmDelete"))) return;
     try {
       await apiClient.deleteCategory(id);
       await loadData();
     } catch (error: any) {
-      alert(error.message || "Failed to delete category");
+      toast.error(error.message || "Failed to delete category");
     }
   };
 
@@ -188,7 +192,7 @@ export function AdminDashboard() {
       setLocationForm({ name: "", address: "", description: "" });
       await loadData();
     } catch (error: any) {
-      alert(error.message || "Failed to create location");
+      toast.error(error.message || "Failed to create location");
     }
   };
 
@@ -202,7 +206,7 @@ export function AdminDashboard() {
       setLocationForm({ name: "", address: "", description: "" });
       await loadData();
     } catch (error: any) {
-      alert(error.message || "Failed to update location");
+      toast.error(error.message || "Failed to update location");
     }
   };
 
@@ -217,22 +221,22 @@ export function AdminDashboard() {
   };
 
   const handleDeleteLocation = async (id: string) => {
-    if (!confirm(t("admin.locations.confirmDelete"))) return;
+    if (!await confirm(t("admin.locations.confirmDelete"))) return;
     try {
       await apiClient.deleteLocation(id);
       await loadData();
     } catch (error: any) {
-      alert(error.message || "Failed to delete location");
+      toast.error(error.message || "Failed to delete location");
     }
   };
 
   const handleApproveItem = async (id: string) => {
-    if (!confirm(t("admin.items.confirmApprove"))) return;
+    if (!await confirm(t("admin.items.confirmApprove"))) return;
     try {
       await apiClient.approveItem(id);
       await loadData();
     } catch (error: any) {
-      alert(error.message || "Failed to approve item");
+      toast.error(error.message || "Failed to approve item");
     }
   };
 
@@ -251,7 +255,7 @@ export function AdminDashboard() {
       setRejectNote("");
       await loadData();
     } catch (error: any) {
-      alert(error.message || "Failed to reject item");
+      toast.error(error.message || "Failed to reject item");
     }
   };
 

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { format } from "date-fns";
 import { apiClient } from "../api/client";
 import { useAuth } from "../context/AuthContext";
+import { useConfirm } from "./ui/ConfirmModal";
 import { ReviewStars } from "./ReviewStars";
 import type { Review, ReviewStats } from "@ting/shared";
 
@@ -13,6 +14,7 @@ interface ItemReviewsProps {
 export function ItemReviews({ itemId }: ItemReviewsProps) {
   const { t } = useTranslation();
   const { user, isAuthenticated } = useAuth();
+  const confirm = useConfirm();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [stats, setStats] = useState<ReviewStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -79,7 +81,7 @@ export function ItemReviews({ itemId }: ItemReviewsProps) {
   };
 
   const handleDelete = async (reviewId: string) => {
-    if (!confirm(t("reviews.confirmDelete"))) return;
+    if (!await confirm(t("reviews.confirmDelete"))) return;
 
     try {
       await apiClient.deleteReview(reviewId);
