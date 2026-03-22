@@ -30,8 +30,8 @@ Focus: make the existing MVP feel solid and trustworthy before growing the user 
 |------|-----|------|--------|------|-------|
 | [x] | T01 | P0 | M | Fix broken/incomplete i18n keys | Several keys missing in da/no — already flagged in git |
 | [x] | T02 | P0 | M | Mobile responsiveness audit | Admin dashboard and item detail not fully usable on small screens |
-| [ ] | T47 | P1 | M | 2-column layout on desktop | Item detail and dashboard use wider screen real estate with a sidebar/2-col grid |
-| [ ] | T48 | P1 | M | Mobile-friendly navbar menu | Hamburger menu / drawer on small screens; current nav overflows |
+| [x] | T47 | P1 | M | 2-column layout on desktop | Item detail and dashboard use wider screen real estate with a sidebar/2-col grid |
+| [x] | T48 | P1 | M | Mobile-friendly navbar menu | Hamburger menu / drawer on small screens; current nav overflows |
 | [ ] | T03 | P0 | S | Error handling & user feedback | Replace raw `alert()` calls with toast/inline messages |
 | [ ] | T04 | P0 | S | Loading & empty states | Skeleton loaders or spinners; empty state illustrations |
 | [ ] | T05 | P1 | S | User profile page | Change name, password, see own activity |
