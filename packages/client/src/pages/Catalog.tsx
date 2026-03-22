@@ -86,20 +86,39 @@ export function Catalog() {
     <div className="container mx-auto px-4 py-8">
       <CatalogHeader organization={activeOrganization ?? null} />
 
-      <div className="flex gap-8">
+      {/* Mobile: search + category chips above grid */}
+      <div className="lg:hidden space-y-3 mb-4">
+        <CatalogSearchBar defaultValue={searchQuery} onSearch={handleSearch} />
         <CategoriesSidebar
           categories={categories}
           selectedCategory={categoryFilter}
           onCategoryChange={handleCategoryChange}
+          variant="chips"
         />
+      </div>
 
-        <div className="flex-1">
+      {/* Desktop: sidebar + grid */}
+      <div className="hidden lg:flex gap-8">
+        <div className="w-64 flex-shrink-0 space-y-4">
           <CatalogSearchBar
             defaultValue={searchQuery}
             onSearch={handleSearch}
           />
+          <CategoriesSidebar
+            categories={categories}
+            selectedCategory={categoryFilter}
+            onCategoryChange={handleCategoryChange}
+          />
+        </div>
+
+        <div className="flex-1">
           <ItemsGrid items={items} />
         </div>
+      </div>
+
+      {/* Mobile: grid */}
+      <div className="lg:hidden">
+        <ItemsGrid items={items} />
       </div>
     </div>
   );

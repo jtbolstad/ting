@@ -12,7 +12,7 @@ export function CatalogSearchBar({
   const { t } = useTranslation();
 
   return (
-    <form onSubmit={onSearch} className="mb-6">
+    <form onSubmit={onSearch}>
       <div className="flex gap-2">
         <input
           type="text"
