@@ -381,6 +381,12 @@
     "selectOrganization": "Vennligst velg en organisasjon først",
     "loadError": "Kunne ikke laste verktøy"
   },
+  "welcome": {
+    "title": "Velkommen til Ting!",
+    "subtitle": "Bla gjennom katalogen for å finne verktøy du kan låne, eller legg til dine egne.",
+    "browseCatalog": "Se katalog",
+    "dismiss": "Lukk"
+  },
   "common": {
     "loading": "Laster...",
     "error": "Feil",

@@ -380,6 +380,12 @@
     "selectOrganization": "Vælg venligst en organisation først",
     "loadError": "Kunne ikke indlæse værktøj"
   },
+  "welcome": {
+    "title": "Velkommen til Ting!",
+    "subtitle": "Gennemse kataloget for at finde værktøj at låne, eller tilføj dine egne.",
+    "browseCatalog": "Se katalog",
+    "dismiss": "Luk"
+  },
   "common": {
     "loading": "Indlæser...",
     "error": "Fejl",

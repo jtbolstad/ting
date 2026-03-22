@@ -380,6 +380,12 @@
     "selectOrganization": "Please select an organization first",
     "loadError": "Failed to load item"
   },
+  "welcome": {
+    "title": "Welcome to Ting!",
+    "subtitle": "Browse the catalog to find tools to borrow, or add your own.",
+    "browseCatalog": "Browse catalog",
+    "dismiss": "Dismiss"
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",
