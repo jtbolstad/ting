@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import type { ItemImage } from "@ting/shared";
 import { apiClient } from "../api/client";
-import { ImageInput } from "../components/ImageInput";
 import { ItemImageManager } from "../components/item/ItemImageManager";
 import { TagInput } from "../components/TagInput";
 import { useAuth } from "../context/AuthContext";

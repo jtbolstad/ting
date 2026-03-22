@@ -1,6 +1,5 @@
 import type { Category, Item } from "@ting/shared";
 import { useCallback, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { apiClient } from "../api/client";
 import { CatalogHeader } from "../components/catalog/CatalogHeader";
@@ -11,7 +10,6 @@ import { useOrganization } from "../context/OrganizationContext";
 import { Spinner } from "../components/ui/Spinner";
 
 export function Catalog() {
-  const { t } = useTranslation();
   const { activeOrganizationId, activeOrganization } = useOrganization();
   const [items, setItems] = useState<Item[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);

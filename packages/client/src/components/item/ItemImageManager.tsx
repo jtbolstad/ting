@@ -22,7 +22,7 @@ export function ItemImageManager({ itemId, images, onChange }: ItemImageManagerP
       for (const file of files) {
         const { url } = await apiClient.uploadImage(file);
         const image = await apiClient.addItemImage(itemId, url);
-        onChange([...images, image]);
+        onChange([...images, { ...image, itemId }]);
       }
     } finally {
       setUploading(false);
