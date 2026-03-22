@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { apiClient } from "../../api/client";
 import { useOrganization } from "../../context/OrganizationContext";
-import type { Item, Category, ItemManual, Loan, Location, User } from "@ting/shared";
+import type { Item, Category, Loan, Location, User } from "@ting/shared";
 
 export function AdminDashboard() {
   const { t } = useTranslation();
@@ -51,18 +52,6 @@ export function AdminDashboard() {
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectingItemId, setRejectingItemId] = useState("");
   const [rejectNote, setRejectNote] = useState("");
-
-  // Manuals modal state
-  const [showManualsModal, setShowManualsModal] = useState(false);
-  const [manualsItem, setManualsItem] = useState<Item | null>(null);
-  const [manuals, setManuals] = useState<ItemManual[]>([]);
-  const [manualType, setManualType] = useState<"PDF" | "LINK" | "TEXT">("LINK");
-  const [manualLabel, setManualLabel] = useState("");
-  const [manualUrl, setManualUrl] = useState("");
-  const [manualContent, setManualContent] = useState("");
-  const [manualUploading, setManualUploading] = useState(false);
-  const [manualSubmitting, setManualSubmitting] = useState(false);
-  const manualFileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     loadData();
@@ -266,70 +255,6 @@ export function AdminDashboard() {
     }
   };
 
-  const openManualsModal = async (item: Item) => {
-    setManualsItem(item);
-    setManualType("LINK");
-    setManualLabel("");
-    setManualUrl("");
-    setManualContent("");
-    try {
-      const data = await apiClient.getItemManuals(item.id);
-      setManuals(data);
-    } catch {
-      setManuals([]);
-    }
-    setShowManualsModal(true);
-  };
-
-  const handleUploadManualPdf = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setManualUploading(true);
-    try {
-      const result = await apiClient.uploadManual(file);
-      setManualUrl(result.url);
-    } catch (err: any) {
-      alert(err.message || "Upload failed");
-    } finally {
-      setManualUploading(false);
-    }
-  };
-
-  const handleAddManual = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!manualsItem) return;
-    setManualSubmitting(true);
-    try {
-      await apiClient.createManual(manualsItem.id, {
-        type: manualType,
-        label: manualLabel,
-        url: manualType !== "TEXT" ? manualUrl : undefined,
-        content: manualType === "TEXT" ? manualContent : undefined,
-      });
-      setManualLabel("");
-      setManualUrl("");
-      setManualContent("");
-      setManualType("LINK");
-      const data = await apiClient.getItemManuals(manualsItem.id);
-      setManuals(data);
-    } catch (err: any) {
-      alert(err.message || "Failed to add manual");
-    } finally {
-      setManualSubmitting(false);
-    }
-  };
-
-  const handleDeleteManual = async (manualId: string) => {
-    if (!manualsItem || !confirm(t("item.manuals.confirmDelete"))) return;
-    try {
-      await apiClient.deleteManual(manualsItem.id, manualId);
-      const data = await apiClient.getItemManuals(manualsItem.id);
-      setManuals(data);
-    } catch (err: any) {
-      alert(err.message || "Failed to delete manual");
-    }
-  };
-
   if (loading) {
     return <div className="text-center py-12">{t("admin.loading")}</div>;
   }
@@ -530,7 +455,11 @@ export function AdminDashboard() {
               <tbody className="divide-y divide-gray-200">
                 {items.map((item) => (
                   <tr key={item.id}>
-                    <td className="px-6 py-4 font-medium">{item.name}</td>
+                    <td className="px-6 py-4 font-medium">
+                      <Link to={`/items/${item.id}`} className="text-indigo-600 hover:underline">
+                        {item.name}
+                      </Link>
+                    </td>
                     <td className="px-6 py-4">{item.category?.name}</td>
                     <td className="px-6 py-4">
                       <span
@@ -573,12 +502,12 @@ export function AdminDashboard() {
                           </button>
                         </>
                       )}
-                      <button
-                        onClick={() => openManualsModal(item)}
+                      <Link
+                        to={`/items/${item.id}/edit`}
                         className="text-indigo-600 hover:text-indigo-900"
                       >
-                        {t("item.manuals.title")}
-                      </button>
+                        {t("admin.items.edit")}
+                      </Link>
                       <button
                         onClick={() => handleDeleteItem(item.id)}
                         className="text-red-600 hover:text-red-900"
@@ -973,128 +902,6 @@ export function AdminDashboard() {
                   onClick={() => setShowAddCategory(false)}
                   className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
                 >
-                  {t("common.cancel")}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Manuals Modal */}
-      {showManualsModal && manualsItem && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 max-w-lg w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-2xl font-bold">{t("item.manuals.title")} – {manualsItem.name}</h3>
-              <button onClick={() => setShowManualsModal(false)} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
-            </div>
-
-            {/* Existing manuals */}
-            {manuals.length === 0 ? (
-              <p className="text-gray-500 text-sm mb-4">{t("item.manuals.noManuals")}</p>
-            ) : (
-              <ul className="space-y-2 mb-4">
-                {manuals.map((manual) => (
-                  <li key={manual.id} className="flex items-center justify-between border rounded px-3 py-2">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className="text-xs px-2 py-0.5 rounded bg-gray-100 text-gray-600 uppercase shrink-0">
-                        {manual.type}
-                      </span>
-                      {manual.type === "TEXT" ? (
-                        <span className="text-sm font-medium truncate">{manual.label}</span>
-                      ) : (
-                        <a href={manual.url!} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-indigo-600 hover:underline truncate">
-                          {manual.label}
-                        </a>
-                      )}
-                    </div>
-                    <button onClick={() => handleDeleteManual(manual.id)} className="text-red-500 hover:text-red-700 text-sm ml-3 shrink-0">
-                      {t("item.manuals.delete")}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            {/* Add manual form */}
-            <form onSubmit={handleAddManual} className="border-t pt-4 space-y-3">
-              <h4 className="font-medium text-sm">{t("item.manuals.addManual")}</h4>
-              <div>
-                <label className="block text-sm font-medium mb-1">{t("item.manuals.type")}</label>
-                <select
-                  value={manualType}
-                  onChange={(e) => { setManualType(e.target.value as "PDF" | "LINK" | "TEXT"); setManualUrl(""); }}
-                  className="w-full px-3 py-2 border rounded text-sm"
-                >
-                  <option value="LINK">{t("item.manuals.typeLink")}</option>
-                  <option value="PDF">{t("item.manuals.typePdf")}</option>
-                  <option value="TEXT">{t("item.manuals.typeText")}</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">{t("item.manuals.label")}</label>
-                <input
-                  type="text"
-                  value={manualLabel}
-                  onChange={(e) => setManualLabel(e.target.value)}
-                  required
-                  placeholder={t("item.manuals.labelPlaceholder")}
-                  className="w-full px-3 py-2 border rounded text-sm"
-                />
-              </div>
-              {manualType === "PDF" && (
-                <div>
-                  <label className="block text-sm font-medium mb-1">{t("item.manuals.uploadPdf")}</label>
-                  <input ref={manualFileRef} type="file" accept="application/pdf" onChange={handleUploadManualPdf} className="hidden" />
-                  <div className="flex gap-2 items-center">
-                    <button
-                      type="button"
-                      onClick={() => manualFileRef.current?.click()}
-                      disabled={manualUploading}
-                      className="px-3 py-1 text-sm border rounded hover:bg-gray-50 disabled:opacity-50"
-                    >
-                      {manualUploading ? t("item.manuals.uploading") : t("item.manuals.uploadPdf")}
-                    </button>
-                    {manualUrl && <span className="text-xs text-green-600 truncate max-w-xs">✓ {t("common.success")}</span>}
-                  </div>
-                </div>
-              )}
-              {manualType === "LINK" && (
-                <div>
-                  <label className="block text-sm font-medium mb-1">{t("item.manuals.url")}</label>
-                  <input
-                    type="url"
-                    value={manualUrl}
-                    onChange={(e) => setManualUrl(e.target.value)}
-                    required
-                    placeholder={t("item.manuals.urlPlaceholder")}
-                    className="w-full px-3 py-2 border rounded text-sm"
-                  />
-                </div>
-              )}
-              {manualType === "TEXT" && (
-                <div>
-                  <label className="block text-sm font-medium mb-1">{t("item.manuals.content")}</label>
-                  <textarea
-                    value={manualContent}
-                    onChange={(e) => setManualContent(e.target.value)}
-                    required
-                    rows={4}
-                    placeholder={t("item.manuals.contentPlaceholder")}
-                    className="w-full px-3 py-2 border rounded text-sm"
-                  />
-                </div>
-              )}
-              <div className="flex gap-2">
-                <button
-                  type="submit"
-                  disabled={manualSubmitting || (manualType === "PDF" && !manualUrl)}
-                  className="px-4 py-2 bg-indigo-600 text-white rounded text-sm hover:bg-indigo-700 disabled:opacity-50"
-                >
-                  {manualSubmitting ? t("item.manuals.adding") : t("item.manuals.add")}
-                </button>
-                <button type="button" onClick={() => setShowManualsModal(false)} className="px-4 py-2 bg-gray-200 rounded text-sm hover:bg-gray-300">
                   {t("common.cancel")}
                 </button>
               </div>

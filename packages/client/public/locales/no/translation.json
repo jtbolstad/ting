@@ -226,6 +226,7 @@
       "approvalStatus": "Godkjenning",
       "actions": "Handlinger",
       "selectCategory": "Velg en kategori",
+      "edit": "Rediger",
       "delete": "Slett",
       "approve": "Godkjenn",
       "reject": "Avvis",

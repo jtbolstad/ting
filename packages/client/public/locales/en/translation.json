@@ -225,6 +225,7 @@
       "approvalStatus": "Approval",
       "actions": "Actions",
       "selectCategory": "Select a category",
+      "edit": "Edit",
       "delete": "Delete",
       "approve": "Approve",
       "reject": "Reject",

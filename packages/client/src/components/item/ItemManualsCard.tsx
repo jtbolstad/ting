@@ -10,7 +10,7 @@ interface ItemManualsCardProps {
 
 export function ItemManualsCard({ itemId }: ItemManualsCardProps) {
   const { t } = useTranslation();
-  const { isAuthenticated } = useAuth();
+  const { isAdmin } = useAuth();
   const [manuals, setManuals] = useState<ItemManual[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [type, setType] = useState<"PDF" | "LINK" | "TEXT">("LINK");
@@ -85,7 +85,7 @@ export function ItemManualsCard({ itemId }: ItemManualsCardProps) {
     <div className="bg-white rounded-lg shadow p-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold">{t("item.manuals.title")}</h2>
-        {isAuthenticated && !showForm && (
+        {isAdmin && !showForm && (
           <button
             onClick={() => setShowForm(true)}
             className="px-3 py-1 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700"
@@ -122,7 +122,7 @@ export function ItemManualsCard({ itemId }: ItemManualsCardProps) {
                 </a>
               )}
             </div>
-            {isAuthenticated && (
+            {isAdmin && (
               <button
                 onClick={() => handleDelete(manual.id)}
                 className="text-red-500 hover:text-red-700 text-sm ml-4"
@@ -134,7 +134,7 @@ export function ItemManualsCard({ itemId }: ItemManualsCardProps) {
         ))}
       </ul>
 
-      {showForm && isAuthenticated && (
+      {showForm && isAdmin && (
         <form onSubmit={handleSubmit} className="border rounded p-4 space-y-3">
           <div>
             <label className="block text-sm font-medium mb-1">{t("item.manuals.type")}</label>
