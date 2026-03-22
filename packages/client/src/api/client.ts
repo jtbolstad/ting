@@ -95,6 +95,13 @@ class ApiClient {
     });
   }
 
+  async changePassword(currentPassword: string, newPassword: string): Promise<void> {
+    return this.request<void>("/auth/change-password", {
+      method: "POST",
+      body: JSON.stringify({ currentPassword, newPassword }),
+    });
+  }
+
   async getCurrentUser(): Promise<{
     user: User;
     memberships: Membership[];

@@ -9,6 +9,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, name: string, organizationId: string) => Promise<void>;
   logout: () => void;
+  refreshUser: () => Promise<void>;
   isLoading: boolean;
   isAuthenticated: boolean;
   isAdmin: boolean;
@@ -116,6 +117,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     applyAuthPayload(response);
   };
 
+  const refreshUser = async () => {
+    const data = await apiClient.getCurrentUser();
+    applyAuthPayload({ user: data.user, memberships: data.memberships ?? [], activeMembershipId: data.activeMembershipId });
+  };
+
   const logout = () => {
     setUser(null);
     persistToken(null);
@@ -159,6 +165,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         register,
         logout,
+        refreshUser,
         isLoading,
         isAuthenticated: !!user,
         isAdmin: user?.role === 'ADMIN' || isOrgAdmin,

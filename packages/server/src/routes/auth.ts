@@ -218,4 +218,33 @@ router.get("/me", authenticate, async (req: AuthRequest, res: Response) => {
   }
 });
 
+// Change password
+router.post("/change-password", authenticate, async (req: AuthRequest, res: Response) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ success: false, error: "currentPassword and newPassword are required" });
+    }
+
+    const user = await prisma.user.findUnique({ where: { id: req.user!.id } });
+    if (!user) {
+      return res.status(404).json({ success: false, error: "User not found" });
+    }
+
+    const valid = await comparePassword(currentPassword, user.passwordHash);
+    if (!valid) {
+      return res.status(400).json({ success: false, error: "Current password is incorrect" });
+    }
+
+    const passwordHash = await hashPassword(newPassword);
+    await prisma.user.update({ where: { id: user.id }, data: { passwordHash } });
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Change password error:", error);
+    res.status(500).json({ success: false, error: "Failed to change password" });
+  }
+});
+
 export default router;
