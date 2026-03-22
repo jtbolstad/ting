@@ -88,6 +88,41 @@ class EmailService {
     await this.sendEmail({ to: userEmail, subject, text, html });
   }
 
+  async sendReservationConfirmed(
+    userEmail: string,
+    userName: string,
+    itemName: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<void> {
+    const subject = `Reservasjon bekreftet: ${itemName}`;
+    const text = `Hei ${userName},\n\nDin reservasjon av "${itemName}" er bekreftet.\nPeriode: ${startDate.toLocaleDateString()} – ${endDate.toLocaleDateString()}\n\nHilsen Ting`;
+    const html = `
+      <h2 style="color: #16a34a;">Reservasjon bekreftet!</h2>
+      <p>Hei ${userName},</p>
+      <p>Din reservasjon av <strong>${itemName}</strong> er bekreftet.</p>
+      <p><strong>Periode:</strong> ${startDate.toLocaleDateString()} – ${endDate.toLocaleDateString()}</p>
+    `;
+    await this.sendEmail({ to: userEmail, subject, text, html });
+  }
+
+  async sendReservationCancelled(
+    userEmail: string,
+    userName: string,
+    itemName: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<void> {
+    const subject = `Reservasjon avbrutt: ${itemName}`;
+    const text = `Hei ${userName},\n\nDin reservasjon av "${itemName}" (${startDate.toLocaleDateString()} – ${endDate.toLocaleDateString()}) er avbrutt.\n\nHilsen Ting`;
+    const html = `
+      <h2>Reservasjon avbrutt</h2>
+      <p>Hei ${userName},</p>
+      <p>Din reservasjon av <strong>${itemName}</strong> (${startDate.toLocaleDateString()} – ${endDate.toLocaleDateString()}) er avbrutt.</p>
+    `;
+    await this.sendEmail({ to: userEmail, subject, text, html });
+  }
+
   async sendApprovalRequest(
     adminEmails: string[],
     submitterName: string,

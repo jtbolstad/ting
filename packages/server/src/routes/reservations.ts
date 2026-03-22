@@ -12,6 +12,7 @@ import {
   withOrganizationContext,
 } from "../middleware/organization.js";
 import { prisma } from "../prisma.js";
+import { emailService } from "../services/email.js";
 
 const router: ExpressRouter = Router();
 
@@ -212,6 +213,15 @@ router.post("/", async (req: AuthRequest, res: Response) => {
       data: serializeReservation(reservation),
     };
 
+    // Send confirmation email (fire and forget)
+    emailService.sendReservationConfirmed(
+      req.user!.email,
+      req.user!.name,
+      reservation.item.name,
+      start,
+      end,
+    ).catch((e) => console.error('Failed to send reservation email:', e));
+
     res.status(201).json(response);
   } catch (error) {
     console.error("Create reservation error:", error);
@@ -303,10 +313,25 @@ router.delete("/:id", async (req: AuthRequest, res: Response) => {
       return res.status(403).json({ success: false, error: "Forbidden" });
     }
 
+    const cancelled = await prisma.reservation.findUnique({
+      where: { id },
+      include: { item: true, user: true },
+    });
+
     await prisma.reservation.update({
       where: { id },
       data: { status: "CANCELLED" },
     });
+
+    if (cancelled) {
+      emailService.sendReservationCancelled(
+        cancelled.user.email,
+        cancelled.user.name,
+        cancelled.item.name,
+        cancelled.startDate,
+        cancelled.endDate,
+      ).catch((e) => console.error('Failed to send cancellation email:', e));
+    }
 
     res.json({ success: true });
   } catch (error) {
