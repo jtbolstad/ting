@@ -58,13 +58,16 @@ export function Dashboard() {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-8">{t('dashboard.title')}</h1>
 
+      <div className="lg:grid lg:grid-cols-2 lg:gap-8">
+
       {/* Current Loans */}
-      <div className="mb-12">
+      <div className="mb-8 lg:mb-0">
         <h2 className="text-2xl font-bold mb-4">{t('dashboard.loans.title')}</h2>
         {loans.length === 0 ? (
           <p className="text-gray-500">{t('dashboard.loans.noLoans')}</p>
         ) : (
           <div className="bg-white rounded-lg shadow overflow-hidden">
+            <div className="overflow-x-auto">
             <table className="min-w-full">
               <thead className="bg-gray-50">
                 <tr>
@@ -109,17 +112,19 @@ export function Dashboard() {
                 })}
               </tbody>
             </table>
+            </div>
           </div>
         )}
       </div>
 
       {/* Reservations */}
-      <div>
+      <div className="min-w-0">
         <h2 className="text-2xl font-bold mb-4">{t('dashboard.reservations.title')}</h2>
         {reservations.length === 0 ? (
           <p className="text-gray-500">{t('dashboard.reservations.noReservations')}</p>
         ) : (
           <div className="bg-white rounded-lg shadow overflow-hidden">
+            <div className="overflow-x-auto">
             <table className="min-w-full">
               <thead className="bg-gray-50">
                 <tr>
@@ -164,8 +169,11 @@ export function Dashboard() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         )}
+      </div>
+
       </div>
     </div>
   );

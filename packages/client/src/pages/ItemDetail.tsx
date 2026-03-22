@@ -41,13 +41,21 @@ export function ItemDetail() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="max-w-6xl mx-auto space-y-6">
-        <ItemDetailsCard item={item} />
-        <ItemTimeline itemId={id!} daysAhead={60} />
-        <ItemReservationForm itemId={id!} itemStatus={item.status} />
-        <ItemManualsCard itemId={id!} />
-        <ItemCommentsCard itemId={id!} />
-        <ItemReviewsCard itemId={id!} />
+      <div className="max-w-6xl mx-auto">
+        <div className="lg:grid lg:grid-cols-3 lg:gap-6">
+          {/* Main column */}
+          <div className="lg:col-span-2 space-y-6">
+            <ItemDetailsCard item={item} />
+            <ItemTimeline itemId={id!} daysAhead={60} />
+            <ItemCommentsCard itemId={id!} />
+            <ItemReviewsCard itemId={id!} />
+          </div>
+          {/* Sidebar */}
+          <div className="space-y-6 mt-6 lg:mt-0">
+            <ItemReservationForm itemId={id!} itemStatus={item.status} />
+            <ItemManualsCard itemId={id!} />
+          </div>
+        </div>
       </div>
     </div>
   );
