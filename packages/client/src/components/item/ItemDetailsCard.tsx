@@ -16,7 +16,7 @@ export function ItemDetailsCard({ item }: ItemDetailsCardProps) {
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
       <div className="md:flex">
-        <div className="md:w-1/2 bg-gray-200 flex items-center justify-center h-96">
+        <div className="md:w-1/2 bg-gray-200 flex items-center justify-center h-56 md:h-96">
           {item.imageUrl ? (
             <img
               src={item.imageUrl}
@@ -28,7 +28,7 @@ export function ItemDetailsCard({ item }: ItemDetailsCardProps) {
           )}
         </div>
 
-        <div className="md:w-1/2 p-8">
+        <div className="md:w-1/2 p-4 md:p-8">
           <h1 className="text-3xl font-bold mb-2">{item.name}</h1>
           <p className="text-gray-600 mb-4">
             {item.category?.name

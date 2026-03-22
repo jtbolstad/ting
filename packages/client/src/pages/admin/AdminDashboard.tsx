@@ -292,8 +292,8 @@ export function AdminDashboard() {
       </div>
 
       {/* Tabs */}
-      <div className="mb-6 border-b">
-        <div className="flex space-x-8">
+      <div className="mb-6 border-b overflow-x-auto">
+        <div className="flex space-x-4 min-w-max">
           <button
             onClick={() => setActiveTab("loans")}
             className={`pb-4 px-1 ${
@@ -361,6 +361,7 @@ export function AdminDashboard() {
           </div>
 
           <div className="bg-white rounded-lg shadow overflow-hidden">
+            <div className="overflow-x-auto">
             <table className="min-w-full">
               <thead className="bg-gray-50">
                 <tr>
@@ -414,6 +415,7 @@ export function AdminDashboard() {
                 })}
               </tbody>
             </table>
+            </div>
           </div>
         </div>
       )}
@@ -432,6 +434,7 @@ export function AdminDashboard() {
           </div>
 
           <div className="bg-white rounded-lg shadow overflow-hidden">
+            <div className="overflow-x-auto">
             <table className="min-w-full">
               <thead className="bg-gray-50">
                 <tr>
@@ -519,6 +522,7 @@ export function AdminDashboard() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </div>
       )}
@@ -528,6 +532,7 @@ export function AdminDashboard() {
         <div>
           <h2 className="text-2xl font-bold mb-4">{t("admin.users.title")}</h2>
           <div className="bg-white rounded-lg shadow overflow-hidden">
+            <div className="overflow-x-auto">
             <table className="min-w-full">
               <thead className="bg-gray-50">
                 <tr>
@@ -568,6 +573,7 @@ export function AdminDashboard() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </div>
       )}
@@ -588,6 +594,7 @@ export function AdminDashboard() {
           </div>
 
           <div className="bg-white rounded-lg shadow overflow-hidden">
+            <div className="overflow-x-auto">
             <table className="min-w-full">
               <thead className="bg-gray-50">
                 <tr>
@@ -633,6 +640,7 @@ export function AdminDashboard() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </div>
       )}
@@ -654,6 +662,7 @@ export function AdminDashboard() {
             <p className="text-gray-500">{t("admin.locations.noLocations")}</p>
           ) : (
             <div className="bg-white rounded-lg shadow overflow-hidden">
+              <div className="overflow-x-auto">
               <table className="min-w-full">
                 <thead className="bg-gray-50">
                   <tr>
@@ -695,6 +704,7 @@ export function AdminDashboard() {
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
           )}
         </div>
