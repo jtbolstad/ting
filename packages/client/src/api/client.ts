@@ -465,7 +465,7 @@ class ApiClient {
 
   async uploadManual(file: File): Promise<{ url: string }> {
     const formData = new FormData();
-    formData.append("manual", file);
+    formData.append("file", file);
 
     const token = localStorage.getItem("token");
     const headers: HeadersInit = {

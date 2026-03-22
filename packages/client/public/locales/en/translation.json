@@ -329,7 +329,12 @@
     "submit": "Add Item",
     "creating": "Adding...",
     "selectOrganization": "Please select an organization first",
-    "loadCategoriesError": "Failed to load categories"
+    "loadCategoriesError": "Failed to load categories",
+    "manualLabel": "User Manual (PDF, optional)",
+    "manualChooseFile": "Choose PDF file",
+    "manualNoFile": "No file chosen",
+    "manualHint": "Upload a PDF user manual for this item",
+    "uploadingManual": "Uploading PDF..."
   },
   "editItem": {
     "title": "Edit Item",

@@ -330,7 +330,12 @@
     "submit": "Legg til verktøy",
     "creating": "Legger til...",
     "selectOrganization": "Vennligst velg en organisasjon først",
-    "loadCategoriesError": "Kunne ikke laste kategorier"
+    "loadCategoriesError": "Kunne ikke laste kategorier",
+    "manualLabel": "Brukerveiledning (PDF, valgfritt)",
+    "manualChooseFile": "Velg PDF-fil",
+    "manualNoFile": "Ingen fil valgt",
+    "manualHint": "Last opp en PDF-brukerveiledning for verktøyet",
+    "uploadingManual": "Laster opp PDF..."
   },
   "editItem": {
     "title": "Rediger verktøy",

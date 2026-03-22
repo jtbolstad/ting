@@ -329,7 +329,12 @@
     "submit": "Tilføj værktøj",
     "creating": "Tilføjer...",
     "selectOrganization": "Vælg venligst en organisation først",
-    "loadCategoriesError": "Kunne ikke indlæse kategorier"
+    "loadCategoriesError": "Kunne ikke indlæse kategorier",
+    "manualLabel": "Brugervejledning (PDF, valgfrit)",
+    "manualChooseFile": "Vælg PDF-fil",
+    "manualNoFile": "Ingen fil valgt",
+    "manualHint": "Upload en PDF-brugervejledning til værktøjet",
+    "uploadingManual": "Uploader PDF..."
   },
   "editItem": {
     "title": "Rediger Værktøj",

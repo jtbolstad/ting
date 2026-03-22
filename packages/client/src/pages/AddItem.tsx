@@ -1,5 +1,5 @@
 import type { Category, Location } from "@ting/shared";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { apiClient } from "../api/client";
@@ -16,6 +16,9 @@ export function AddItem() {
   const [locations, setLocations] = useState<Location[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -59,6 +62,17 @@ export function AddItem() {
     setLoading(true);
 
     try {
+      let pdfUrl: string | undefined;
+      if (pdfFile) {
+        setUploading(true);
+        try {
+          const result = await apiClient.uploadManual(pdfFile);
+          pdfUrl = result.url;
+        } finally {
+          setUploading(false);
+        }
+      }
+
       const item = await apiClient.createItem({
         name: formData.name,
         description: formData.description || undefined,
@@ -67,7 +81,14 @@ export function AddItem() {
         locationId: formData.locationId || undefined,
       });
 
-      // Navigate to the new item's detail page
+      if (pdfUrl) {
+        await apiClient.createManual(item.id, {
+          type: "PDF",
+          label: pdfFile!.name.replace(/\.pdf$/i, ""),
+          url: pdfUrl,
+        });
+      }
+
       navigate(`/items/${item.id}`);
     } catch (err: any) {
       setError(err.message || t("errors.createItemFailed"));
@@ -205,13 +226,41 @@ export function AddItem() {
             label={t("addItem.imageUrl")}
           />
 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {t("addItem.manualLabel")}
+            </label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="application/pdf"
+              onChange={(e) => setPdfFile(e.target.files?.[0] ?? null)}
+              className="hidden"
+            />
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="px-3 py-2 text-sm border border-gray-300 rounded hover:bg-gray-50"
+              >
+                {t("addItem.manualChooseFile")}
+              </button>
+              {pdfFile ? (
+                <span className="text-sm text-gray-700 truncate max-w-xs">{pdfFile.name}</span>
+              ) : (
+                <span className="text-sm text-gray-400">{t("addItem.manualNoFile")}</span>
+              )}
+            </div>
+            <p className="text-xs text-gray-500 mt-1">{t("addItem.manualHint")}</p>
+          </div>
+
           <div className="flex space-x-4 pt-4">
             <button
               type="submit"
               disabled={loading}
               className="flex-1 py-2 px-4 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
-              {loading ? t("addItem.creating") : t("addItem.submit")}
+              {uploading ? t("addItem.uploadingManual") : loading ? t("addItem.creating") : t("addItem.submit")}
             </button>
             <button
               type="button"
