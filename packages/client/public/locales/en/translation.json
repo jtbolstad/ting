@@ -175,6 +175,7 @@
   },
   "admin": {
     "title": "Admin Dashboard",
+    "loading": "Loading...",
     "stats": {
       "totalItems": "Total Items",
       "available": "Available",

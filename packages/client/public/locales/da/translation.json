@@ -175,6 +175,7 @@
   },
   "admin": {
     "title": "Administrationspanel",
+    "loading": "Indlæser...",
     "stats": {
       "totalItems": "Totalt Værktøjer",
       "available": "Tilgængelige",

@@ -176,6 +176,7 @@
   },
   "admin": {
     "title": "Administrasjonspanel",
+    "loading": "Laster...",
     "stats": {
       "totalItems": "Totalt verktøy",
       "available": "Tilgjengelig",
