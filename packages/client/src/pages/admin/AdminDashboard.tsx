@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { apiClient } from "../../api/client";
 import { useOrganization } from "../../context/OrganizationContext";
-import type { Item, Category, Loan, User } from "@ting/shared";
+import type { Item, Category, ItemManual, Loan, Location, User } from "@ting/shared";
 
 export function AdminDashboard() {
   const { t } = useTranslation();
@@ -14,7 +14,7 @@ export function AdminDashboard() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<
-    "loans" | "items" | "users" | "categories"
+    "loans" | "items" | "users" | "categories" | "locations"
   >("loans");
 
   // Checkout modal state
@@ -40,6 +40,30 @@ export function AdminDashboard() {
     description: "",
   });
 
+  // Location state
+  const [locations, setLocations] = useState<Location[]>([]);
+  const [showAddLocation, setShowAddLocation] = useState(false);
+  const [showEditLocation, setShowEditLocation] = useState(false);
+  const [editingLocation, setEditingLocation] = useState<Location | null>(null);
+  const [locationForm, setLocationForm] = useState({ name: "", address: "", description: "" });
+
+  // Item approval state
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [rejectingItemId, setRejectingItemId] = useState("");
+  const [rejectNote, setRejectNote] = useState("");
+
+  // Manuals modal state
+  const [showManualsModal, setShowManualsModal] = useState(false);
+  const [manualsItem, setManualsItem] = useState<Item | null>(null);
+  const [manuals, setManuals] = useState<ItemManual[]>([]);
+  const [manualType, setManualType] = useState<"PDF" | "LINK" | "TEXT">("LINK");
+  const [manualLabel, setManualLabel] = useState("");
+  const [manualUrl, setManualUrl] = useState("");
+  const [manualContent, setManualContent] = useState("");
+  const [manualUploading, setManualUploading] = useState(false);
+  const [manualSubmitting, setManualSubmitting] = useState(false);
+  const manualFileRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     loadData();
   }, []);
@@ -47,12 +71,13 @@ export function AdminDashboard() {
   const loadData = async () => {
     if (!activeOrganizationId) return;
     try {
-      const [loansData, itemsData, categoriesData, usersData] =
+      const [loansData, itemsData, categoriesData, usersData, locationsData] =
         await Promise.all([
           apiClient.getLoans(),
           apiClient.getItems({ organizationId: activeOrganizationId, limit: 100 }),
           apiClient.getCategories(activeOrganizationId),
           apiClient.getUsers(),
+          apiClient.getLocations(),
         ]);
       setLoans(loansData.filter((l) => !l.returnedAt));
       setOverdueLoans(
@@ -63,6 +88,7 @@ export function AdminDashboard() {
       setItems(itemsData.items);
       setCategories(categoriesData);
       setUsers(usersData.map(item => item.user));
+      setLocations(locationsData);
     } catch (error) {
       console.error("Failed to load admin data:", error);
     } finally {
@@ -165,6 +191,145 @@ export function AdminDashboard() {
     }
   };
 
+  const handleAddLocation = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await apiClient.createLocation(locationForm);
+      setShowAddLocation(false);
+      setLocationForm({ name: "", address: "", description: "" });
+      await loadData();
+    } catch (error: any) {
+      alert(error.message || "Failed to create location");
+    }
+  };
+
+  const handleEditLocation = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingLocation) return;
+    try {
+      await apiClient.updateLocation(editingLocation.id, locationForm);
+      setShowEditLocation(false);
+      setEditingLocation(null);
+      setLocationForm({ name: "", address: "", description: "" });
+      await loadData();
+    } catch (error: any) {
+      alert(error.message || "Failed to update location");
+    }
+  };
+
+  const openEditLocation = (location: Location) => {
+    setEditingLocation(location);
+    setLocationForm({
+      name: location.name,
+      address: location.address || "",
+      description: location.description || "",
+    });
+    setShowEditLocation(true);
+  };
+
+  const handleDeleteLocation = async (id: string) => {
+    if (!confirm(t("admin.locations.confirmDelete"))) return;
+    try {
+      await apiClient.deleteLocation(id);
+      await loadData();
+    } catch (error: any) {
+      alert(error.message || "Failed to delete location");
+    }
+  };
+
+  const handleApproveItem = async (id: string) => {
+    if (!confirm(t("admin.items.confirmApprove"))) return;
+    try {
+      await apiClient.approveItem(id);
+      await loadData();
+    } catch (error: any) {
+      alert(error.message || "Failed to approve item");
+    }
+  };
+
+  const openRejectModal = (id: string) => {
+    setRejectingItemId(id);
+    setRejectNote("");
+    setShowRejectModal(true);
+  };
+
+  const handleRejectItem = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await apiClient.rejectItem(rejectingItemId, rejectNote || undefined);
+      setShowRejectModal(false);
+      setRejectingItemId("");
+      setRejectNote("");
+      await loadData();
+    } catch (error: any) {
+      alert(error.message || "Failed to reject item");
+    }
+  };
+
+  const openManualsModal = async (item: Item) => {
+    setManualsItem(item);
+    setManualType("LINK");
+    setManualLabel("");
+    setManualUrl("");
+    setManualContent("");
+    try {
+      const data = await apiClient.getItemManuals(item.id);
+      setManuals(data);
+    } catch {
+      setManuals([]);
+    }
+    setShowManualsModal(true);
+  };
+
+  const handleUploadManualPdf = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setManualUploading(true);
+    try {
+      const result = await apiClient.uploadManual(file);
+      setManualUrl(result.url);
+    } catch (err: any) {
+      alert(err.message || "Upload failed");
+    } finally {
+      setManualUploading(false);
+    }
+  };
+
+  const handleAddManual = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!manualsItem) return;
+    setManualSubmitting(true);
+    try {
+      await apiClient.createManual(manualsItem.id, {
+        type: manualType,
+        label: manualLabel,
+        url: manualType !== "TEXT" ? manualUrl : undefined,
+        content: manualType === "TEXT" ? manualContent : undefined,
+      });
+      setManualLabel("");
+      setManualUrl("");
+      setManualContent("");
+      setManualType("LINK");
+      const data = await apiClient.getItemManuals(manualsItem.id);
+      setManuals(data);
+    } catch (err: any) {
+      alert(err.message || "Failed to add manual");
+    } finally {
+      setManualSubmitting(false);
+    }
+  };
+
+  const handleDeleteManual = async (manualId: string) => {
+    if (!manualsItem || !confirm(t("item.manuals.confirmDelete"))) return;
+    try {
+      await apiClient.deleteManual(manualsItem.id, manualId);
+      const data = await apiClient.getItemManuals(manualsItem.id);
+      setManuals(data);
+    } catch (err: any) {
+      alert(err.message || "Failed to delete manual");
+    }
+  };
+
   if (loading) {
     return <div className="text-center py-12">{t("admin.loading")}</div>;
   }
@@ -243,6 +408,16 @@ export function AdminDashboard() {
             }`}
           >
             {t("admin.tabs.categories")}
+          </button>
+          <button
+            onClick={() => setActiveTab("locations")}
+            className={`pb-4 px-1 ${
+              activeTab === "locations"
+                ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
+                : "text-gray-500"
+            }`}
+          >
+            {t("admin.tabs.locations")}
           </button>
         </div>
       </div>
@@ -345,6 +520,9 @@ export function AdminDashboard() {
                     {t("admin.items.status")}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    {t("admin.items.approvalStatus")}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                     {t("admin.items.actions")}
                   </th>
                 </tr>
@@ -366,6 +544,41 @@ export function AdminDashboard() {
                       </span>
                     </td>
                     <td className="px-6 py-4">
+                      <span
+                        className={`px-2 py-1 text-xs rounded ${
+                          item.approvalStatus === "APPROVED"
+                            ? "bg-green-100 text-green-800"
+                            : item.approvalStatus === "PENDING"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
+                      >
+                        {t(`admin.items.approvalValues.${item.approvalStatus}`)}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 space-x-3">
+                      {item.approvalStatus === "PENDING" && (
+                        <>
+                          <button
+                            onClick={() => handleApproveItem(item.id)}
+                            className="text-green-600 hover:text-green-900"
+                          >
+                            {t("admin.items.approve")}
+                          </button>
+                          <button
+                            onClick={() => openRejectModal(item.id)}
+                            className="text-orange-600 hover:text-orange-900"
+                          >
+                            {t("admin.items.reject")}
+                          </button>
+                        </>
+                      )}
+                      <button
+                        onClick={() => openManualsModal(item)}
+                        className="text-indigo-600 hover:text-indigo-900"
+                      >
+                        {t("item.manuals.title")}
+                      </button>
                       <button
                         onClick={() => handleDeleteItem(item.id)}
                         className="text-red-600 hover:text-red-900"
@@ -492,6 +705,69 @@ export function AdminDashboard() {
               </tbody>
             </table>
           </div>
+        </div>
+      )}
+
+      {/* Locations Tab */}
+      {activeTab === "locations" && (
+        <div>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold">{t("admin.locations.title")}</h2>
+            <button
+              onClick={() => setShowAddLocation(true)}
+              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+            >
+              {t("admin.locations.addLocation")}
+            </button>
+          </div>
+
+          {locations.length === 0 ? (
+            <p className="text-gray-500">{t("admin.locations.noLocations")}</p>
+          ) : (
+            <div className="bg-white rounded-lg shadow overflow-hidden">
+              <table className="min-w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.locations.name")}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.locations.address")}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.locations.description")}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.locations.actions")}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {locations.map((location) => (
+                    <tr key={location.id}>
+                      <td className="px-6 py-4 font-medium">{location.name}</td>
+                      <td className="px-6 py-4 text-gray-600">{location.address || "-"}</td>
+                      <td className="px-6 py-4 text-gray-600">{location.description || "-"}</td>
+                      <td className="px-6 py-4 space-x-3">
+                        <button
+                          onClick={() => openEditLocation(location)}
+                          className="text-indigo-600 hover:text-indigo-900"
+                        >
+                          {t("admin.locations.edit")}
+                        </button>
+                        <button
+                          onClick={() => handleDeleteLocation(location.id)}
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          {t("admin.locations.delete")}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       )}
 
@@ -695,6 +971,267 @@ export function AdminDashboard() {
                 <button
                   type="button"
                   onClick={() => setShowAddCategory(false)}
+                  className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                >
+                  {t("common.cancel")}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Manuals Modal */}
+      {showManualsModal && manualsItem && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-lg w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-2xl font-bold">{t("item.manuals.title")} – {manualsItem.name}</h3>
+              <button onClick={() => setShowManualsModal(false)} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+            </div>
+
+            {/* Existing manuals */}
+            {manuals.length === 0 ? (
+              <p className="text-gray-500 text-sm mb-4">{t("item.manuals.noManuals")}</p>
+            ) : (
+              <ul className="space-y-2 mb-4">
+                {manuals.map((manual) => (
+                  <li key={manual.id} className="flex items-center justify-between border rounded px-3 py-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-xs px-2 py-0.5 rounded bg-gray-100 text-gray-600 uppercase shrink-0">
+                        {manual.type}
+                      </span>
+                      {manual.type === "TEXT" ? (
+                        <span className="text-sm font-medium truncate">{manual.label}</span>
+                      ) : (
+                        <a href={manual.url!} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-indigo-600 hover:underline truncate">
+                          {manual.label}
+                        </a>
+                      )}
+                    </div>
+                    <button onClick={() => handleDeleteManual(manual.id)} className="text-red-500 hover:text-red-700 text-sm ml-3 shrink-0">
+                      {t("item.manuals.delete")}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {/* Add manual form */}
+            <form onSubmit={handleAddManual} className="border-t pt-4 space-y-3">
+              <h4 className="font-medium text-sm">{t("item.manuals.addManual")}</h4>
+              <div>
+                <label className="block text-sm font-medium mb-1">{t("item.manuals.type")}</label>
+                <select
+                  value={manualType}
+                  onChange={(e) => { setManualType(e.target.value as "PDF" | "LINK" | "TEXT"); setManualUrl(""); }}
+                  className="w-full px-3 py-2 border rounded text-sm"
+                >
+                  <option value="LINK">{t("item.manuals.typeLink")}</option>
+                  <option value="PDF">{t("item.manuals.typePdf")}</option>
+                  <option value="TEXT">{t("item.manuals.typeText")}</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">{t("item.manuals.label")}</label>
+                <input
+                  type="text"
+                  value={manualLabel}
+                  onChange={(e) => setManualLabel(e.target.value)}
+                  required
+                  placeholder={t("item.manuals.labelPlaceholder")}
+                  className="w-full px-3 py-2 border rounded text-sm"
+                />
+              </div>
+              {manualType === "PDF" && (
+                <div>
+                  <label className="block text-sm font-medium mb-1">{t("item.manuals.uploadPdf")}</label>
+                  <input ref={manualFileRef} type="file" accept="application/pdf" onChange={handleUploadManualPdf} className="hidden" />
+                  <div className="flex gap-2 items-center">
+                    <button
+                      type="button"
+                      onClick={() => manualFileRef.current?.click()}
+                      disabled={manualUploading}
+                      className="px-3 py-1 text-sm border rounded hover:bg-gray-50 disabled:opacity-50"
+                    >
+                      {manualUploading ? t("item.manuals.uploading") : t("item.manuals.uploadPdf")}
+                    </button>
+                    {manualUrl && <span className="text-xs text-green-600 truncate max-w-xs">✓ {t("common.success")}</span>}
+                  </div>
+                </div>
+              )}
+              {manualType === "LINK" && (
+                <div>
+                  <label className="block text-sm font-medium mb-1">{t("item.manuals.url")}</label>
+                  <input
+                    type="url"
+                    value={manualUrl}
+                    onChange={(e) => setManualUrl(e.target.value)}
+                    required
+                    placeholder={t("item.manuals.urlPlaceholder")}
+                    className="w-full px-3 py-2 border rounded text-sm"
+                  />
+                </div>
+              )}
+              {manualType === "TEXT" && (
+                <div>
+                  <label className="block text-sm font-medium mb-1">{t("item.manuals.content")}</label>
+                  <textarea
+                    value={manualContent}
+                    onChange={(e) => setManualContent(e.target.value)}
+                    required
+                    rows={4}
+                    placeholder={t("item.manuals.contentPlaceholder")}
+                    className="w-full px-3 py-2 border rounded text-sm"
+                  />
+                </div>
+              )}
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  disabled={manualSubmitting || (manualType === "PDF" && !manualUrl)}
+                  className="px-4 py-2 bg-indigo-600 text-white rounded text-sm hover:bg-indigo-700 disabled:opacity-50"
+                >
+                  {manualSubmitting ? t("item.manuals.adding") : t("item.manuals.add")}
+                </button>
+                <button type="button" onClick={() => setShowManualsModal(false)} className="px-4 py-2 bg-gray-200 rounded text-sm hover:bg-gray-300">
+                  {t("common.cancel")}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Reject Item Modal */}
+      {showRejectModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full">
+            <h3 className="text-2xl font-bold mb-4">{t("admin.items.reject")}</h3>
+            <form onSubmit={handleRejectItem} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.items.rejectNote")}
+                </label>
+                <textarea
+                  value={rejectNote}
+                  onChange={(e) => setRejectNote(e.target.value)}
+                  className="w-full px-3 py-2 border rounded"
+                  rows={3}
+                />
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  className="flex-1 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                >
+                  {t("admin.items.reject")}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowRejectModal(false)}
+                  className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                >
+                  {t("common.cancel")}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Add Location Modal */}
+      {showAddLocation && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full">
+            <h3 className="text-2xl font-bold mb-4">{t("admin.locations.addLocation")}</h3>
+            <form onSubmit={handleAddLocation} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">{t("admin.locations.name")}</label>
+                <input
+                  type="text"
+                  value={locationForm.name}
+                  onChange={(e) => setLocationForm({ ...locationForm, name: e.target.value })}
+                  required
+                  className="w-full px-3 py-2 border rounded"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">{t("admin.locations.address")}</label>
+                <input
+                  type="text"
+                  value={locationForm.address}
+                  onChange={(e) => setLocationForm({ ...locationForm, address: e.target.value })}
+                  className="w-full px-3 py-2 border rounded"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">{t("admin.locations.description")}</label>
+                <textarea
+                  value={locationForm.description}
+                  onChange={(e) => setLocationForm({ ...locationForm, description: e.target.value })}
+                  className="w-full px-3 py-2 border rounded"
+                  rows={3}
+                />
+              </div>
+              <div className="flex gap-2">
+                <button type="submit" className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+                  {t("admin.locations.create")}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowAddLocation(false)}
+                  className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                >
+                  {t("common.cancel")}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Location Modal */}
+      {showEditLocation && editingLocation && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full">
+            <h3 className="text-2xl font-bold mb-4">{t("admin.locations.editLocation")}</h3>
+            <form onSubmit={handleEditLocation} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">{t("admin.locations.name")}</label>
+                <input
+                  type="text"
+                  value={locationForm.name}
+                  onChange={(e) => setLocationForm({ ...locationForm, name: e.target.value })}
+                  required
+                  className="w-full px-3 py-2 border rounded"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">{t("admin.locations.address")}</label>
+                <input
+                  type="text"
+                  value={locationForm.address}
+                  onChange={(e) => setLocationForm({ ...locationForm, address: e.target.value })}
+                  className="w-full px-3 py-2 border rounded"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">{t("admin.locations.description")}</label>
+                <textarea
+                  value={locationForm.description}
+                  onChange={(e) => setLocationForm({ ...locationForm, description: e.target.value })}
+                  className="w-full px-3 py-2 border rounded"
+                  rows={3}
+                />
+              </div>
+              <div className="flex gap-2">
+                <button type="submit" className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+                  {t("admin.locations.update")}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setShowEditLocation(false); setEditingLocation(null); setLocationForm({ name: "", address: "", description: "" }); }}
                   className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
                 >
                   {t("common.cancel")}

@@ -6,6 +6,7 @@ import { ItemDetailsCard } from "../components/item/ItemDetailsCard";
 import { ItemTimeline } from "../components/item/ItemTimeline";
 import { ItemReservationForm } from "../components/item/ItemReservationForm";
 import { ItemCommentsCard } from "../components/item/ItemCommentsCard";
+import { ItemManualsCard } from "../components/item/ItemManualsCard";
 import { ItemReviewsCard } from "../components/item/ItemReviewsCard";
 import type { Item } from "@ting/shared";
 
@@ -44,6 +45,7 @@ export function ItemDetail() {
         <ItemDetailsCard item={item} />
         <ItemTimeline itemId={id!} daysAhead={60} />
         <ItemReservationForm itemId={id!} itemStatus={item.status} />
+        <ItemManualsCard itemId={id!} />
         <ItemCommentsCard itemId={id!} />
         <ItemReviewsCard itemId={id!} />
       </div>

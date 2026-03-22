@@ -60,6 +60,13 @@ export function ItemDetailsCard({ item }: ItemDetailsCardProps) {
             </span>
           </div>
 
+          {item.location && (
+            <div className="mb-4 flex items-center gap-2 text-sm text-gray-600">
+              <span>📍</span>
+              <span>{item.location.name}{item.location.address ? ` – ${item.location.address}` : ""}</span>
+            </div>
+          )}
+
           <p className="text-gray-700 mb-8">
             {item.description || t("item.noDescription")}
           </p>

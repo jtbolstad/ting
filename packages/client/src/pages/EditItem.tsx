@@ -1,4 +1,4 @@
-import type { Category } from "@ting/shared";
+import type { Category, Location } from "@ting/shared";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -14,6 +14,7 @@ export function EditItem() {
   const { isAuthenticated } = useAuth();
   const { activeOrganizationId } = useOrganization();
   const [categories, setCategories] = useState<Category[]>([]);
+  const [locations, setLocations] = useState<Location[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -24,6 +25,7 @@ export function EditItem() {
     categoryId: "",
     imageUrl: "",
     status: "AVAILABLE",
+    locationId: "",
   });
 
   useEffect(() => {
@@ -43,18 +45,21 @@ export function EditItem() {
 
   const loadData = async () => {
     try {
-      const [item, categoriesData] = await Promise.all([
+      const [item, categoriesData, locationsData] = await Promise.all([
         apiClient.getItem(id!),
         apiClient.getCategories(activeOrganizationId!),
+        apiClient.getLocations(),
       ]);
 
       setCategories(categoriesData);
+      setLocations(locationsData);
       setFormData({
         name: item.name,
         description: item.description || "",
         categoryId: item.categoryId,
         imageUrl: item.imageUrl || "",
         status: item.status,
+        locationId: item.locationId || "",
       });
     } catch (error: any) {
       console.error("Failed to load item:", error);
@@ -76,6 +81,7 @@ export function EditItem() {
         categoryId: formData.categoryId,
         imageUrl: formData.imageUrl || undefined,
         status: formData.status as any,
+        locationId: formData.locationId || null,
       });
 
       navigate(`/items/${id}`);
@@ -196,6 +202,31 @@ export function EditItem() {
               <option value="RETIRED">{t("catalog.status.retired")}</option>
             </select>
           </div>
+
+          {locations.length > 0 && (
+            <div>
+              <label
+                htmlFor="locationId"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                {t("editItem.location")}
+              </label>
+              <select
+                id="locationId"
+                name="locationId"
+                value={formData.locationId}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="">{t("editItem.noLocation")}</option>
+                {locations.map((loc) => (
+                  <option key={loc.id} value={loc.id}>
+                    {loc.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <div>
             <label

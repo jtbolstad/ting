@@ -82,6 +82,7 @@
     "description": "Beskrivelse",
     "category": "Kategori",
     "status": "Status",
+    "location": "Lokation",
     "loading": "Indlæser værktøj...",
     "notFound": "Værktøj ikke fundet",
     "noDescription": "Ingen beskrivelse tilgængelig.",
@@ -91,6 +92,28 @@
     "endDate": "Slutdato",
     "loginToReserve": "Log venligst ind for at reservere dette værktøj",
     "edit": "Rediger Værktøj",
+    "manuals": {
+      "title": "Manualer",
+      "noManuals": "Ingen manualer tilføjet.",
+      "addManual": "Tilføj Manual",
+      "label": "Titel",
+      "labelPlaceholder": "f.eks. Brugermanual, Sikkerhedsvejledning",
+      "type": "Type",
+      "typePdf": "PDF",
+      "typeLink": "Eksternt link",
+      "typeText": "Tekst",
+      "url": "URL",
+      "urlPlaceholder": "https://...",
+      "content": "Indhold",
+      "contentPlaceholder": "Skriv manual indhold...",
+      "uploadPdf": "Upload PDF",
+      "uploading": "Uploader...",
+      "add": "Tilføj",
+      "adding": "Tilføjer...",
+      "delete": "Slet",
+      "confirmDelete": "Er du sikker på, at du vil slette denne manual?",
+      "loginRequired": "Log ind for at administrere manualer."
+    },
     "availability": {
       "title": "Tilgængelighed (Næste {{days}} Dage)"
     },
@@ -162,7 +185,23 @@
       "loans": "Udlån",
       "items": "Værktøjer",
       "users": "Brugere",
-      "categories": "Kategorier"
+      "categories": "Kategorier",
+      "locations": "Lokationer"
+    },
+    "locations": {
+      "title": "Lokationer",
+      "addLocation": "Tilføj Lokation",
+      "editLocation": "Rediger Lokation",
+      "name": "Navn",
+      "address": "Adresse",
+      "description": "Beskrivelse",
+      "actions": "Handlinger",
+      "edit": "Rediger",
+      "delete": "Slet",
+      "create": "Opret Lokation",
+      "update": "Opdater Lokation",
+      "confirmDelete": "Er du sikker på, at du vil slette denne lokation?",
+      "noLocations": "Ingen lokationer oprettet endnu."
     },
     "loans": {
       "title": "Aktive Udlån",
@@ -183,10 +222,20 @@
       "category": "Kategori",
       "description": "Beskrivelse",
       "status": "Status",
+      "approvalStatus": "Godkendelse",
       "actions": "Handlinger",
       "selectCategory": "Vælg en kategori",
       "delete": "Slet",
-      "confirmDelete": "Er du sikker på, at du vil slette dette værktøj?"
+      "approve": "Godkend",
+      "reject": "Afvis",
+      "confirmDelete": "Er du sikker på, at du vil slette dette værktøj?",
+      "confirmApprove": "Godkend dette værktøj?",
+      "rejectNote": "Begrundelse for afvisning (valgfrit)",
+      "approvalValues": {
+        "PENDING": "Afventer",
+        "APPROVED": "Godkendt",
+        "REJECTED": "Afvist"
+      }
     },
     "users": {
       "title": "Brugere",
@@ -267,6 +316,9 @@
     "namePlaceholder": "f.eks., Elektrisk bor, Campingtelt, osv.",
     "category": "Kategori",
     "selectCategory": "Vælg en kategori",
+    "location": "Lokation (valgfrit)",
+    "selectLocation": "Vælg en lokation",
+    "noLocation": "Ingen lokation",
     "descriptionLabel": "Beskrivelse",
     "descriptionPlaceholder": "Beskriv værktøjet, tilstand og vigtige detaljer...",
     "imageUrl": "Billed-URL (valgfrit)",
@@ -283,6 +335,9 @@
     "name": "Værktøjsnavn",
     "category": "Kategori",
     "selectCategory": "Vælg en kategori",
+    "location": "Lokation",
+    "selectLocation": "Vælg en lokation",
+    "noLocation": "Ingen lokation",
     "status": "Status",
     "descriptionLabel": "Beskrivelse",
     "descriptionPlaceholder": "Beskriv værktøjet, tilstand og vigtige detaljer...",

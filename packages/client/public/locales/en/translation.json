@@ -82,6 +82,7 @@
     "description": "Description",
     "category": "Category",
     "status": "Status",
+    "location": "Location",
     "loading": "Loading item...",
     "notFound": "Item not found",
     "noDescription": "No description available.",
@@ -91,6 +92,28 @@
     "endDate": "End Date",
     "loginToReserve": "Please log in to reserve this item",
     "edit": "Edit Item",
+    "manuals": {
+      "title": "Manuals",
+      "noManuals": "No manuals added.",
+      "addManual": "Add Manual",
+      "label": "Title",
+      "labelPlaceholder": "e.g. User Manual, Safety Guide",
+      "type": "Type",
+      "typePdf": "PDF",
+      "typeLink": "External link",
+      "typeText": "Text",
+      "url": "URL",
+      "urlPlaceholder": "https://...",
+      "content": "Content",
+      "contentPlaceholder": "Enter manual content...",
+      "uploadPdf": "Upload PDF",
+      "uploading": "Uploading...",
+      "add": "Add",
+      "adding": "Adding...",
+      "delete": "Delete",
+      "confirmDelete": "Are you sure you want to delete this manual?",
+      "loginRequired": "Log in to manage manuals."
+    },
     "availability": {
       "title": "Availability (Next {{days}} Days)"
     },
@@ -162,7 +185,23 @@
       "loans": "Loans",
       "items": "Items",
       "users": "Users",
-      "categories": "Categories"
+      "categories": "Categories",
+      "locations": "Locations"
+    },
+    "locations": {
+      "title": "Locations",
+      "addLocation": "Add Location",
+      "editLocation": "Edit Location",
+      "name": "Name",
+      "address": "Address",
+      "description": "Description",
+      "actions": "Actions",
+      "edit": "Edit",
+      "delete": "Delete",
+      "create": "Create Location",
+      "update": "Update Location",
+      "confirmDelete": "Are you sure you want to delete this location?",
+      "noLocations": "No locations created yet."
     },
     "loans": {
       "title": "Active Loans",
@@ -183,10 +222,20 @@
       "category": "Category",
       "description": "Description",
       "status": "Status",
+      "approvalStatus": "Approval",
       "actions": "Actions",
       "selectCategory": "Select a category",
       "delete": "Delete",
-      "confirmDelete": "Are you sure you want to delete this item?"
+      "approve": "Approve",
+      "reject": "Reject",
+      "confirmDelete": "Are you sure you want to delete this item?",
+      "confirmApprove": "Approve this item?",
+      "rejectNote": "Reason for rejection (optional)",
+      "approvalValues": {
+        "PENDING": "Pending",
+        "APPROVED": "Approved",
+        "REJECTED": "Rejected"
+      }
     },
     "users": {
       "title": "Users",
@@ -267,6 +316,9 @@
     "namePlaceholder": "e.g., Electric Drill, Camping Tent, etc.",
     "category": "Category",
     "selectCategory": "Select a category",
+    "location": "Location (optional)",
+    "selectLocation": "Select a location",
+    "noLocation": "No location",
     "descriptionLabel": "Description",
     "descriptionPlaceholder": "Describe the item, its condition, and any important details...",
     "imageUrl": "Image URL (optional)",
@@ -283,6 +335,9 @@
     "name": "Item Name",
     "category": "Category",
     "selectCategory": "Select a category",
+    "location": "Location",
+    "selectLocation": "Select a location",
+    "noLocation": "No location",
     "status": "Status",
     "descriptionLabel": "Description",
     "descriptionPlaceholder": "Describe the item, its condition, and any important details...",

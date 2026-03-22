@@ -1,4 +1,4 @@
-import type { Category } from "@ting/shared";
+import type { Category, Location } from "@ting/shared";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +13,7 @@ export function AddItem() {
   const { isAuthenticated } = useAuth();
   const { activeOrganizationId } = useOrganization();
   const [categories, setCategories] = useState<Category[]>([]);
+  const [locations, setLocations] = useState<Location[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -21,6 +22,7 @@ export function AddItem() {
     description: "",
     categoryId: "",
     imageUrl: "",
+    locationId: "",
   });
 
   useEffect(() => {
@@ -39,8 +41,12 @@ export function AddItem() {
 
   const loadCategories = async () => {
     try {
-      const data = await apiClient.getCategories(activeOrganizationId!);
-      setCategories(data);
+      const [cats, locs] = await Promise.all([
+        apiClient.getCategories(activeOrganizationId!),
+        apiClient.getLocations(),
+      ]);
+      setCategories(cats);
+      setLocations(locs);
     } catch (error) {
       console.error("Failed to load categories:", error);
       setError(t("addItem.loadCategoriesError"));
@@ -58,6 +64,7 @@ export function AddItem() {
         description: formData.description || undefined,
         categoryId: formData.categoryId,
         imageUrl: formData.imageUrl || undefined,
+        locationId: formData.locationId || undefined,
       });
 
       // Navigate to the new item's detail page
@@ -146,6 +153,31 @@ export function AddItem() {
               ))}
             </select>
           </div>
+
+          {locations.length > 0 && (
+            <div>
+              <label
+                htmlFor="locationId"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                {t("addItem.location")}
+              </label>
+              <select
+                id="locationId"
+                name="locationId"
+                value={formData.locationId}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="">{t("addItem.noLocation")}</option>
+                {locations.map((loc) => (
+                  <option key={loc.id} value={loc.id}>
+                    {loc.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <div>
             <label

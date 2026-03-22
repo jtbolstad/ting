@@ -83,6 +83,7 @@
     "description": "Beskrivelse",
     "category": "Kategori",
     "status": "Status",
+    "location": "Lokasjon",
     "loading": "Laster verktøy...",
     "notFound": "Verktøy ikke funnet",
     "noDescription": "Ingen beskrivelse tilgjengelig.",
@@ -92,6 +93,28 @@
     "endDate": "Sluttdato",
     "loginToReserve": "Vennligst logg inn for å reservere dette verktøyet",
     "edit": "Rediger Verktøy",
+    "manuals": {
+      "title": "Bruksanvisninger",
+      "noManuals": "Ingen bruksanvisninger lagt til.",
+      "addManual": "Legg til bruksanvisning",
+      "label": "Tittel",
+      "labelPlaceholder": "f.eks. Bruksanvisning, Sikkerhetsguide",
+      "type": "Type",
+      "typePdf": "PDF",
+      "typeLink": "Ekstern lenke",
+      "typeText": "Tekst",
+      "url": "URL",
+      "urlPlaceholder": "https://...",
+      "content": "Innhold",
+      "contentPlaceholder": "Skriv inn bruksanvisning...",
+      "uploadPdf": "Last opp PDF",
+      "uploading": "Laster opp...",
+      "add": "Legg til",
+      "adding": "Legger til...",
+      "delete": "Slett",
+      "confirmDelete": "Er du sikker på at du vil slette denne bruksanvisningen?",
+      "loginRequired": "Logg inn for å administrere bruksanvisninger."
+    },
     "availability": {
       "title": "Tilgjengelighet (neste {{days}} dager)"
     },
@@ -163,7 +186,23 @@
       "loans": "Utlån",
       "items": "Verktøy",
       "users": "Brukere",
-      "categories": "Kategorier"
+      "categories": "Kategorier",
+      "locations": "Lokasjoner"
+    },
+    "locations": {
+      "title": "Lokasjoner",
+      "addLocation": "Legg til lokasjon",
+      "editLocation": "Rediger lokasjon",
+      "name": "Navn",
+      "address": "Adresse",
+      "description": "Beskrivelse",
+      "actions": "Handlinger",
+      "edit": "Rediger",
+      "delete": "Slett",
+      "create": "Opprett lokasjon",
+      "update": "Oppdater lokasjon",
+      "confirmDelete": "Er du sikker på at du vil slette denne lokasjonen?",
+      "noLocations": "Ingen lokasjoner opprettet ennå."
     },
     "loans": {
       "title": "Aktive utlån",
@@ -184,10 +223,20 @@
       "category": "Kategori",
       "description": "Beskrivelse",
       "status": "Status",
+      "approvalStatus": "Godkjenning",
       "actions": "Handlinger",
       "selectCategory": "Velg en kategori",
       "delete": "Slett",
-      "confirmDelete": "Er du sikker på at du vil slette dette verktøyet?"
+      "approve": "Godkjenn",
+      "reject": "Avvis",
+      "confirmDelete": "Er du sikker på at du vil slette dette verktøyet?",
+      "confirmApprove": "Godkjenn dette verktøyet?",
+      "rejectNote": "Begrunnelse for avvisning (valgfritt)",
+      "approvalValues": {
+        "PENDING": "Venter",
+        "APPROVED": "Godkjent",
+        "REJECTED": "Avvist"
+      }
     },
     "users": {
       "title": "Brukere",
@@ -268,6 +317,9 @@
     "namePlaceholder": "f.eks., Elektrisk drill, Campingtelt, osv.",
     "category": "Kategori",
     "selectCategory": "Velg en kategori",
+    "location": "Lokasjon (valgfritt)",
+    "selectLocation": "Velg en lokasjon",
+    "noLocation": "Ingen lokasjon",
     "descriptionLabel": "Beskrivelse",
     "descriptionPlaceholder": "Beskriv verktøyet, tilstand og viktige detaljer...",
     "imageUrl": "Bilde-URL (valgfritt)",
@@ -284,6 +336,9 @@
     "name": "Verktøynavn",
     "category": "Kategori",
     "selectCategory": "Velg en kategori",
+    "location": "Lokasjon",
+    "selectLocation": "Velg en lokasjon",
+    "noLocation": "Ingen lokasjon",
     "status": "Status",
     "descriptionLabel": "Beskrivelse",
     "descriptionPlaceholder": "Beskriv verktøyet, tilstand og viktige detaljer...",

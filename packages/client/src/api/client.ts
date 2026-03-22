@@ -5,7 +5,9 @@ import type {
   Comment,
   ImageUploadResponse,
   Item,
+  ItemManual,
   Loan,
+  Location,
   MemberGroup,
   Membership,
   Organization,
@@ -137,6 +139,7 @@ class ApiClient {
     description?: string;
     categoryId: string;
     imageUrl?: string;
+    locationId?: string;
   }): Promise<Item> {
     return this.request<Item>("/items", {
       method: "POST",
@@ -419,6 +422,81 @@ class ApiClient {
 
   async deleteReview(id: string): Promise<void> {
     return this.request<void>(`/reviews/${id}`, { method: "DELETE" });
+  }
+
+  // Locations
+  async getLocations(): Promise<Location[]> {
+    return this.request<Location[]>("/locations");
+  }
+
+  async createLocation(data: { name: string; address?: string; description?: string }): Promise<Location> {
+    return this.request<Location>("/locations", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateLocation(id: string, data: { name?: string; address?: string | null; description?: string | null }): Promise<Location> {
+    return this.request<Location>(`/locations/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteLocation(id: string): Promise<void> {
+    return this.request<void>(`/locations/${id}`, { method: "DELETE" });
+  }
+
+  // Manuals
+  async getItemManuals(itemId: string): Promise<ItemManual[]> {
+    return this.request<ItemManual[]>(`/items/${itemId}/manuals`);
+  }
+
+  async createManual(itemId: string, data: { type: "PDF" | "LINK" | "TEXT"; label: string; url?: string; content?: string }): Promise<ItemManual> {
+    return this.request<ItemManual>(`/items/${itemId}/manuals`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteManual(itemId: string, manualId: string): Promise<void> {
+    return this.request<void>(`/items/${itemId}/manuals/${manualId}`, { method: "DELETE" });
+  }
+
+  async uploadManual(file: File): Promise<{ url: string }> {
+    const formData = new FormData();
+    formData.append("manual", file);
+
+    const token = localStorage.getItem("token");
+    const headers: HeadersInit = {
+      ...(token && { Authorization: `Bearer ${token}` }),
+      ...(this.activeOrganizationId && { "X-Organization-Id": this.activeOrganizationId }),
+    };
+
+    const response = await fetch(`${API_BASE_URL}/uploads/manual`, {
+      method: "POST",
+      headers,
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({ error: "Upload failed" }));
+      throw new Error(errorData.error || "Failed to upload manual");
+    }
+
+    return response.json();
+  }
+
+  // Item approval
+  async approveItem(id: string): Promise<Item> {
+    return this.request<Item>(`/items/${id}/approve`, { method: "POST" });
+  }
+
+  async rejectItem(id: string, note?: string): Promise<Item> {
+    return this.request<Item>(`/items/${id}/reject`, {
+      method: "POST",
+      body: JSON.stringify({ note }),
+    });
   }
 }
 
