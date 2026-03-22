@@ -10,8 +10,9 @@ interface ItemDetailsCardProps {
 
 export function ItemDetailsCard({ item }: ItemDetailsCardProps) {
   const { t } = useTranslation();
-  const { isAuthenticated } = useAuth();
+  const { user, isAdmin, isOrgAdmin, isOrgManager } = useAuth();
   const navigate = useNavigate();
+  const canEdit = isAdmin || isOrgAdmin || isOrgManager || (!!user && user.id === item.ownerId);
 
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -71,7 +72,7 @@ export function ItemDetailsCard({ item }: ItemDetailsCardProps) {
             {item.description || t("item.noDescription")}
           </p>
 
-          {isAuthenticated && (
+          {canEdit && (
             <div className="flex space-x-3">
               <button
                 onClick={() => navigate(`/items/${item.id}/edit`)}

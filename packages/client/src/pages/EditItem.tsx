@@ -11,7 +11,8 @@ export function EditItem() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isAdmin, isOrgManager } = useAuth();
+  const canChangeStatus = isAdmin || isOrgManager;
   const { activeOrganizationId } = useOrganization();
   const [categories, setCategories] = useState<Category[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
@@ -177,6 +178,7 @@ export function EditItem() {
             </select>
           </div>
 
+          {canChangeStatus && (
           <div>
             <label
               htmlFor="status"
@@ -202,6 +204,7 @@ export function EditItem() {
               <option value="RETIRED">{t("catalog.status.retired")}</option>
             </select>
           </div>
+          )}
 
           {locations.length > 0 && (
             <div>
