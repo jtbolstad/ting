@@ -30,8 +30,10 @@ Focus: make the existing MVP feel solid and trustworthy before growing the user 
 |-----|------|--------|----------|------|-------|
 | T01 | P0 | M | [ ] | Fix broken/incomplete i18n keys | Several keys missing in da/no — already flagged in git |
 | T02 | P0 | M | [ ] | Mobile responsiveness audit | Admin dashboard and item detail not fully usable on small screens |
-| T03 | P0 | M | [ ] | Error handling & user feedback | Replace raw `alert()` calls with toast/inline messages |
-| T04 | P0 | M | [ ] | Loading & empty states | Skeleton loaders or spinners; empty state illustrations |
+| T47 | P1 | M | [ ] | 2-column layout on desktop | Item detail and dashboard use wider screen real estate with a sidebar/2-col grid |
+| T48 | P1 | M | [ ] | Mobile-friendly navbar menu | Hamburger menu / drawer on small screens; current nav overflows |
+| T03 | P0 | S | [ ] | Error handling & user feedback | Replace raw `alert()` calls with toast/inline messages |
+| T04 | P0 | S | [ ] | Loading & empty states | Skeleton loaders or spinners; empty state illustrations |
 | T05 | P1 | S | [ ] | User profile page | Change name, password, see own activity |
 | T06 | P1 | S | [ ] | Item edit by owner | Item owners (not just admins) can edit their own submitted items |
 | T07 | P1 | S | [ ] | Reservation status emails | Confirm/cancel emails when reservation is created or cancelled |
@@ -111,9 +113,12 @@ Focus: connecting organizations and broader community features.
 
 | # | Prio | MoSCoW | Approved | Item |
 |-----|------|--------|----------|------|
+| T49 | P0 | M | [ ] | Establish TDD workflow with Vitest (unit), Vitest Browser Mode (component), and Playwright (E2E) |
 | T41 | P0 | M | [ ] | Increase test coverage (E2E + unit) — Playwright tests exist but coverage is spotty |
 | T42 | P0 | M | [ ] | CI/CD pipeline (GitHub Actions) — build, test, lint on every PR |
 | T43 | P1 | S | [ ] | Environment config validation on startup (Zod/envalid) |
 | T44 | P1 | S | [ ] | Structured logging (pino/winston) instead of console.log |
 | T45 | P2 | C | [ ] | Docker Compose for local dev |
 | T46 | P2 | C | [ ] | OpenAPI / Swagger docs for the REST API |
+| T50 | P1 | S | [ ] | SQLite backup procedure — scheduled backup of db file on VPS (cron + offsite copy) |
+| T51 | P1 | S | [ ] | DB sync to local dev — script to pull production SQLite db from VPS to local environment |
