@@ -8,6 +8,7 @@ import { CatalogSearchBar } from "../components/catalog/CatalogSearchBar";
 import { CategoriesSidebar } from "../components/catalog/CategoriesSidebar";
 import { ItemsGrid } from "../components/catalog/ItemsGrid";
 import { useOrganization } from "../context/OrganizationContext";
+import { Spinner } from "../components/ui/Spinner";
 
 export function Catalog() {
   const { t } = useTranslation();
@@ -66,7 +67,7 @@ export function Catalog() {
   };
 
   if (loading) {
-    return <div className="text-center py-12">{t("catalog.loading")}</div>;
+    return <Spinner />;
   }
 
   if (!activeOrganizationId) {

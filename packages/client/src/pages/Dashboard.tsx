@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { apiClient } from '../api/client';
 import { useToast } from '../components/ui/Toast';
 import { useConfirm } from '../components/ui/ConfirmModal';
+import { Spinner } from '../components/ui/Spinner';
 import type { Reservation, Loan } from '@ting/shared';
 
 export function Dashboard() {
@@ -55,7 +56,7 @@ export function Dashboard() {
   };
 
   if (loading) {
-    return <div className="text-center py-12">{t('dashboard.loading')}</div>;
+    return <Spinner />;
   }
 
   return (

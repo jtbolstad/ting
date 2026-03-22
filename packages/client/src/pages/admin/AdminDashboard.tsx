@@ -5,6 +5,7 @@ import { apiClient } from "../../api/client";
 import { useOrganization } from "../../context/OrganizationContext";
 import { useToast } from "../../components/ui/Toast";
 import { useConfirm } from "../../components/ui/ConfirmModal";
+import { Spinner } from "../../components/ui/Spinner";
 import type { Item, Category, Loan, Location, User } from "@ting/shared";
 
 export function AdminDashboard() {
@@ -260,7 +261,7 @@ export function AdminDashboard() {
   };
 
   if (loading) {
-    return <div className="text-center py-12">{t("admin.loading")}</div>;
+    return <Spinner />;
   }
 
   const availableItems = items.filter((i) => i.status === "AVAILABLE");

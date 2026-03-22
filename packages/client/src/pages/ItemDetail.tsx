@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { apiClient } from "../api/client";
+import { Spinner } from "../components/ui/Spinner";
 import { ItemDetailsCard } from "../components/item/ItemDetailsCard";
 import { ItemTimeline } from "../components/item/ItemTimeline";
 import { ItemReservationForm } from "../components/item/ItemReservationForm";
@@ -32,7 +33,7 @@ export function ItemDetail() {
   };
 
   if (loading) {
-    return <div className="text-center py-12">{t("item.loading")}</div>;
+    return <Spinner />;
   }
 
   if (!item) {

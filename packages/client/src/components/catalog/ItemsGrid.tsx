@@ -11,8 +11,9 @@ export function ItemsGrid({ items }: ItemsGridProps) {
 
   if (items.length === 0) {
     return (
-      <div className="text-center py-12 text-gray-500">
-        {t("catalog.noItems")}
+      <div className="text-center py-16 text-gray-400">
+        <div className="text-5xl mb-3">🔍</div>
+        <p className="text-lg">{t("catalog.noItems")}</p>
       </div>
     );
   }
