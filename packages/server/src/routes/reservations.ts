@@ -216,7 +216,7 @@ router.post("/", async (req: AuthRequest, res: Response) => {
     // Send confirmation email (fire and forget)
     emailService.sendReservationConfirmed(
       req.user!.email,
-      req.user!.name,
+      reservation.user.name,
       reservation.item.name,
       start,
       end,
