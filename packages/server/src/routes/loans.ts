@@ -26,6 +26,7 @@ function serializeLoan(loan: any): Loan {
     checkedOutAt: loan.checkedOutAt.toISOString(),
     dueDate: loan.dueDate.toISOString(),
     returnedAt: loan.returnedAt ? loan.returnedAt.toISOString() : null,
+    damageNote: loan.damageNote ?? null,
   };
 }
 
@@ -216,6 +217,7 @@ router.post("/checkout", async (req: AuthRequest, res: Response) => {
 router.post("/:id/checkin", async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
+    const { damageNote } = req.body;
 
     const loan = await prisma.loan.findUnique({
       where: { id },
@@ -250,7 +252,7 @@ router.post("/:id/checkin", async (req: AuthRequest, res: Response) => {
     const [updated] = await Promise.all([
       prisma.loan.update({
         where: { id },
-        data: { returnedAt: new Date() },
+        data: { returnedAt: new Date(), damageNote: damageNote || null },
         include: {
           item: { include: { category: true } },
           user: true,
@@ -259,7 +261,10 @@ router.post("/:id/checkin", async (req: AuthRequest, res: Response) => {
       }),
       prisma.item.update({
         where: { id: loan.itemId },
-        data: { status: "AVAILABLE" },
+        data: {
+          status: "AVAILABLE",
+          ...(req.body.condition ? { condition: req.body.condition } : {}),
+        },
       }),
     ]);
 

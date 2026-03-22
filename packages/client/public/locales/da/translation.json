@@ -140,6 +140,13 @@
       "confirmDelete": "Er du sikker på, at du vil slette denne manual?",
       "loginRequired": "Log ind for at administrere manualer."
     },
+    "condition": {
+      "label": "Tilstand",
+      "unknown": "Ukendt",
+      "good": "God",
+      "fair": "Acceptabel",
+      "needsRepair": "Skal repareres"
+    },
     "availability": {
       "title": "Tilgængelighed (Næste {{days}} Dage)"
     },
@@ -197,6 +204,12 @@
         "cancelled": "Annulleret",
         "completed": "Fuldført"
       }
+    },
+    "history": {
+      "title": "Lånehistorik",
+      "noHistory": "Ingen tidligere udlån",
+      "returned": "Returneret",
+      "damage": "Skadenotat"
     }
   },
   "admin": {
@@ -239,7 +252,10 @@
       "dueDate": "Forfaldsdato",
       "actions": "Handlinger",
       "checkin": "Lever Ind",
-      "confirmCheckin": "Bekræft indlevering?"
+      "checkinTitle": "Lever Værktøj Ind",
+      "confirmCheckin": "Bekræft indlevering?",
+      "damageNote": "Skadenotat (valgfrit)",
+      "damageNotePlaceholder": "Beskriv eventuelle skader..."
     },
     "items": {
       "title": "Værktøjer",

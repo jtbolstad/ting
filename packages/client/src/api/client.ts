@@ -254,9 +254,10 @@ class ApiClient {
     });
   }
 
-  async checkin(loanId: string): Promise<Loan> {
+  async checkin(loanId: string, opts?: { damageNote?: string; condition?: string }): Promise<Loan> {
     return this.request<Loan>(`/loans/${loanId}/checkin`, {
       method: "POST",
+      body: JSON.stringify(opts ?? {}),
     });
   }
 

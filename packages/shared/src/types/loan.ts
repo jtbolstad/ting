@@ -13,6 +13,7 @@ export interface Loan {
   checkedOutAt: string;
   dueDate: string;
   returnedAt: string | null;
+  damageNote?: string | null;
 }
 
 export interface CheckoutInput {

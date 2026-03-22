@@ -29,6 +29,12 @@ export function AdminDashboard() {
   const [selectedUserId, setSelectedUserId] = useState("");
   const [dueDate, setDueDate] = useState("");
 
+  // Checkin modal state
+  const [showCheckin, setShowCheckin] = useState(false);
+  const [checkinLoanId, setCheckinLoanId] = useState("");
+  const [checkinDamageNote, setCheckinDamageNote] = useState("");
+  const [checkinCondition, setCheckinCondition] = useState("");
+
   // Add item modal state
   const [showAddItem, setShowAddItem] = useState(false);
   const [newItem, setNewItem] = useState({
@@ -108,10 +114,21 @@ export function AdminDashboard() {
     }
   };
 
-  const handleCheckin = async (loanId: string) => {
-    if (!await confirm(t("admin.loans.confirmCheckin"))) return;
+  const openCheckin = (loanId: string) => {
+    setCheckinLoanId(loanId);
+    setCheckinDamageNote("");
+    setCheckinCondition("");
+    setShowCheckin(true);
+  };
+
+  const handleCheckin = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
-      await apiClient.checkin(loanId);
+      await apiClient.checkin(checkinLoanId, {
+        damageNote: checkinDamageNote || undefined,
+        condition: checkinCondition || undefined,
+      });
+      setShowCheckin(false);
       await loadData();
     } catch (error: any) {
       toast.error(error.message || "Failed to checkin item");
@@ -409,7 +426,7 @@ export function AdminDashboard() {
                       </td>
                       <td className="px-6 py-4">
                         <button
-                          onClick={() => handleCheckin(loan.id)}
+                          onClick={() => openCheckin(loan.id)}
                           className="text-indigo-600 hover:text-indigo-900"
                         >
                           {t("admin.loans.checkin")}
@@ -785,6 +802,48 @@ export function AdminDashboard() {
                   className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
                 >
                   {t("admin.checkout.cancel")}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Checkin Modal */}
+      {showCheckin && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full">
+            <h3 className="text-2xl font-bold mb-4">{t("admin.loans.checkinTitle")}</h3>
+            <form onSubmit={handleCheckin} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">{t("item.condition.label")}</label>
+                <select
+                  value={checkinCondition}
+                  onChange={(e) => setCheckinCondition(e.target.value)}
+                  className="w-full px-3 py-2 border rounded"
+                >
+                  <option value="">{t("item.condition.unknown")}</option>
+                  <option value="GOOD">{t("item.condition.good")}</option>
+                  <option value="FAIR">{t("item.condition.fair")}</option>
+                  <option value="NEEDS_REPAIR">{t("item.condition.needsRepair")}</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">{t("admin.loans.damageNote")}</label>
+                <textarea
+                  value={checkinDamageNote}
+                  onChange={(e) => setCheckinDamageNote(e.target.value)}
+                  rows={3}
+                  className="w-full px-3 py-2 border rounded"
+                  placeholder={t("admin.loans.damageNotePlaceholder")}
+                />
+              </div>
+              <div className="flex gap-2">
+                <button type="submit" className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+                  {t("admin.loans.checkin")}
+                </button>
+                <button type="button" onClick={() => setShowCheckin(false)} className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400">
+                  {t("common.cancel")}
                 </button>
               </div>
             </form>

@@ -49,7 +49,7 @@ export function ItemDetailsCard({ item }: ItemDetailsCardProps) {
             </div>
           )}
 
-          <div className="mb-6">
+          <div className="mb-4 flex flex-wrap gap-2">
             <span
               className={`inline-block px-3 py-1 rounded ${
                 item.status === "AVAILABLE"
@@ -59,6 +59,15 @@ export function ItemDetailsCard({ item }: ItemDetailsCardProps) {
             >
               {t(`catalog.status.${item.status.toLowerCase()}`)}
             </span>
+            {item.condition && (
+              <span className={`inline-block px-3 py-1 rounded text-sm ${
+                item.condition === "GOOD" ? "bg-emerald-100 text-emerald-800" :
+                item.condition === "FAIR" ? "bg-yellow-100 text-yellow-800" :
+                "bg-orange-100 text-orange-800"
+              }`}>
+                {t(`item.condition.${item.condition === "NEEDS_REPAIR" ? "needsRepair" : item.condition.toLowerCase()}`)}
+              </span>
+            )}
           </div>
 
           {item.location && (

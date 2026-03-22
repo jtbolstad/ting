@@ -1,6 +1,7 @@
 export type ItemStatus = 'AVAILABLE' | 'CHECKED_OUT' | 'MAINTENANCE' | 'RETIRED';
 export type ItemOwnerType = 'ORGANIZATION' | 'MEMBER';
 export type ItemApprovalStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+export type ItemCondition = 'GOOD' | 'FAIR' | 'NEEDS_REPAIR';
 
 export interface Location {
   id: string;
@@ -74,6 +75,7 @@ export interface Item {
   ownerType: ItemOwnerType;
   approvalStatus: ItemApprovalStatus;
   rejectionNote?: string | null;
+  condition?: ItemCondition | null;
   tags?: string[];
   manuals?: ItemManual[];
   createdAt: string;
@@ -98,6 +100,7 @@ export interface UpdateItemInput {
   status?: ItemStatus;
   imageUrl?: string | null;
   locationId?: string | null;
+  condition?: ItemCondition | null;
   tags?: string[];
 }
 

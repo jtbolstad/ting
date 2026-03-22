@@ -133,6 +133,7 @@ model Item {
   ownerType      String        @default("ORGANIZATION") // "ORGANIZATION" | "MEMBER"
   approvalStatus String        @default("APPROVED")     // "PENDING" | "APPROVED" | "REJECTED"
   rejectionNote  String?
+  condition      String?                                  // "GOOD" | "FAIR" | "NEEDS_REPAIR"
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
   reservations   Reservation[]
@@ -201,6 +202,7 @@ model Loan {
   checkedOutAt   DateTime     @default(now())
   dueDate        DateTime
   returnedAt     DateTime?
+  damageNote     String?
   organization   Organization @relation(fields: [organizationId], references: [id])
 
   @@index([organizationId])

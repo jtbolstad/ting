@@ -141,6 +141,13 @@
       "confirmDelete": "Er du sikker på at du vil slette denne bruksanvisningen?",
       "loginRequired": "Logg inn for å administrere bruksanvisninger."
     },
+    "condition": {
+      "label": "Tilstand",
+      "unknown": "Ukjent",
+      "good": "God",
+      "fair": "Akseptabel",
+      "needsRepair": "Trenger reparasjon"
+    },
     "availability": {
       "title": "Tilgjengelighet (neste {{days}} dager)"
     },
@@ -198,6 +205,12 @@
         "cancelled": "Avbrutt",
         "completed": "Fullført"
       }
+    },
+    "history": {
+      "title": "Lånehistorikk",
+      "noHistory": "Ingen tidligere utlån",
+      "returned": "Returnert",
+      "damage": "Skadenotat"
     }
   },
   "admin": {
@@ -240,7 +253,10 @@
       "dueDate": "Forfallsdato",
       "actions": "Handlinger",
       "checkin": "Lever inn",
-      "confirmCheckin": "Bekreft innlevering?"
+      "checkinTitle": "Lever inn verktøy",
+      "confirmCheckin": "Bekreft innlevering?",
+      "damageNote": "Skadenotat (valgfritt)",
+      "damageNotePlaceholder": "Beskriv eventuelle skader..."
     },
     "items": {
       "title": "Verktøy",

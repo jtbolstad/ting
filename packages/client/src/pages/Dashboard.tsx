@@ -12,6 +12,7 @@ export function Dashboard() {
   const confirm = useConfirm();
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loans, setLoans] = useState<Loan[]>([]);
+  const [loanHistory, setLoanHistory] = useState<Loan[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,12 +21,14 @@ export function Dashboard() {
 
   const loadData = async () => {
     try {
-      const [reservationsData, loansData] = await Promise.all([
+      const [reservationsData, loansData, allLoansData] = await Promise.all([
         apiClient.getReservations(),
         apiClient.getLoans({ active: true }),
+        apiClient.getLoans(),
       ]);
       setReservations(reservationsData.filter(r => r.status !== 'CANCELLED'));
       setLoans(loansData);
+      setLoanHistory(allLoansData.filter(l => l.returnedAt !== null));
     } catch (error) {
       console.error('Failed to load dashboard data:', error);
     } finally {
@@ -180,6 +183,53 @@ export function Dashboard() {
       </div>
 
       </div>
+
+      {/* Loan History */}
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold mb-4">{t('dashboard.history.title')}</h2>
+        {loanHistory.length === 0 ? (
+          <p className="text-gray-500">{t('dashboard.history.noHistory')}</p>
+        ) : (
+          <div className="bg-white rounded-lg shadow overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="min-w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('dashboard.loans.item')}</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('dashboard.loans.checkedOut')}</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('dashboard.history.returned')}</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{t('dashboard.history.damage')}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {loanHistory.map(loan => (
+                    <tr key={loan.id}>
+                      <td className="px-6 py-4">
+                        <div className="font-medium">{loan.item?.name}</div>
+                        <div className="text-sm text-gray-500">
+                          {loan.item?.category?.name ? t(`categories.${loan.item.category.name}`, loan.item.category.name) : ''}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500">
+                        {new Date(loan.checkedOutAt).toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500">
+                        {loan.returnedAt ? new Date(loan.returnedAt).toLocaleDateString() : ''}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500">
+                        {loan.damageNote ? (
+                          <span className="text-orange-700">{loan.damageNote}</span>
+                        ) : '—'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </div>
+
     </div>
   );
 }

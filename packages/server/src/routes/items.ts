@@ -40,6 +40,7 @@ function serializeItem(item: any): Item {
     ownerType: item.ownerType ?? 'ORGANIZATION',
     approvalStatus: item.approvalStatus ?? 'APPROVED',
     rejectionNote: item.rejectionNote ?? null,
+    condition: item.condition ?? null,
     tags: item.tags ? item.tags.map((t: any) => t.name) : undefined,
     manuals: item.manuals ?? undefined,
     createdAt: item.createdAt.toISOString(),
@@ -354,7 +355,7 @@ router.patch(
   async (req: AuthRequest, res: Response) => {
     try {
       const { id } = req.params;
-      const { name, description, categoryId, status, imageUrl, locationId, tags } = req.body as UpdateItemInput;
+      const { name, description, categoryId, status, imageUrl, locationId, condition, tags } = req.body as UpdateItemInput;
 
       const existing = await prisma.item.findUnique({ where: { id } });
       if (!existing || existing.organizationId !== req.organization!.id) {
@@ -375,6 +376,7 @@ router.patch(
       if (imageUrl !== undefined) updateData.imageUrl = imageUrl || null;
       if (locationId !== undefined) updateData.locationId = locationId || null;
       if (status && (isManager || isPlatformAdmin)) updateData.status = status;
+      if (condition !== undefined && (isManager || isPlatformAdmin)) updateData.condition = condition || null;
 
       if (categoryId) {
         const category = await prisma.category.findFirst({

@@ -140,6 +140,13 @@
       "confirmDelete": "Are you sure you want to delete this manual?",
       "loginRequired": "Log in to manage manuals."
     },
+    "condition": {
+      "label": "Condition",
+      "unknown": "Unknown",
+      "good": "Good",
+      "fair": "Fair",
+      "needsRepair": "Needs Repair"
+    },
     "availability": {
       "title": "Availability (Next {{days}} Days)"
     },
@@ -197,6 +204,12 @@
         "cancelled": "Cancelled",
         "completed": "Completed"
       }
+    },
+    "history": {
+      "title": "Loan History",
+      "noHistory": "No past loans",
+      "returned": "Returned",
+      "damage": "Damage Note"
     }
   },
   "admin": {
@@ -239,7 +252,10 @@
       "dueDate": "Due Date",
       "actions": "Actions",
       "checkin": "Checkin",
-      "confirmCheckin": "Confirm item checkin?"
+      "checkinTitle": "Return Item",
+      "confirmCheckin": "Confirm item checkin?",
+      "damageNote": "Damage Note (optional)",
+      "damageNotePlaceholder": "Describe any damage..."
     },
     "items": {
       "title": "Items",

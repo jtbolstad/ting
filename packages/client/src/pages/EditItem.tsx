@@ -29,6 +29,7 @@ export function EditItem() {
     imageUrl: "",
     status: "AVAILABLE",
     locationId: "",
+    condition: "",
   });
 
   useEffect(() => {
@@ -64,6 +65,7 @@ export function EditItem() {
         imageUrl: item.imageUrl || "",
         status: item.status,
         locationId: item.locationId || "",
+        condition: item.condition || "",
       });
     } catch (error: any) {
       console.error("Failed to load item:", error);
@@ -86,6 +88,7 @@ export function EditItem() {
         imageUrl: formData.imageUrl || undefined,
         status: formData.status as any,
         locationId: formData.locationId || null,
+        condition: (formData.condition as any) || null,
         tags,
       });
 
@@ -206,6 +209,29 @@ export function EditItem() {
                 {t("catalog.status.maintenance")}
               </option>
               <option value="RETIRED">{t("catalog.status.retired")}</option>
+            </select>
+          </div>
+          )}
+
+          {canChangeStatus && (
+          <div>
+            <label
+              htmlFor="condition"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              {t("item.condition.label")}
+            </label>
+            <select
+              id="condition"
+              name="condition"
+              value={formData.condition}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              <option value="">{t("item.condition.unknown")}</option>
+              <option value="GOOD">{t("item.condition.good")}</option>
+              <option value="FAIR">{t("item.condition.fair")}</option>
+              <option value="NEEDS_REPAIR">{t("item.condition.needsRepair")}</option>
             </select>
           </div>
           )}
