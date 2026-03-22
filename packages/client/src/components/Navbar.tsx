@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
 import { LanguageSwitcher } from "./LanguageSwitcher";
-import { OrganizationSwitcher } from "./OrganizationSwitcher";
-import { TermsPopover } from "./TermsPopover";
 
 export function Navbar() {
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
@@ -14,7 +12,7 @@ export function Navbar() {
   const close = () => setMenuOpen(false);
 
   return (
-    <nav className="bg-indigo-600 text-white shadow-lg">
+    <nav className="bg-indigo-600 text-white shadow-lg" aria-label="Hovednavigasjon">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
 
@@ -31,21 +29,13 @@ export function Navbar() {
                 {isAdmin && (
                   <Link to="/admin" className="hover:text-indigo-200">{t("nav.admin")}</Link>
                 )}
+                <Link to="/profile" className="hover:text-indigo-200">{t("nav.profile")}</Link>
               </div>
             )}
           </div>
 
           {/* Desktop right side */}
           <div className="hidden md:flex items-center space-x-4">
-            <button
-              type="button"
-              // @ts-ignore - popovertarget is not yet in TypeScript types
-              popovertarget="navbar-terms-popover"
-              className="text-sm hover:text-indigo-200"
-            >
-              {t("nav.terms")}
-            </button>
-            <OrganizationSwitcher />
             <LanguageSwitcher />
             {isAuthenticated ? (
               <>
@@ -95,6 +85,7 @@ export function Navbar() {
               {isAdmin && (
                 <Link to="/admin" onClick={close} className="block py-2 hover:text-indigo-200">{t("nav.admin")}</Link>
               )}
+              <Link to="/profile" onClick={close} className="block py-2 hover:text-indigo-200">{t("nav.profile")}</Link>
               <div className="pt-3 border-t border-indigo-500 flex items-center justify-between">
                 <span className="text-sm">{t("nav.hello", { name: user?.name })}</span>
                 <button
@@ -112,21 +103,11 @@ export function Navbar() {
             </>
           )}
           <div className="pt-3 border-t border-indigo-500 flex items-center gap-4">
-            <button
-              type="button"
-              // @ts-ignore
-              popovertarget="navbar-terms-popover"
-              className="text-sm hover:text-indigo-200"
-            >
-              {t("nav.terms")}
-            </button>
-            <OrganizationSwitcher />
             <LanguageSwitcher />
           </div>
         </div>
       )}
 
-      <TermsPopover id="navbar-terms-popover" />
     </nav>
   );
 }

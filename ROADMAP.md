@@ -32,14 +32,14 @@ Focus: make the existing MVP feel solid and trustworthy before growing the user 
 | ✅ | T02 | P0 | M | Mobile responsiveness audit | Admin dashboard and item detail not fully usable on small screens |
 | ✅ | T47 | P1 | M | 2-column layout on desktop | Item detail and dashboard use wider screen real estate with a sidebar/2-col grid |
 | ✅ | T48 | P1 | M | Mobile-friendly navbar menu | Hamburger menu / drawer on small screens; current nav overflows |
-| [ ] | T03 | P0 | S | Error handling & user feedback | Replace raw `alert()` calls with toast/inline messages |
-| [ ] | T04 | P0 | S | Loading & empty states | Skeleton loaders or spinners; empty state illustrations |
-| [ ] | T05 | P1 | S | User profile page | Change name, password, see own activity |
-| [ ] | T06 | P1 | S | Item edit by owner | Item owners (not just admins) can edit their own submitted items |
-| [ ] | T07 | P1 | S | Reservation status emails | Confirm/cancel emails when reservation is created or cancelled |
-| [ ] | T08 | P1 | S | Admin: item approval email | Notify owner when item is approved or rejected with reason |
-| [ ] | T09 | P2 | C | Onboarding flow | First-login wizard or welcome screen explaining the service |
-| [ ] | T10 | P2 | C | Accessible keyboard navigation | WCAG 2.1 AA compliance pass |
+| ✅ | T03 | P0 | S | Error handling & user feedback | Replace raw `alert()` calls with toast/inline messages |
+| ✅ | T04 | P0 | S | Loading & empty states | Skeleton loaders or spinners; empty state illustrations |
+| ✅ | T05 | P1 | S | User profile page | Change name, password, see own activity |
+| ✅ | T06 | P1 | S | Item edit by owner | Item owners (not just admins) can edit their own submitted items |
+| ✅ | T07 | P1 | S | Reservation status emails | Confirm/cancel emails when reservation is created or cancelled |
+| ✅ | T08 | P1 | S | Admin: item approval email | Notify owner when item is approved or rejected with reason |
+| ✅ | T09 | P2 | C | Onboarding flow | First-login wizard or welcome screen explaining the service |
+| ✅ | T10 | P2 | C | Accessible keyboard navigation | WCAG 2.1 AA compliance pass |
 
 ---
 

@@ -25,8 +25,10 @@ function App() {
           <ToastProvider>
           <ConfirmProvider>
           <div className="min-h-screen bg-gray-50">
+            <a href="#main-content" className="skip-link">Hopp til innhold</a>
             <Navbar />
             <WelcomeBanner />
+            <main id="main-content">
             <Routes>
               <Route path="/" element={<Navigate to="/catalog" replace />} />
               <Route path="/login" element={<Login />} />
@@ -75,6 +77,7 @@ function App() {
                 }
               />
             </Routes>
+            </main>
           </div>
           </ConfirmProvider>
           </ToastProvider>
