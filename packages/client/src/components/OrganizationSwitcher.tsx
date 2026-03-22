@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useOrganization } from "../context/OrganizationContext";
 
-export function OrganizationSwitcher() {
+export function OrganizationSwitcher({ variant = 'dark' }: { variant?: 'dark' | 'light' }) {
   const {
     organizations,
     activeOrganizationId,
@@ -23,17 +23,22 @@ export function OrganizationSwitcher() {
     memberships.map((membership) => membership.organizationId),
   );
 
+  const isLight = variant === 'light';
+
   return (
-    <div className="flex flex-col text-white">
+    <div className={`flex flex-col ${isLight ? 'text-gray-700' : 'text-white'}`}>
       <label
-        className="text-xs uppercase tracking-wide opacity-70 mb-1"
+        className={`text-xs uppercase tracking-wide mb-1 ${isLight ? 'text-gray-500' : 'opacity-70'}`}
         htmlFor="org-switcher"
       >
         Organization
       </label>
       <select
         id="org-switcher"
-        className="bg-indigo-500/50 border border-indigo-200 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/70"
+        className={isLight
+          ? "border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          : "bg-indigo-500/50 border border-indigo-200 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/70"
+        }
         value={activeOrganizationId ?? ""}
         onChange={handleChange}
         disabled={isLoading || organizations.length === 0}

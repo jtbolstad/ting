@@ -147,6 +147,7 @@ class ApiClient {
     categoryId: string;
     imageUrl?: string;
     locationId?: string;
+    tags?: string[];
   }): Promise<Item> {
     return this.request<Item>("/items", {
       method: "POST",

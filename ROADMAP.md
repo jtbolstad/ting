@@ -49,13 +49,13 @@ Focus: make it easier to find items and manage lending.
 
 | Done | # | Prio | MoSCoW | Item | Notes |
 |------|-----|------|--------|------|-------|
-| [ ] | T11 | P0 | M | Item tags / free-text search improvement | Tags per item, better full-text search across name + description + tags |
-| [ ] | T12 | P1 | S | Reservation calendar view | Visual calendar on item detail showing availability |
-| [ ] | T13 | P1 | S | Item condition tracking | Admin marks condition (good / fair / needs repair) on check-in |
-| [ ] | T14 | P1 | S | Damage report on return | Free-text field when checking in; logged per loan |
-| [ ] | T15 | P1 | S | Loan history visible to borrower | Users can see their own full history (not just active loans) |
+| ✅ | T11 | P0 | M | Item tags / free-text search improvement | Tags per item, better full-text search across name + description + tags |
+| ✅ | T12 | P1 | S | Reservation calendar view | Visual calendar on item detail showing availability (already implemented via ItemAvailabilityCalendar) |
+| [ ] | T13 | P1 | M | Item condition tracking | Admin marks condition (good / fair / needs repair) on check-in |
+| [ ] | T14 | P1 | M | Damage report on return | Free-text field when checking in; logged per loan |
+| [ ] | T15 | P1 | M | Loan history visible to borrower | Users can see their own full history (not just active loans) |
 | [ ] | T16 | P2 | C | Item QR code labels | Generate printable QR codes linking to item detail page |
-| [ ] | T17 | P2 | C | Multi-image per item | Upload multiple photos; first is primary |
+| [ ] | T17 | P2 | M | Multi-image per item | Upload multiple photos; first is primary |
 | [ ] | T18 | P2 | C | Bulk item import (CSV) | Admin imports many items at once |
 | [ ] | T19 | W | W | Barcode scanner (mobile camera) | Needs native app or PWA camera API — later |
 

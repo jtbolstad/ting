@@ -456,5 +456,11 @@
       "selected": "Valgt",
       "today": "I dag"
     }
+  },
+  "tags": {
+    "label": "Tags",
+    "placeholder": "Tilføj tags...",
+    "hint": "Tryk Enter eller komma for at tilføje et tag",
+    "remove": "Fjern tag {{tag}}"
   }
 }

@@ -141,8 +141,20 @@ model Item {
   reviews        Review[]
   manuals        ItemManual[]
 
+  tags         ItemTag[]
+
   @@index([organizationId])
   @@index([ownerId])
+}
+
+model ItemTag {
+  id     String @id @default(cuid())
+  itemId String
+  name   String
+  item   Item   @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([itemId, name])
+  @@index([itemId])
 }
 
 model ItemManual {

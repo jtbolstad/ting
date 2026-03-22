@@ -40,6 +40,7 @@ function serializeItem(item: any): Item {
     ownerType: item.ownerType ?? 'ORGANIZATION',
     approvalStatus: item.approvalStatus ?? 'APPROVED',
     rejectionNote: item.rejectionNote ?? null,
+    tags: item.tags ? item.tags.map((t: any) => t.name) : undefined,
     manuals: item.manuals ?? undefined,
     createdAt: item.createdAt.toISOString(),
     updatedAt: item.updatedAt.toISOString(),
@@ -66,6 +67,7 @@ router.get(
         where.OR = [
           { name: { contains: q } },
           { description: { contains: q } },
+          { tags: { some: { name: { contains: q } } } },
         ];
       }
       if (categoryId) where.categoryId = categoryId;
@@ -89,6 +91,7 @@ router.get(
           include: {
             category: true,
             location: true,
+            tags: true,
             _count: { select: { reviews: true } },
           },
           skip,
@@ -146,6 +149,7 @@ router.get(
           include: {
             category: true,
             location: true,
+            tags: true,
             manuals: { orderBy: { createdAt: 'asc' } },
             _count: { select: { reviews: true } },
           },
@@ -190,7 +194,7 @@ router.post(
   requireOrgRole("MEMBER"),
   async (req: AuthRequest, res: Response) => {
     try {
-      const { name, description, categoryId, imageUrl, locationId } = req.body as CreateItemInput;
+      const { name, description, categoryId, imageUrl, locationId, tags } = req.body as CreateItemInput;
 
       if (!name || !categoryId) {
         return res.status(400).json({ success: false, error: "Name and categoryId are required" });
@@ -225,8 +229,11 @@ router.post(
           ownerType,
           ownerId,
           approvalStatus,
+          tags: tags && tags.length > 0
+            ? { create: tags.map((t: string) => ({ name: t.toLowerCase().trim() })) }
+            : undefined,
         },
-        include: { category: true, location: true },
+        include: { category: true, location: true, tags: true },
       });
 
       // Notify admins if pending approval
@@ -347,7 +354,7 @@ router.patch(
   async (req: AuthRequest, res: Response) => {
     try {
       const { id } = req.params;
-      const { name, description, categoryId, status, imageUrl, locationId } = req.body as UpdateItemInput;
+      const { name, description, categoryId, status, imageUrl, locationId, tags } = req.body as UpdateItemInput;
 
       const existing = await prisma.item.findUnique({ where: { id } });
       if (!existing || existing.organizationId !== req.organization!.id) {
@@ -377,10 +384,19 @@ router.patch(
         updateData.categoryId = categoryId;
       }
 
+      if (tags !== undefined) {
+        await prisma.itemTag.deleteMany({ where: { itemId: id } });
+        if (tags.length > 0) {
+          await prisma.itemTag.createMany({
+            data: tags.map((t: string) => ({ itemId: id, name: t.toLowerCase().trim() })),
+          });
+        }
+      }
+
       const item = await prisma.item.update({
         where: { id },
         data: updateData,
-        include: { category: true, location: true, manuals: true },
+        include: { category: true, location: true, tags: true, manuals: true },
       });
 
       res.json({ success: true, data: serializeItem(item) });

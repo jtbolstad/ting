@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { apiClient } from "../api/client";
 import { ImageInput } from "../components/ImageInput";
+import { TagInput } from "../components/TagInput";
 import { useAuth } from "../context/AuthContext";
 import { useOrganization } from "../context/OrganizationContext";
 
@@ -20,6 +21,7 @@ export function AddItem() {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [tags, setTags] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -79,6 +81,7 @@ export function AddItem() {
         categoryId: formData.categoryId,
         imageUrl: formData.imageUrl || undefined,
         locationId: formData.locationId || undefined,
+        tags: tags.length > 0 ? tags : undefined,
       });
 
       if (pdfUrl) {
@@ -224,6 +227,12 @@ export function AddItem() {
               setFormData((prev) => ({ ...prev, imageUrl: url }))
             }
             label={t("addItem.imageUrl")}
+          />
+
+          <TagInput
+            tags={tags}
+            onChange={setTags}
+            label={t("tags.label")}
           />
 
           <div>

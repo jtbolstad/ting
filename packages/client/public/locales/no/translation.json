@@ -457,5 +457,11 @@
       "selected": "Valgt",
       "today": "I dag"
     }
+  },
+  "tags": {
+    "label": "Tagger",
+    "placeholder": "Legg til tagger...",
+    "hint": "Trykk Enter eller komma for å legge til en tagg",
+    "remove": "Fjern tagg {{tag}}"
   }
 }

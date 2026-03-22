@@ -456,5 +456,11 @@
       "selected": "Selected",
       "today": "Today"
     }
+  },
+  "tags": {
+    "label": "Tags",
+    "placeholder": "Add tags...",
+    "hint": "Press Enter or comma to add a tag",
+    "remove": "Remove tag {{tag}}"
   }
 }

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { apiClient } from "../api/client";
 import { ImageInput } from "../components/ImageInput";
+import { TagInput } from "../components/TagInput";
 import { useAuth } from "../context/AuthContext";
 import { useOrganization } from "../context/OrganizationContext";
 
@@ -19,6 +20,7 @@ export function EditItem() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -54,6 +56,7 @@ export function EditItem() {
 
       setCategories(categoriesData);
       setLocations(locationsData);
+      setTags(item.tags ?? []);
       setFormData({
         name: item.name,
         description: item.description || "",
@@ -83,6 +86,7 @@ export function EditItem() {
         imageUrl: formData.imageUrl || undefined,
         status: formData.status as any,
         locationId: formData.locationId || null,
+        tags,
       });
 
       navigate(`/items/${id}`);
@@ -255,6 +259,12 @@ export function EditItem() {
               setFormData((prev) => ({ ...prev, imageUrl: url }))
             }
             label={t("editItem.imageUrl")}
+          />
+
+          <TagInput
+            tags={tags}
+            onChange={setTags}
+            label={t("tags.label")}
           />
 
           <div className="flex space-x-4 pt-4">

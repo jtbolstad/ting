@@ -74,6 +74,7 @@ export interface Item {
   ownerType: ItemOwnerType;
   approvalStatus: ItemApprovalStatus;
   rejectionNote?: string | null;
+  tags?: string[];
   manuals?: ItemManual[];
   createdAt: string;
   updatedAt: string;
@@ -87,6 +88,7 @@ export interface CreateItemInput {
   categoryId: string;
   imageUrl?: string | null;
   locationId?: string | null;
+  tags?: string[];
 }
 
 export interface UpdateItemInput {
@@ -96,6 +98,7 @@ export interface UpdateItemInput {
   status?: ItemStatus;
   imageUrl?: string | null;
   locationId?: string | null;
+  tags?: string[];
 }
 
 export interface ItemSearchParams {

@@ -68,9 +68,19 @@ export function ItemDetailsCard({ item }: ItemDetailsCardProps) {
             </div>
           )}
 
-          <p className="text-gray-700 mb-8">
+          <p className="text-gray-700 mb-4">
             {item.description || t("item.noDescription")}
           </p>
+
+          {item.tags && item.tags.length > 0 && (
+            <div className="mb-6 flex flex-wrap gap-1.5">
+              {item.tags.map((tag) => (
+                <span key={tag} className="px-2 py-0.5 bg-indigo-50 text-indigo-700 text-sm rounded border border-indigo-100">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
 
           {canEdit && (
             <div className="flex space-x-3">
