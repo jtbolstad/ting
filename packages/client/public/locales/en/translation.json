@@ -147,6 +147,18 @@
       "fair": "Fair",
       "needsRepair": "Needs Repair"
     },
+    "images": {
+      "label": "Photos",
+      "primary": "Primary",
+      "addImages": "Add photos",
+      "uploading": "Uploading...",
+      "delete": "Delete photo",
+      "moveLeft": "Move left",
+      "moveRight": "Move right",
+      "hint": "First photo is used as the primary image",
+      "filesSelected": "files selected",
+      "noFiles": "No files selected"
+    },
     "availability": {
       "title": "Availability (Next {{days}} Days)"
     },

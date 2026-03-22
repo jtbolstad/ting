@@ -42,6 +42,7 @@ function serializeItem(item: any): Item {
     rejectionNote: item.rejectionNote ?? null,
     condition: item.condition ?? null,
     tags: item.tags ? item.tags.map((t: any) => t.name) : undefined,
+    images: item.images ?? undefined,
     manuals: item.manuals ?? undefined,
     createdAt: item.createdAt.toISOString(),
     updatedAt: item.updatedAt.toISOString(),
@@ -93,6 +94,7 @@ router.get(
             category: true,
             location: true,
             tags: true,
+            images: { orderBy: { position: 'asc' as const } },
             _count: { select: { reviews: true } },
           },
           skip,
@@ -151,6 +153,7 @@ router.get(
             category: true,
             location: true,
             tags: true,
+            images: { orderBy: { position: 'asc' as const } },
             manuals: { orderBy: { createdAt: 'asc' } },
             _count: { select: { reviews: true } },
           },
@@ -234,7 +237,7 @@ router.post(
             ? { create: tags.map((t: string) => ({ name: t.toLowerCase().trim() })) }
             : undefined,
         },
-        include: { category: true, location: true, tags: true },
+        include: { category: true, location: true, tags: true, images: true },
       });
 
       // Notify admins if pending approval
@@ -398,7 +401,7 @@ router.patch(
       const item = await prisma.item.update({
         where: { id },
         data: updateData,
-        include: { category: true, location: true, tags: true, manuals: true },
+        include: { category: true, location: true, tags: true, images: { orderBy: { position: 'asc' as const } }, manuals: true },
       });
 
       res.json({ success: true, data: serializeItem(item) });
@@ -505,6 +508,81 @@ router.delete("/:id/manuals/:manualId", authenticate, withOrganizationContext(),
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ success: false, error: "Failed to delete manual" });
+  }
+});
+
+// --- Images ---
+
+// Add image to item
+router.post("/:id/images", authenticate, withOrganizationContext(), async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { url } = req.body;
+    if (!url) return res.status(400).json({ success: false, error: "url is required" });
+
+    const item = await prisma.item.findFirst({ where: { id, organizationId: req.organization!.id } });
+    if (!item) return res.status(404).json({ success: false, error: "Item not found" });
+
+    const isManager = hasOrgRole(req, 'MANAGER');
+    const isPlatformAdmin = req.user?.role === 'ADMIN';
+    if (!isManager && !isPlatformAdmin && item.ownerId !== req.user!.id) {
+      return res.status(403).json({ success: false, error: "Forbidden" });
+    }
+
+    const count = await prisma.itemImage.count({ where: { itemId: id } });
+    const image = await prisma.itemImage.create({ data: { itemId: id, url, position: count } });
+    res.status(201).json({ success: true, data: image });
+  } catch (error) {
+    res.status(500).json({ success: false, error: "Failed to add image" });
+  }
+});
+
+// Delete image from item
+router.delete("/:id/images/:imageId", authenticate, withOrganizationContext(), async (req: AuthRequest, res: Response) => {
+  try {
+    const { id, imageId } = req.params;
+
+    const item = await prisma.item.findFirst({ where: { id, organizationId: req.organization!.id } });
+    if (!item) return res.status(404).json({ success: false, error: "Item not found" });
+
+    const isManager = hasOrgRole(req, 'MANAGER');
+    const isPlatformAdmin = req.user?.role === 'ADMIN';
+    if (!isManager && !isPlatformAdmin && item.ownerId !== req.user!.id) {
+      return res.status(403).json({ success: false, error: "Forbidden" });
+    }
+
+    await prisma.itemImage.delete({ where: { id: imageId } });
+
+    // Reindex remaining images
+    const remaining = await prisma.itemImage.findMany({ where: { itemId: id }, orderBy: { position: 'asc' } });
+    await Promise.all(remaining.map((img, i) => prisma.itemImage.update({ where: { id: img.id }, data: { position: i } })));
+
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false, error: "Failed to delete image" });
+  }
+});
+
+// Reorder images (send full ordered array of ids)
+router.patch("/:id/images/reorder", authenticate, withOrganizationContext(), async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { imageIds } = req.body as { imageIds: string[] };
+    if (!Array.isArray(imageIds)) return res.status(400).json({ success: false, error: "imageIds must be an array" });
+
+    const item = await prisma.item.findFirst({ where: { id, organizationId: req.organization!.id } });
+    if (!item) return res.status(404).json({ success: false, error: "Item not found" });
+
+    const isManager = hasOrgRole(req, 'MANAGER');
+    const isPlatformAdmin = req.user?.role === 'ADMIN';
+    if (!isManager && !isPlatformAdmin && item.ownerId !== req.user!.id) {
+      return res.status(403).json({ success: false, error: "Forbidden" });
+    }
+
+    await Promise.all(imageIds.map((imgId, i) => prisma.itemImage.update({ where: { id: imgId }, data: { position: i } })));
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ success: false, error: "Failed to reorder images" });
   }
 });
 

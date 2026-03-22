@@ -496,6 +496,25 @@ class ApiClient {
     return response.json();
   }
 
+  // Item images
+  async addItemImage(itemId: string, url: string): Promise<{ id: string; url: string; position: number }> {
+    return this.request<{ id: string; url: string; position: number }>(`/items/${itemId}/images`, {
+      method: "POST",
+      body: JSON.stringify({ url }),
+    });
+  }
+
+  async deleteItemImage(itemId: string, imageId: string): Promise<void> {
+    return this.request<void>(`/items/${itemId}/images/${imageId}`, { method: "DELETE" });
+  }
+
+  async reorderItemImages(itemId: string, imageIds: string[]): Promise<void> {
+    return this.request<void>(`/items/${itemId}/images/reorder`, {
+      method: "PATCH",
+      body: JSON.stringify({ imageIds }),
+    });
+  }
+
   // Item approval
   async approveItem(id: string): Promise<Item> {
     return this.request<Item>(`/items/${id}/approve`, { method: "POST" });

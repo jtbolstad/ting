@@ -143,6 +143,7 @@ model Item {
   manuals        ItemManual[]
 
   tags         ItemTag[]
+  images       ItemImage[]
 
   @@index([organizationId])
   @@index([ownerId])
@@ -155,6 +156,16 @@ model ItemTag {
   item   Item   @relation(fields: [itemId], references: [id], onDelete: Cascade)
 
   @@unique([itemId, name])
+  @@index([itemId])
+}
+
+model ItemImage {
+  id        String @id @default(cuid())
+  itemId    String
+  url       String
+  position  Int    @default(0)
+  item      Item   @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
   @@index([itemId])
 }
 

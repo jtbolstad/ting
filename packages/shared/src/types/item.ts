@@ -23,6 +23,13 @@ export interface UpdateLocationInput {
   description?: string | null;
 }
 
+export interface ItemImage {
+  id: string;
+  itemId: string;
+  url: string;
+  position: number;
+}
+
 export interface ItemManual {
   id: string;
   itemId: string;
@@ -77,6 +84,7 @@ export interface Item {
   rejectionNote?: string | null;
   condition?: ItemCondition | null;
   tags?: string[];
+  images?: ItemImage[];
   manuals?: ItemManual[];
   createdAt: string;
   updatedAt: string;

@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { apiClient } from "../api/client";
-import { ImageInput } from "../components/ImageInput";
 import { TagInput } from "../components/TagInput";
 import { useAuth } from "../context/AuthContext";
 import { useOrganization } from "../context/OrganizationContext";
@@ -18,15 +17,16 @@ export function AddItem() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [pdfFile, setPdfFile] = useState<File | null>(null);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
 
   const [tags, setTags] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     categoryId: "",
-    imageUrl: "",
     locationId: "",
   });
 
@@ -79,10 +79,19 @@ export function AddItem() {
         name: formData.name,
         description: formData.description || undefined,
         categoryId: formData.categoryId,
-        imageUrl: formData.imageUrl || undefined,
         locationId: formData.locationId || undefined,
         tags: tags.length > 0 ? tags : undefined,
       });
+
+      // Upload images
+      if (imageFiles.length > 0) {
+        setUploading(true);
+        for (const file of imageFiles) {
+          const { url } = await apiClient.uploadImage(file);
+          await apiClient.addItemImage(item.id, url);
+        }
+        setUploading(false);
+      }
 
       if (pdfUrl) {
         await apiClient.createManual(item.id, {
@@ -221,13 +230,40 @@ export function AddItem() {
             />
           </div>
 
-          <ImageInput
-            value={formData.imageUrl}
-            onChange={(url) =>
-              setFormData((prev) => ({ ...prev, imageUrl: url }))
-            }
-            label={t("addItem.imageUrl")}
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {t("item.images.label")}
+            </label>
+            <input
+              ref={imageInputRef}
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={(e) => setImageFiles(Array.from(e.target.files ?? []))}
+              className="hidden"
+            />
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => imageInputRef.current?.click()}
+                className="px-3 py-2 text-sm border border-gray-300 rounded hover:bg-gray-50"
+              >
+                {t("item.images.addImages")}
+              </button>
+              {imageFiles.length > 0 ? (
+                <span className="text-sm text-gray-700">{imageFiles.length} {t("item.images.filesSelected")}</span>
+              ) : (
+                <span className="text-sm text-gray-400">{t("item.images.noFiles")}</span>
+              )}
+            </div>
+            {imageFiles.length > 0 && (
+              <div className="mt-2 flex gap-2 flex-wrap">
+                {imageFiles.map((f, i) => (
+                  <span key={i} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded truncate max-w-[120px]">{f.name}</span>
+                ))}
+              </div>
+            )}
+          </div>
 
           <TagInput
             tags={tags}

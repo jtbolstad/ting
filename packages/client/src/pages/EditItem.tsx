@@ -2,8 +2,10 @@ import type { Category, Location } from "@ting/shared";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
+import type { ItemImage } from "@ting/shared";
 import { apiClient } from "../api/client";
 import { ImageInput } from "../components/ImageInput";
+import { ItemImageManager } from "../components/item/ItemImageManager";
 import { TagInput } from "../components/TagInput";
 import { useAuth } from "../context/AuthContext";
 import { useOrganization } from "../context/OrganizationContext";
@@ -21,6 +23,7 @@ export function EditItem() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [tags, setTags] = useState<string[]>([]);
+  const [images, setImages] = useState<ItemImage[]>([]);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -58,6 +61,7 @@ export function EditItem() {
       setCategories(categoriesData);
       setLocations(locationsData);
       setTags(item.tags ?? []);
+      setImages(item.images ?? []);
       setFormData({
         name: item.name,
         description: item.description || "",
@@ -279,12 +283,10 @@ export function EditItem() {
             />
           </div>
 
-          <ImageInput
-            value={formData.imageUrl}
-            onChange={(url) =>
-              setFormData((prev) => ({ ...prev, imageUrl: url }))
-            }
-            label={t("editItem.imageUrl")}
+          <ItemImageManager
+            itemId={id!}
+            images={images}
+            onChange={setImages}
           />
 
           <TagInput

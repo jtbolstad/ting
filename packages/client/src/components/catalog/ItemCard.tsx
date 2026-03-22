@@ -16,9 +16,9 @@ export function ItemCard({ item }: ItemCardProps) {
       className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow overflow-hidden"
     >
       <div className="h-48 bg-gray-200 flex items-center justify-center">
-        {item.imageUrl ? (
+        {(item.images?.[0]?.url || item.imageUrl) ? (
           <img
-            src={item.imageUrl}
+            src={item.images?.[0]?.url ?? item.imageUrl!}
             alt={item.name}
             className="h-full w-full object-cover"
           />

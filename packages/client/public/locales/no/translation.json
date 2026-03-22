@@ -148,6 +148,18 @@
       "fair": "Akseptabel",
       "needsRepair": "Trenger reparasjon"
     },
+    "images": {
+      "label": "Bilder",
+      "primary": "Primær",
+      "addImages": "Legg til bilder",
+      "uploading": "Laster opp...",
+      "delete": "Slett bilde",
+      "moveLeft": "Flytt venstre",
+      "moveRight": "Flytt høyre",
+      "hint": "Første bilde brukes som primærbilde",
+      "filesSelected": "filer valgt",
+      "noFiles": "Ingen filer valgt"
+    },
     "availability": {
       "title": "Tilgjengelighet (neste {{days}} dager)"
     },

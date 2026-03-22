@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
@@ -14,18 +15,43 @@ export function ItemDetailsCard({ item }: ItemDetailsCardProps) {
   const navigate = useNavigate();
   const canEdit = isAdmin || isOrgAdmin || isOrgManager || (!!user && user.id === item.ownerId);
 
+  const allImages = item.images && item.images.length > 0
+    ? item.images
+    : item.imageUrl
+      ? [{ id: "legacy", url: item.imageUrl, position: 0, itemId: item.id }]
+      : [];
+
+  const [activeIndex, setActiveIndex] = useState(0);
+  const activeImage = allImages[activeIndex];
+
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
       <div className="md:flex">
-        <div className="md:w-1/2 bg-gray-200 flex items-center justify-center h-56 md:h-96">
-          {item.imageUrl ? (
-            <img
-              src={item.imageUrl}
-              alt={item.name}
-              className="h-full w-full object-cover"
-            />
-          ) : (
-            <span className="text-gray-400 text-8xl">📦</span>
+        <div className="md:w-1/2 flex flex-col">
+          <div className="bg-gray-200 flex items-center justify-center h-56 md:h-80">
+            {activeImage ? (
+              <img
+                src={activeImage.url}
+                alt={item.name}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <span className="text-gray-400 text-8xl">📦</span>
+            )}
+          </div>
+          {allImages.length > 1 && (
+            <div className="flex gap-1.5 p-2 overflow-x-auto bg-gray-50">
+              {allImages.map((img, i) => (
+                <button
+                  key={img.id}
+                  type="button"
+                  onClick={() => setActiveIndex(i)}
+                  className={`flex-shrink-0 w-14 h-14 rounded overflow-hidden border-2 transition-colors ${i === activeIndex ? "border-indigo-500" : "border-transparent"}`}
+                >
+                  <img src={img.url} alt="" className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
           )}
         </div>
 
