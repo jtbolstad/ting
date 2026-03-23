@@ -50,9 +50,9 @@ export function Navbar() {
             ) : (
               <>
                 <Link to="/login" className="px-4 py-2 hover:text-indigo-200">{t("nav.login")}</Link>
-                <Link to="/register" className="px-4 py-2 bg-indigo-700 rounded hover:bg-indigo-800">
+                {/* <Link to="/register" className="px-4 py-2 bg-indigo-700 rounded hover:bg-indigo-800">
                   {t("nav.register")}
-                </Link>
+                </Link> */}
               </>
             )}
           </div>
