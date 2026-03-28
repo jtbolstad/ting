@@ -109,6 +109,25 @@ Focus: connecting organizations and broader community features.
 
 ---
 
+## Design Refresh — Visual Identity
+
+Focus: replace the generic Tailwind-default look with a distinct, warm visual identity that feels community-oriented and trustworthy.
+
+| Done | # | Prio | MoSCoW | Item | Notes |
+|------|-----|------|--------|------|-------|
+| [ ] | T52 | P0 | M | Design token overhaul | Replace generic indigo palette with a warm, earthy brand palette (primary, surface, accent, semantic colors defined as CSS custom properties) |
+| [ ] | T53 | P0 | M | Typography system | Pick a distinctive typeface pair (display + body); establish consistent scale (h1–h4, body, label, caption) across all pages |
+| [ ] | T54 | P0 | M | Navbar redesign | White/light background, logo lockup, clear active-link indicator, org switcher integrated cleanly; remove flat indigo bar |
+| [ ] | T55 | P1 | S | ItemCard redesign | Taller image area with aspect-ratio lock, status badge as overlay, hover lift + subtle scale, better tag + rating placement |
+| [ ] | T56 | P1 | S | Catalog page layout | Filter sidebar with section headers and icon per category; search bar with clear button; result count + sort dropdown |
+| [ ] | T57 | P1 | S | ItemDetail hero section | Full-width image carousel / lightbox at top, availability pill prominent, sticky reservation sidebar on desktop |
+| [ ] | T58 | P1 | S | Button & form component polish | Consistent primary/secondary/ghost/danger variants; proper focus rings; unified input, select, textarea sizing |
+| [ ] | T59 | P2 | C | Empty state illustrations | SVG illustrations for no-results, no-loans, no-items — branded and friendly rather than plain text |
+| [ ] | T60 | P2 | C | Dark mode | CSS custom-property-based theming makes this straightforward once T52 is done |
+| [ ] | T61 | P2 | C | Micro-animations | Skeleton loaders on cards, page fade-in, toast slide-in, button press feedback — using Tailwind transitions only |
+
+---
+
 ## Technical Debt & Infrastructure (ongoing)
 
 | Done | # | Prio | MoSCoW | Item |
