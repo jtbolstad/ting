@@ -21,5 +21,9 @@ jobs:
             cd /var/www/ting
             git pull origin main
             pnpm install --frozen-lockfile
-            pnpm build
+            pnpm --filter @ting/shared build
+            pnpm --filter @ting/server exec prisma generate
+            pnpm --filter @ting/server exec prisma migrate deploy
+            pnpm --filter @ting/server build
+            pnpm --filter @ting/client build
             pm2 restart ting

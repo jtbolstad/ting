@@ -10,7 +10,6 @@ import loansRoutes from "./routes/loans.js";
 import organizationsRoutes from "./routes/organizations.js";
 import reservationsRoutes from "./routes/reservations.js";
 import reviewsRoutes from "./routes/reviews.js";
-import locationsRoutes from "./routes/locations.js";
 import uploadsRoutes from "./routes/uploads.js";
 import usersRoutes from "./routes/users.js";
 
@@ -63,7 +62,6 @@ async function startServer() {
   app.use("/api/organizations", organizationsRoutes);
   app.use("/api/comments", commentsRoutes);
   app.use("/api/reviews", reviewsRoutes);
-  app.use("/api/locations", locationsRoutes);
   app.use("/api/uploads", uploadsRoutes);
 
   // Health check
