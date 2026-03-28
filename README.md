@@ -4,7 +4,7 @@ A full-stack tool library management system for community makerspaces, built wit
 
 ## Features
 
-- 🔐 **User Authentication** - JWT-based auth with admin/member roles
+- 🔐 **User Authentication** - JWT-based auth with admin/member roles, with optional SmartOrg membership verification
 - 📦 **Item Catalog** - Browse and search tools by category
 - 📅 **Reservations** - Book items in advance with conflict detection
 - ✅ **Check-in/Check-out** - Track who has what items
@@ -134,6 +134,32 @@ ting/
   - **Processing**: Auto-resizes to max 1200px width, converts to WebP, generates 300px thumbnail
   - **Storage**: Local filesystem at `server/uploads/{organizationId}/`
   - **Access**: Images served publicly at `/uploads/{organizationId}/{filename}`
+
+## SmartOrg Integration
+
+Ting can integrate with [SmartOrg](https://smartorg.no) to verify that users are active members of your organization before granting access.
+
+### How it works
+
+When enabled, login and registration will check the user's membership status via the SmartOrg API. Users who are not active members will be denied access.
+
+### Setup
+
+Add these environment variables to `packages/server/.env`:
+
+```env
+SMARTORG_API_URL=https://api.smartorg.no
+SMARTORG_API_KEY=your-api-key
+SMARTORG_ORG_ID=your-organization-id
+```
+
+| Variable | Description |
+|---|---|
+| `SMARTORG_API_URL` | SmartOrg API base URL |
+| `SMARTORG_API_KEY` | API key from your SmartOrg admin panel |
+| `SMARTORG_ORG_ID` | Your organization's ID in SmartOrg |
+
+When `SMARTORG_API_KEY` is not set, the integration is disabled and all registered users can log in normally.
 
 ## Email Notifications
 
