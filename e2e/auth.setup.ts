@@ -1,9 +1,6 @@
 import { test as setup } from '@playwright/test';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-export const authFile = path.join(__dirname, '.auth/user.json');
+const authFile = 'e2e/.auth/user.json';
 
 setup('authenticate as member', async ({ page }) => {
   await page.goto('/login');
