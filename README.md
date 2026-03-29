@@ -1,72 +1,65 @@
-# Ting - Community Tool Lending Service
+# Ting — Community Tool Lending
 
 A full-stack tool library management system for community makerspaces, built with Node.js, TypeScript, and React.
 
 ## Features
 
-- 🔐 **User Authentication** - JWT-based auth with admin/member roles, with optional SmartOrg membership verification
-- 📦 **Item Catalog** - Browse and search tools by category
-- 📅 **Reservations** - Book items in advance with conflict detection
-- ✅ **Check-in/Check-out** - Track who has what items
-- 📧 **Email Reminders** - Automated due date and overdue notifications
-- 👨‍💼 **Admin Dashboard** - Manage items, users, and loans
-- 🎨 **Modern UI** - Responsive design with TailwindCSS
+- 🔐 **User Authentication** — JWT-based auth with admin/member/manager roles
+- 📦 **Item Catalog** — Browse and search tools by category, with approval workflow
+- 📅 **Reservations** — Book items in advance with conflict detection
+- ✅ **Loans** — Check-in/check-out tracking
+- 📧 **Email Reminders** — Automated due date and overdue notifications
+- 👨‍💼 **Admin Dashboard** — Manage items, users, loans, and organizations
+- 🏢 **Multi-organization** — Multiple lending orgs in one instance
+- 🎨 **Modern UI** — Responsive design with TailwindCSS
 
 ## Tech Stack
 
-- **Frontend**: React 18, TypeScript, Vite, TailwindCSS, React Router
-- **Backend**: Node.js, Express, TypeScript
-- **Database**: SQLite with Prisma ORM
-- **Authentication**: JWT with bcrypt password hashing
-- **Email**: Nodemailer (configurable SMTP)
+| Layer | Technology |
+|---|---|
+| Frontend | React 19, TypeScript, Vite, TailwindCSS, React Router |
+| Backend | Node.js, Express, TypeScript |
+| Database | SQLite with Prisma ORM |
+| Auth | JWT + bcrypt |
+| Email | Nodemailer (configurable SMTP) |
+| Process manager | PM2 (production) |
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ installed
-- pnpm installed (`npm install -g pnpm`)
+- Node.js 18+
+- pnpm (`npm install -g pnpm`)
 
 ### Installation
 
-1. **Install dependencies**:
+```bash
+pnpm install
+```
 
-   ```bash
-   pnpm install
-   ```
+### Database setup
 
-2. **Set up the database**:
+```bash
+cd packages/server
+pnpm run db:migrate   # apply migrations
+pnpm run db:seed      # seed demo data
+```
 
-   ```bash
-   cd packages/server
-   pnpm run db:migrate
-   pnpm run db:seed
-   ```
+### Start dev servers
 
-3. **Start the development servers**:
+```bash
+# from repo root — two terminals
+pnpm run dev:server   # API on http://localhost:3001
+pnpm run dev:client   # UI  on http://localhost:3000
+```
 
-   In one terminal (backend):
+### Test accounts (after seed)
 
-   ```bash
-   pnpm run dev:server
-   ```
-
-   In another terminal (frontend):
-
-   ```bash
-   pnpm run dev:client
-   ```
-
-4. **Access the application**:
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:3001
-
-### Test Accounts
-
-After seeding, you can log in with:
-
-- **Admin**: `admin@ting.com` / `admin123`
-- **User**: `user@ting.com` / `user123`
+| Role | Email | Password |
+|---|---|---|
+| Platform admin | `admin@ting.com` | `admin123` |
+| Org manager | `emma@ting.com` | `user123` |
+| Member | `lars@ting.com` | `user123` |
 
 ## Project Structure
 
@@ -75,145 +68,133 @@ ting/
 ├── packages/
 │   ├── shared/           # Shared TypeScript types
 │   ├── server/           # Express API backend
-│   │   ├── prisma/       # Database schema & migrations
+│   │   ├── prisma/       # Schema, migrations, seed
 │   │   └── src/
 │   │       ├── routes/   # API endpoints
-│   │       ├── services/ # Business logic
+│   │       ├── services/ # Business logic (email)
 │   │       ├── jobs/     # Background jobs (reminders)
 │   │       └── middleware/
 │   └── client/           # React frontend
 │       └── src/
 │           ├── api/      # API client
 │           ├── components/
-│           ├── context/  # Auth state
+│           ├── context/  # Auth + org state
 │           └── pages/
-└── package.json          # Workspace config
+├── e2e/                  # Playwright E2E tests
+├── scripts/              # Dev utilities
+├── planning/             # Roadmap, specs, bugs
+└── ecosystem.config.js   # PM2 process config
 ```
+
+## Testing
+
+```bash
+pnpm test             # Unit tests (Vitest, Node env)
+pnpm test:browser     # Component tests (Vitest Browser + Playwright)
+pnpm test:e2e         # E2E tests (Playwright, requires running servers)
+```
+
+Three-layer strategy:
+
+| Layer | Files | What it tests |
+|---|---|---|
+| Unit | `*.test.ts` | Pure functions, utilities |
+| Component | `*.browser.test.tsx` | React components in real browser via MSW |
+| E2E | `e2e/*.spec.ts` | Full user journeys against real backend |
 
 ## API Endpoints
 
-### Authentication
-
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - Login
-- `GET /api/auth/me` - Get current user
+### Auth
+- `POST /api/auth/register` — Register new user (requires `organizationId`)
+- `POST /api/auth/login` — Login
+- `GET  /api/auth/me` — Get current user + memberships
 
 ### Items
+- `GET    /api/items` — List/search items
+- `GET    /api/items/:slug` — Get item (accepts slug or id)
+- `POST   /api/items` — Create item
+- `PATCH  /api/items/:slug` — Update item
+- `DELETE /api/items/:slug` — Delete item
+- `POST   /api/items/:slug/approve` — Approve pending item (manager+)
+- `POST   /api/items/:slug/reject` — Reject pending item (manager+)
 
-- `GET /api/items` - List items (with search & filters)
-- `GET /api/items/:id` - Get item details
-- `POST /api/items` - Create item (admin)
-- `PATCH /api/items/:id` - Update item (admin)
-- `DELETE /api/items/:id` - Delete item (admin)
+### Categories / Locations / Organizations / Users / Reservations / Loans / Reviews / Comments / Uploads
 
-### Categories
+See route files in `packages/server/src/routes/` for full endpoint reference.
 
-- `GET /api/categories` - List all categories
-- `POST /api/categories` - Create category (admin)
+## Production Deployment
 
-### Reservations
+Ting runs on a VPS with **PM2** as the process manager. Deployment is triggered automatically on push to `main` via a GitHub Actions webhook.
 
-- `GET /api/reservations` - List user's reservations
-- `GET /api/reservations/availability/:itemId` - Check availability
-- `POST /api/reservations` - Create reservation
-- `DELETE /api/reservations/:id` - Cancel reservation
+### Architecture
 
-### Loans
-
-- `GET /api/loans` - List loans
-- `POST /api/loans/checkout` - Checkout item
-- `POST /api/loans/:id/checkin` - Return item
-
-### Uploads
-
-- `POST /api/uploads/image` - Upload an image for an item
-  - **Request**: `multipart/form-data` with `image` field
-  - **Response**: `{ url: string, thumbnail: string }`
-  - **Requirements**: Authentication, organization context
-  - **Limits**: 10MB max, JPEG/PNG/GIF/WebP only
-  - **Processing**: Auto-resizes to max 1200px width, converts to WebP, generates 300px thumbnail
-  - **Storage**: Local filesystem at `server/uploads/{organizationId}/`
-  - **Access**: Images served publicly at `/uploads/{organizationId}/{filename}`
-
-## SmartOrg Integration
-
-Ting can integrate with [SmartOrg](https://smartorg.no) to verify that users are active members of your organization before granting access.
-
-### How it works
-
-When enabled, login and registration will check the user's membership status via the SmartOrg API. Users who are not active members will be denied access.
-
-### Setup
-
-Add these environment variables to `packages/server/.env`:
-
-```env
-SMARTORG_API_URL=https://api.smartorg.no
-SMARTORG_API_KEY=your-api-key
-SMARTORG_ORG_ID=your-organization-id
+```
+GitHub push → GitHub Actions → SSH webhook → VPS
+                                              ├── git pull
+                                              ├── pnpm install
+                                              ├── pnpm build
+                                              ├── prisma migrate deploy
+                                              └── pm2 reload ting
 ```
 
-| Variable | Description |
-|---|---|
-| `SMARTORG_API_URL` | SmartOrg API base URL |
-| `SMARTORG_API_KEY` | API key from your SmartOrg admin panel |
-| `SMARTORG_ORG_ID` | Your organization's ID in SmartOrg |
+- App served at port 3001 (behind a reverse proxy)
+- SQLite database at `/var/data/db.sqlite` (persistent volume)
+- PM2 config: `ecosystem.config.js`
 
-When `SMARTORG_API_KEY` is not set, the integration is disabled and all registered users can log in normally.
+### Environment variables (production)
 
-## Email Notifications
-
-The system can send automated email reminders for:
-
-- Items due tomorrow
-- Overdue items
-
-### Setup Email (Production)
-
-Add these environment variables to `packages/server/.env`:
+Set in `packages/server/.env` on the VPS:
 
 ```env
 NODE_ENV=production
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_SECURE=false
-SMTP_USER=your-email@gmail.com
-SMTP_PASS=your-app-password
-EMAIL_FROM="Ting <noreply@ting.com>"
+DATABASE_URL="file:/var/data/db.sqlite"
+JWT_SECRET="your-secure-random-secret"
 ```
 
-### Run Reminders Manually
+Optional email (SMTP) and SmartOrg integration variables — see `packages/server/.env.example`.
+
+### Manual deploy
+
+```bash
+pnpm run build                         # build all packages
+cd packages/server
+npx prisma migrate deploy              # apply pending migrations
+pm2 reload ting                        # zero-downtime restart
+```
+
+## Syncing Production DB to Local
+
+Pull the live SQLite database to your local dev environment:
+
+```bash
+pnpm run db:sync-from-prod
+```
+
+This runs `scripts/sync-db-from-prod.ps1`, which:
+
+1. Reads `VPS_HOST` (and optionally `VPS_DB`, `SSH_KEY`) from `.env` or environment
+2. Backs up your current `packages/server/prisma/dev.db`
+3. Downloads the production DB via `scp`
+
+Configure in your `.env` (repo root or `packages/server/.env`):
+
+```env
+VPS_HOST="deploy@your-server-ip"
+VPS_DB="/var/data/db.sqlite"    # default
+SSH_KEY="~/.ssh/id_rsa"         # default
+```
+
+## Database
+
+### Migrations
 
 ```bash
 cd packages/server
-pnpm run reminders
+pnpm run db:migrate        # dev — create + apply new migration
+npx prisma migrate deploy  # prod — apply pending migrations only
 ```
 
-### Automated Reminders (Cron)
-
-Set up a daily cron job to run reminders:
-
-```bash
-0 9 * * * cd /path/to/ting/packages/server && pnpm run reminders
-```
-
-## Development
-
-### Build Shared Types
-
-```bash
-cd packages/shared
-pnpm run build
-```
-
-### Database Migrations
-
-```bash
-cd packages/server
-pnpm run db:migrate
-```
-
-### Reset Database
+### Reset local database
 
 ```bash
 cd packages/server
@@ -222,63 +203,31 @@ pnpm run db:migrate
 pnpm run db:seed
 ```
 
-## Production Deployment
+## Email Reminders
 
-### Quick Deploy to Fly.io
-
-Ting is ready to deploy to Fly.io with a single command:
+Automated reminders for items due tomorrow and overdue items.
 
 ```bash
-# Install Fly CLI and login
-fly auth login
+# Run manually
+cd packages/server
+pnpm run reminders
 
-# Deploy (includes database setup)
-fly launch
+# Cron (daily at 09:00)
+0 9 * * * cd /var/www/ting/packages/server && pnpm run reminders
 ```
 
-For detailed deployment instructions including:
+Configure SMTP in `packages/server/.env` — see `.env.example`.
 
-- SQLite vs PostgreSQL options
-- Environment variable configuration
-- Custom domain setup
-- Monitoring and troubleshooting
+## SmartOrg Integration
 
-See **[DEPLOYMENT.md](./DEPLOYMENT.md)** for the complete guide.
+Optional membership verification via [SmartOrg](https://smartorg.no). When `SMARTORG_API_KEY` is set, users must be active members to register or log in.
 
-### Manual Deployment
-
-1. **Build all packages**:
-
-   ```bash
-   pnpm run build
-   ```
-
-2. **Set production environment variables** in `packages/server/.env`:
-
-   ```env
-   NODE_ENV=production
-   DATABASE_URL="file:/data/db.sqlite"
-   JWT_SECRET="your-secure-random-secret"
-   ```
-
-3. **Run migrations**:
-
-   ```bash
-   cd packages/server
-   pnpm db:migrate deploy
-   ```
-
-4. **Start the server**:
-   ```bash
-   pnpm start
-   ```
-
-The server will automatically serve the built frontend from `packages/client/dist` in production mode.
+```env
+SMARTORG_API_URL=https://api.smartorg.no
+SMARTORG_API_KEY=your-api-key
+SMARTORG_ORG_ID=your-organization-id
+```
 
 ## License
 
 MIT
-
-## Contributing
-
-Contributions are welcome! Please open an issue or submit a pull request.
