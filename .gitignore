@@ -34,3 +34,4 @@ Thumbs.db
 # Fly.io
 .fly/
 fly.toml.local
+e2e/.auth/

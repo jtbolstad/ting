@@ -1,1 +1,1 @@
-import '@testing-library/jest-dom';
+// Unit test setup — no DOM, no MSW
