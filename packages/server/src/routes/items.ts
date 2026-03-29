@@ -22,12 +22,35 @@ const router: ExpressRouter = Router();
 
 const MANAGER_ROLES = ['MANAGER', 'ADMIN', 'OWNER'];
 
+function toSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function generateSlug(name: string, id: string): string {
+  return `${toSlug(name)}-${id.slice(-6)}`;
+}
+
+async function resolveItemId(slugOrId: string, orgId: string): Promise<string | null> {
+  const item = await prisma.item.findFirst({
+    where: { organizationId: orgId, OR: [{ id: slugOrId }, { slug: slugOrId }] },
+    select: { id: true },
+  });
+  return item?.id ?? null;
+}
+
 function serializeItem(item: any): Item {
   const averageRating = item._avg?.rating || item.averageRating;
   const reviewCount = item._count?.reviews || item.reviewCount;
 
   return {
     id: item.id,
+    slug: item.slug ?? undefined,
     name: item.name,
     description: item.description,
     categoryId: item.categoryId,
@@ -144,7 +167,8 @@ router.get(
   resolveOrganizationPublic,
   async (req: AuthRequest, res: Response) => {
     try {
-      const { id } = req.params;
+      const { id: slugOrId } = req.params;
+      const id = await resolveItemId(slugOrId, req.organization!.id) ?? slugOrId;
 
       const [item, reviewAggregate] = await Promise.all([
         prisma.item.findFirst({
@@ -221,7 +245,7 @@ router.post(
       const ownerType = isManager ? 'ORGANIZATION' : 'MEMBER';
       const ownerId = isManager ? null : req.user!.id;
 
-      const item = await prisma.item.create({
+      const created = await prisma.item.create({
         data: {
           organizationId: req.organization!.id,
           name,
@@ -237,6 +261,11 @@ router.post(
             ? { create: tags.map((t: string) => ({ name: t.toLowerCase().trim() })) }
             : undefined,
         },
+        select: { id: true },
+      });
+      const item = await prisma.item.update({
+        where: { id: created.id },
+        data: { slug: generateSlug(name, created.id) },
         include: { category: true, location: true, tags: true, images: true },
       });
 
@@ -279,7 +308,8 @@ router.post(
   requireOrgRole("MANAGER"),
   async (req: AuthRequest, res: Response) => {
     try {
-      const { id } = req.params;
+      const { id: slugOrId } = req.params;
+      const id = await resolveItemId(slugOrId, req.organization!.id) ?? slugOrId;
       const existing = await prisma.item.findFirst({ where: { id, organizationId: req.organization!.id } });
       if (!existing) return res.status(404).json({ success: false, error: "Item not found" });
       if (existing.approvalStatus !== 'PENDING') {
@@ -317,7 +347,8 @@ router.post(
   requireOrgRole("MANAGER"),
   async (req: AuthRequest, res: Response) => {
     try {
-      const { id } = req.params;
+      const { id: slugOrId } = req.params;
+      const id = await resolveItemId(slugOrId, req.organization!.id) ?? slugOrId;
       const { note } = req.body;
 
       const existing = await prisma.item.findFirst({ where: { id, organizationId: req.organization!.id } });
@@ -357,7 +388,8 @@ router.patch(
   requireOrgRole("MEMBER"),
   async (req: AuthRequest, res: Response) => {
     try {
-      const { id } = req.params;
+      const { id: slugOrId } = req.params;
+      const id = await resolveItemId(slugOrId, req.organization!.id) ?? slugOrId;
       const { name, description, categoryId, status, imageUrl, locationId, condition, tags } = req.body as UpdateItemInput;
 
       const existing = await prisma.item.findUnique({ where: { id } });
@@ -420,7 +452,8 @@ router.delete(
   requireOrgRole("MEMBER"),
   async (req: AuthRequest, res: Response) => {
     try {
-      const { id } = req.params;
+      const { id: slugOrId } = req.params;
+      const id = await resolveItemId(slugOrId, req.organization!.id) ?? slugOrId;
       const existing = await prisma.item.findUnique({ where: { id } });
       if (!existing || existing.organizationId !== req.organization!.id) {
         return res.status(404).json({ success: false, error: "Item not found in this organization" });
@@ -447,7 +480,8 @@ router.delete(
 // List manuals for item (public)
 router.get("/:id/manuals", resolveOrganizationPublic, async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const { id: slugOrId } = req.params;
+    const id = await resolveItemId(slugOrId, req.organization!.id) ?? slugOrId;
     const item = await prisma.item.findFirst({ where: { id, organizationId: req.organization!.id } });
     if (!item) return res.status(404).json({ success: false, error: "Item not found" });
 
@@ -464,7 +498,8 @@ router.get("/:id/manuals", resolveOrganizationPublic, async (req: AuthRequest, r
 // Add manual (owner or MANAGER+)
 router.post("/:id/manuals", authenticate, withOrganizationContext(), requireOrgRole("MEMBER"), async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const { id: slugOrId } = req.params;
+    const id = await resolveItemId(slugOrId, req.organization!.id) ?? slugOrId;
     const { type, label, url, content } = req.body as CreateManualInput;
 
     if (!type || !label) return res.status(400).json({ success: false, error: "Type og label er påkrevd" });
@@ -492,7 +527,8 @@ router.post("/:id/manuals", authenticate, withOrganizationContext(), requireOrgR
 // Delete manual (owner or MANAGER+)
 router.delete("/:id/manuals/:manualId", authenticate, withOrganizationContext(), requireOrgRole("MEMBER"), async (req: AuthRequest, res: Response) => {
   try {
-    const { id, manualId } = req.params;
+    const { id: slugOrId, manualId } = req.params;
+    const id = await resolveItemId(slugOrId, req.organization!.id) ?? slugOrId;
 
     const item = await prisma.item.findFirst({ where: { id, organizationId: req.organization!.id } });
     if (!item) return res.status(404).json({ success: false, error: "Item not found" });
@@ -516,7 +552,8 @@ router.delete("/:id/manuals/:manualId", authenticate, withOrganizationContext(),
 // Add image to item
 router.post("/:id/images", authenticate, withOrganizationContext(), async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const { id: slugOrId } = req.params;
+    const id = await resolveItemId(slugOrId, req.organization!.id) ?? slugOrId;
     const { url } = req.body;
     if (!url) return res.status(400).json({ success: false, error: "url is required" });
 
@@ -540,7 +577,8 @@ router.post("/:id/images", authenticate, withOrganizationContext(), async (req: 
 // Delete image from item
 router.delete("/:id/images/:imageId", authenticate, withOrganizationContext(), async (req: AuthRequest, res: Response) => {
   try {
-    const { id, imageId } = req.params;
+    const { id: slugOrId, imageId } = req.params;
+    const id = await resolveItemId(slugOrId, req.organization!.id) ?? slugOrId;
 
     const item = await prisma.item.findFirst({ where: { id, organizationId: req.organization!.id } });
     if (!item) return res.status(404).json({ success: false, error: "Item not found" });
@@ -566,7 +604,8 @@ router.delete("/:id/images/:imageId", authenticate, withOrganizationContext(), a
 // Reorder images (send full ordered array of ids)
 router.patch("/:id/images/reorder", authenticate, withOrganizationContext(), async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const { id: slugOrId } = req.params;
+    const id = await resolveItemId(slugOrId, req.organization!.id) ?? slugOrId;
     const { imageIds } = req.body as { imageIds: string[] };
     if (!Array.isArray(imageIds)) return res.status(400).json({ success: false, error: "imageIds must be an array" });
 

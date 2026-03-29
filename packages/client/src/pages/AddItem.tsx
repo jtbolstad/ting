@@ -101,7 +101,7 @@ export function AddItem() {
         });
       }
 
-      navigate(`/items/${item.id}`);
+      navigate(`/items/${item.slug ?? item.id}`);
     } catch (err: any) {
       setError(err.message || t("errors.createItemFailed"));
     } finally {

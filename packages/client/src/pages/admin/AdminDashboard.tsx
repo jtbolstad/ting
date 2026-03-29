@@ -481,7 +481,7 @@ export function AdminDashboard() {
                 {items.map((item) => (
                   <tr key={item.id}>
                     <td className="px-6 py-4 font-medium">
-                      <Link to={`/items/${item.id}`} className="text-indigo-600 hover:underline">
+                      <Link to={`/items/${item.slug ?? item.id}`} className="text-indigo-600 hover:underline">
                         {item.name}
                       </Link>
                     </td>
@@ -528,7 +528,7 @@ export function AdminDashboard() {
                         </>
                       )}
                       <Link
-                        to={`/items/${item.id}/edit`}
+                        to={`/items/${item.slug ?? item.id}/edit`}
                         className="text-indigo-600 hover:text-indigo-900"
                       >
                         {t("admin.items.edit")}

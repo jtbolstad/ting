@@ -12,7 +12,7 @@ export function ItemCard({ item }: ItemCardProps) {
 
   return (
     <Link
-      to={`/items/${item.id}`}
+      to={`/items/${item.slug ?? item.id}`}
       className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow overflow-hidden"
     >
       <div className="h-48 bg-gray-200 flex items-center justify-center">

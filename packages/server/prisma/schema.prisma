@@ -119,6 +119,7 @@ model Category {
 
 model Item {
   id             String        @id @default(cuid())
+  slug           String?       @unique
   organizationId String
   name           String
   description    String?

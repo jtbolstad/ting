@@ -70,6 +70,7 @@ export interface UpdateCategoryInput {
 
 export interface Item {
   id: string;
+  slug?: string;
   name: string;
   description: string | null;
   categoryId: string;

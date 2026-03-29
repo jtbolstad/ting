@@ -120,7 +120,7 @@ export function ItemDetailsCard({ item }: ItemDetailsCardProps) {
           {canEdit && (
             <div className="flex space-x-3">
               <button
-                onClick={() => navigate(`/items/${item.id}/edit`)}
+                onClick={() => navigate(`/items/${item.slug ?? item.id}/edit`)}
                 className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
               >
                 {t("item.edit")}
