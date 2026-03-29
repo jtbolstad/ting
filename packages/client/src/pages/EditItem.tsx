@@ -84,7 +84,7 @@ export function EditItem() {
     setSubmitting(true);
 
     try {
-      await apiClient.updateItem(id!, {
+      const updated = await apiClient.updateItem(id!, {
         name: formData.name,
         description: formData.description || undefined,
         categoryId: formData.categoryId,
@@ -95,7 +95,7 @@ export function EditItem() {
         tags,
       });
 
-      navigate(`/items/${id}`);
+      navigate(`/items/${updated.slug ?? id}`);
     } catch (err: any) {
       setError(err.message || t("errors.updateItemFailed"));
     } finally {
