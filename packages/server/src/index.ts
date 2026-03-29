@@ -7,6 +7,7 @@ import categoriesRoutes from "./routes/categories.js";
 import commentsRoutes from "./routes/comments.js";
 import itemsRoutes from "./routes/items.js";
 import loansRoutes from "./routes/loans.js";
+import locationsRoutes from "./routes/locations.js";
 import organizationsRoutes from "./routes/organizations.js";
 import reservationsRoutes from "./routes/reservations.js";
 import reviewsRoutes from "./routes/reviews.js";
@@ -59,6 +60,7 @@ async function startServer() {
   app.use("/api/items", itemsRoutes);
   app.use("/api/reservations", reservationsRoutes);
   app.use("/api/loans", loansRoutes);
+  app.use("/api/locations", locationsRoutes);
   app.use("/api/organizations", organizationsRoutes);
   app.use("/api/comments", commentsRoutes);
   app.use("/api/reviews", reviewsRoutes);
