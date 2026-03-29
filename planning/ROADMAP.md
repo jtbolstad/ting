@@ -134,6 +134,7 @@ Focus: replace the generic Tailwind-default look with a distinct, warm visual id
 | [ ] | T59 | P2 | C | Empty state illustrations | SVG illustrations for no-results, no-loans, no-items — branded and friendly rather than plain text |
 | [ ] | T60 | P2 | C | Dark mode | CSS custom-property-based theming makes this straightforward once T52 is done |
 | [ ] | T61 | P2 | C | Micro-animations | Skeleton loaders on cards, page fade-in, toast slide-in, button press feedback — using Tailwind transitions only |
+| [ ] | T62 | P2 | C | CSS theme support | Allow per-organization color themes via CSS custom properties; org admin picks a primary color, system generates a full token set; requires T52 |
 
 ---
 
