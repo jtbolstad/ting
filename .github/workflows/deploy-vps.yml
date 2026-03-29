@@ -18,6 +18,8 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
+            export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+            export PATH="$HOME/.local/share/pnpm:$PATH"
             cd /var/www/ting
             git pull origin main
             pnpm install --frozen-lockfile
@@ -26,4 +28,4 @@ jobs:
             pnpm --filter @ting/server exec prisma migrate deploy
             pnpm --filter @ting/server build
             pnpm --filter @ting/client build
-            pm2 restart ting
+            pm2 startOrRestart ecosystem.config.js --env production || pm2 start ecosystem.config.js
