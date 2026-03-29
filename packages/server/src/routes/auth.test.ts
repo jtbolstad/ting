@@ -1,8 +1,19 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import { PrismaClient } from '@prisma/client';
 import bcryptjs from 'bcryptjs';
 import request from 'supertest';
 import express from 'express';
+
+// Mock prisma.ts to use the test DB — must be before authRoutes import
+vi.mock('../prisma.js', async () => {
+  const { PrismaClient } = await import('@prisma/client');
+  return {
+    prisma: new PrismaClient({
+      datasources: { db: { url: 'file:./test-auth.db' } },
+    }),
+  };
+});
+
 import authRoutes from './auth';
 
 const prisma = new PrismaClient({
@@ -13,9 +24,20 @@ const app = express();
 app.use(express.json());
 app.use('/auth', authRoutes);
 
+let organizationId: string;
+
 describe('Auth Routes', () => {
   beforeAll(async () => {
+    await prisma.$executeRaw`PRAGMA foreign_keys = OFF`;
+    await prisma.$executeRaw`DELETE FROM Membership`;
     await prisma.$executeRaw`DELETE FROM User`;
+    await prisma.$executeRaw`DELETE FROM Organization`;
+    await prisma.$executeRaw`PRAGMA foreign_keys = ON`;
+
+    const org = await prisma.organization.create({
+      data: { name: 'Test Org', slug: 'test-org' },
+    });
+    organizationId = org.id;
   });
 
   afterAll(async () => {
@@ -30,6 +52,7 @@ describe('Auth Routes', () => {
           email: 'newuser@test.com',
           password: 'password123',
           name: 'New User',
+          organizationId,
         });
 
       expect(response.status).toBe(201);
@@ -49,6 +72,7 @@ describe('Auth Routes', () => {
           email: 'newuser@test.com',
           password: 'password123',
           name: 'Duplicate User',
+          organizationId,
         });
 
       expect(response.status).toBe(400);
@@ -137,12 +161,11 @@ describe('Auth Routes', () => {
 
       expect(response.status).toBe(200);
       expect(response.body.success).toBe(true);
-      expect(response.body.data.email).toBe('login@test.com');
+      expect(response.body.data.user.email).toBe('login@test.com');
     });
 
     it('should reject request without token', async () => {
       const response = await request(app).get('/auth/me');
-
       expect(response.status).toBe(401);
     });
 
@@ -150,7 +173,6 @@ describe('Auth Routes', () => {
       const response = await request(app)
         .get('/auth/me')
         .set('Authorization', 'Bearer invalidtoken');
-
       expect(response.status).toBe(401);
     });
   });
