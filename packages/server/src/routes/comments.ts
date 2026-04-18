@@ -7,10 +7,6 @@ import type {
 import type { Router as ExpressRouter, Response } from "express";
 import { Router } from "express";
 import { authenticate, type AuthRequest } from "../middleware/auth.js";
-import {
-  resolveOrganizationPublic,
-  withOrganizationContext,
-} from "../middleware/organization.js";
 import { prisma } from "../prisma.js";
 
 const router: ExpressRouter = Router();
@@ -39,24 +35,24 @@ function serializeComment(comment: any): Comment {
 // Get comments for an item (public)
 router.get(
   "/item/:itemId",
-  resolveOrganizationPublic,
   async (req: AuthRequest, res: Response) => {
     try {
       const { itemId } = req.params;
 
-      // Verify item exists and belongs to organization
-      const item = await prisma.item.findFirst({
-        where: { id: itemId, organizationId: req.organization!.id },
+      // Find the item to determine organization and verify it's public
+      const item = await prisma.item.findUnique({
+        where: { id: itemId },
+        select: { organizationId: true, approvalStatus: true },
       });
 
-      if (!item) {
+      if (!item || item.approvalStatus !== "APPROVED") {
         return res
           .status(404)
           .json({ success: false, error: "Item not found" });
       }
 
       const comments = await prisma.comment.findMany({
-        where: { itemId, organizationId: req.organization!.id },
+        where: { itemId, organizationId: item.organizationId },
         include: { user: true },
         orderBy: { createdAt: "desc" },
       });
@@ -80,7 +76,6 @@ router.get(
 router.post(
   "/",
   authenticate,
-  withOrganizationContext(),
   async (req: AuthRequest, res: Response) => {
     try {
       const { itemId, content } = req.body as CreateCommentInput;
@@ -92,9 +87,10 @@ router.post(
         });
       }
 
-      // Verify item exists and belongs to organization
-      const item = await prisma.item.findFirst({
-        where: { id: itemId, organizationId: req.organization!.id },
+      // Find item to determine organization
+      const item = await prisma.item.findUnique({
+        where: { id: itemId },
+        select: { organizationId: true, approvalStatus: true },
       });
 
       if (!item) {
@@ -105,7 +101,7 @@ router.post(
 
       const comment = await prisma.comment.create({
         data: {
-          organizationId: req.organization!.id,
+          organizationId: item.organizationId,
           itemId,
           userId: req.user!.id,
           content: content.trim(),
@@ -132,7 +128,6 @@ router.post(
 router.patch(
   "/:id",
   authenticate,
-  withOrganizationContext(),
   async (req: AuthRequest, res: Response) => {
     try {
       const { id } = req.params;
@@ -146,8 +141,8 @@ router.patch(
       }
 
       // Find comment and verify ownership
-      const existingComment = await prisma.comment.findFirst({
-        where: { id, organizationId: req.organization!.id },
+      const existingComment = await prisma.comment.findUnique({
+        where: { id },
       });
 
       if (!existingComment) {
@@ -188,14 +183,13 @@ router.patch(
 router.delete(
   "/:id",
   authenticate,
-  withOrganizationContext(),
   async (req: AuthRequest, res: Response) => {
     try {
       const { id } = req.params;
 
       // Find comment and verify ownership
-      const existingComment = await prisma.comment.findFirst({
-        where: { id, organizationId: req.organization!.id },
+      const existingComment = await prisma.comment.findUnique({
+        where: { id },
       });
 
       if (!existingComment) {

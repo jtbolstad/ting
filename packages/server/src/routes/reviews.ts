@@ -7,10 +7,6 @@ import type {
 import type { Router as ExpressRouter, Response } from "express";
 import { Router } from "express";
 import { authenticate, type AuthRequest } from "../middleware/auth.js";
-import {
-  resolveOrganizationPublic,
-  withOrganizationContext,
-} from "../middleware/organization.js";
 import { prisma } from "../prisma.js";
 
 const router: ExpressRouter = Router();
@@ -36,24 +32,24 @@ function serializeReview(review: any): Review {
 // Get reviews for an item (public)
 router.get(
   "/item/:itemId",
-  resolveOrganizationPublic,
   async (req: AuthRequest, res: Response) => {
     try {
       const { itemId } = req.params;
 
-      // Verify item exists and belongs to organization
-      const item = await prisma.item.findFirst({
-        where: { id: itemId, organizationId: req.organization!.id },
+      // Find the item to determine organization and verify it's public
+      const item = await prisma.item.findUnique({
+        where: { id: itemId },
+        select: { organizationId: true, approvalStatus: true },
       });
 
-      if (!item) {
+      if (!item || item.approvalStatus !== "APPROVED") {
         return res
           .status(404)
           .json({ success: false, error: "Item not found" });
       }
 
       const reviews = await prisma.review.findMany({
-        where: { itemId, organizationId: req.organization!.id },
+        where: { itemId, organizationId: item.organizationId },
         include: { user: true },
         orderBy: { createdAt: "desc" },
       });
@@ -76,24 +72,24 @@ router.get(
 // Get review stats for an item (public)
 router.get(
   "/item/:itemId/stats",
-  resolveOrganizationPublic,
   async (req: AuthRequest, res: Response) => {
     try {
       const { itemId } = req.params;
 
-      // Verify item exists and belongs to organization
-      const item = await prisma.item.findFirst({
-        where: { id: itemId, organizationId: req.organization!.id },
+      // Find the item to determine organization and verify it's public
+      const item = await prisma.item.findUnique({
+        where: { id: itemId },
+        select: { organizationId: true, approvalStatus: true },
       });
 
-      if (!item) {
+      if (!item || item.approvalStatus !== "APPROVED") {
         return res
           .status(404)
           .json({ success: false, error: "Item not found" });
       }
 
       const reviews = await prisma.review.findMany({
-        where: { itemId, organizationId: req.organization!.id },
+        where: { itemId, organizationId: item.organizationId },
         select: { rating: true },
       });
 
@@ -137,7 +133,6 @@ router.get(
 router.post(
   "/",
   authenticate,
-  withOrganizationContext(),
   async (req: AuthRequest, res: Response) => {
     try {
       const { itemId, rating, comment } = req.body as CreateReviewInput;
@@ -156,9 +151,10 @@ router.post(
         });
       }
 
-      // Verify item exists and belongs to organization
-      const item = await prisma.item.findFirst({
-        where: { id: itemId, organizationId: req.organization!.id },
+      // Find item to determine organization
+      const item = await prisma.item.findUnique({
+        where: { id: itemId },
+        select: { organizationId: true },
       });
 
       if (!item) {
@@ -176,7 +172,7 @@ router.post(
           },
         },
         create: {
-          organizationId: req.organization!.id,
+          organizationId: item.organizationId,
           itemId,
           userId: req.user!.id,
           rating,
@@ -208,21 +204,16 @@ router.post(
 router.delete(
   "/:id",
   authenticate,
-  withOrganizationContext(),
   async (req: AuthRequest, res: Response) => {
     try {
       const { id } = req.params;
 
       // Verify review exists and belongs to user
-      const review = await prisma.review.findFirst({
-        where: {
-          id,
-          userId: req.user!.id,
-          organizationId: req.organization!.id,
-        },
+      const review = await prisma.review.findUnique({
+        where: { id },
       });
 
-      if (!review) {
+      if (!review || review.userId !== req.user!.id) {
         return res
           .status(404)
           .json({ success: false, error: "Review not found" });
