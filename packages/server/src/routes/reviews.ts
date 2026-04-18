@@ -29,17 +29,19 @@ function serializeReview(review: any): Review {
   };
 }
 
-// Get reviews for an item (public)
+// Get reviews for an item (public) - supports both slug and ID
 router.get(
-  "/item/:itemId",
+  "/item/:itemIdOrSlug",
   async (req: AuthRequest, res: Response) => {
     try {
-      const { itemId } = req.params;
+      const { itemIdOrSlug } = req.params;
 
-      // Find the item to determine organization and verify it's public
-      const item = await prisma.item.findUnique({
-        where: { id: itemId },
-        select: { organizationId: true, approvalStatus: true },
+      // Try to find the item by ID or slug
+      const item = await prisma.item.findFirst({
+        where: {
+          OR: [{ id: itemIdOrSlug }, { slug: itemIdOrSlug }],
+        },
+        select: { id: true, organizationId: true, approvalStatus: true },
       });
 
       if (!item || item.approvalStatus !== "APPROVED") {
@@ -49,7 +51,7 @@ router.get(
       }
 
       const reviews = await prisma.review.findMany({
-        where: { itemId, organizationId: item.organizationId },
+        where: { itemId: item.id, organizationId: item.organizationId },
         include: { user: true },
         orderBy: { createdAt: "desc" },
       });
@@ -69,17 +71,19 @@ router.get(
   },
 );
 
-// Get review stats for an item (public)
+// Get review stats for an item (public) - supports both slug and ID
 router.get(
-  "/item/:itemId/stats",
+  "/item/:itemIdOrSlug/stats",
   async (req: AuthRequest, res: Response) => {
     try {
-      const { itemId } = req.params;
+      const { itemIdOrSlug } = req.params;
 
-      // Find the item to determine organization and verify it's public
-      const item = await prisma.item.findUnique({
-        where: { id: itemId },
-        select: { organizationId: true, approvalStatus: true },
+      // Try to find the item by ID or slug
+      const item = await prisma.item.findFirst({
+        where: {
+          OR: [{ id: itemIdOrSlug }, { slug: itemIdOrSlug }],
+        },
+        select: { id: true, organizationId: true, approvalStatus: true },
       });
 
       if (!item || item.approvalStatus !== "APPROVED") {
@@ -89,7 +93,7 @@ router.get(
       }
 
       const reviews = await prisma.review.findMany({
-        where: { itemId, organizationId: item.organizationId },
+        where: { itemId: item.id, organizationId: item.organizationId },
         select: { rating: true },
       });
 
@@ -151,10 +155,12 @@ router.post(
         });
       }
 
-      // Find item to determine organization
-      const item = await prisma.item.findUnique({
-        where: { id: itemId },
-        select: { organizationId: true },
+      // Find item by ID or slug to determine organization
+      const item = await prisma.item.findFirst({
+        where: {
+          OR: [{ id: itemId }, { slug: itemId }],
+        },
+        select: { id: true, organizationId: true },
       });
 
       if (!item) {
@@ -168,12 +174,12 @@ router.post(
         where: {
           userId_itemId: {
             userId: req.user!.id,
-            itemId,
+            itemId: item.id,
           },
         },
         create: {
           organizationId: item.organizationId,
-          itemId,
+          itemId: item.id,
           userId: req.user!.id,
           rating,
           comment: comment?.trim() || null,
