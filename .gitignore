@@ -18,6 +18,9 @@ test-results/
 playwright-report/
 coverage/
 
+# Agents
+.claude
+
 # Logs
 *.log
 npm-debug.log*
