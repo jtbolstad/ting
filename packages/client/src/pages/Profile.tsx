@@ -168,7 +168,7 @@ export function Profile() {
                   <ul className="space-y-1">
                     {loans.map((loan) => (
                       <li key={loan.id} className="flex justify-between text-sm">
-                        <Link to={`/items/${loan.itemId}`} className="text-indigo-600 hover:underline">
+                        <Link to={`/items/${loan.item?.slug ?? loan.itemId}`} className="text-indigo-600 hover:underline">
                           {loan.item?.name ?? loan.itemId}
                         </Link>
                         <span className="text-gray-500">
@@ -187,7 +187,7 @@ export function Profile() {
                   <ul className="space-y-1">
                     {reservations.map((res) => (
                       <li key={res.id} className="flex justify-between text-sm">
-                        <Link to={`/items/${res.itemId}`} className="text-indigo-600 hover:underline">
+                        <Link to={`/items/${res.item?.slug ?? res.itemId}`} className="text-indigo-600 hover:underline">
                           {res.item?.name ?? res.itemId}
                         </Link>
                         <span className="text-gray-500">
