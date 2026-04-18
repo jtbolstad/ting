@@ -47,14 +47,14 @@ export function ItemDetail() {
           {/* Main column */}
           <div className="lg:col-span-2 space-y-6">
             <ItemDetailsCard item={item} />
-            <ItemTimeline itemId={id!} daysAhead={60} />
+            <ItemTimeline itemId={item.id} daysAhead={60} />
           </div>
           {/* Sidebar */}
           <div className="space-y-6 mt-6 lg:mt-0">
-            <ItemReservationForm itemId={id!} itemStatus={item.status} />
-            <ItemManualsCard itemId={id!} />
-            <ItemCommentsCard itemId={id!} />
-            <ItemReviewsCard itemId={id!} />
+            <ItemReservationForm itemId={item.id} itemStatus={item.status} />
+            <ItemManualsCard itemId={item.id} />
+            <ItemCommentsCard itemId={item.id} />
+            <ItemReviewsCard itemId={item.id} />
           </div>
         </div>
       </div>
