@@ -68,21 +68,26 @@ export function LanguageSwitcher() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 bg-white rounded-md shadow-lg z-50 border border-gray-200 p-2 flex gap-2">
+        <div className="absolute right-0 mt-2 bg-white rounded-md shadow-lg z-50 border border-gray-200 w-40">
           {languages.map((lang) => (
             <button
               key={lang.code}
               onClick={() => handleLanguageChange(lang.code)}
-              className={`p-2 rounded transition-all ${
+              className={`w-full flex items-center gap-3 px-4 py-3 text-sm transition-colors first:rounded-t-md last:rounded-b-md ${
                 i18n.language === lang.code
-                  ? "bg-indigo-100 ring-2 ring-indigo-600"
-                  : "hover:bg-gray-100"
+                  ? "bg-indigo-100 text-indigo-900 font-medium"
+                  : "hover:bg-gray-50 text-gray-700"
               }`}
-              title={lang.name}
               aria-label={`Switch to ${lang.name}`}
               aria-current={i18n.language === lang.code ? "true" : "false"}
             >
               <FlagIcon code={lang.code} />
+              <span>{lang.name}</span>
+              {i18n.language === lang.code && (
+                <svg className="w-4 h-4 ml-auto text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              )}
             </button>
           ))}
         </div>
