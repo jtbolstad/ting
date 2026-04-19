@@ -285,7 +285,15 @@ export function AdminDashboard() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8">{t("admin.title")}</h1>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-4xl font-bold">{t("admin.title")}</h1>
+        <Link
+          to="/admin/overview"
+          className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+        >
+          Platform Overview
+        </Link>
+      </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
