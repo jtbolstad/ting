@@ -181,4 +181,63 @@ router.get(
   }
 );
 
+// Update user (platform admin only)
+router.patch(
+  "/users/:userId",
+  authenticate,
+  requirePlatformAdmin,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { userId } = req.params;
+      const { name, role } = req.body;
+
+      if (!name && role === undefined) {
+        return res.status(400).json({
+          success: false,
+          error: "At least one field (name, role) is required",
+        });
+      }
+
+      if (role && !["ADMIN", "USER"].includes(role)) {
+        return res.status(400).json({
+          success: false,
+          error: "Role must be ADMIN or USER",
+        });
+      }
+
+      const updateData: any = {};
+      if (name !== undefined) updateData.name = name;
+      if (role !== undefined) updateData.role = role;
+
+      const user = await prisma.user.update({
+        where: { id: userId },
+        data: updateData,
+      });
+
+      const response: ApiResponse<{
+        id: string;
+        email: string;
+        name: string;
+        role: string;
+      }> = {
+        success: true,
+        data: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+        },
+      };
+
+      res.json(response);
+    } catch (error) {
+      console.error("Update user error:", error);
+      res.status(500).json({
+        success: false,
+        error: "Failed to update user",
+      });
+    }
+  }
+);
+
 export default router;

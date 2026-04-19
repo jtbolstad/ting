@@ -38,6 +38,9 @@ export function AdminOverview() {
   );
   const [selectedOrgId, setSelectedOrgId] = useState<string | null>(null);
   const [selectedOrgDetails, setSelectedOrgDetails] = useState<any>(null);
+  const [editingUserId, setEditingUserId] = useState<string | null>(null);
+  const [editUserForm, setEditUserForm] = useState({ name: "", role: "" });
+  const [editError, setEditError] = useState("");
 
   useEffect(() => {
     loadData();
@@ -70,6 +73,35 @@ export function AdminOverview() {
   const handleSelectOrg = (orgId: string) => {
     setSelectedOrgId(orgId);
     loadOrgDetails(orgId);
+  };
+
+  const handleEditUser = (user: User) => {
+    setEditingUserId(user.id);
+    setEditUserForm({ name: user.name, role: user.role });
+    setEditError("");
+  };
+
+  const handleSaveUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingUserId) return;
+
+    try {
+      setEditError("");
+      await apiClient.updateAdminUser(editingUserId, {
+        name: editUserForm.name || undefined,
+        role: editUserForm.role || undefined,
+      });
+      setEditingUserId(null);
+      await loadData();
+    } catch (error: any) {
+      setEditError(error.message || "Failed to update user");
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingUserId(null);
+    setEditUserForm({ name: "", role: "" });
+    setEditError("");
   };
 
   if (loading) {
@@ -255,6 +287,9 @@ export function AdminOverview() {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                       Joined
                     </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
@@ -292,11 +327,75 @@ export function AdminOverview() {
                       <td className="px-6 py-4 text-sm">
                         {new Date(user.createdAt).toLocaleDateString()}
                       </td>
+                      <td className="px-6 py-4">
+                        <button
+                          onClick={() => handleEditUser(user)}
+                          className="text-indigo-600 hover:text-indigo-900 text-sm"
+                        >
+                          Edit
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit User Modal */}
+      {editingUserId && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full">
+            <h3 className="text-2xl font-bold mb-4">Edit User</h3>
+            {editError && (
+              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm">
+                {editError}
+              </div>
+            )}
+            <form onSubmit={handleSaveUser} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Name</label>
+                <input
+                  type="text"
+                  value={editUserForm.name}
+                  onChange={(e) =>
+                    setEditUserForm({ ...editUserForm, name: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Role</label>
+                <select
+                  value={editUserForm.role}
+                  onChange={(e) =>
+                    setEditUserForm({ ...editUserForm, role: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value="">Select role...</option>
+                  <option value="USER">User</option>
+                  <option value="ADMIN">Admin</option>
+                </select>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCancelEdit}
+                  className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

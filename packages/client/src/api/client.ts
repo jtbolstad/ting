@@ -579,6 +579,16 @@ class ApiClient {
   }> {
     return this.request(`/admin/organizations/${orgId}`);
   }
+
+  async updateAdminUser(
+    userId: string,
+    data: { name?: string; role?: string }
+  ): Promise<{ id: string; email: string; name: string; role: string }> {
+    return this.request(`/admin/users/${userId}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
+  }
 }
 
 export const apiClient = new ApiClient();
