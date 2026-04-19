@@ -2,6 +2,7 @@ import cors from "cors";
 import express from "express";
 import fs from "node:fs/promises";
 import path from "node:path";
+import adminRoutes from "./routes/admin.js";
 import authRoutes from "./routes/auth.js";
 import categoriesRoutes from "./routes/categories.js";
 import commentsRoutes from "./routes/comments.js";
@@ -54,6 +55,7 @@ async function startServer() {
   }
 
   // API Routes
+  app.use("/api/admin", adminRoutes);
   app.use("/api/auth", authRoutes);
   app.use("/api/users", usersRoutes);
   app.use("/api/categories", categoriesRoutes);

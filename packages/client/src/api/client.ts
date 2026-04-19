@@ -526,6 +526,59 @@ class ApiClient {
       body: JSON.stringify({ note }),
     });
   }
+
+  // Admin
+  async getAdminOrganizations(): Promise<Array<{
+    id: string;
+    name: string;
+    slug: string;
+    description: string | null;
+    memberCount: number;
+    itemCount: number;
+    createdAt: string;
+    updatedAt: string;
+  }>> {
+    return this.request("/admin/organizations");
+  }
+
+  async getAdminUsers(): Promise<Array<{
+    id: string;
+    email: string;
+    name: string;
+    role: string;
+    memberships: Array<{
+      organizationId: string;
+      organizationName: string;
+      organizationSlug: string;
+      role: string;
+      status: string;
+    }>;
+    createdAt: string;
+    updatedAt: string;
+  }>> {
+    return this.request("/admin/users");
+  }
+
+  async getAdminOrganization(orgId: string): Promise<{
+    id: string;
+    name: string;
+    slug: string;
+    description: string | null;
+    itemCount: number;
+    members: Array<{
+      userId: string;
+      userEmail: string;
+      userName: string;
+      userRole: string;
+      membershipRole: string;
+      status: string;
+      joinedAt: string;
+    }>;
+    createdAt: string;
+    updatedAt: string;
+  }> {
+    return this.request(`/admin/organizations/${orgId}`);
+  }
 }
 
 export const apiClient = new ApiClient();

@@ -14,6 +14,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { AddItem } from "./pages/AddItem";
 import { EditItem } from "./pages/EditItem";
 import { AdminDashboard } from "./pages/admin/AdminDashboard";
+import { AdminOverview } from "./pages/admin/AdminOverview";
 import { TermsOfService } from "./pages/TermsOfService";
 import { Profile } from "./pages/Profile";
 
@@ -65,6 +66,14 @@ function App() {
                 element={
                   <ProtectedRoute requireAdmin>
                     <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/overview"
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <AdminOverview />
                   </ProtectedRoute>
                 }
               />
