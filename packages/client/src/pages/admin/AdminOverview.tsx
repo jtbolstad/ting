@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { apiClient } from "../../api/client";
 import { Spinner } from "../../components/ui/Spinner";
-import { ORG_TYPES, ORG_TYPE_LABELS, ORG_NAME_SUGGESTIONS, slugify } from "../../utils/orgNameSuggestions";
+import { ORG_TYPES, ORG_NAME_SUGGESTIONS, slugify } from "../../utils/orgNameSuggestions";
 
 interface Organization {
   id: string;
@@ -53,6 +54,8 @@ export function AdminOverview() {
   const [creatingOrg, setCreatingOrg] = useState(false);
   const [createOrgForm, setCreateOrgForm] = useState({ name: "", description: "", slug: "", type: "" });
   const [createOrgError, setCreateOrgError] = useState("");
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     loadData();
@@ -280,12 +283,12 @@ export function AdminOverview() {
           {/* Organizations List */}
           <div className="lg:col-span-2">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold">All Organizations</h2>
+              <h2 className="text-2xl font-bold">{t("admin.organizations.title")}</h2>
               <button
                 onClick={() => setCreatingOrg(true)}
                 className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
               >
-                Create Organization
+                {t("admin.organizations.createButton")}
               </button>
             </div>
             <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -314,7 +317,7 @@ export function AdminOverview() {
                           <div>{org.name}</div>
                           {org.type && (
                             <div className="text-xs text-gray-500 mt-1">
-                              {ORG_TYPE_LABELS[org.type as keyof typeof ORG_TYPE_LABELS]}
+                              {t(`organizationType.${org.type}`)}
                             </div>
                           )}
                         </td>
@@ -618,70 +621,6 @@ export function AdminOverview() {
         </div>
       )}
 
-      {/* Edit Organization Modal */}
-      {editingOrgId && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 max-w-md w-full">
-            <h3 className="text-2xl font-bold mb-4">Edit Organization</h3>
-            {editOrgError && (
-              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm">
-                {editOrgError}
-              </div>
-            )}
-            <form onSubmit={handleSaveOrganization} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Name</label>
-                <input
-                  type="text"
-                  value={editOrgForm.name}
-                  onChange={(e) =>
-                    setEditOrgForm({ ...editOrgForm, name: e.target.value })
-                  }
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Slug</label>
-                <input
-                  type="text"
-                  value={editOrgForm.slug}
-                  onChange={(e) =>
-                    setEditOrgForm({ ...editOrgForm, slug: e.target.value })
-                  }
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Description</label>
-                <textarea
-                  value={editOrgForm.description}
-                  onChange={(e) =>
-                    setEditOrgForm({ ...editOrgForm, description: e.target.value })
-                  }
-                  rows={3}
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-              <div className="flex gap-2">
-                <button
-                  type="submit"
-                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
-                >
-                  Save
-                </button>
-                <button
-                  type="button"
-                  onClick={handleCancelEditOrg}
-                  className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
       {/* Delete Organization Confirmation Modal */}
       {deleteConfirmOrgId && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -717,7 +656,7 @@ export function AdminOverview() {
       {editingOrgId && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <h3 className="text-2xl font-bold mb-4">Edit Organization</h3>
+            <h3 className="text-2xl font-bold mb-4">{t("admin.organizations.editModal.title")}</h3>
             {editOrgError && (
               <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm">
                 {editOrgError}
@@ -725,7 +664,7 @@ export function AdminOverview() {
             )}
             <form onSubmit={handleSaveOrganization} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Name</label>
+                <label className="block text-sm font-medium mb-1">{t("admin.organizations.form.name")}</label>
                 <input
                   type="text"
                   value={editOrgForm.name}
@@ -734,23 +673,23 @@ export function AdminOverview() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Type</label>
+                <label className="block text-sm font-medium mb-1">{t("admin.organizations.form.type")}</label>
                 <select
                   value={editOrgForm.type}
                   onChange={(e) => setEditOrgForm({ ...editOrgForm, type: e.target.value })}
                   className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
-                  <option value="">— No type —</option>
+                  <option value="">{t("organizationType.noType")}</option>
                   {ORG_TYPES.map((type) => (
                     <option key={type} value={type}>
-                      {ORG_TYPE_LABELS[type]}
+                      {t(`organizationType.${type}`)}
                     </option>
                   ))}
                 </select>
               </div>
               {editOrgForm.type && (
                 <div className="border-t pt-3">
-                  <p className="text-xs text-gray-600 mb-2">Suggestions:</p>
+                  <p className="text-xs text-gray-600 mb-2">{t("organizationType.suggestions")}</p>
                   <div className="space-y-1">
                     {ORG_NAME_SUGGESTIONS[editOrgForm.type as keyof typeof ORG_NAME_SUGGESTIONS].map((suggestion) => (
                       <button
@@ -772,7 +711,7 @@ export function AdminOverview() {
                 </div>
               )}
               <div>
-                <label className="block text-sm font-medium mb-1">Slug</label>
+                <label className="block text-sm font-medium mb-1">{t("admin.organizations.form.slug")}</label>
                 <input
                   type="text"
                   value={editOrgForm.slug}
@@ -781,7 +720,7 @@ export function AdminOverview() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Description</label>
+                <label className="block text-sm font-medium mb-1">{t("admin.organizations.form.description")}</label>
                 <textarea
                   value={editOrgForm.description}
                   onChange={(e) => setEditOrgForm({ ...editOrgForm, description: e.target.value })}
@@ -794,14 +733,14 @@ export function AdminOverview() {
                   type="submit"
                   className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
                 >
-                  Save
+                  {t("admin.organizations.form.save")}
                 </button>
                 <button
                   type="button"
                   onClick={handleCancelEditOrg}
                   className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
                 >
-                  Cancel
+                  {t("admin.organizations.form.cancel")}
                 </button>
               </div>
             </form>
@@ -813,7 +752,7 @@ export function AdminOverview() {
       {creatingOrg && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <h3 className="text-2xl font-bold mb-4">Create Organization</h3>
+            <h3 className="text-2xl font-bold mb-4">{t("admin.organizations.createModal.title")}</h3>
             {createOrgError && (
               <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm">
                 {createOrgError}
@@ -821,7 +760,7 @@ export function AdminOverview() {
             )}
             <form onSubmit={handleCreateOrganization} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Name</label>
+                <label className="block text-sm font-medium mb-1">{t("admin.organizations.form.name")}</label>
                 <input
                   type="text"
                   value={createOrgForm.name}
@@ -830,23 +769,23 @@ export function AdminOverview() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Type</label>
+                <label className="block text-sm font-medium mb-1">{t("admin.organizations.form.type")}</label>
                 <select
                   value={createOrgForm.type}
                   onChange={(e) => setCreateOrgForm({ ...createOrgForm, type: e.target.value })}
                   className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
-                  <option value="">— No type —</option>
+                  <option value="">{t("organizationType.noType")}</option>
                   {ORG_TYPES.map((type) => (
                     <option key={type} value={type}>
-                      {ORG_TYPE_LABELS[type]}
+                      {t(`organizationType.${type}`)}
                     </option>
                   ))}
                 </select>
               </div>
               {createOrgForm.type && (
                 <div className="border-t pt-3">
-                  <p className="text-xs text-gray-600 mb-2">Suggestions:</p>
+                  <p className="text-xs text-gray-600 mb-2">{t("organizationType.suggestions")}</p>
                   <div className="space-y-1">
                     {ORG_NAME_SUGGESTIONS[createOrgForm.type as keyof typeof ORG_NAME_SUGGESTIONS].map((suggestion) => (
                       <button
@@ -868,7 +807,7 @@ export function AdminOverview() {
                 </div>
               )}
               <div>
-                <label className="block text-sm font-medium mb-1">Slug</label>
+                <label className="block text-sm font-medium mb-1">{t("admin.organizations.form.slug")}</label>
                 <input
                   type="text"
                   value={createOrgForm.slug}
@@ -877,7 +816,7 @@ export function AdminOverview() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Description</label>
+                <label className="block text-sm font-medium mb-1">{t("admin.organizations.form.description")}</label>
                 <textarea
                   value={createOrgForm.description}
                   onChange={(e) => setCreateOrgForm({ ...createOrgForm, description: e.target.value })}
@@ -890,14 +829,14 @@ export function AdminOverview() {
                   type="submit"
                   className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
                 >
-                  Create
+                  {t("admin.organizations.form.create")}
                 </button>
                 <button
                   type="button"
                   onClick={handleCancelCreate}
                   className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
                 >
-                  Cancel
+                  {t("admin.organizations.form.cancel")}
                 </button>
               </div>
             </form>
