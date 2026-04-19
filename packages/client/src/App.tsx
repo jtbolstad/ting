@@ -17,6 +17,7 @@ import { AdminDashboard } from "./pages/admin/AdminDashboard";
 import { AdminOverview } from "./pages/admin/AdminOverview";
 import { TermsOfService } from "./pages/TermsOfService";
 import { Profile } from "./pages/Profile";
+import { NotFound } from "./pages/NotFound";
 
 function App() {
   return (
@@ -85,6 +86,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route path="*" element={<NotFound />} />
             </Routes>
             </main>
           </div>
