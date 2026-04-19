@@ -2,11 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { apiClient } from "../../api/client";
 import { Spinner } from "../../components/ui/Spinner";
-import {
-  ORG_TYPES,
-  ORG_NAME_SUGGESTIONS,
-  slugify,
-} from "../../utils/orgNameSuggestions";
+import { ORG_TYPES, slugify } from "../../utils/orgNameSuggestions";
 
 interface Organization {
   id: string;
@@ -442,19 +438,46 @@ export function AdminOverview() {
                     {t("admin.organizations.details.members")}
                   </p>
                   <div className="space-y-2">
-                    {selectedOrgDetails.members.map((member: any) => (
-                      <div
-                        key={member.userId}
-                        className="p-3 bg-gray-50 rounded text-sm"
-                      >
-                        <div className="font-medium">{member.userName}</div>
-                        <div className="text-gray-600">{member.userEmail}</div>
-                        <div className="text-xs text-gray-500 mt-1">
-                          {t("platformAdmin.orgDetails.memberRole")}:{" "}
-                          {member.membershipRole}
-                        </div>
-                      </div>
-                    ))}
+                    {[...selectedOrgDetails.members]
+                      .sort((a: any, b: any) => {
+                        if (
+                          a.membershipRole === "ORG_ADMIN" &&
+                          b.membershipRole !== "ORG_ADMIN"
+                        )
+                          return -1;
+                        if (
+                          a.membershipRole !== "ORG_ADMIN" &&
+                          b.membershipRole === "ORG_ADMIN"
+                        )
+                          return 1;
+                        return 0;
+                      })
+                      .map((member: any) => {
+                        const isOrgAdmin =
+                          member.membershipRole === "ORG_ADMIN";
+                        return (
+                          <div
+                            key={member.userId}
+                            className={`p-3 rounded text-sm flex items-start justify-between ${isOrgAdmin ? "bg-indigo-50 border border-indigo-200" : "bg-gray-50"}`}
+                          >
+                            <div>
+                              <div className="font-medium">
+                                {member.userName}
+                              </div>
+                              <div className="text-gray-600">
+                                {member.userEmail}
+                              </div>
+                            </div>
+                            <span
+                              className={`ml-2 mt-0.5 text-xs px-2 py-0.5 rounded font-medium whitespace-nowrap ${isOrgAdmin ? "bg-indigo-100 text-indigo-800" : "bg-gray-200 text-gray-600"}`}
+                            >
+                              {isOrgAdmin
+                                ? t("admin.userRole.orgAdmin")
+                                : t("admin.userRole.user")}
+                            </span>
+                          </div>
+                        );
+                      })}
                   </div>
                 </div>
               </div>
@@ -787,33 +810,7 @@ export function AdminOverview() {
                   ))}
                 </select>
               </div>
-              {editOrgForm.type && (
-                <div className="border-t pt-3">
-                  <p className="text-xs text-gray-600 mb-2">
-                    {t("organizationType.suggestions")}
-                  </p>
-                  <div className="space-y-1">
-                    {ORG_NAME_SUGGESTIONS[
-                      editOrgForm.type as keyof typeof ORG_NAME_SUGGESTIONS
-                    ].map((suggestion) => (
-                      <button
-                        key={suggestion}
-                        type="button"
-                        onClick={() => {
-                          setEditOrgForm({
-                            ...editOrgForm,
-                            name: suggestion,
-                            slug: slugify(suggestion),
-                          });
-                        }}
-                        className="w-full text-left px-3 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 rounded text-indigo-700"
-                      >
-                        {suggestion}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
+
               <div>
                 <label className="block text-sm font-medium mb-1">
                   {t("admin.organizations.form.slug")}
@@ -908,33 +905,7 @@ export function AdminOverview() {
                   ))}
                 </select>
               </div>
-              {createOrgForm.type && (
-                <div className="border-t pt-3">
-                  <p className="text-xs text-gray-600 mb-2">
-                    {t("organizationType.suggestions")}
-                  </p>
-                  <div className="space-y-1">
-                    {ORG_NAME_SUGGESTIONS[
-                      createOrgForm.type as keyof typeof ORG_NAME_SUGGESTIONS
-                    ].map((suggestion) => (
-                      <button
-                        key={suggestion}
-                        type="button"
-                        onClick={() => {
-                          setCreateOrgForm({
-                            ...createOrgForm,
-                            name: suggestion,
-                            slug: slugify(suggestion),
-                          });
-                        }}
-                        className="w-full text-left px-3 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 rounded text-indigo-700"
-                      >
-                        {suggestion}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
+
               <div>
                 <label className="block text-sm font-medium mb-1">
                   {t("admin.organizations.form.slug")}
