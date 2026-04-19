@@ -299,7 +299,12 @@
       "name": "Navn",
       "email": "E-post",
       "role": "Rolle",
-      "joined": "Ble medlem"
+      "joined": "Ble medlem",
+      "addUser": "Legg til bruker",
+      "password": "Passord",
+      "create": "Opprett bruker",
+      "addSuccess": "Bruker opprettet",
+      "addError": "Kunne ikke opprette bruker"
     },
     "checkout": {
       "title": "Lån ut verktøy",
@@ -365,30 +370,54 @@
         "members": "Medlemmer",
         "role": "Rolle"
       }
+    }
+  },
+  "platformAdmin": {
+    "title": "Plattformadministrasjon",
+    "tabs": {
+      "organizations": "Organisasjoner",
+      "users": "Brukere"
     },
-    "platformAdmin": {
-      "tabs": {
+    "stats": {
+      "totalOrganizations": "Totalt organisasjoner",
+      "totalUsers": "Totalt brukere",
+      "totalItems": "Totalt verktøy"
+    },
+    "users": {
+      "title": "Alle brukere",
+      "table": {
+        "name": "Navn",
+        "email": "E-post",
+        "role": "Rolle",
         "organizations": "Organisasjoner",
-        "users": "Brukere"
-      },
-      "stats": {
-        "totalOrganizations": "Totalt organisasjoner",
-        "totalUsers": "Totalt brukere",
-        "totalItems": "Totalt verktøy"
-      },
-      "users": {
-        "title": "Alle brukere",
-        "table": {
-          "name": "Navn",
-          "email": "E-post",
-          "role": "Rolle",
-          "organizations": "Organisasjoner",
-          "joined": "Ble medlem",
-          "actions": "Handlinger",
-          "edit": "Rediger",
-          "none": "Ingen"
-        }
+        "joined": "Ble medlem",
+        "actions": "Handlinger",
+        "edit": "Rediger",
+        "none": "Ingen"
       }
+    },
+    "editUser": {
+      "title": "Rediger bruker",
+      "name": "Navn",
+      "email": "E-post",
+      "role": "Rolle",
+      "selectRole": "Velg rolle...",
+      "organizations": "Organisasjoner",
+      "noOrganizations": "Ikke medlem av noen organisasjon",
+      "remove": "Fjern",
+      "addToOrg": "Legg til i organisasjon...",
+      "add": "Legg til",
+      "save": "Lagre endringer",
+      "cancel": "Avbryt"
+    },
+    "deleteOrg": {
+      "title": "Slett organisasjon",
+      "confirm": "Er du sikker på at du vil slette denne organisasjonen? Denne handlingen kan ikke angres. Sørg for at organisasjonen ikke har noen gjenstander.",
+      "delete": "Slett",
+      "cancel": "Avbryt"
+    },
+    "orgDetails": {
+      "memberRole": "Rolle"
     }
   },
   "comments": {

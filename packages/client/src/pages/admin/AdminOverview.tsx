@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { apiClient } from "../../api/client";
 import { Spinner } from "../../components/ui/Spinner";
-import { ORG_TYPES, ORG_NAME_SUGGESTIONS, slugify } from "../../utils/orgNameSuggestions";
+import {
+  ORG_TYPES,
+  ORG_NAME_SUGGESTIONS,
+  slugify,
+} from "../../utils/orgNameSuggestions";
 
 interface Organization {
   id: string;
@@ -37,22 +41,40 @@ export function AdminOverview() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"organizations" | "users">(
-    "organizations"
+    "organizations",
   );
   const [selectedOrgId, setSelectedOrgId] = useState<string | null>(null);
   const [selectedOrgDetails, setSelectedOrgDetails] = useState<any>(null);
   const [editingUserId, setEditingUserId] = useState<string | null>(null);
-  const [editUserForm, setEditUserForm] = useState({ name: "", email: "", role: "" });
+  const [editUserForm, setEditUserForm] = useState({
+    name: "",
+    email: "",
+    role: "",
+  });
   const [editError, setEditError] = useState("");
-  const [availableOrgsForUser, setAvailableOrgsForUser] = useState<Organization[]>([]);
+  const [availableOrgsForUser, setAvailableOrgsForUser] = useState<
+    Organization[]
+  >([]);
   const [selectedOrgToAdd, setSelectedOrgToAdd] = useState("");
   const [addOrgLoading, setAddOrgLoading] = useState(false);
   const [editingOrgId, setEditingOrgId] = useState<string | null>(null);
-  const [editOrgForm, setEditOrgForm] = useState({ name: "", description: "", slug: "", type: "" });
+  const [editOrgForm, setEditOrgForm] = useState({
+    name: "",
+    description: "",
+    slug: "",
+    type: "",
+  });
   const [editOrgError, setEditOrgError] = useState("");
-  const [deleteConfirmOrgId, setDeleteConfirmOrgId] = useState<string | null>(null);
+  const [deleteConfirmOrgId, setDeleteConfirmOrgId] = useState<string | null>(
+    null,
+  );
   const [creatingOrg, setCreatingOrg] = useState(false);
-  const [createOrgForm, setCreateOrgForm] = useState({ name: "", description: "", slug: "", type: "" });
+  const [createOrgForm, setCreateOrgForm] = useState({
+    name: "",
+    description: "",
+    slug: "",
+    type: "",
+  });
   const [createOrgError, setCreateOrgError] = useState("");
 
   const { t } = useTranslation();
@@ -97,8 +119,8 @@ export function AdminOverview() {
     setSelectedOrgToAdd("");
 
     // Calculate available organizations (not already a member of)
-    const userOrgIds = new Set(user.memberships.map(m => m.organizationId));
-    const available = organizations.filter(org => !userOrgIds.has(org.id));
+    const userOrgIds = new Set(user.memberships.map((m) => m.organizationId));
+    const available = organizations.filter((org) => !userOrgIds.has(org.id));
     setAvailableOrgsForUser(available);
   };
 
@@ -154,7 +176,12 @@ export function AdminOverview() {
 
   const handleEditOrganization = (org: Organization) => {
     setEditingOrgId(org.id);
-    setEditOrgForm({ name: org.name, description: org.description || "", slug: org.slug, type: org.type || "" });
+    setEditOrgForm({
+      name: org.name,
+      description: org.description || "",
+      slug: org.slug,
+      type: org.type || "",
+    });
     setEditOrgError("");
   };
 
@@ -229,7 +256,7 @@ export function AdminOverview() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8">Platform Admin Overview</h1>
+      <h1 className="text-4xl font-bold mb-8">{t("platformAdmin.title")}</h1>
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -237,17 +264,23 @@ export function AdminOverview() {
           <div className="text-3xl font-bold text-indigo-600">
             {organizations.length}
           </div>
-          <div className="text-gray-600">{t("platformAdmin.stats.totalOrganizations")}</div>
+          <div className="text-gray-600">
+            {t("platformAdmin.stats.totalOrganizations")}
+          </div>
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <div className="text-3xl font-bold text-blue-600">{users.length}</div>
-          <div className="text-gray-600">{t("platformAdmin.stats.totalUsers")}</div>
+          <div className="text-gray-600">
+            {t("platformAdmin.stats.totalUsers")}
+          </div>
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <div className="text-3xl font-bold text-green-600">
             {organizations.reduce((sum, org) => sum + org.itemCount, 0)}
           </div>
-          <div className="text-gray-600">{t("platformAdmin.stats.totalItems")}</div>
+          <div className="text-gray-600">
+            {t("platformAdmin.stats.totalItems")}
+          </div>
         </div>
       </div>
 
@@ -283,7 +316,9 @@ export function AdminOverview() {
           {/* Organizations List */}
           <div className="lg:col-span-2">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold">{t("admin.organizations.title")}</h2>
+              <h2 className="text-2xl font-bold">
+                {t("admin.organizations.title")}
+              </h2>
               <button
                 onClick={() => setCreatingOrg(true)}
                 className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
@@ -381,23 +416,31 @@ export function AdminOverview() {
               </div>
               <div className="bg-white rounded-lg shadow p-6 space-y-6">
                 <div>
-                  <p className="text-gray-600 text-sm">{t("admin.organizations.details.slug")}</p>
+                  <p className="text-gray-600 text-sm">
+                    {t("admin.organizations.details.slug")}
+                  </p>
                   <p className="font-medium">{selectedOrgDetails.slug}</p>
                 </div>
                 <div>
-                  <p className="text-gray-600 text-sm">{t("admin.organizations.details.description")}</p>
+                  <p className="text-gray-600 text-sm">
+                    {t("admin.organizations.details.description")}
+                  </p>
                   <p className="font-medium">
                     {selectedOrgDetails.description || "—"}
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-600 text-sm">{t("admin.organizations.details.items")}</p>
+                  <p className="text-gray-600 text-sm">
+                    {t("admin.organizations.details.items")}
+                  </p>
                   <p className="text-3xl font-bold text-green-600">
                     {selectedOrgDetails.itemCount}
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-600 text-sm mb-3">{t("admin.organizations.details.members")}</p>
+                  <p className="text-gray-600 text-sm mb-3">
+                    {t("admin.organizations.details.members")}
+                  </p>
                   <div className="space-y-2">
                     {selectedOrgDetails.members.map((member: any) => (
                       <div
@@ -407,7 +450,8 @@ export function AdminOverview() {
                         <div className="font-medium">{member.userName}</div>
                         <div className="text-gray-600">{member.userEmail}</div>
                         <div className="text-xs text-gray-500 mt-1">
-                          Role: {member.membershipRole}
+                          {t("platformAdmin.orgDetails.memberRole")}:{" "}
+                          {member.membershipRole}
                         </div>
                       </div>
                     ))}
@@ -422,7 +466,9 @@ export function AdminOverview() {
       {/* Users Tab */}
       {activeTab === "users" && (
         <div>
-          <h2 className="text-2xl font-bold mb-4">{t("platformAdmin.users.title")}</h2>
+          <h2 className="text-2xl font-bold mb-4">
+            {t("platformAdmin.users.title")}
+          </h2>
           <div className="bg-white rounded-lg shadow overflow-hidden">
             <div className="overflow-x-auto">
               <table className="min-w-full">
@@ -459,17 +505,23 @@ export function AdminOverview() {
                             user.role === "ADMIN"
                               ? "bg-purple-100 text-purple-800"
                               : user.role === "ORG_ADMIN"
-                              ? "bg-indigo-100 text-indigo-800"
-                              : "bg-gray-100 text-gray-800"
+                                ? "bg-indigo-100 text-indigo-800"
+                                : "bg-gray-100 text-gray-800"
                           }`}
                         >
-                          {user.role === "ORG_ADMIN" ? t("admin.userRole.orgAdmin") : user.role === "ADMIN" ? t("admin.userRole.admin") : t("admin.userRole.user")}
+                          {user.role === "ORG_ADMIN"
+                            ? t("admin.userRole.orgAdmin")
+                            : user.role === "ADMIN"
+                              ? t("admin.userRole.admin")
+                              : t("admin.userRole.user")}
                         </span>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex flex-wrap gap-1">
                           {user.memberships.length === 0 ? (
-                            <span className="text-gray-500 text-sm">{t("platformAdmin.users.table.none")}</span>
+                            <span className="text-gray-500 text-sm">
+                              {t("platformAdmin.users.table.none")}
+                            </span>
                           ) : (
                             user.memberships.map((m) => (
                               <span
@@ -503,10 +555,12 @@ export function AdminOverview() {
       )}
 
       {/* Edit User Modal */}
-      {editingUserId && users.find(u => u.id === editingUserId) && (
+      {editingUserId && users.find((u) => u.id === editingUserId) && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <h3 className="text-2xl font-bold mb-4">Edit User</h3>
+            <h3 className="text-2xl font-bold mb-4">
+              {t("platformAdmin.editUser.title")}
+            </h3>
             {editError && (
               <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm">
                 {editError}
@@ -515,7 +569,9 @@ export function AdminOverview() {
             <form onSubmit={handleSaveUser} className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Name</label>
+                  <label className="block text-sm font-medium mb-1">
+                    {t("platformAdmin.editUser.name")}
+                  </label>
                   <input
                     type="text"
                     value={editUserForm.name}
@@ -526,19 +582,26 @@ export function AdminOverview() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Email</label>
+                  <label className="block text-sm font-medium mb-1">
+                    {t("platformAdmin.editUser.email")}
+                  </label>
                   <input
                     type="email"
                     value={editUserForm.email}
                     onChange={(e) =>
-                      setEditUserForm({ ...editUserForm, email: e.target.value })
+                      setEditUserForm({
+                        ...editUserForm,
+                        email: e.target.value,
+                      })
                     }
                     className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Role</label>
+                <label className="block text-sm font-medium mb-1">
+                  {t("platformAdmin.editUser.role")}
+                </label>
                 <select
                   value={editUserForm.role}
                   onChange={(e) =>
@@ -546,35 +609,55 @@ export function AdminOverview() {
                   }
                   className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
-                  <option value="">Select role...</option>
+                  <option value="">
+                    {t("platformAdmin.editUser.selectRole")}
+                  </option>
                   <option value="USER">{t("admin.userRole.user")}</option>
-                  <option value="ORG_ADMIN">{t("admin.userRole.orgAdmin")}</option>
+                  <option value="ORG_ADMIN">
+                    {t("admin.userRole.orgAdmin")}
+                  </option>
                   <option value="ADMIN">{t("admin.userRole.admin")}</option>
                 </select>
               </div>
 
               {/* Organizations */}
               <div className="border-t pt-4">
-                <h4 className="font-medium mb-3">Organizations</h4>
+                <h4 className="font-medium mb-3">
+                  {t("platformAdmin.editUser.organizations")}
+                </h4>
                 <div className="space-y-2 mb-4">
-                  {users.find(u => u.id === editingUserId)?.memberships.length === 0 ? (
-                    <p className="text-gray-500 text-sm">Not a member of any organization</p>
+                  {users.find((u) => u.id === editingUserId)?.memberships
+                    .length === 0 ? (
+                    <p className="text-gray-500 text-sm">
+                      {t("platformAdmin.editUser.noOrganizations")}
+                    </p>
                   ) : (
-                    users.find(u => u.id === editingUserId)?.memberships.map((m) => (
-                      <div key={m.organizationId} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                        <div>
-                          <div className="font-medium text-sm">{m.organizationName}</div>
-                          <div className="text-xs text-gray-500">{m.role}</div>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveOrganization(m.organizationId)}
-                          className="text-red-600 hover:text-red-900 text-sm"
+                    users
+                      .find((u) => u.id === editingUserId)
+                      ?.memberships.map((m) => (
+                        <div
+                          key={m.organizationId}
+                          className="flex items-center justify-between p-2 bg-gray-50 rounded"
                         >
-                          Remove
-                        </button>
-                      </div>
-                    ))
+                          <div>
+                            <div className="font-medium text-sm">
+                              {m.organizationName}
+                            </div>
+                            <div className="text-xs text-gray-500">
+                              {m.role}
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleRemoveOrganization(m.organizationId)
+                            }
+                            className="text-red-600 hover:text-red-900 text-sm"
+                          >
+                            {t("platformAdmin.editUser.remove")}
+                          </button>
+                        </div>
+                      ))
                   )}
                 </div>
 
@@ -585,7 +668,9 @@ export function AdminOverview() {
                       onChange={(e) => setSelectedOrgToAdd(e.target.value)}
                       className="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
-                      <option value="">Add to organization...</option>
+                      <option value="">
+                        {t("platformAdmin.editUser.addToOrg")}
+                      </option>
                       {availableOrgsForUser.map((org) => (
                         <option key={org.id} value={org.id}>
                           {org.name}
@@ -598,7 +683,7 @@ export function AdminOverview() {
                       disabled={!selectedOrgToAdd || addOrgLoading}
                       className="px-3 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-400 text-sm"
                     >
-                      Add
+                      {t("platformAdmin.editUser.add")}
                     </button>
                   </div>
                 )}
@@ -609,14 +694,14 @@ export function AdminOverview() {
                   type="submit"
                   className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
                 >
-                  Save Changes
+                  {t("platformAdmin.editUser.save")}
                 </button>
                 <button
                   type="button"
                   onClick={handleCancelEdit}
                   className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
                 >
-                  Cancel
+                  {t("platformAdmin.editUser.cancel")}
                 </button>
               </div>
             </form>
@@ -628,27 +713,29 @@ export function AdminOverview() {
       {deleteConfirmOrgId && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-8 max-w-md w-full">
-            <h3 className="text-2xl font-bold mb-4">Delete Organization</h3>
+            <h3 className="text-2xl font-bold mb-4">
+              {t("platformAdmin.deleteOrg.title")}
+            </h3>
             {editOrgError && (
               <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm">
                 {editOrgError}
               </div>
             )}
             <p className="text-gray-600 mb-6">
-              Are you sure you want to delete this organization? This action cannot be undone. Make sure the organization has no items.
+              {t("platformAdmin.deleteOrg.confirm")}
             </p>
             <div className="flex gap-2">
               <button
                 onClick={() => handleDeleteOrganization(deleteConfirmOrgId)}
                 className="flex-1 py-2 bg-red-600 text-white rounded hover:bg-red-700"
               >
-                Delete
+                {t("platformAdmin.deleteOrg.delete")}
               </button>
               <button
                 onClick={() => setDeleteConfirmOrgId(null)}
                 className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
               >
-                Cancel
+                {t("platformAdmin.deleteOrg.cancel")}
               </button>
             </div>
           </div>
@@ -659,7 +746,9 @@ export function AdminOverview() {
       {editingOrgId && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <h3 className="text-2xl font-bold mb-4">{t("admin.organizations.editModal.title")}</h3>
+            <h3 className="text-2xl font-bold mb-4">
+              {t("admin.organizations.editModal.title")}
+            </h3>
             {editOrgError && (
               <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm">
                 {editOrgError}
@@ -667,19 +756,27 @@ export function AdminOverview() {
             )}
             <form onSubmit={handleSaveOrganization} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">{t("admin.organizations.form.name")}</label>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.organizations.form.name")}
+                </label>
                 <input
                   type="text"
                   value={editOrgForm.name}
-                  onChange={(e) => setEditOrgForm({ ...editOrgForm, name: e.target.value })}
+                  onChange={(e) =>
+                    setEditOrgForm({ ...editOrgForm, name: e.target.value })
+                  }
                   className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">{t("admin.organizations.form.type")}</label>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.organizations.form.type")}
+                </label>
                 <select
                   value={editOrgForm.type}
-                  onChange={(e) => setEditOrgForm({ ...editOrgForm, type: e.target.value })}
+                  onChange={(e) =>
+                    setEditOrgForm({ ...editOrgForm, type: e.target.value })
+                  }
                   className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="">{t("organizationType.noType")}</option>
@@ -692,9 +789,13 @@ export function AdminOverview() {
               </div>
               {editOrgForm.type && (
                 <div className="border-t pt-3">
-                  <p className="text-xs text-gray-600 mb-2">{t("organizationType.suggestions")}</p>
+                  <p className="text-xs text-gray-600 mb-2">
+                    {t("organizationType.suggestions")}
+                  </p>
                   <div className="space-y-1">
-                    {ORG_NAME_SUGGESTIONS[editOrgForm.type as keyof typeof ORG_NAME_SUGGESTIONS].map((suggestion) => (
+                    {ORG_NAME_SUGGESTIONS[
+                      editOrgForm.type as keyof typeof ORG_NAME_SUGGESTIONS
+                    ].map((suggestion) => (
                       <button
                         key={suggestion}
                         type="button"
@@ -714,19 +815,30 @@ export function AdminOverview() {
                 </div>
               )}
               <div>
-                <label className="block text-sm font-medium mb-1">{t("admin.organizations.form.slug")}</label>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.organizations.form.slug")}
+                </label>
                 <input
                   type="text"
                   value={editOrgForm.slug}
-                  onChange={(e) => setEditOrgForm({ ...editOrgForm, slug: e.target.value })}
+                  onChange={(e) =>
+                    setEditOrgForm({ ...editOrgForm, slug: e.target.value })
+                  }
                   className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">{t("admin.organizations.form.description")}</label>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.organizations.form.description")}
+                </label>
                 <textarea
                   value={editOrgForm.description}
-                  onChange={(e) => setEditOrgForm({ ...editOrgForm, description: e.target.value })}
+                  onChange={(e) =>
+                    setEditOrgForm({
+                      ...editOrgForm,
+                      description: e.target.value,
+                    })
+                  }
                   rows={3}
                   className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
@@ -755,7 +867,9 @@ export function AdminOverview() {
       {creatingOrg && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <h3 className="text-2xl font-bold mb-4">{t("admin.organizations.createModal.title")}</h3>
+            <h3 className="text-2xl font-bold mb-4">
+              {t("admin.organizations.createModal.title")}
+            </h3>
             {createOrgError && (
               <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm">
                 {createOrgError}
@@ -763,19 +877,27 @@ export function AdminOverview() {
             )}
             <form onSubmit={handleCreateOrganization} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">{t("admin.organizations.form.name")}</label>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.organizations.form.name")}
+                </label>
                 <input
                   type="text"
                   value={createOrgForm.name}
-                  onChange={(e) => setCreateOrgForm({ ...createOrgForm, name: e.target.value })}
+                  onChange={(e) =>
+                    setCreateOrgForm({ ...createOrgForm, name: e.target.value })
+                  }
                   className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">{t("admin.organizations.form.type")}</label>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.organizations.form.type")}
+                </label>
                 <select
                   value={createOrgForm.type}
-                  onChange={(e) => setCreateOrgForm({ ...createOrgForm, type: e.target.value })}
+                  onChange={(e) =>
+                    setCreateOrgForm({ ...createOrgForm, type: e.target.value })
+                  }
                   className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="">{t("organizationType.noType")}</option>
@@ -788,9 +910,13 @@ export function AdminOverview() {
               </div>
               {createOrgForm.type && (
                 <div className="border-t pt-3">
-                  <p className="text-xs text-gray-600 mb-2">{t("organizationType.suggestions")}</p>
+                  <p className="text-xs text-gray-600 mb-2">
+                    {t("organizationType.suggestions")}
+                  </p>
                   <div className="space-y-1">
-                    {ORG_NAME_SUGGESTIONS[createOrgForm.type as keyof typeof ORG_NAME_SUGGESTIONS].map((suggestion) => (
+                    {ORG_NAME_SUGGESTIONS[
+                      createOrgForm.type as keyof typeof ORG_NAME_SUGGESTIONS
+                    ].map((suggestion) => (
                       <button
                         key={suggestion}
                         type="button"
@@ -810,19 +936,30 @@ export function AdminOverview() {
                 </div>
               )}
               <div>
-                <label className="block text-sm font-medium mb-1">{t("admin.organizations.form.slug")}</label>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.organizations.form.slug")}
+                </label>
                 <input
                   type="text"
                   value={createOrgForm.slug}
-                  onChange={(e) => setCreateOrgForm({ ...createOrgForm, slug: e.target.value })}
+                  onChange={(e) =>
+                    setCreateOrgForm({ ...createOrgForm, slug: e.target.value })
+                  }
                   className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">{t("admin.organizations.form.description")}</label>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.organizations.form.description")}
+                </label>
                 <textarea
                   value={createOrgForm.description}
-                  onChange={(e) => setCreateOrgForm({ ...createOrgForm, description: e.target.value })}
+                  onChange={(e) =>
+                    setCreateOrgForm({
+                      ...createOrgForm,
+                      description: e.target.value,
+                    })
+                  }
                   rows={3}
                   className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />

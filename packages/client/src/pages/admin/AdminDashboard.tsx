@@ -64,6 +64,11 @@ export function AdminDashboard() {
   const [rejectingItemId, setRejectingItemId] = useState("");
   const [rejectNote, setRejectNote] = useState("");
 
+  // Add user modal state
+  const [showAddUser, setShowAddUser] = useState(false);
+  const [newUser, setNewUser] = useState({ name: "", email: "", password: "" });
+  const [addUserError, setAddUserError] = useState("");
+
   useEffect(() => {
     loadData();
   }, []);
@@ -274,6 +279,21 @@ export function AdminDashboard() {
       await loadData();
     } catch (error: any) {
       toast.error(error.message || "Failed to reject item");
+    }
+  };
+
+  const handleAddUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAddUserError("");
+    if (!activeOrganizationId) return;
+    try {
+      await apiClient.register(newUser.email, newUser.password, newUser.name, activeOrganizationId);
+      setShowAddUser(false);
+      setNewUser({ name: "", email: "", password: "" });
+      await loadData();
+      toast.success(t("admin.users.addSuccess"));
+    } catch (error: any) {
+      setAddUserError(error.message || t("admin.users.addError"));
     }
   };
 
@@ -560,7 +580,15 @@ export function AdminDashboard() {
       {/* Users Tab */}
       {activeTab === "users" && (
         <div>
-          <h2 className="text-2xl font-bold mb-4">{t("admin.users.title")}</h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold">{t("admin.users.title")}</h2>
+            <button
+              onClick={() => { setShowAddUser(true); setAddUserError(""); }}
+              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+            >
+              {t("admin.users.addUser")}
+            </button>
+          </div>
           <div className="bg-white rounded-lg shadow overflow-hidden">
             <div className="overflow-x-auto">
             <table className="min-w-full">
@@ -1121,6 +1149,66 @@ export function AdminDashboard() {
                 <button
                   type="button"
                   onClick={() => { setShowEditLocation(false); setEditingLocation(null); setLocationForm({ name: "", address: "", description: "" }); }}
+                  className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                >
+                  {t("common.cancel")}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Add User Modal */}
+      {showAddUser && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full">
+            <h3 className="text-2xl font-bold mb-4">{t("admin.users.addUser")}</h3>
+            <form onSubmit={handleAddUser} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">{t("admin.users.name")}</label>
+                <input
+                  type="text"
+                  value={newUser.name}
+                  onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+                  required
+                  className="w-full px-3 py-2 border rounded"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">{t("admin.users.email")}</label>
+                <input
+                  type="email"
+                  value={newUser.email}
+                  onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                  required
+                  className="w-full px-3 py-2 border rounded"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">{t("admin.users.password")}</label>
+                <input
+                  type="password"
+                  value={newUser.password}
+                  onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                  required
+                  minLength={8}
+                  className="w-full px-3 py-2 border rounded"
+                />
+              </div>
+              {addUserError && (
+                <p className="text-red-600 text-sm">{addUserError}</p>
+              )}
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                >
+                  {t("admin.users.create")}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setShowAddUser(false); setNewUser({ name: "", email: "", password: "" }); setAddUserError(""); }}
                   className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
                 >
                   {t("common.cancel")}

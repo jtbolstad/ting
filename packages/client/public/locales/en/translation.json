@@ -298,7 +298,12 @@
       "name": "Name",
       "email": "Email",
       "role": "Role",
-      "joined": "Joined"
+      "joined": "Joined",
+      "addUser": "Add User",
+      "password": "Password",
+      "create": "Create User",
+      "addSuccess": "User created",
+      "addError": "Could not create user"
     },
     "checkout": {
       "title": "Checkout Item",
@@ -364,30 +369,54 @@
         "members": "Members",
         "role": "Role"
       }
+    }
+  },
+  "platformAdmin": {
+    "title": "Platform Admin Overview",
+    "tabs": {
+      "organizations": "Organizations",
+      "users": "Users"
     },
-    "platformAdmin": {
-      "tabs": {
+    "stats": {
+      "totalOrganizations": "Total Organizations",
+      "totalUsers": "Total Users",
+      "totalItems": "Total Items"
+    },
+    "users": {
+      "title": "All Users",
+      "table": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
         "organizations": "Organizations",
-        "users": "Users"
-      },
-      "stats": {
-        "totalOrganizations": "Total Organizations",
-        "totalUsers": "Total Users",
-        "totalItems": "Total Items"
-      },
-      "users": {
-        "title": "All Users",
-        "table": {
-          "name": "Name",
-          "email": "Email",
-          "role": "Role",
-          "organizations": "Organizations",
-          "joined": "Joined",
-          "actions": "Actions",
-          "edit": "Edit",
-          "none": "None"
-        }
+        "joined": "Joined",
+        "actions": "Actions",
+        "edit": "Edit",
+        "none": "None"
       }
+    },
+    "editUser": {
+      "title": "Edit User",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "selectRole": "Select role...",
+      "organizations": "Organizations",
+      "noOrganizations": "Not a member of any organization",
+      "remove": "Remove",
+      "addToOrg": "Add to organization...",
+      "add": "Add",
+      "save": "Save Changes",
+      "cancel": "Cancel"
+    },
+    "deleteOrg": {
+      "title": "Delete Organization",
+      "confirm": "Are you sure you want to delete this organization? This action cannot be undone. Make sure the organization has no items.",
+      "delete": "Delete",
+      "cancel": "Cancel"
+    },
+    "orgDetails": {
+      "memberRole": "Role"
     }
   },
   "comments": {
