@@ -38,6 +38,7 @@ router.get(
         name: org.name,
         slug: org.slug,
         description: org.description,
+        type: org.type ?? null,
         memberCount: org._count.memberships,
         itemCount: org._count.items,
         createdAt: org.createdAt.toISOString(),
@@ -151,6 +152,7 @@ router.get(
         name: organization.name,
         slug: organization.slug,
         description: organization.description,
+        type: organization.type ?? null,
         itemCount: organization._count.items,
         members: organization.memberships.map((m) => ({
           userId: m.user.id,
@@ -377,12 +379,19 @@ router.patch(
   async (req: AuthRequest, res: Response) => {
     try {
       const { orgId } = req.params;
-      const { name, description, slug } = req.body;
+      const { name, description, slug, type } = req.body;
 
-      if (!name && !description && !slug) {
+      if (!name && !description && !slug && type === undefined) {
         return res.status(400).json({
           success: false,
-          error: "At least one field (name, description, slug) is required",
+          error: "At least one field (name, description, slug, type) is required",
+        });
+      }
+
+      if (type !== undefined && type !== null && !['neighborhood', 'school', 'company', 'friends'].includes(type)) {
+        return res.status(400).json({
+          success: false,
+          error: "Type must be one of: neighborhood, school, company, friends",
         });
       }
 
@@ -390,6 +399,7 @@ router.patch(
       if (name !== undefined) updateData.name = name;
       if (description !== undefined) updateData.description = description;
       if (slug !== undefined) updateData.slug = slug;
+      if (type !== undefined) updateData.type = type;
 
       const org = await prisma.organization.update({
         where: { id: orgId },
@@ -406,6 +416,7 @@ router.patch(
         name: string;
         slug: string;
         description: string | null;
+        type: string | null;
         memberCount: number;
         itemCount: number;
       }> = {
@@ -415,6 +426,7 @@ router.patch(
           name: org.name,
           slug: org.slug,
           description: org.description,
+          type: org.type ?? null,
           memberCount: org._count.memberships,
           itemCount: org._count.items,
         },

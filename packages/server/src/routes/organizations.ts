@@ -85,10 +85,11 @@ router.get("/me", async (req: AuthRequest, res: Response) => {
 
 router.post("/", requireAdmin, async (req: AuthRequest, res: Response) => {
   try {
-    const { name, slug, description } = req.body as {
+    const { name, slug, description, type } = req.body as {
       name?: string;
       slug?: string;
       description?: string;
+      type?: string;
     };
 
     if (!name) {
@@ -97,11 +98,19 @@ router.post("/", requireAdmin, async (req: AuthRequest, res: Response) => {
         .json({ success: false, error: "Name is required" });
     }
 
+    if (type && !['neighborhood', 'school', 'company', 'friends'].includes(type)) {
+      return res.status(400).json({
+        success: false,
+        error: "Type must be one of: neighborhood, school, company, friends",
+      });
+    }
+
     const organization = await prisma.organization.create({
       data: {
         name,
         slug: slug || slugify(name),
         description: description || null,
+        type: type || null,
       },
     });
 

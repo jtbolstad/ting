@@ -2,11 +2,14 @@ export type MembershipRole = 'OWNER' | 'ADMIN' | 'MANAGER' | 'MEMBER';
 
 export type MembershipStatus = 'ACTIVE' | 'INVITED' | 'SUSPENDED';
 
+export type OrgType = 'neighborhood' | 'school' | 'company' | 'friends';
+
 export interface Organization {
   id: string;
   name: string;
   slug: string;
   description: string | null;
+  type?: OrgType | null;
   createdAt: string;
   updatedAt: string;
 }

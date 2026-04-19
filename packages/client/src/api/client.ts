@@ -288,6 +288,7 @@ class ApiClient {
     name: string;
     slug?: string;
     description?: string;
+    type?: string;
   }): Promise<{ organization: Organization; membership: Membership }> {
     return this.request<{ organization: Organization; membership: Membership }>(
       "/organizations",
@@ -564,6 +565,7 @@ class ApiClient {
     name: string;
     slug: string;
     description: string | null;
+    type: string | null;
     itemCount: number;
     members: Array<{
       userId: string;
@@ -612,12 +614,13 @@ class ApiClient {
 
   async updateAdminOrganization(
     orgId: string,
-    data: { name?: string; description?: string; slug?: string }
+    data: { name?: string; description?: string; slug?: string; type?: string | null }
   ): Promise<{
     id: string;
     name: string;
     slug: string;
     description: string | null;
+    type: string | null;
     memberCount: number;
     itemCount: number;
   }> {

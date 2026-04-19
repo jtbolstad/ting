@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { apiClient } from "../../api/client";
 import { Spinner } from "../../components/ui/Spinner";
+import { ORG_TYPES, ORG_TYPE_LABELS, ORG_NAME_SUGGESTIONS, slugify } from "../../utils/orgNameSuggestions";
 
 interface Organization {
   id: string;
   name: string;
   slug: string;
   description: string | null;
+  type?: string | null;
   memberCount: number;
   itemCount: number;
   createdAt: string;
@@ -45,9 +47,12 @@ export function AdminOverview() {
   const [selectedOrgToAdd, setSelectedOrgToAdd] = useState("");
   const [addOrgLoading, setAddOrgLoading] = useState(false);
   const [editingOrgId, setEditingOrgId] = useState<string | null>(null);
-  const [editOrgForm, setEditOrgForm] = useState({ name: "", description: "", slug: "" });
+  const [editOrgForm, setEditOrgForm] = useState({ name: "", description: "", slug: "", type: "" });
   const [editOrgError, setEditOrgError] = useState("");
   const [deleteConfirmOrgId, setDeleteConfirmOrgId] = useState<string | null>(null);
+  const [creatingOrg, setCreatingOrg] = useState(false);
+  const [createOrgForm, setCreateOrgForm] = useState({ name: "", description: "", slug: "", type: "" });
+  const [createOrgError, setCreateOrgError] = useState("");
 
   useEffect(() => {
     loadData();
@@ -146,7 +151,7 @@ export function AdminOverview() {
 
   const handleEditOrganization = (org: Organization) => {
     setEditingOrgId(org.id);
-    setEditOrgForm({ name: org.name, description: org.description || "", slug: org.slug });
+    setEditOrgForm({ name: org.name, description: org.description || "", slug: org.slug, type: org.type || "" });
     setEditOrgError("");
   };
 
@@ -156,7 +161,12 @@ export function AdminOverview() {
 
     try {
       setEditOrgError("");
-      await apiClient.updateAdminOrganization(editingOrgId, editOrgForm);
+      await apiClient.updateAdminOrganization(editingOrgId, {
+        name: editOrgForm.name || undefined,
+        description: editOrgForm.description || undefined,
+        slug: editOrgForm.slug || undefined,
+        type: editOrgForm.type || null,
+      });
       setEditingOrgId(null);
       await loadData();
     } catch (error: any) {
@@ -177,8 +187,37 @@ export function AdminOverview() {
 
   const handleCancelEditOrg = () => {
     setEditingOrgId(null);
-    setEditOrgForm({ name: "", description: "", slug: "" });
+    setEditOrgForm({ name: "", description: "", slug: "", type: "" });
     setEditOrgError("");
+  };
+
+  const handleCreateOrganization = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!createOrgForm.name) {
+      setCreateOrgError("Name is required");
+      return;
+    }
+
+    try {
+      setCreateOrgError("");
+      await apiClient.createOrganization({
+        name: createOrgForm.name,
+        slug: createOrgForm.slug || undefined,
+        description: createOrgForm.description || undefined,
+        type: createOrgForm.type || undefined,
+      });
+      setCreatingOrg(false);
+      setCreateOrgForm({ name: "", description: "", slug: "", type: "" });
+      await loadData();
+    } catch (error: any) {
+      setCreateOrgError(error.message || "Failed to create organization");
+    }
+  };
+
+  const handleCancelCreate = () => {
+    setCreatingOrg(false);
+    setCreateOrgForm({ name: "", description: "", slug: "", type: "" });
+    setCreateOrgError("");
   };
 
   if (loading) {
@@ -240,7 +279,15 @@ export function AdminOverview() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Organizations List */}
           <div className="lg:col-span-2">
-            <h2 className="text-2xl font-bold mb-4">All Organizations</h2>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold">All Organizations</h2>
+              <button
+                onClick={() => setCreatingOrg(true)}
+                className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+              >
+                Create Organization
+              </button>
+            </div>
             <div className="bg-white rounded-lg shadow overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="min-w-full">
@@ -263,7 +310,14 @@ export function AdminOverview() {
                   <tbody className="divide-y divide-gray-200">
                     {organizations.map((org) => (
                       <tr key={org.id}>
-                        <td className="px-6 py-4 font-medium">{org.name}</td>
+                        <td className="px-6 py-4 font-medium">
+                          <div>{org.name}</div>
+                          {org.type && (
+                            <div className="text-xs text-gray-500 mt-1">
+                              {ORG_TYPE_LABELS[org.type as keyof typeof ORG_TYPE_LABELS]}
+                            </div>
+                          )}
+                        </td>
                         <td className="px-6 py-4">
                           <span className="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
                             {org.memberCount}
@@ -655,6 +709,198 @@ export function AdminOverview() {
                 Cancel
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Organization Modal */}
+      {editingOrgId && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <h3 className="text-2xl font-bold mb-4">Edit Organization</h3>
+            {editOrgError && (
+              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm">
+                {editOrgError}
+              </div>
+            )}
+            <form onSubmit={handleSaveOrganization} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Name</label>
+                <input
+                  type="text"
+                  value={editOrgForm.name}
+                  onChange={(e) => setEditOrgForm({ ...editOrgForm, name: e.target.value })}
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Type</label>
+                <select
+                  value={editOrgForm.type}
+                  onChange={(e) => setEditOrgForm({ ...editOrgForm, type: e.target.value })}
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value="">— No type —</option>
+                  {ORG_TYPES.map((type) => (
+                    <option key={type} value={type}>
+                      {ORG_TYPE_LABELS[type]}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {editOrgForm.type && (
+                <div className="border-t pt-3">
+                  <p className="text-xs text-gray-600 mb-2">Suggestions:</p>
+                  <div className="space-y-1">
+                    {ORG_NAME_SUGGESTIONS[editOrgForm.type as keyof typeof ORG_NAME_SUGGESTIONS].map((suggestion) => (
+                      <button
+                        key={suggestion}
+                        type="button"
+                        onClick={() => {
+                          setEditOrgForm({
+                            ...editOrgForm,
+                            name: suggestion,
+                            slug: slugify(suggestion),
+                          });
+                        }}
+                        className="w-full text-left px-3 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 rounded text-indigo-700"
+                      >
+                        {suggestion}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <div>
+                <label className="block text-sm font-medium mb-1">Slug</label>
+                <input
+                  type="text"
+                  value={editOrgForm.slug}
+                  onChange={(e) => setEditOrgForm({ ...editOrgForm, slug: e.target.value })}
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Description</label>
+                <textarea
+                  value={editOrgForm.description}
+                  onChange={(e) => setEditOrgForm({ ...editOrgForm, description: e.target.value })}
+                  rows={3}
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCancelEditOrg}
+                  className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Create Organization Modal */}
+      {creatingOrg && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <h3 className="text-2xl font-bold mb-4">Create Organization</h3>
+            {createOrgError && (
+              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm">
+                {createOrgError}
+              </div>
+            )}
+            <form onSubmit={handleCreateOrganization} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Name</label>
+                <input
+                  type="text"
+                  value={createOrgForm.name}
+                  onChange={(e) => setCreateOrgForm({ ...createOrgForm, name: e.target.value })}
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Type</label>
+                <select
+                  value={createOrgForm.type}
+                  onChange={(e) => setCreateOrgForm({ ...createOrgForm, type: e.target.value })}
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value="">— No type —</option>
+                  {ORG_TYPES.map((type) => (
+                    <option key={type} value={type}>
+                      {ORG_TYPE_LABELS[type]}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {createOrgForm.type && (
+                <div className="border-t pt-3">
+                  <p className="text-xs text-gray-600 mb-2">Suggestions:</p>
+                  <div className="space-y-1">
+                    {ORG_NAME_SUGGESTIONS[createOrgForm.type as keyof typeof ORG_NAME_SUGGESTIONS].map((suggestion) => (
+                      <button
+                        key={suggestion}
+                        type="button"
+                        onClick={() => {
+                          setCreateOrgForm({
+                            ...createOrgForm,
+                            name: suggestion,
+                            slug: slugify(suggestion),
+                          });
+                        }}
+                        className="w-full text-left px-3 py-2 text-sm bg-indigo-50 hover:bg-indigo-100 rounded text-indigo-700"
+                      >
+                        {suggestion}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <div>
+                <label className="block text-sm font-medium mb-1">Slug</label>
+                <input
+                  type="text"
+                  value={createOrgForm.slug}
+                  onChange={(e) => setCreateOrgForm({ ...createOrgForm, slug: e.target.value })}
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Description</label>
+                <textarea
+                  value={createOrgForm.description}
+                  onChange={(e) => setCreateOrgForm({ ...createOrgForm, description: e.target.value })}
+                  rows={3}
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                >
+                  Create
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCancelCreate}
+                  className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
