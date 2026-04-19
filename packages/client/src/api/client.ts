@@ -609,6 +609,29 @@ class ApiClient {
       method: "DELETE",
     });
   }
+
+  async updateAdminOrganization(
+    orgId: string,
+    data: { name?: string; description?: string; slug?: string }
+  ): Promise<{
+    id: string;
+    name: string;
+    slug: string;
+    description: string | null;
+    memberCount: number;
+    itemCount: number;
+  }> {
+    return this.request(`/admin/organizations/${orgId}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteAdminOrganization(orgId: string): Promise<{ deleted: boolean }> {
+    return this.request(`/admin/organizations/${orgId}`, {
+      method: "DELETE",
+    });
+  }
 }
 
 export const apiClient = new ApiClient();

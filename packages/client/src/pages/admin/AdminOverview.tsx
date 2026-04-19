@@ -44,6 +44,10 @@ export function AdminOverview() {
   const [availableOrgsForUser, setAvailableOrgsForUser] = useState<Organization[]>([]);
   const [selectedOrgToAdd, setSelectedOrgToAdd] = useState("");
   const [addOrgLoading, setAddOrgLoading] = useState(false);
+  const [editingOrgId, setEditingOrgId] = useState<string | null>(null);
+  const [editOrgForm, setEditOrgForm] = useState({ name: "", description: "", slug: "" });
+  const [editOrgError, setEditOrgError] = useState("");
+  const [deleteConfirmOrgId, setDeleteConfirmOrgId] = useState<string | null>(null);
 
   useEffect(() => {
     loadData();
@@ -140,6 +144,43 @@ export function AdminOverview() {
     }
   };
 
+  const handleEditOrganization = (org: Organization) => {
+    setEditingOrgId(org.id);
+    setEditOrgForm({ name: org.name, description: org.description || "", slug: org.slug });
+    setEditOrgError("");
+  };
+
+  const handleSaveOrganization = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingOrgId) return;
+
+    try {
+      setEditOrgError("");
+      await apiClient.updateAdminOrganization(editingOrgId, editOrgForm);
+      setEditingOrgId(null);
+      await loadData();
+    } catch (error: any) {
+      setEditOrgError(error.message || "Failed to update organization");
+    }
+  };
+
+  const handleDeleteOrganization = async (orgId: string) => {
+    try {
+      await apiClient.deleteAdminOrganization(orgId);
+      setDeleteConfirmOrgId(null);
+      setSelectedOrgId(null);
+      await loadData();
+    } catch (error: any) {
+      setEditOrgError(error.message || "Failed to delete organization");
+    }
+  };
+
+  const handleCancelEditOrg = () => {
+    setEditingOrgId(null);
+    setEditOrgForm({ name: "", description: "", slug: "" });
+    setEditOrgError("");
+  };
+
   if (loading) {
     return <Spinner />;
   }
@@ -233,7 +274,7 @@ export function AdminOverview() {
                             {org.itemCount}
                           </span>
                         </td>
-                        <td className="px-6 py-4">
+                        <td className="px-6 py-4 space-x-2">
                           <button
                             onClick={() => handleSelectOrg(org.id)}
                             className={`text-sm px-3 py-1 rounded ${
@@ -242,7 +283,13 @@ export function AdminOverview() {
                                 : "text-indigo-600 hover:text-indigo-900"
                             }`}
                           >
-                            View Details
+                            View
+                          </button>
+                          <button
+                            onClick={() => handleEditOrganization(org)}
+                            className="text-sm px-3 py-1 text-indigo-600 hover:text-indigo-900"
+                          >
+                            Edit
                           </button>
                         </td>
                       </tr>
@@ -256,9 +303,25 @@ export function AdminOverview() {
           {/* Organization Details */}
           {selectedOrgDetails && (
             <div>
-              <h2 className="text-2xl font-bold mb-4">
-                {selectedOrgDetails.name}
-              </h2>
+              <div className="flex justify-between items-start mb-4">
+                <h2 className="text-2xl font-bold">
+                  {selectedOrgDetails.name}
+                </h2>
+                <div className="space-x-2">
+                  <button
+                    onClick={() => handleEditOrganization(selectedOrgDetails)}
+                    className="px-3 py-1 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => setDeleteConfirmOrgId(selectedOrgDetails.id)}
+                    className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
               <div className="bg-white rounded-lg shadow p-6 space-y-6">
                 <div>
                   <p className="text-gray-600 text-sm">Slug</p>
@@ -497,6 +560,101 @@ export function AdminOverview() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Organization Modal */}
+      {editingOrgId && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full">
+            <h3 className="text-2xl font-bold mb-4">Edit Organization</h3>
+            {editOrgError && (
+              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm">
+                {editOrgError}
+              </div>
+            )}
+            <form onSubmit={handleSaveOrganization} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Name</label>
+                <input
+                  type="text"
+                  value={editOrgForm.name}
+                  onChange={(e) =>
+                    setEditOrgForm({ ...editOrgForm, name: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Slug</label>
+                <input
+                  type="text"
+                  value={editOrgForm.slug}
+                  onChange={(e) =>
+                    setEditOrgForm({ ...editOrgForm, slug: e.target.value })
+                  }
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Description</label>
+                <textarea
+                  value={editOrgForm.description}
+                  onChange={(e) =>
+                    setEditOrgForm({ ...editOrgForm, description: e.target.value })
+                  }
+                  rows={3}
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCancelEditOrg}
+                  className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Organization Confirmation Modal */}
+      {deleteConfirmOrgId && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full">
+            <h3 className="text-2xl font-bold mb-4">Delete Organization</h3>
+            {editOrgError && (
+              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm">
+                {editOrgError}
+              </div>
+            )}
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete this organization? This action cannot be undone. Make sure the organization has no items.
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => handleDeleteOrganization(deleteConfirmOrgId)}
+                className="flex-1 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+              >
+                Delete
+              </button>
+              <button
+                onClick={() => setDeleteConfirmOrgId(null)}
+                className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       )}

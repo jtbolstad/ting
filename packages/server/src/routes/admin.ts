@@ -369,4 +369,113 @@ router.delete(
   }
 );
 
+// Update organization (platform admin only)
+router.patch(
+  "/organizations/:orgId",
+  authenticate,
+  requirePlatformAdmin,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { orgId } = req.params;
+      const { name, description, slug } = req.body;
+
+      if (!name && !description && !slug) {
+        return res.status(400).json({
+          success: false,
+          error: "At least one field (name, description, slug) is required",
+        });
+      }
+
+      const updateData: any = {};
+      if (name !== undefined) updateData.name = name;
+      if (description !== undefined) updateData.description = description;
+      if (slug !== undefined) updateData.slug = slug;
+
+      const org = await prisma.organization.update({
+        where: { id: orgId },
+        data: updateData,
+        include: {
+          _count: {
+            select: { memberships: true, items: true },
+          },
+        },
+      });
+
+      const response: ApiResponse<{
+        id: string;
+        name: string;
+        slug: string;
+        description: string | null;
+        memberCount: number;
+        itemCount: number;
+      }> = {
+        success: true,
+        data: {
+          id: org.id,
+          name: org.name,
+          slug: org.slug,
+          description: org.description,
+          memberCount: org._count.memberships,
+          itemCount: org._count.items,
+        },
+      };
+
+      res.json(response);
+    } catch (error) {
+      console.error("Update organization error:", error);
+      res.status(500).json({
+        success: false,
+        error: "Failed to update organization",
+      });
+    }
+  }
+);
+
+// Delete organization (platform admin only)
+router.delete(
+  "/organizations/:orgId",
+  authenticate,
+  requirePlatformAdmin,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { orgId } = req.params;
+
+      // Check if organization has items or active memberships
+      const itemCount = await prisma.item.count({
+        where: { organizationId: orgId },
+      });
+
+      if (itemCount > 0) {
+        return res.status(400).json({
+          success: false,
+          error: "Cannot delete organization with items. Delete items first.",
+        });
+      }
+
+      // Delete all memberships first
+      await prisma.membership.deleteMany({
+        where: { organizationId: orgId },
+      });
+
+      // Then delete the organization
+      await prisma.organization.delete({
+        where: { id: orgId },
+      });
+
+      const response: ApiResponse<{ deleted: boolean }> = {
+        success: true,
+        data: { deleted: true },
+      };
+
+      res.json(response);
+    } catch (error) {
+      console.error("Delete organization error:", error);
+      res.status(500).json({
+        success: false,
+        error: "Failed to delete organization",
+      });
+    }
+  }
+);
+
 export default router;
