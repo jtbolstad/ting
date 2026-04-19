@@ -39,8 +39,11 @@ export function AdminOverview() {
   const [selectedOrgId, setSelectedOrgId] = useState<string | null>(null);
   const [selectedOrgDetails, setSelectedOrgDetails] = useState<any>(null);
   const [editingUserId, setEditingUserId] = useState<string | null>(null);
-  const [editUserForm, setEditUserForm] = useState({ name: "", role: "" });
+  const [editUserForm, setEditUserForm] = useState({ name: "", email: "", role: "" });
   const [editError, setEditError] = useState("");
+  const [availableOrgsForUser, setAvailableOrgsForUser] = useState<Organization[]>([]);
+  const [selectedOrgToAdd, setSelectedOrgToAdd] = useState("");
+  const [addOrgLoading, setAddOrgLoading] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -77,8 +80,14 @@ export function AdminOverview() {
 
   const handleEditUser = (user: User) => {
     setEditingUserId(user.id);
-    setEditUserForm({ name: user.name, role: user.role });
+    setEditUserForm({ name: user.name, email: user.email, role: user.role });
     setEditError("");
+    setSelectedOrgToAdd("");
+
+    // Calculate available organizations (not already a member of)
+    const userOrgIds = new Set(user.memberships.map(m => m.organizationId));
+    const available = organizations.filter(org => !userOrgIds.has(org.id));
+    setAvailableOrgsForUser(available);
   };
 
   const handleSaveUser = async (e: React.FormEvent) => {
@@ -100,8 +109,35 @@ export function AdminOverview() {
 
   const handleCancelEdit = () => {
     setEditingUserId(null);
-    setEditUserForm({ name: "", role: "" });
+    setEditUserForm({ name: "", email: "", role: "" });
     setEditError("");
+    setSelectedOrgToAdd("");
+  };
+
+  const handleAddOrganization = async () => {
+    if (!editingUserId || !selectedOrgToAdd) return;
+
+    try {
+      setAddOrgLoading(true);
+      await apiClient.addUserToOrganization(editingUserId, selectedOrgToAdd);
+      setSelectedOrgToAdd("");
+      await loadData();
+    } catch (error: any) {
+      setEditError(error.message || "Failed to add user to organization");
+    } finally {
+      setAddOrgLoading(false);
+    }
+  };
+
+  const handleRemoveOrganization = async (orgId: string) => {
+    if (!editingUserId) return;
+
+    try {
+      await apiClient.removeUserFromOrganization(editingUserId, orgId);
+      await loadData();
+    } catch (error: any) {
+      setEditError(error.message || "Failed to remove user from organization");
+    }
   };
 
   if (loading) {
@@ -345,26 +381,39 @@ export function AdminOverview() {
       )}
 
       {/* Edit User Modal */}
-      {editingUserId && (
+      {editingUserId && users.find(u => u.id === editingUserId) && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-8 max-w-md w-full">
+          <div className="bg-white rounded-lg p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <h3 className="text-2xl font-bold mb-4">Edit User</h3>
             {editError && (
               <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm">
                 {editError}
               </div>
             )}
-            <form onSubmit={handleSaveUser} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Name</label>
-                <input
-                  type="text"
-                  value={editUserForm.name}
-                  onChange={(e) =>
-                    setEditUserForm({ ...editUserForm, name: e.target.value })
-                  }
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
+            <form onSubmit={handleSaveUser} className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Name</label>
+                  <input
+                    type="text"
+                    value={editUserForm.name}
+                    onChange={(e) =>
+                      setEditUserForm({ ...editUserForm, name: e.target.value })
+                    }
+                    className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Email</label>
+                  <input
+                    type="email"
+                    value={editUserForm.email}
+                    onChange={(e) =>
+                      setEditUserForm({ ...editUserForm, email: e.target.value })
+                    }
+                    className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Role</label>
@@ -380,12 +429,64 @@ export function AdminOverview() {
                   <option value="ADMIN">Admin</option>
                 </select>
               </div>
-              <div className="flex gap-2">
+
+              {/* Organizations */}
+              <div className="border-t pt-4">
+                <h4 className="font-medium mb-3">Organizations</h4>
+                <div className="space-y-2 mb-4">
+                  {users.find(u => u.id === editingUserId)?.memberships.length === 0 ? (
+                    <p className="text-gray-500 text-sm">Not a member of any organization</p>
+                  ) : (
+                    users.find(u => u.id === editingUserId)?.memberships.map((m) => (
+                      <div key={m.organizationId} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                        <div>
+                          <div className="font-medium text-sm">{m.organizationName}</div>
+                          <div className="text-xs text-gray-500">{m.role}</div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveOrganization(m.organizationId)}
+                          className="text-red-600 hover:text-red-900 text-sm"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                {availableOrgsForUser.length > 0 && (
+                  <div className="flex gap-2">
+                    <select
+                      value={selectedOrgToAdd}
+                      onChange={(e) => setSelectedOrgToAdd(e.target.value)}
+                      className="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
+                      <option value="">Add to organization...</option>
+                      {availableOrgsForUser.map((org) => (
+                        <option key={org.id} value={org.id}>
+                          {org.name}
+                        </option>
+                      ))}
+                    </select>
+                    <button
+                      type="button"
+                      onClick={handleAddOrganization}
+                      disabled={!selectedOrgToAdd || addOrgLoading}
+                      className="px-3 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-400 text-sm"
+                    >
+                      Add
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-2 border-t pt-4">
                 <button
                   type="submit"
                   className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
                 >
-                  Save
+                  Save Changes
                 </button>
                 <button
                   type="button"

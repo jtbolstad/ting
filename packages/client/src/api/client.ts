@@ -582,11 +582,31 @@ class ApiClient {
 
   async updateAdminUser(
     userId: string,
-    data: { name?: string; role?: string }
+    data: { name?: string; role?: string; email?: string }
   ): Promise<{ id: string; email: string; name: string; role: string }> {
     return this.request(`/admin/users/${userId}`, {
       method: "PATCH",
       body: JSON.stringify(data),
+    });
+  }
+
+  async addUserToOrganization(
+    userId: string,
+    organizationId: string,
+    role: string = "MEMBER"
+  ): Promise<{ id: string; role: string; status: string }> {
+    return this.request(`/admin/users/${userId}/memberships`, {
+      method: "POST",
+      body: JSON.stringify({ organizationId, role }),
+    });
+  }
+
+  async removeUserFromOrganization(
+    userId: string,
+    organizationId: string
+  ): Promise<{ deleted: boolean }> {
+    return this.request(`/admin/users/${userId}/memberships/${organizationId}`, {
+      method: "DELETE",
     });
   }
 }

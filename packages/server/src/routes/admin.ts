@@ -189,12 +189,12 @@ router.patch(
   async (req: AuthRequest, res: Response) => {
     try {
       const { userId } = req.params;
-      const { name, role } = req.body;
+      const { name, role, email } = req.body;
 
-      if (!name && role === undefined) {
+      if (!name && role === undefined && !email) {
         return res.status(400).json({
           success: false,
-          error: "At least one field (name, role) is required",
+          error: "At least one field (name, role, email) is required",
         });
       }
 
@@ -208,6 +208,7 @@ router.patch(
       const updateData: any = {};
       if (name !== undefined) updateData.name = name;
       if (role !== undefined) updateData.role = role;
+      if (email !== undefined) updateData.email = email;
 
       const user = await prisma.user.update({
         where: { id: userId },
@@ -235,6 +236,134 @@ router.patch(
       res.status(500).json({
         success: false,
         error: "Failed to update user",
+      });
+    }
+  }
+);
+
+// Add user to organization (platform admin only)
+router.post(
+  "/users/:userId/memberships",
+  authenticate,
+  requirePlatformAdmin,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { userId } = req.params;
+      const { organizationId, role = "MEMBER" } = req.body;
+
+      if (!organizationId) {
+        return res.status(400).json({
+          success: false,
+          error: "organizationId is required",
+        });
+      }
+
+      // Check if user exists
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          error: "User not found",
+        });
+      }
+
+      // Check if organization exists
+      const org = await prisma.organization.findUnique({
+        where: { id: organizationId },
+      });
+      if (!org) {
+        return res.status(404).json({
+          success: false,
+          error: "Organization not found",
+        });
+      }
+
+      // Check if membership already exists
+      const existing = await prisma.membership.findUnique({
+        where: {
+          userId_organizationId: { userId, organizationId },
+        },
+      });
+
+      if (existing) {
+        return res.status(400).json({
+          success: false,
+          error: "User is already a member of this organization",
+        });
+      }
+
+      const membership = await prisma.membership.create({
+        data: {
+          userId,
+          organizationId,
+          role,
+          status: "ACTIVE",
+        },
+      });
+
+      const response: ApiResponse<{
+        id: string;
+        role: string;
+        status: string;
+      }> = {
+        success: true,
+        data: {
+          id: membership.id,
+          role: membership.role,
+          status: membership.status,
+        },
+      };
+
+      res.status(201).json(response);
+    } catch (error) {
+      console.error("Add membership error:", error);
+      res.status(500).json({
+        success: false,
+        error: "Failed to add user to organization",
+      });
+    }
+  }
+);
+
+// Remove user from organization (platform admin only)
+router.delete(
+  "/users/:userId/memberships/:orgId",
+  authenticate,
+  requirePlatformAdmin,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { userId, orgId } = req.params;
+
+      const membership = await prisma.membership.findUnique({
+        where: {
+          userId_organizationId: { userId, organizationId: orgId },
+        },
+      });
+
+      if (!membership) {
+        return res.status(404).json({
+          success: false,
+          error: "Membership not found",
+        });
+      }
+
+      await prisma.membership.delete({
+        where: {
+          userId_organizationId: { userId, organizationId: orgId },
+        },
+      });
+
+      const response: ApiResponse<{ deleted: boolean }> = {
+        success: true,
+        data: { deleted: true },
+      };
+
+      res.json(response);
+    } catch (error) {
+      console.error("Remove membership error:", error);
+      res.status(500).json({
+        success: false,
+        error: "Failed to remove user from organization",
       });
     }
   }
