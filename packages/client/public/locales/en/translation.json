@@ -342,6 +342,46 @@
         "save": "Save",
         "create": "Create",
         "cancel": "Cancel"
+      },
+      "table": {
+        "name": "Name",
+        "members": "Members",
+        "items": "Items",
+        "actions": "Actions",
+        "view": "View",
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "details": {
+        "slug": "Slug",
+        "description": "Description",
+        "items": "Items",
+        "members": "Members",
+        "role": "Role"
+      }
+    },
+    "platformAdmin": {
+      "tabs": {
+        "organizations": "Organizations",
+        "users": "Users"
+      },
+      "stats": {
+        "totalOrganizations": "Total Organizations",
+        "totalUsers": "Total Users",
+        "totalItems": "Total Items"
+      },
+      "users": {
+        "title": "All Users",
+        "table": {
+          "name": "Name",
+          "email": "Email",
+          "role": "Role",
+          "organizations": "Organizations",
+          "joined": "Joined",
+          "actions": "Actions",
+          "edit": "Edit",
+          "none": "None"
+        }
       }
     }
   },

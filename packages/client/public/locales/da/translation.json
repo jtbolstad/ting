@@ -342,6 +342,46 @@
         "save": "Gem",
         "create": "Opret",
         "cancel": "Annuller"
+      },
+      "table": {
+        "name": "Navn",
+        "members": "Medlemmer",
+        "items": "Værktøjer",
+        "actions": "Handlinger",
+        "view": "Vis",
+        "edit": "Rediger",
+        "delete": "Slet"
+      },
+      "details": {
+        "slug": "Slug",
+        "description": "Beskrivelse",
+        "items": "Værktøjer",
+        "members": "Medlemmer",
+        "role": "Rolle"
+      }
+    },
+    "platformAdmin": {
+      "tabs": {
+        "organizations": "Organisationer",
+        "users": "Brugere"
+      },
+      "stats": {
+        "totalOrganizations": "I alt organisationer",
+        "totalUsers": "I alt brugere",
+        "totalItems": "I alt værktøjer"
+      },
+      "users": {
+        "title": "Alle brugere",
+        "table": {
+          "name": "Navn",
+          "email": "E-mail",
+          "role": "Rolle",
+          "organizations": "Organisationer",
+          "joined": "Blev medlem",
+          "actions": "Handlinger",
+          "edit": "Rediger",
+          "none": "Ingen"
+        }
       }
     }
   },

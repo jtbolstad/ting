@@ -237,17 +237,17 @@ export function AdminOverview() {
           <div className="text-3xl font-bold text-indigo-600">
             {organizations.length}
           </div>
-          <div className="text-gray-600">Total Organizations</div>
+          <div className="text-gray-600">{t("platformAdmin.stats.totalOrganizations")}</div>
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <div className="text-3xl font-bold text-blue-600">{users.length}</div>
-          <div className="text-gray-600">Total Users</div>
+          <div className="text-gray-600">{t("platformAdmin.stats.totalUsers")}</div>
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
           <div className="text-3xl font-bold text-green-600">
             {organizations.reduce((sum, org) => sum + org.itemCount, 0)}
           </div>
-          <div className="text-gray-600">Total Items</div>
+          <div className="text-gray-600">{t("platformAdmin.stats.totalItems")}</div>
         </div>
       </div>
 
@@ -262,7 +262,7 @@ export function AdminOverview() {
                 : "text-gray-500"
             }`}
           >
-            Organizations
+            {t("platformAdmin.tabs.organizations")}
           </button>
           <button
             onClick={() => setActiveTab("users")}
@@ -272,7 +272,7 @@ export function AdminOverview() {
                 : "text-gray-500"
             }`}
           >
-            Users
+            {t("platformAdmin.tabs.users")}
           </button>
         </div>
       </div>
@@ -297,16 +297,16 @@ export function AdminOverview() {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        Name
+                        {t("admin.organizations.table.name")}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        Members
+                        {t("admin.organizations.table.members")}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        Items
+                        {t("admin.organizations.table.items")}
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                        Actions
+                        {t("admin.organizations.table.actions")}
                       </th>
                     </tr>
                   </thead>
@@ -340,13 +340,13 @@ export function AdminOverview() {
                                 : "text-indigo-600 hover:text-indigo-900"
                             }`}
                           >
-                            View
+                            {t("admin.organizations.table.view")}
                           </button>
                           <button
                             onClick={() => handleEditOrganization(org)}
                             className="text-sm px-3 py-1 text-indigo-600 hover:text-indigo-900"
                           >
-                            Edit
+                            {t("admin.organizations.table.edit")}
                           </button>
                         </td>
                       </tr>
@@ -369,35 +369,35 @@ export function AdminOverview() {
                     onClick={() => handleEditOrganization(selectedOrgDetails)}
                     className="px-3 py-1 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700"
                   >
-                    Edit
+                    {t("admin.organizations.table.edit")}
                   </button>
                   <button
                     onClick={() => setDeleteConfirmOrgId(selectedOrgDetails.id)}
                     className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700"
                   >
-                    Delete
+                    {t("admin.organizations.table.delete")}
                   </button>
                 </div>
               </div>
               <div className="bg-white rounded-lg shadow p-6 space-y-6">
                 <div>
-                  <p className="text-gray-600 text-sm">Slug</p>
+                  <p className="text-gray-600 text-sm">{t("admin.organizations.details.slug")}</p>
                   <p className="font-medium">{selectedOrgDetails.slug}</p>
                 </div>
                 <div>
-                  <p className="text-gray-600 text-sm">Description</p>
+                  <p className="text-gray-600 text-sm">{t("admin.organizations.details.description")}</p>
                   <p className="font-medium">
                     {selectedOrgDetails.description || "—"}
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-600 text-sm">Items</p>
+                  <p className="text-gray-600 text-sm">{t("admin.organizations.details.items")}</p>
                   <p className="text-3xl font-bold text-green-600">
                     {selectedOrgDetails.itemCount}
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-600 text-sm mb-3">Members</p>
+                  <p className="text-gray-600 text-sm mb-3">{t("admin.organizations.details.members")}</p>
                   <div className="space-y-2">
                     {selectedOrgDetails.members.map((member: any) => (
                       <div
@@ -422,29 +422,29 @@ export function AdminOverview() {
       {/* Users Tab */}
       {activeTab === "users" && (
         <div>
-          <h2 className="text-2xl font-bold mb-4">All Users</h2>
+          <h2 className="text-2xl font-bold mb-4">{t("platformAdmin.users.title")}</h2>
           <div className="bg-white rounded-lg shadow overflow-hidden">
             <div className="overflow-x-auto">
               <table className="min-w-full">
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                      Name
+                      {t("platformAdmin.users.table.name")}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                      Email
+                      {t("platformAdmin.users.table.email")}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                      Role
+                      {t("platformAdmin.users.table.role")}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                      Organizations
+                      {t("platformAdmin.users.table.organizations")}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                      Joined
+                      {t("platformAdmin.users.table.joined")}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                      Actions
+                      {t("platformAdmin.users.table.actions")}
                     </th>
                   </tr>
                 </thead>
@@ -467,7 +467,7 @@ export function AdminOverview() {
                       <td className="px-6 py-4">
                         <div className="flex flex-wrap gap-1">
                           {user.memberships.length === 0 ? (
-                            <span className="text-gray-500 text-sm">None</span>
+                            <span className="text-gray-500 text-sm">{t("platformAdmin.users.table.none")}</span>
                           ) : (
                             user.memberships.map((m) => (
                               <span
@@ -488,7 +488,7 @@ export function AdminOverview() {
                           onClick={() => handleEditUser(user)}
                           className="text-indigo-600 hover:text-indigo-900 text-sm"
                         >
-                          Edit
+                          {t("platformAdmin.users.table.edit")}
                         </button>
                       </td>
                     </tr>

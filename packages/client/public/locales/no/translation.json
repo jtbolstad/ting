@@ -343,6 +343,46 @@
         "save": "Lagre",
         "create": "Opprett",
         "cancel": "Avbryt"
+      },
+      "table": {
+        "name": "Navn",
+        "members": "Medlemmer",
+        "items": "Verktøy",
+        "actions": "Handlinger",
+        "view": "Vis",
+        "edit": "Rediger",
+        "delete": "Slett"
+      },
+      "details": {
+        "slug": "Slug",
+        "description": "Beskrivelse",
+        "items": "Verktøy",
+        "members": "Medlemmer",
+        "role": "Rolle"
+      }
+    },
+    "platformAdmin": {
+      "tabs": {
+        "organizations": "Organisasjoner",
+        "users": "Brukere"
+      },
+      "stats": {
+        "totalOrganizations": "Totalt organisasjoner",
+        "totalUsers": "Totalt brukere",
+        "totalItems": "Totalt verktøy"
+      },
+      "users": {
+        "title": "Alle brukere",
+        "table": {
+          "name": "Navn",
+          "email": "E-post",
+          "role": "Rolle",
+          "organizations": "Organisasjoner",
+          "joined": "Ble medlem",
+          "actions": "Handlinger",
+          "edit": "Rediger",
+          "none": "Ingen"
+        }
       }
     }
   },
