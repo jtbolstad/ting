@@ -324,6 +324,26 @@
       "create": "Opprett kategori",
       "update": "Oppdater kategori",
       "confirmDelete": "Er du sikker på at du vil slette denne kategorien? Dette vil feile hvis kategorien har verktøy."
+    },
+    "organizations": {
+      "title": "Organisasjoner",
+      "createButton": "Opprett organisasjon",
+      "type": "Type",
+      "editModal": {
+        "title": "Rediger organisasjon"
+      },
+      "createModal": {
+        "title": "Opprett organisasjon"
+      },
+      "form": {
+        "name": "Navn",
+        "type": "Type",
+        "slug": "Slug",
+        "description": "Beskrivelse",
+        "save": "Lagre",
+        "create": "Opprett",
+        "cancel": "Avbryt"
+      }
     }
   },
   "comments": {
@@ -491,5 +511,18 @@
     "placeholder": "Legg til tagger...",
     "hint": "Trykk Enter eller komma for å legge til en tagg",
     "remove": "Fjern tagg {{tag}}"
+  },
+  "notFound": {
+    "title": "Oops!",
+    "message": "Ser ut til at dette verktøyet har fløyet av. Siden du leter etter finnes ikke.",
+    "backToCatalog": "Tilbake til katalog"
+  },
+  "organizationType": {
+    "neighborhood": "Nabolag",
+    "school": "Skole / Makerspace",
+    "company": "Bedrift / Workshop",
+    "friends": "Venngruppe",
+    "noType": "— Ingen type —",
+    "suggestions": "Forslag:"
   }
 }
