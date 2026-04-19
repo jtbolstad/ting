@@ -5,10 +5,11 @@ import { useAuth } from '../context/AuthContext';
 interface ProtectedRouteProps {
   children: React.ReactNode;
   requireAdmin?: boolean;
+  requirePlatformAdmin?: boolean;
 }
 
-export function ProtectedRoute({ children, requireAdmin = false }: ProtectedRouteProps) {
-  const { isAuthenticated, isAdmin, isLoading } = useAuth();
+export function ProtectedRoute({ children, requireAdmin = false, requirePlatformAdmin = false }: ProtectedRouteProps) {
+  const { isAuthenticated, isAdmin, isPlatformAdmin, isLoading } = useAuth();
 
   if (isLoading) {
     return (
@@ -20,6 +21,10 @@ export function ProtectedRoute({ children, requireAdmin = false }: ProtectedRout
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  if (requirePlatformAdmin && !isPlatformAdmin) {
+    return <Navigate to="/" replace />;
   }
 
   if (requireAdmin && !isAdmin) {

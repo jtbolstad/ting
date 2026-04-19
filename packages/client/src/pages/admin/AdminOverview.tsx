@@ -458,10 +458,12 @@ export function AdminOverview() {
                           className={`inline-block px-3 py-1 text-xs rounded font-medium ${
                             user.role === "ADMIN"
                               ? "bg-purple-100 text-purple-800"
+                              : user.role === "ORG_ADMIN"
+                              ? "bg-indigo-100 text-indigo-800"
                               : "bg-gray-100 text-gray-800"
                           }`}
                         >
-                          {user.role}
+                          {user.role === "ORG_ADMIN" ? t("admin.userRole.orgAdmin") : user.role === "ADMIN" ? t("admin.userRole.admin") : t("admin.userRole.user")}
                         </span>
                       </td>
                       <td className="px-6 py-4">
@@ -545,8 +547,9 @@ export function AdminOverview() {
                   className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="">Select role...</option>
-                  <option value="USER">User</option>
-                  <option value="ADMIN">Admin</option>
+                  <option value="USER">{t("admin.userRole.user")}</option>
+                  <option value="ORG_ADMIN">{t("admin.userRole.orgAdmin")}</option>
+                  <option value="ADMIN">{t("admin.userRole.admin")}</option>
                 </select>
               </div>
 

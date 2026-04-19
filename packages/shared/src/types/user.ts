@@ -1,6 +1,6 @@
 import type { Membership } from './organization.js';
 
-export type UserRole = 'ADMIN' | 'MEMBER';
+export type UserRole = 'ADMIN' | 'ORG_ADMIN' | 'USER';
 
 export interface User {
   id: string;

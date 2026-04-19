@@ -200,10 +200,10 @@ router.patch(
         });
       }
 
-      if (role && !["ADMIN", "USER"].includes(role)) {
+      if (role && !["ADMIN", "ORG_ADMIN", "USER"].includes(role)) {
         return res.status(400).json({
           success: false,
-          error: "Role must be ADMIN or USER",
+          error: "Role must be ADMIN, ORG_ADMIN, or USER",
         });
       }
 

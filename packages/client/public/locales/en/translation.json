@@ -324,6 +324,11 @@
       "update": "Update Category",
       "confirmDelete": "Are you sure you want to delete this category? This will fail if the category has items."
     },
+    "userRole": {
+      "user": "User",
+      "orgAdmin": "Organization Admin",
+      "admin": "Platform Admin"
+    },
     "organizations": {
       "title": "Organizations",
       "createButton": "Create Organization",

@@ -324,6 +324,11 @@
       "update": "Opdater Kategori",
       "confirmDelete": "Er du sikker på, at du vil slette denne kategori? Dette vil fejle, hvis kategorien har værktøjer."
     },
+    "userRole": {
+      "user": "Bruger",
+      "orgAdmin": "Organisationsadministrator",
+      "admin": "Platformadministrator"
+    },
     "organizations": {
       "title": "Organisationer",
       "createButton": "Opret Organisation",

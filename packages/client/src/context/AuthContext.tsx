@@ -13,6 +13,7 @@ interface AuthContextType {
   isLoading: boolean;
   isAuthenticated: boolean;
   isAdmin: boolean;
+  isPlatformAdmin: boolean;
   memberships: Membership[];
   activeMembership: Membership | null;
   setActiveMembership: (membershipId: string) => void;
@@ -168,7 +169,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         refreshUser,
         isLoading,
         isAuthenticated: !!user,
-        isAdmin: user?.role === 'ADMIN' || isOrgAdmin,
+        isAdmin: user?.role === 'ADMIN' || user?.role === 'ORG_ADMIN' || isOrgAdmin,
+        isPlatformAdmin: user?.role === 'ADMIN',
         memberships,
         activeMembership,
         setActiveMembership,
