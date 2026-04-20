@@ -169,7 +169,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         refreshUser,
         isLoading,
         isAuthenticated: !!user,
-        isAdmin: user?.role === 'ADMIN' || user?.role === 'ORG_ADMIN' || isOrgAdmin,
+        isAdmin: (user?.role === 'ADMIN' || (user?.role as string) === 'ORG_ADMIN') || isOrgAdmin,
         isPlatformAdmin: user?.role === 'ADMIN',
         memberships,
         activeMembership,

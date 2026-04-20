@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { apiClient } from "../../api/client";
 import { Spinner } from "../../components/ui/Spinner";
-import { ORG_TYPES, slugify } from "../../utils/orgNameSuggestions";
+import { ORG_TYPES } from "../../utils/orgNameSuggestions";
 
 interface Organization {
   id: string;
