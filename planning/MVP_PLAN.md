@@ -369,3 +369,112 @@ The MVP is complete when:
 - Membership tiers (paid plans)
 - Custom branding per org
 - Advanced permissions system
+
+---
+
+## 📡 Event Logging Plan
+
+### Mål
+
+Strukturert hendelseslogging for sporing av brukeraktivitet, feilsøking og fremtidig statistikk/analyse.
+
+### Hendelseskategorier
+
+#### Autentisering
+
+| Hendelse             | Triggerpunkt        | Data              |
+| -------------------- | ------------------- | ----------------- |
+| `auth.login.success` | POST /auth/login    | userId, orgId, ip |
+| `auth.login.failure` | POST /auth/login    | email, reason, ip |
+| `auth.logout`        | POST /auth/logout   | userId            |
+| `auth.register`      | POST /auth/register | userId, orgId     |
+| `auth.token.refresh` | Token refresh       | userId            |
+
+#### Gjenstander (Items)
+
+| Hendelse              | Triggerpunkt             | Data                                 |
+| --------------------- | ------------------------ | ------------------------------------ |
+| `item.created`        | POST /items              | itemId, orgId, userId, ownerType     |
+| `item.updated`        | PATCH /items/:id         | itemId, orgId, userId, changedFields |
+| `item.deleted`        | DELETE /items/:id        | itemId, orgId, userId                |
+| `item.approved`       | PATCH /items/:id/approve | itemId, orgId, adminId               |
+| `item.rejected`       | PATCH /items/:id/reject  | itemId, orgId, adminId, reason       |
+| `item.status_changed` | Status update            | itemId, fromStatus, toStatus, userId |
+
+#### Reservasjoner
+
+| Hendelse                | Triggerpunkt                   | Data                                                     |
+| ----------------------- | ------------------------------ | -------------------------------------------------------- |
+| `reservation.created`   | POST /reservations             | reservationId, itemId, userId, orgId, startDate, endDate |
+| `reservation.cancelled` | PATCH /reservations/:id/cancel | reservationId, itemId, userId, reason                    |
+| `reservation.confirmed` | Admin confirm                  | reservationId, adminId                                   |
+| `reservation.conflict`  | Conflict detected              | itemId, userId, requestedDates                           |
+
+#### Utlån (Loans)
+
+| Hendelse        | Triggerpunkt            | Data                                        |
+| --------------- | ----------------------- | ------------------------------------------- |
+| `loan.checkout` | POST /loans             | loanId, itemId, userId, adminId, dueDate    |
+| `loan.checkin`  | PATCH /loans/:id/return | loanId, itemId, userId, adminId, returnDate |
+| `loan.overdue`  | Cron job                | loanId, itemId, userId, daysOverdue         |
+| `loan.extended` | Extend endpoint         | loanId, oldDueDate, newDueDate, userId      |
+
+#### Organisasjoner
+
+| Hendelse             | Triggerpunkt        | Data                            |
+| -------------------- | ------------------- | ------------------------------- |
+| `org.created`        | POST /organizations | orgId, ownerId                  |
+| `org.member_added`   | POST /memberships   | orgId, userId, role             |
+| `org.member_removed` | DELETE /memberships | orgId, userId                   |
+| `org.role_changed`   | PATCH /memberships  | orgId, userId, fromRole, toRole |
+
+### Teknisk implementasjon
+
+#### Fase 1 – Strukturert serverlogging (backend)
+
+- Bruk eksisterende `AuditLog`-modell i Prisma eller utvid til en egen `EventLog`-tabell
+- Logg til database + structured console (JSON) via Winston eller Pino
+- Legg til `EventLogger`-service i `packages/server/src/services/`
+- Kall fra routes/middleware etter vellykkede operasjoner
+
+**Hendelsesformat:**
+
+```json
+{
+  "timestamp": "2026-04-25T10:00:00Z",
+  "event": "loan.checkout",
+  "level": "info",
+  "orgId": "cmmrwuhqo00006ikrs6qoyikj",
+  "userId": "...",
+  "data": { "loanId": "...", "itemId": "...", "dueDate": "..." },
+  "requestId": "uuid"
+}
+```
+
+#### Fase 2 – Admin loggvisning
+
+- [ ] API-endepunkt: `GET /admin/events?type=&userId=&from=&to=&limit=`
+- [ ] Admin UI: hendelseslogg-tabell med filtrering og paginering
+- [ ] Vis siste N hendelser på AdminDashboard som aktivitetsstrøm
+
+#### Fase 3 – Analyse og varsler (post-MVP)
+
+- [ ] Dashbord med aggregert statistikk (utlån per uke, populære gjenstander)
+- [ ] Varsler ved unormale mønstre (mange feilede innlogginger, høy overdue-rate)
+- [ ] Eksport til CSV
+
+### Prioritering
+
+| Fase                                | Prioritet       | Estimat   |
+| ----------------------------------- | --------------- | --------- |
+| Fase 1: Backend EventLogger-service | P1 (bør ha)     | 2–3 timer |
+| Fase 2: Admin loggvisning           | P2 (kjekt å ha) | 3–4 timer |
+| Fase 3: Analyse                     | P3 (post-MVP)   | 8+ timer  |
+
+### Eksisterende infrastruktur
+
+- ✅ `AuditLog`-modell i Prisma (kan utvides eller gjenbrukes)
+- ✅ Organization middleware (orgId tilgjengelig i alle autentiserte routes)
+- ✅ JWT-auth (userId tilgjengelig i req.user)
+- [ ] Mangler: strukturert JSON-logging til fil/ekstern tjeneste
+- [ ] Mangler: admin UI for å se logger
