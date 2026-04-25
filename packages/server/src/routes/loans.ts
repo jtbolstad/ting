@@ -8,6 +8,7 @@ import {
   withOrganizationContext,
 } from "../middleware/organization.js";
 import { prisma } from "../prisma.js";
+import { emailService } from "../services/email.js";
 
 const router: ExpressRouter = Router();
 
@@ -201,6 +202,13 @@ router.post("/checkout", async (req: AuthRequest, res: Response) => {
         : null,
     ]);
 
+    emailService.sendCheckedOut(
+      loan.user.email,
+      loan.user.name,
+      loan.item.name,
+      loan.dueDate,
+    ).catch(console.error);
+
     const response: ApiResponse<Loan> = {
       success: true,
       data: serializeLoan(loan),
@@ -267,6 +275,12 @@ router.post("/:id/checkin", async (req: AuthRequest, res: Response) => {
         },
       }),
     ]);
+
+    emailService.sendCheckedIn(
+      updated.user.email,
+      updated.user.name,
+      updated.item.name,
+    ).catch(console.error);
 
     const response: ApiResponse<Loan> = {
       success: true,

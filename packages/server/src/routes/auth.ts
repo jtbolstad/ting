@@ -16,6 +16,7 @@ import {
   serializeMembership,
   serializeUser,
 } from "../services/auth.js";
+import { emailService } from "../services/email.js";
 
 const router: ExpressRouter = Router();
 const membershipInclude = {
@@ -126,6 +127,8 @@ router.post("/register", async (req: Request, res: Response) => {
         activeMembershipId,
       },
     };
+
+    emailService.sendWelcome(user.email, user.name, organization.name).catch(console.error);
 
     res.status(201).json(response);
   } catch (error) {

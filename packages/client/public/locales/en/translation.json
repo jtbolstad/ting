@@ -375,7 +375,8 @@
     "title": "Platform Admin Overview",
     "tabs": {
       "organizations": "Organizations",
-      "users": "Users"
+      "users": "Users",
+      "emails": "Email Log"
     },
     "stats": {
       "totalOrganizations": "Total Organizations",

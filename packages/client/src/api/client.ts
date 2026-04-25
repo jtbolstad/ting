@@ -635,6 +635,18 @@ class ApiClient {
       method: "DELETE",
     });
   }
+
+  async getEmailLogs(limit = 100): Promise<Array<{
+    id: string;
+    to: string;
+    subject: string;
+    event: string;
+    status: string;
+    error: string | null;
+    createdAt: string;
+  }>> {
+    return this.request(`/admin/email-logs?limit=${limit}`);
+  }
 }
 
 export const apiClient = new ApiClient();

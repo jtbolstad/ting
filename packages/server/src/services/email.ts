@@ -1,10 +1,12 @@
 import nodemailer from 'nodemailer';
+import { prisma } from '../prisma.js';
 
 interface EmailOptions {
   to: string;
   subject: string;
   text: string;
   html?: string;
+  event?: string;
 }
 
 class EmailService {
@@ -17,7 +19,7 @@ class EmailService {
   private initializeTransporter() {
     // For development, use ethereal email (fake SMTP)
     // In production, replace with real SMTP credentials
-    if (process.env.NODE_ENV === 'production') {
+    // if (process.env.NODE_ENV === 'production') {
       this.transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: parseInt(process.env.SMTP_PORT || '587'),
@@ -27,24 +29,27 @@ class EmailService {
           pass: process.env.SMTP_PASS,
         },
       });
-    } else {
-      // Development mode - log emails to console
-      console.log('📧 Email service initialized in development mode (emails will be logged)');
-    }
+    // } else {
+    //   // Development mode - log emails to console
+    //   console.log('📧 Email service initialized in development mode (emails will be logged)');
+    // }
   }
 
-  async sendEmail({ to, subject, text, html }: EmailOptions): Promise<void> {
-    if (!this.transporter) {
+  async sendEmail({ to, subject, text, html, event }: EmailOptions): Promise<void> {
+    // if (!this.transporter) {
       // In development, just log the email
       console.log('\n📧 Email would be sent:');
       console.log(`To: ${to}`);
       console.log(`Subject: ${subject}`);
       console.log(`Body: ${text}`);
       console.log('---\n');
-      return;
-    }
+      // return;
+    // }
 
     try {
+      if (!this.transporter) {
+        throw new Error('Email transporter is not initialized.');
+      }
       const info = await this.transporter.sendMail({
         from: process.env.EMAIL_FROM || 'noreply@ting.com',
         to,
@@ -54,8 +59,10 @@ class EmailService {
       });
 
       console.log(`✅ Email sent: ${info.messageId}`);
+      prisma.emailLog.create({ data: { to, subject, event: event ?? 'unknown', status: 'sent' } }).catch(() => {});
     } catch (error) {
       console.error('❌ Failed to send email:', error);
+      prisma.emailLog.create({ data: { to, subject, event: event ?? 'unknown', status: 'failed', error: String(error) } }).catch(() => {});
       throw error;
     }
   }
@@ -71,7 +78,7 @@ class EmailService {
       <p>Thank you!</p>
     `;
 
-    await this.sendEmail({ to: userEmail, subject, text, html });
+    await this.sendEmail({ to: userEmail, subject, text, html, event: 'due_soon' });
   }
 
   async sendOverdueNotice(userEmail: string, userName: string, itemName: string, dueDate: Date): Promise<void> {
@@ -85,7 +92,7 @@ class EmailService {
       <p>Thank you for your cooperation.</p>
     `;
 
-    await this.sendEmail({ to: userEmail, subject, text, html });
+    await this.sendEmail({ to: userEmail, subject, text, html, event: 'overdue' });
   }
 
   async sendReservationConfirmed(
@@ -103,7 +110,7 @@ class EmailService {
       <p>Din reservasjon av <strong>${itemName}</strong> er bekreftet.</p>
       <p><strong>Periode:</strong> ${startDate.toLocaleDateString()} – ${endDate.toLocaleDateString()}</p>
     `;
-    await this.sendEmail({ to: userEmail, subject, text, html });
+    await this.sendEmail({ to: userEmail, subject, text, html, event: 'reservation_confirmed' });
   }
 
   async sendReservationCancelled(
@@ -120,7 +127,7 @@ class EmailService {
       <p>Hei ${userName},</p>
       <p>Din reservasjon av <strong>${itemName}</strong> (${startDate.toLocaleDateString()} – ${endDate.toLocaleDateString()}) er avbrutt.</p>
     `;
-    await this.sendEmail({ to: userEmail, subject, text, html });
+    await this.sendEmail({ to: userEmail, subject, text, html, event: 'reservation_cancelled' });
   }
 
   async sendApprovalRequest(
@@ -139,7 +146,7 @@ class EmailService {
     `;
 
     for (const email of adminEmails) {
-      await this.sendEmail({ to: email, subject, text, html });
+      await this.sendEmail({ to: email, subject, text, html, event: 'approval_request' });
     }
   }
 
@@ -153,7 +160,7 @@ class EmailService {
       <p>Takk for at du bidrar til nabolaget!</p>
     `;
 
-    await this.sendEmail({ to: userEmail, subject, text, html });
+    await this.sendEmail({ to: userEmail, subject, text, html, event: 'item_approved' });
   }
 
   async sendItemRejected(
@@ -175,7 +182,114 @@ class EmailService {
       <p>Ta kontakt med administrator hvis du har spørsmål.</p>
     `;
 
-    await this.sendEmail({ to: userEmail, subject, text, html });
+    await this.sendEmail({ to: userEmail, subject, text, html, event: 'item_rejected' });
+  }
+
+  async sendWelcome(userEmail: string, userName: string, orgName: string): Promise<void> {
+    const subject = `Velkommen til ${orgName} på Ting!`;
+    const text = `Hei ${userName},\n\nVelkommen til ${orgName} på Ting! Du kan nå bla i katalogen og låne verktøy og utstyr fra fellesskapet.\n\nHilsen Ting`;
+    const html = `
+      <h2 style="color: #6366f1;">Velkommen til ${orgName}!</h2>
+      <p>Hei ${userName},</p>
+      <p>Du er nå registrert på <strong>Ting</strong> og medlem av <strong>${orgName}</strong>.</p>
+      <p>Bla i katalogen og lån verktøy og utstyr fra fellesskapet.</p>
+      <p>Hilsen Ting</p>
+    `;
+    await this.sendEmail({ to: userEmail, subject, text, html, event: 'welcome' });
+  }
+
+  async sendCheckedOut(
+    userEmail: string,
+    userName: string,
+    itemName: string,
+    dueDate: Date,
+  ): Promise<void> {
+    const subject = `Du har lånt: ${itemName}`;
+    const text = `Hei ${userName},\n\n"${itemName}" er nå registrert som utlånt til deg.\nLeveres tilbake innen: ${dueDate.toLocaleDateString('no-NO')}\n\nHilsen Ting`;
+    const html = `
+      <h2>Utlånsbekreftelse</h2>
+      <p>Hei ${userName},</p>
+      <p><strong>${itemName}</strong> er nå registrert som utlånt til deg.</p>
+      <p><strong>Leveringsfrist:</strong> ${dueDate.toLocaleDateString('no-NO')}</p>
+      <p>Hilsen Ting</p>
+    `;
+    await this.sendEmail({ to: userEmail, subject, text, html, event: 'checked_out' });
+  }
+
+  async sendCheckedIn(userEmail: string, userName: string, itemName: string): Promise<void> {
+    const subject = `${itemName} er levert inn`;
+    const text = `Hei ${userName},\n\nTakk! "${itemName}" er registrert som innlevert.\n\nHilsen Ting`;
+    const html = `
+      <h2>Innlevering bekreftet</h2>
+      <p>Hei ${userName},</p>
+      <p>Takk! <strong>${itemName}</strong> er registrert som innlevert.</p>
+      <p>Hilsen Ting</p>
+    `;
+    await this.sendEmail({ to: userEmail, subject, text, html, event: 'checked_in' });
+  }
+
+  async sendReservationReminderDay(
+    userEmail: string,
+    userName: string,
+    itemName: string,
+    startDate: Date,
+  ): Promise<void> {
+    const subject = `Påminnelse: ${itemName} er klar til henting i morgen`;
+    const text = `Hei ${userName},\n\nHusk at reservasjonen din av "${itemName}" starter i morgen (${startDate.toLocaleDateString('no-NO')}).\n\nHilsen Ting`;
+    const html = `
+      <h2>Påminnelse: Reservasjon starter i morgen</h2>
+      <p>Hei ${userName},</p>
+      <p><strong>${itemName}</strong> er klar til henting i morgen, <strong>${startDate.toLocaleDateString('no-NO')}</strong>.</p>
+      <p>Hilsen Ting</p>
+    `;
+    await this.sendEmail({ to: userEmail, subject, text, html, event: 'reservation_reminder_day' });
+  }
+
+  async sendReservationCancelledByAdmin(
+    userEmail: string,
+    userName: string,
+    itemName: string,
+    startDate: Date,
+    endDate: Date,
+    reason?: string,
+  ): Promise<void> {
+    const subject = `Reservasjon kansellert av administrator: ${itemName}`;
+    const reasonText = reason ? `\n\nÅrsak: ${reason}` : '';
+    const text = `Hei ${userName},\n\nDin reservasjon av "${itemName}" (${startDate.toLocaleDateString('no-NO')} – ${endDate.toLocaleDateString('no-NO')}) er kansellert av en administrator.${reasonText}\n\nTa kontakt med administrator for mer informasjon.\n\nHilsen Ting`;
+    const reasonHtml = reason ? `<p><strong>Årsak:</strong> ${reason}</p>` : '';
+    const html = `
+      <h2 style="color: #dc2626;">Reservasjon kansellert</h2>
+      <p>Hei ${userName},</p>
+      <p>Din reservasjon av <strong>${itemName}</strong> (${startDate.toLocaleDateString('no-NO')} – ${endDate.toLocaleDateString('no-NO')}) er kansellert av en administrator.</p>
+      ${reasonHtml}
+      <p>Ta kontakt med administrator for mer informasjon.</p>
+      <p>Hilsen Ting</p>
+    `;
+    await this.sendEmail({ to: userEmail, subject, text, html, event: 'reservation_cancelled_by_admin' });
+  }
+
+  async sendOrgRoleChanged(
+    userEmail: string,
+    userName: string,
+    orgName: string,
+    newRole: string,
+  ): Promise<void> {
+    const roleLabels: Record<string, string> = {
+      MEMBER: 'Medlem',
+      MANAGER: 'Administrator',
+      ADMIN: 'Administrator',
+      OWNER: 'Eier',
+    };
+    const roleLabel = roleLabels[newRole] ?? newRole;
+    const subject = `Rollen din i ${orgName} er endret`;
+    const text = `Hei ${userName},\n\nRollen din i ${orgName} er endret til: ${roleLabel}.\n\nHilsen Ting`;
+    const html = `
+      <h2>Rolle endret</h2>
+      <p>Hei ${userName},</p>
+      <p>Rollen din i <strong>${orgName}</strong> er endret til: <strong>${roleLabel}</strong>.</p>
+      <p>Hilsen Ting</p>
+    `;
+    await this.sendEmail({ to: userEmail, subject, text, html, event: 'org_role_changed' });
   }
 }
 

@@ -36,9 +36,20 @@ export function AdminOverview() {
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"organizations" | "users">(
-    "organizations",
-  );
+  const [activeTab, setActiveTab] = useState<
+    "organizations" | "users" | "emails"
+  >("organizations");
+  const [emailLogs, setEmailLogs] = useState<
+    Array<{
+      id: string;
+      to: string;
+      subject: string;
+      event: string;
+      status: string;
+      error: string | null;
+      createdAt: string;
+    }>
+  >([]);
   const [selectedOrgId, setSelectedOrgId] = useState<string | null>(null);
   const [selectedOrgDetails, setSelectedOrgDetails] = useState<any>(null);
   const [editingUserId, setEditingUserId] = useState<string | null>(null);
@@ -91,6 +102,15 @@ export function AdminOverview() {
       console.error("Failed to load admin overview data:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadEmailLogs = async () => {
+    try {
+      const logs = await apiClient.getEmailLogs(200);
+      setEmailLogs(logs);
+    } catch (error) {
+      console.error("Failed to load email logs:", error);
     }
   };
 
@@ -302,6 +322,19 @@ export function AdminOverview() {
             }`}
           >
             {t("platformAdmin.tabs.users")}
+          </button>
+          <button
+            onClick={() => {
+              setActiveTab("emails");
+              loadEmailLogs();
+            }}
+            className={`pb-4 px-1 ${
+              activeTab === "emails"
+                ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
+                : "text-gray-500"
+            }`}
+          >
+            {t("platformAdmin.tabs.emails")}
           </button>
         </div>
       </div>
@@ -577,7 +610,100 @@ export function AdminOverview() {
         </div>
       )}
 
-      {/* Edit User Modal */}
+      {/* Email Log Tab */}
+      {activeTab === "emails" && (
+        <div>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold">
+              {t("platformAdmin.tabs.emails")}
+            </h2>
+            <button
+              onClick={loadEmailLogs}
+              className="px-3 py-1.5 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700"
+            >
+              {t("common.loading") === "Loading..."
+                ? "Refresh"
+                : t("common.loading")}
+            </button>
+          </div>
+          <div className="bg-white rounded-lg shadow overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="min-w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Tidspunkt
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Til
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Event
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Emne
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Status
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {emailLogs.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan={5}
+                        className="px-4 py-8 text-center text-gray-500"
+                      >
+                        Ingen e-poster logget
+                      </td>
+                    </tr>
+                  ) : (
+                    emailLogs.map((log) => (
+                      <tr key={log.id}>
+                        <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">
+                          {new Date(log.createdAt).toLocaleString("no-NO")}
+                        </td>
+                        <td className="px-4 py-3 text-sm">{log.to}</td>
+                        <td className="px-4 py-3">
+                          <span className="inline-block px-2 py-0.5 text-xs rounded bg-indigo-100 text-indigo-800 font-mono">
+                            {log.event}
+                          </span>
+                        </td>
+                        <td
+                          className="px-4 py-3 text-sm text-gray-700 max-w-xs truncate"
+                          title={log.subject}
+                        >
+                          {log.subject}
+                        </td>
+                        <td className="px-4 py-3">
+                          <span
+                            className={`inline-block px-2 py-0.5 text-xs rounded font-medium ${
+                              log.status === "sent"
+                                ? "bg-green-100 text-green-800"
+                                : "bg-red-100 text-red-800"
+                            }`}
+                          >
+                            {log.status}
+                          </span>
+                          {log.error && (
+                            <div
+                              className="text-xs text-red-600 mt-1 max-w-xs truncate"
+                              title={log.error}
+                            >
+                              {log.error}
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
       {editingUserId && users.find((u) => u.id === editingUserId) && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
