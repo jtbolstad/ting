@@ -376,7 +376,8 @@
     "title": "Plattformadministrasjon",
     "tabs": {
       "organizations": "Organisasjoner",
-      "users": "Brukere"
+      "users": "Brukere",
+      "emails": "E-postlogg"
     },
     "stats": {
       "totalOrganizations": "Totalt organisasjoner",

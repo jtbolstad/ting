@@ -3,6 +3,7 @@ import type { Router as ExpressRouter, Response } from "express";
 import { Router } from "express";
 import { authenticate, type AuthRequest } from "../middleware/auth.js";
 import { prisma } from "../prisma.js";
+import { emailService } from "../services/email.js";
 
 const router: ExpressRouter = Router();
 
@@ -216,6 +217,10 @@ router.patch(
         where: { id: userId },
         data: updateData,
       });
+
+      if (role !== undefined && role !== user.role) {
+        emailService.sendOrgRoleChanged(user.email, user.name, 'Ting', role).catch(console.error);
+      }
 
       const response: ApiResponse<{
         id: string;
@@ -488,6 +493,26 @@ router.delete(
       });
     }
   }
+);
+
+// Email log (platform admin only)
+router.get(
+  "/email-logs",
+  authenticate,
+  requirePlatformAdmin,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const limit = Math.min(parseInt((req.query.limit as string) || '100'), 500);
+      const logs = await prisma.emailLog.findMany({
+        orderBy: { createdAt: 'desc' },
+        take: limit,
+      });
+      res.json({ success: true, data: logs });
+    } catch (error) {
+      console.error('Email log error:', error);
+      res.status(500).json({ success: false, error: 'Failed to fetch email logs' });
+    }
+  },
 );
 
 export default router;

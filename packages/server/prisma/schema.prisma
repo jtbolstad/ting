@@ -273,3 +273,15 @@ model AuditLog {
 
   @@index([organizationId, createdAt])
 }
+
+model EmailLog {
+  id        String   @id @default(cuid())
+  to        String
+  subject   String
+  event     String
+  status    String   @default("sent") // sent | failed
+  error     String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}

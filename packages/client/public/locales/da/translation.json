@@ -375,7 +375,8 @@
     "title": "Platformadministration",
     "tabs": {
       "organizations": "Organisationer",
-      "users": "Brugere"
+      "users": "Brugere",
+      "emails": "E-maillog"
     },
     "stats": {
       "totalOrganizations": "I alt organisationer",

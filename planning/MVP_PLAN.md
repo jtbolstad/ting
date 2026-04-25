@@ -15,7 +15,20 @@
 - ✅ Full organizations API (create, manage, memberships, groups)
 - ✅ Items, Categories, Loans, Reservations APIs with org context
 - ✅ JWT authentication with bcrypt
-- ✅ Email reminder service
+- ✅ Email service (nodemailer, dev-mode logging)
+- ✅ Email: due-soon reminder
+- ✅ Email: overdue notice
+- ✅ Email: reservation confirmed
+- ✅ Email: reservation cancelled (by user)
+- ✅ Email: item approval request (to admins)
+- ✅ Email: item approved
+- ✅ Email: item rejected
+- ✅ Email: welcome on registration
+- ✅ Email: checkout confirmation
+- ✅ Email: checkin confirmation
+- ✅ Email: org role changed
+- ✅ Email: reservation cancelled by admin (method ready, not wired to route)
+- ✅ Email: reservation reminder 1 day before (method ready, needs cron job)
 - ✅ Audit logging system
 - ✅ Test seed data for Oslo & Bergen organizations
 - ✅ Image upload API with multer and sharp
