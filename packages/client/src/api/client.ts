@@ -647,6 +647,13 @@ class ApiClient {
   }>> {
     return this.request(`/admin/email-logs?limit=${limit}`);
   }
+
+  async sendTestEmail(to: string, subject: string, text: string): Promise<void> {
+    await this.request("/admin/send-test-email", {
+      method: "POST",
+      body: JSON.stringify({ to, subject, text }),
+    });
+  }
 }
 
 export const apiClient = new ApiClient();

@@ -495,6 +495,30 @@ router.delete(
   }
 );
 
+// Send test email (platform admin only)
+router.post(
+  "/send-test-email",
+  authenticate,
+  requirePlatformAdmin,
+  async (req: AuthRequest, res: Response) => {
+    const { to, subject, text } = req.body as { to?: string; subject?: string; text?: string };
+    if (!to || !subject || !text) {
+      return res.status(400).json({ success: false, error: "to, subject, and text are required" });
+    }
+    // Basic email validation
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRe.test(to)) {
+      return res.status(400).json({ success: false, error: "Invalid email address" });
+    }
+    try {
+      await emailService.sendEmail({ to, subject, text, event: "test" });
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ success: false, error: "Failed to send email" });
+    }
+  },
+);
+
 // Email log (platform admin only)
 router.get(
   "/email-logs",

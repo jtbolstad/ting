@@ -20,7 +20,7 @@ export function AdminDashboard() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<
-    "loans" | "items" | "users" | "categories" | "locations"
+    "loans" | "items" | "users" | "categories" | "locations" | "email"
   >("loans");
 
   // Checkout modal state
@@ -57,7 +57,11 @@ export function AdminDashboard() {
   const [showAddLocation, setShowAddLocation] = useState(false);
   const [showEditLocation, setShowEditLocation] = useState(false);
   const [editingLocation, setEditingLocation] = useState<Location | null>(null);
-  const [locationForm, setLocationForm] = useState({ name: "", address: "", description: "" });
+  const [locationForm, setLocationForm] = useState({
+    name: "",
+    address: "",
+    description: "",
+  });
 
   // Item approval state
   const [showRejectModal, setShowRejectModal] = useState(false);
@@ -69,6 +73,26 @@ export function AdminDashboard() {
   const [newUser, setNewUser] = useState({ name: "", email: "", password: "" });
   const [addUserError, setAddUserError] = useState("");
 
+  // Email log state
+  const [emailLogs, setEmailLogs] = useState<
+    Array<{
+      id: string;
+      to: string;
+      subject: string;
+      event: string;
+      status: string;
+      error: string | null;
+      createdAt: string;
+    }>
+  >([]);
+  const [emailLogsLoading, setEmailLogsLoading] = useState(false);
+
+  // Test email form state
+  const [testEmailTo, setTestEmailTo] = useState("");
+  const [testEmailSubject, setTestEmailSubject] = useState("");
+  const [testEmailText, setTestEmailText] = useState("");
+  const [testEmailSending, setTestEmailSending] = useState(false);
+
   useEffect(() => {
     loadData();
   }, []);
@@ -79,7 +103,10 @@ export function AdminDashboard() {
       const [loansData, itemsData, categoriesData, usersData, locationsData] =
         await Promise.all([
           apiClient.getLoans(),
-          apiClient.getItems({ organizationId: activeOrganizationId, limit: 100 }),
+          apiClient.getItems({
+            organizationId: activeOrganizationId,
+            limit: 100,
+          }),
           apiClient.getCategories(activeOrganizationId),
           apiClient.getUsers(),
           apiClient.getLocations(),
@@ -92,7 +119,7 @@ export function AdminDashboard() {
       );
       setItems(itemsData.items);
       setCategories(categoriesData);
-      setUsers(usersData.map(item => item.user));
+      setUsers(usersData.map((item) => item.user));
       setLocations(locationsData);
     } catch (error) {
       console.error("Failed to load admin data:", error);
@@ -153,7 +180,7 @@ export function AdminDashboard() {
   };
 
   const handleDeleteItem = async (id: string) => {
-    if (!await confirm(t("admin.items.confirmDelete"))) return;
+    if (!(await confirm(t("admin.items.confirmDelete")))) return;
     try {
       await apiClient.deleteItem(id);
       await loadData();
@@ -198,7 +225,7 @@ export function AdminDashboard() {
   };
 
   const handleDeleteCategory = async (id: string) => {
-    if (!await confirm(t("admin.categories.confirmDelete"))) return;
+    if (!(await confirm(t("admin.categories.confirmDelete")))) return;
     try {
       await apiClient.deleteCategory(id);
       await loadData();
@@ -244,7 +271,7 @@ export function AdminDashboard() {
   };
 
   const handleDeleteLocation = async (id: string) => {
-    if (!await confirm(t("admin.locations.confirmDelete"))) return;
+    if (!(await confirm(t("admin.locations.confirmDelete")))) return;
     try {
       await apiClient.deleteLocation(id);
       await loadData();
@@ -254,7 +281,7 @@ export function AdminDashboard() {
   };
 
   const handleApproveItem = async (id: string) => {
-    if (!await confirm(t("admin.items.confirmApprove"))) return;
+    if (!(await confirm(t("admin.items.confirmApprove")))) return;
     try {
       await apiClient.approveItem(id);
       await loadData();
@@ -287,7 +314,12 @@ export function AdminDashboard() {
     setAddUserError("");
     if (!activeOrganizationId) return;
     try {
-      await apiClient.register(newUser.email, newUser.password, newUser.name, activeOrganizationId);
+      await apiClient.register(
+        newUser.email,
+        newUser.password,
+        newUser.name,
+        activeOrganizationId,
+      );
       setShowAddUser(false);
       setNewUser({ name: "", email: "", password: "" });
       await loadData();
@@ -394,6 +426,26 @@ export function AdminDashboard() {
           >
             {t("admin.tabs.locations")}
           </button>
+          <button
+            onClick={() => {
+              setActiveTab("email");
+              if (emailLogs.length === 0) {
+                setEmailLogsLoading(true);
+                apiClient
+                  .getEmailLogs(200)
+                  .then(setEmailLogs)
+                  .catch(console.error)
+                  .finally(() => setEmailLogsLoading(false));
+              }
+            }}
+            className={`pb-4 px-1 ${
+              activeTab === "email"
+                ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
+                : "text-gray-500"
+            }`}
+          >
+            E-post
+          </button>
         </div>
       </div>
 
@@ -412,59 +464,64 @@ export function AdminDashboard() {
 
           <div className="bg-white rounded-lg shadow overflow-hidden">
             <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t("admin.loans.item")}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t("admin.loans.user")}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t("admin.loans.checkedOut")}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t("admin.loans.dueDate")}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t("admin.loans.actions")}
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {loans.map((loan) => {
-                  const isOverdue = new Date(loan.dueDate) < new Date();
-                  return (
-                    <tr key={loan.id} className={isOverdue ? "bg-red-50" : ""}>
-                      <td className="px-6 py-4">
-                        <div className="font-medium">{loan.item?.name}</div>
-                      </td>
-                      <td className="px-6 py-4">{loan.user?.name}</td>
-                      <td className="px-6 py-4 text-sm">
-                        {new Date(loan.checkedOutAt).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span
-                          className={isOverdue ? "text-red-600 font-bold" : ""}
-                        >
-                          {new Date(loan.dueDate).toLocaleDateString()}
-                          {isOverdue && " (OVERDUE)"}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <button
-                          onClick={() => openCheckin(loan.id)}
-                          className="text-indigo-600 hover:text-indigo-900"
-                        >
-                          {t("admin.loans.checkin")}
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+              <table className="min-w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.loans.item")}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.loans.user")}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.loans.checkedOut")}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.loans.dueDate")}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.loans.actions")}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {loans.map((loan) => {
+                    const isOverdue = new Date(loan.dueDate) < new Date();
+                    return (
+                      <tr
+                        key={loan.id}
+                        className={isOverdue ? "bg-red-50" : ""}
+                      >
+                        <td className="px-6 py-4">
+                          <div className="font-medium">{loan.item?.name}</div>
+                        </td>
+                        <td className="px-6 py-4">{loan.user?.name}</td>
+                        <td className="px-6 py-4 text-sm">
+                          {new Date(loan.checkedOutAt).toLocaleDateString()}
+                        </td>
+                        <td className="px-6 py-4">
+                          <span
+                            className={
+                              isOverdue ? "text-red-600 font-bold" : ""
+                            }
+                          >
+                            {new Date(loan.dueDate).toLocaleDateString()}
+                            {isOverdue && " (OVERDUE)"}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <button
+                            onClick={() => openCheckin(loan.id)}
+                            className="text-indigo-600 hover:text-indigo-900"
+                          >
+                            {t("admin.loans.checkin")}
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -485,93 +542,98 @@ export function AdminDashboard() {
 
           <div className="bg-white rounded-lg shadow overflow-hidden">
             <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t("admin.items.name")}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t("admin.items.category")}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t("admin.items.status")}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t("admin.items.approvalStatus")}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t("admin.items.actions")}
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {items.map((item) => (
-                  <tr key={item.id}>
-                    <td className="px-6 py-4 font-medium">
-                      <Link to={`/items/${item.slug ?? item.id}`} className="text-indigo-600 hover:underline">
-                        {item.name}
-                      </Link>
-                    </td>
-                    <td className="px-6 py-4">{item.category?.name}</td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`px-2 py-1 text-xs rounded ${
-                          item.status === "AVAILABLE"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-red-100 text-red-800"
-                        }`}
-                      >
-                        {item.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`px-2 py-1 text-xs rounded ${
-                          item.approvalStatus === "APPROVED"
-                            ? "bg-green-100 text-green-800"
-                            : item.approvalStatus === "PENDING"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-red-100 text-red-800"
-                        }`}
-                      >
-                        {t(`admin.items.approvalValues.${item.approvalStatus}`)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 space-x-3">
-                      {item.approvalStatus === "PENDING" && (
-                        <>
-                          <button
-                            onClick={() => handleApproveItem(item.id)}
-                            className="text-green-600 hover:text-green-900"
-                          >
-                            {t("admin.items.approve")}
-                          </button>
-                          <button
-                            onClick={() => openRejectModal(item.id)}
-                            className="text-orange-600 hover:text-orange-900"
-                          >
-                            {t("admin.items.reject")}
-                          </button>
-                        </>
-                      )}
-                      <Link
-                        to={`/items/${item.slug ?? item.id}/edit`}
-                        className="text-indigo-600 hover:text-indigo-900"
-                      >
-                        {t("admin.items.edit")}
-                      </Link>
-                      <button
-                        onClick={() => handleDeleteItem(item.id)}
-                        className="text-red-600 hover:text-red-900"
-                      >
-                        {t("admin.items.delete")}
-                      </button>
-                    </td>
+              <table className="min-w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.items.name")}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.items.category")}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.items.status")}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.items.approvalStatus")}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.items.actions")}
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {items.map((item) => (
+                    <tr key={item.id}>
+                      <td className="px-6 py-4 font-medium">
+                        <Link
+                          to={`/items/${item.slug ?? item.id}`}
+                          className="text-indigo-600 hover:underline"
+                        >
+                          {item.name}
+                        </Link>
+                      </td>
+                      <td className="px-6 py-4">{item.category?.name}</td>
+                      <td className="px-6 py-4">
+                        <span
+                          className={`px-2 py-1 text-xs rounded ${
+                            item.status === "AVAILABLE"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-red-100 text-red-800"
+                          }`}
+                        >
+                          {item.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span
+                          className={`px-2 py-1 text-xs rounded ${
+                            item.approvalStatus === "APPROVED"
+                              ? "bg-green-100 text-green-800"
+                              : item.approvalStatus === "PENDING"
+                                ? "bg-yellow-100 text-yellow-800"
+                                : "bg-red-100 text-red-800"
+                          }`}
+                        >
+                          {t(
+                            `admin.items.approvalValues.${item.approvalStatus}`,
+                          )}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 space-x-3">
+                        {item.approvalStatus === "PENDING" && (
+                          <>
+                            <button
+                              onClick={() => handleApproveItem(item.id)}
+                              className="text-green-600 hover:text-green-900"
+                            >
+                              {t("admin.items.approve")}
+                            </button>
+                            <button
+                              onClick={() => openRejectModal(item.id)}
+                              className="text-orange-600 hover:text-orange-900"
+                            >
+                              {t("admin.items.reject")}
+                            </button>
+                          </>
+                        )}
+                        <Link
+                          to={`/items/${item.slug ?? item.id}/edit`}
+                          className="text-indigo-600 hover:text-indigo-900"
+                        >
+                          {t("admin.items.edit")}
+                        </Link>
+                        <button
+                          onClick={() => handleDeleteItem(item.id)}
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          {t("admin.items.delete")}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -583,7 +645,10 @@ export function AdminDashboard() {
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">{t("admin.users.title")}</h2>
             <button
-              onClick={() => { setShowAddUser(true); setAddUserError(""); }}
+              onClick={() => {
+                setShowAddUser(true);
+                setAddUserError("");
+              }}
               className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
             >
               {t("admin.users.addUser")}
@@ -591,46 +656,46 @@ export function AdminDashboard() {
           </div>
           <div className="bg-white rounded-lg shadow overflow-hidden">
             <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t("admin.users.name")}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t("admin.users.email")}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t("admin.users.role")}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t("admin.users.joined")}
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {users.map((user) => (
-                  <tr key={user.id}>
-                    <td className="px-6 py-4 font-medium">{user.name}</td>
-                    <td className="px-6 py-4">{user.email}</td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`px-2 py-1 text-xs rounded ${
-                          user.role === "ADMIN"
-                            ? "bg-purple-100 text-purple-800"
-                            : "bg-gray-100 text-gray-800"
-                        }`}
-                      >
-                        {user.role}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm">
-                      {new Date(user.createdAt).toLocaleDateString()}
-                    </td>
+              <table className="min-w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.users.name")}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.users.email")}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.users.role")}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.users.joined")}
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {users.map((user) => (
+                    <tr key={user.id}>
+                      <td className="px-6 py-4 font-medium">{user.name}</td>
+                      <td className="px-6 py-4">{user.email}</td>
+                      <td className="px-6 py-4">
+                        <span
+                          className={`px-2 py-1 text-xs rounded ${
+                            user.role === "ADMIN"
+                              ? "bg-purple-100 text-purple-800"
+                              : "bg-gray-100 text-gray-800"
+                          }`}
+                        >
+                          {user.role}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-sm">
+                        {new Date(user.createdAt).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -653,51 +718,54 @@ export function AdminDashboard() {
 
           <div className="bg-white rounded-lg shadow overflow-hidden">
             <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t("admin.categories.name")}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t("admin.categories.description")}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t("admin.categories.itemCount")}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    {t("admin.categories.actions")}
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {categories.map((category) => (
-                  <tr key={category.id}>
-                    <td className="px-6 py-4 font-medium">{category.name}</td>
-                    <td className="px-6 py-4 text-gray-600">
-                      {category.description || "-"}
-                    </td>
-                    <td className="px-6 py-4">
-                      {items.filter((i) => i.categoryId === category.id).length}
-                    </td>
-                    <td className="px-6 py-4 space-x-3">
-                      <button
-                        onClick={() => openEditCategory(category)}
-                        className="text-indigo-600 hover:text-indigo-900"
-                      >
-                        {t("admin.categories.edit")}
-                      </button>
-                      <button
-                        onClick={() => handleDeleteCategory(category.id)}
-                        className="text-red-600 hover:text-red-900"
-                      >
-                        {t("admin.categories.delete")}
-                      </button>
-                    </td>
+              <table className="min-w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.categories.name")}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.categories.description")}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.categories.itemCount")}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.categories.actions")}
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {categories.map((category) => (
+                    <tr key={category.id}>
+                      <td className="px-6 py-4 font-medium">{category.name}</td>
+                      <td className="px-6 py-4 text-gray-600">
+                        {category.description || "-"}
+                      </td>
+                      <td className="px-6 py-4">
+                        {
+                          items.filter((i) => i.categoryId === category.id)
+                            .length
+                        }
+                      </td>
+                      <td className="px-6 py-4 space-x-3">
+                        <button
+                          onClick={() => openEditCategory(category)}
+                          className="text-indigo-600 hover:text-indigo-900"
+                        >
+                          {t("admin.categories.edit")}
+                        </button>
+                        <button
+                          onClick={() => handleDeleteCategory(category.id)}
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          {t("admin.categories.delete")}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -721,50 +789,222 @@ export function AdminDashboard() {
           ) : (
             <div className="bg-white rounded-lg shadow overflow-hidden">
               <div className="overflow-x-auto">
-              <table className="min-w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                      {t("admin.locations.name")}
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                      {t("admin.locations.address")}
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                      {t("admin.locations.description")}
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                      {t("admin.locations.actions")}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {locations.map((location) => (
-                    <tr key={location.id}>
-                      <td className="px-6 py-4 font-medium">{location.name}</td>
-                      <td className="px-6 py-4 text-gray-600">{location.address || "-"}</td>
-                      <td className="px-6 py-4 text-gray-600">{location.description || "-"}</td>
-                      <td className="px-6 py-4 space-x-3">
-                        <button
-                          onClick={() => openEditLocation(location)}
-                          className="text-indigo-600 hover:text-indigo-900"
-                        >
-                          {t("admin.locations.edit")}
-                        </button>
-                        <button
-                          onClick={() => handleDeleteLocation(location.id)}
-                          className="text-red-600 hover:text-red-900"
-                        >
-                          {t("admin.locations.delete")}
-                        </button>
-                      </td>
+                <table className="min-w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        {t("admin.locations.name")}
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        {t("admin.locations.address")}
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        {t("admin.locations.description")}
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        {t("admin.locations.actions")}
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {locations.map((location) => (
+                      <tr key={location.id}>
+                        <td className="px-6 py-4 font-medium">
+                          {location.name}
+                        </td>
+                        <td className="px-6 py-4 text-gray-600">
+                          {location.address || "-"}
+                        </td>
+                        <td className="px-6 py-4 text-gray-600">
+                          {location.description || "-"}
+                        </td>
+                        <td className="px-6 py-4 space-x-3">
+                          <button
+                            onClick={() => openEditLocation(location)}
+                            className="text-indigo-600 hover:text-indigo-900"
+                          >
+                            {t("admin.locations.edit")}
+                          </button>
+                          <button
+                            onClick={() => handleDeleteLocation(location.id)}
+                            className="text-red-600 hover:text-red-900"
+                          >
+                            {t("admin.locations.delete")}
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Email Tab */}
+      {activeTab === "email" && (
+        <div className="space-y-8">
+          {/* Test email form */}
+          <div>
+            <h2 className="text-2xl font-bold mb-4">Send test-e-post</h2>
+            <div className="bg-white rounded-lg shadow p-6 max-w-lg">
+              <form
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  setTestEmailSending(true);
+                  try {
+                    await apiClient.sendTestEmail(
+                      testEmailTo,
+                      testEmailSubject,
+                      testEmailText,
+                    );
+                    toast.success("E-post sendt!");
+                    setTestEmailTo("");
+                    setTestEmailSubject("");
+                    setTestEmailText("");
+                    // Refresh log
+                    apiClient
+                      .getEmailLogs(200)
+                      .then(setEmailLogs)
+                      .catch(console.error);
+                  } catch (err: any) {
+                    toast.error(err.message || "Feil ved sending");
+                  } finally {
+                    setTestEmailSending(false);
+                  }
+                }}
+                className="space-y-4"
+              >
+                <div>
+                  <label className="block text-sm font-medium mb-1">Til</label>
+                  <input
+                    type="email"
+                    value={testEmailTo}
+                    onChange={(e) => setTestEmailTo(e.target.value)}
+                    required
+                    className="w-full px-3 py-2 border rounded"
+                    placeholder="mottaker@example.com"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Emne</label>
+                  <input
+                    type="text"
+                    value={testEmailSubject}
+                    onChange={(e) => setTestEmailSubject(e.target.value)}
+                    required
+                    className="w-full px-3 py-2 border rounded"
+                    placeholder="Testmelding fra Ting"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Melding
+                  </label>
+                  <textarea
+                    value={testEmailText}
+                    onChange={(e) => setTestEmailText(e.target.value)}
+                    required
+                    rows={4}
+                    className="w-full px-3 py-2 border rounded"
+                    placeholder="Skriv meldingstekst her..."
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={testEmailSending}
+                  className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:opacity-50"
+                >
+                  {testEmailSending ? "Sender..." : "Send"}
+                </button>
+              </form>
+            </div>
+          </div>
+
+          {/* Email log */}
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <h2 className="text-2xl font-bold">E-postlogg</h2>
+              <button
+                onClick={() => {
+                  setEmailLogsLoading(true);
+                  apiClient
+                    .getEmailLogs(200)
+                    .then(setEmailLogs)
+                    .catch(console.error)
+                    .finally(() => setEmailLogsLoading(false));
+                }}
+                className="text-sm text-indigo-600 hover:underline"
+              >
+                Oppdater
+              </button>
+            </div>
+            {emailLogsLoading ? (
+              <p className="text-gray-500">Laster...</p>
+            ) : emailLogs.length === 0 ? (
+              <p className="text-gray-500">Ingen e-poster logget ennå.</p>
+            ) : (
+              <div className="bg-white rounded-lg shadow overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-sm">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                          Tid
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                          Til
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                          Emne
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                          Hendelse
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                          Status
+                        </th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                          Feil
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {emailLogs.map((log) => (
+                        <tr key={log.id}>
+                          <td className="px-4 py-3 text-gray-500 whitespace-nowrap">
+                            {new Date(log.createdAt).toLocaleString("no")}
+                          </td>
+                          <td className="px-4 py-3">{log.to}</td>
+                          <td className="px-4 py-3">{log.subject}</td>
+                          <td className="px-4 py-3">
+                            <span className="px-2 py-0.5 bg-gray-100 rounded text-xs">
+                              {log.event}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3">
+                            <span
+                              className={`px-2 py-0.5 rounded text-xs font-medium ${
+                                log.status === "sent"
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-red-100 text-red-800"
+                              }`}
+                            >
+                              {log.status}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 text-red-600 text-xs">
+                            {log.error || "–"}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
 
@@ -849,10 +1089,14 @@ export function AdminDashboard() {
       {showCheckin && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-8 max-w-md w-full">
-            <h3 className="text-2xl font-bold mb-4">{t("admin.loans.checkinTitle")}</h3>
+            <h3 className="text-2xl font-bold mb-4">
+              {t("admin.loans.checkinTitle")}
+            </h3>
             <form onSubmit={handleCheckin} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">{t("item.condition.label")}</label>
+                <label className="block text-sm font-medium mb-1">
+                  {t("item.condition.label")}
+                </label>
                 <select
                   value={checkinCondition}
                   onChange={(e) => setCheckinCondition(e.target.value)}
@@ -861,11 +1105,15 @@ export function AdminDashboard() {
                   <option value="">{t("item.condition.unknown")}</option>
                   <option value="GOOD">{t("item.condition.good")}</option>
                   <option value="FAIR">{t("item.condition.fair")}</option>
-                  <option value="NEEDS_REPAIR">{t("item.condition.needsRepair")}</option>
+                  <option value="NEEDS_REPAIR">
+                    {t("item.condition.needsRepair")}
+                  </option>
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">{t("admin.loans.damageNote")}</label>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.loans.damageNote")}
+                </label>
                 <textarea
                   value={checkinDamageNote}
                   onChange={(e) => setCheckinDamageNote(e.target.value)}
@@ -875,10 +1123,17 @@ export function AdminDashboard() {
                 />
               </div>
               <div className="flex gap-2">
-                <button type="submit" className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+                <button
+                  type="submit"
+                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                >
                   {t("admin.loans.checkin")}
                 </button>
-                <button type="button" onClick={() => setShowCheckin(false)} className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400">
+                <button
+                  type="button"
+                  onClick={() => setShowCheckin(false)}
+                  className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                >
                   {t("common.cancel")}
                 </button>
               </div>
@@ -1024,7 +1279,9 @@ export function AdminDashboard() {
       {showRejectModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-8 max-w-md w-full">
-            <h3 className="text-2xl font-bold mb-4">{t("admin.items.reject")}</h3>
+            <h3 className="text-2xl font-bold mb-4">
+              {t("admin.items.reject")}
+            </h3>
             <form onSubmit={handleRejectItem} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-1">
@@ -1061,38 +1318,61 @@ export function AdminDashboard() {
       {showAddLocation && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-8 max-w-md w-full">
-            <h3 className="text-2xl font-bold mb-4">{t("admin.locations.addLocation")}</h3>
+            <h3 className="text-2xl font-bold mb-4">
+              {t("admin.locations.addLocation")}
+            </h3>
             <form onSubmit={handleAddLocation} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">{t("admin.locations.name")}</label>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.locations.name")}
+                </label>
                 <input
                   type="text"
                   value={locationForm.name}
-                  onChange={(e) => setLocationForm({ ...locationForm, name: e.target.value })}
+                  onChange={(e) =>
+                    setLocationForm({ ...locationForm, name: e.target.value })
+                  }
                   required
                   className="w-full px-3 py-2 border rounded"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">{t("admin.locations.address")}</label>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.locations.address")}
+                </label>
                 <input
                   type="text"
                   value={locationForm.address}
-                  onChange={(e) => setLocationForm({ ...locationForm, address: e.target.value })}
+                  onChange={(e) =>
+                    setLocationForm({
+                      ...locationForm,
+                      address: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 border rounded"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">{t("admin.locations.description")}</label>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.locations.description")}
+                </label>
                 <textarea
                   value={locationForm.description}
-                  onChange={(e) => setLocationForm({ ...locationForm, description: e.target.value })}
+                  onChange={(e) =>
+                    setLocationForm({
+                      ...locationForm,
+                      description: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 border rounded"
                   rows={3}
                 />
               </div>
               <div className="flex gap-2">
-                <button type="submit" className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+                <button
+                  type="submit"
+                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                >
                   {t("admin.locations.create")}
                 </button>
                 <button
@@ -1112,43 +1392,70 @@ export function AdminDashboard() {
       {showEditLocation && editingLocation && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-8 max-w-md w-full">
-            <h3 className="text-2xl font-bold mb-4">{t("admin.locations.editLocation")}</h3>
+            <h3 className="text-2xl font-bold mb-4">
+              {t("admin.locations.editLocation")}
+            </h3>
             <form onSubmit={handleEditLocation} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">{t("admin.locations.name")}</label>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.locations.name")}
+                </label>
                 <input
                   type="text"
                   value={locationForm.name}
-                  onChange={(e) => setLocationForm({ ...locationForm, name: e.target.value })}
+                  onChange={(e) =>
+                    setLocationForm({ ...locationForm, name: e.target.value })
+                  }
                   required
                   className="w-full px-3 py-2 border rounded"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">{t("admin.locations.address")}</label>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.locations.address")}
+                </label>
                 <input
                   type="text"
                   value={locationForm.address}
-                  onChange={(e) => setLocationForm({ ...locationForm, address: e.target.value })}
+                  onChange={(e) =>
+                    setLocationForm({
+                      ...locationForm,
+                      address: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 border rounded"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">{t("admin.locations.description")}</label>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.locations.description")}
+                </label>
                 <textarea
                   value={locationForm.description}
-                  onChange={(e) => setLocationForm({ ...locationForm, description: e.target.value })}
+                  onChange={(e) =>
+                    setLocationForm({
+                      ...locationForm,
+                      description: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 border rounded"
                   rows={3}
                 />
               </div>
               <div className="flex gap-2">
-                <button type="submit" className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+                <button
+                  type="submit"
+                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                >
                   {t("admin.locations.update")}
                 </button>
                 <button
                   type="button"
-                  onClick={() => { setShowEditLocation(false); setEditingLocation(null); setLocationForm({ name: "", address: "", description: "" }); }}
+                  onClick={() => {
+                    setShowEditLocation(false);
+                    setEditingLocation(null);
+                    setLocationForm({ name: "", address: "", description: "" });
+                  }}
                   className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
                 >
                   {t("common.cancel")}
@@ -1163,34 +1470,48 @@ export function AdminDashboard() {
       {showAddUser && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-8 max-w-md w-full">
-            <h3 className="text-2xl font-bold mb-4">{t("admin.users.addUser")}</h3>
+            <h3 className="text-2xl font-bold mb-4">
+              {t("admin.users.addUser")}
+            </h3>
             <form onSubmit={handleAddUser} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">{t("admin.users.name")}</label>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.users.name")}
+                </label>
                 <input
                   type="text"
                   value={newUser.name}
-                  onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+                  onChange={(e) =>
+                    setNewUser({ ...newUser, name: e.target.value })
+                  }
                   required
                   className="w-full px-3 py-2 border rounded"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">{t("admin.users.email")}</label>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.users.email")}
+                </label>
                 <input
                   type="email"
                   value={newUser.email}
-                  onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                  onChange={(e) =>
+                    setNewUser({ ...newUser, email: e.target.value })
+                  }
                   required
                   className="w-full px-3 py-2 border rounded"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">{t("admin.users.password")}</label>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.users.password")}
+                </label>
                 <input
                   type="password"
                   value={newUser.password}
-                  onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                  onChange={(e) =>
+                    setNewUser({ ...newUser, password: e.target.value })
+                  }
                   required
                   minLength={8}
                   className="w-full px-3 py-2 border rounded"
@@ -1208,7 +1529,11 @@ export function AdminDashboard() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => { setShowAddUser(false); setNewUser({ name: "", email: "", password: "" }); setAddUserError(""); }}
+                  onClick={() => {
+                    setShowAddUser(false);
+                    setNewUser({ name: "", email: "", password: "" });
+                    setAddUserError("");
+                  }}
                   className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
                 >
                   {t("common.cancel")}

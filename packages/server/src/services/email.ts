@@ -17,9 +17,7 @@ class EmailService {
   }
 
   private initializeTransporter() {
-    // For development, use ethereal email (fake SMTP)
-    // In production, replace with real SMTP credentials
-    // if (process.env.NODE_ENV === 'production') {
+    if (process.env.SMTP_HOST) {
       this.transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: parseInt(process.env.SMTP_PORT || '587'),
@@ -29,27 +27,26 @@ class EmailService {
           pass: process.env.SMTP_PASS,
         },
       });
-    // } else {
-    //   // Development mode - log emails to console
-    //   console.log('📧 Email service initialized in development mode (emails will be logged)');
-    // }
+      console.log('📧 Email service initialized with SMTP');
+    } else {
+      console.log('📧 Email service in dev mode (no SMTP_HOST set — emails will be logged only)');
+    }
   }
 
   async sendEmail({ to, subject, text, html, event }: EmailOptions): Promise<void> {
-    // if (!this.transporter) {
-      // In development, just log the email
-      console.log('\n📧 Email would be sent:');
-      console.log(`To: ${to}`);
-      console.log(`Subject: ${subject}`);
-      console.log(`Body: ${text}`);
-      console.log('---\n');
-      // return;
-    // }
+    console.log('\n📧 Email:');
+    console.log(`To: ${to}`);
+    console.log(`Subject: ${subject}`);
+    console.log(`Body: ${text}`);
+    console.log('---\n');
+
+    if (!this.transporter) {
+      // Dev mode: log to DB as "dev" status and return
+      prisma.emailLog.create({ data: { to, subject, event: event ?? 'unknown', status: 'dev' } }).catch(() => {});
+      return;
+    }
 
     try {
-      if (!this.transporter) {
-        throw new Error('Email transporter is not initialized.');
-      }
       const info = await this.transporter.sendMail({
         from: process.env.EMAIL_FROM || 'noreply@ting.com',
         to,
