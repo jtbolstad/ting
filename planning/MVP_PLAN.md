@@ -246,17 +246,17 @@
 
 ### Should Have (P1)
 
-- [ ] Calendar view in user dashboard
-- [ ] Availability timeline on catalog cards
-- [ ] Show pending items to submitting member
+- ✅ Calendar view in user dashboard
+- ✅ Availability timeline on catalog cards
+- ✅ Show pending items to submitting member
 - [ ] Email reminders (due tomorrow, overdue)
-- [ ] Admin: Manage categories
-- [ ] Admin: View users
-- [ ] Search items by name
-- [ ] Filter items by category
+- ✅ Admin: Manage categories
+- ✅ Admin: View users
+- ✅ Search items by name
+- ✅ Filter items by category
 - [ ] Filter items by availability
 - [ ] Mobile responsive design
-- [ ] Multi-language support (en, no, da)
+- ✅ Multi-language support (en, no, da)
 
 ### Nice to Have (P2)
 
@@ -264,12 +264,15 @@
 - ✅ Item manuals (PDF, link, text)
 - ✅ Item locations
 - ✅ Member-submitted items with approval workflow
-- [ ] Admin: Promote users to MANAGER/ADMIN
+- ✅ Admin: Promote users to MANAGER/ADMIN
 - [ ] Member groups with permissions
-- [ ] Extend loan duration
+- ✅ Extend loan duration
 - [ ] Late fees calculation
 - [ ] Export reports (CSV)
 - ✅ Audit log viewer
+- ✅ Admin: Filter loans by status
+- ✅ Admin: Filter items by category/status
+- ✅ User: View membership info
 
 ---
 
@@ -309,14 +312,14 @@
 
 ```
 Phase 1 (Critical):  ▓▓▓▓▓▓░░░░  60% - Infrastructure done, org isolation testing needed
-Phase 2 (High):      ▓▓▓▓▓░░░░░  50% - Calendar + manuals + locations done, reservations need work
-Phase 3 (Medium):    ▓▓▓░░░░░░░  30% - Locations + approval done, filters + user mgmt needed
-Phase 4 (Nice):      ▓▓░░░░░░░░  20% - i18n setup + key translations done
+Phase 2 (High):      ▓▓▓▓▓▓▓▓▓░  90% - Dashboard + calendar + reservations complete
+Phase 3 (Medium):    ▓▓▓▓▓▓▓▓░░  80% - Admin filters + user mgmt + categories complete
+Phase 4 (Nice):      ▓▓▓▓▓▓▓░░░  70% - i18n complete (en/no/da), images/manuals/audit done
 ```
 
-**Overall MVP Completion: ~45%**
+**Overall MVP Completion: ~75%**
 
-**Estimated Time to MVP:** 8-12 hours of focused development
+**Estimated Time to MVP:** 3-5 hours of focused development
 
 ---
 
