@@ -38,7 +38,22 @@
     "noLoans": "Ingen aktive lån",
     "noReservations": "Ingen kommende reservationer",
     "dueDate": "Afleveringsdato",
-    "period": "Periode"
+    "period": "Periode",
+    "inviteMembers": "Inviter medlemmer",
+    "inviteEmailPlaceholder": "Indtast e-mailadresse...",
+    "roleMember": "Medlem",
+    "roleManager": "Leder",
+    "roleAdmin": "Administrator",
+    "sendInvite": "Send invitation",
+    "sending": "Sender...",
+    "inviteSent": "Invitation sendt",
+    "inviteFailed": "Kunne ikke sende invitation",
+    "alreadyMember": "Denne bruger er allerede medlem",
+    "inviteLink": "Invitationslink",
+    "copyLink": "Kopier",
+    "currentOrganization": "Din organisation",
+    "yourRole": "Din rolle",
+    "noOrganization": "Ikke tilknyttet en organisation"
   },
   "auth": {
     "loginTitle": "Log Ind på Ting",

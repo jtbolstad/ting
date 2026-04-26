@@ -38,7 +38,22 @@
     "noLoans": "No active loans",
     "noReservations": "No upcoming reservations",
     "dueDate": "Due date",
-    "period": "Period"
+    "period": "Period",
+    "inviteMembers": "Invite members",
+    "inviteEmailPlaceholder": "Enter email address...",
+    "roleMember": "Member",
+    "roleManager": "Manager",
+    "roleAdmin": "Administrator",
+    "sendInvite": "Send invitation",
+    "sending": "Sending...",
+    "inviteSent": "Invitation sent",
+    "inviteFailed": "Could not send invitation",
+    "alreadyMember": "This user is already a member",
+    "inviteLink": "Invitation link",
+    "copyLink": "Copy",
+    "currentOrganization": "Your organization",
+    "yourRole": "Your role",
+    "noOrganization": "Not associated with an organization"
   },
   "auth": {
     "loginTitle": "Login to Ting",

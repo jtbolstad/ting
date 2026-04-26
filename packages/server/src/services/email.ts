@@ -288,6 +288,35 @@ class EmailService {
     `;
     await this.sendEmail({ to: userEmail, subject, text, html, event: 'org_role_changed' });
   }
+
+  async sendOrganizationInvitation(
+    email: string,
+    orgName: string,
+    inviterName: string,
+    inviteLink: string,
+    role: string,
+  ): Promise<void> {
+    const roleLabels: Record<string, string> = {
+      MEMBER: 'medlem',
+      MANAGER: 'leder',
+      ADMIN: 'administrator',
+      OWNER: 'eier',
+    };
+    const roleLabel = roleLabels[role] ?? role.toLowerCase();
+    const subject = `Invitasjon til ${orgName} på Ting`;
+    const text = `Hei,\n\n${inviterName} har invitert deg til å bli ${roleLabel} i ${orgName} på Ting.\n\nKlikk på lenken under for å akseptere invitasjonen:\n${inviteLink}\n\nLenken utløper om 7 dager.\n\nHilsen Ting`;
+    const html = `
+      <h2 style="color: #6366f1;">Du er invitert til ${orgName}!</h2>
+      <p>Hei,</p>
+      <p><strong>${inviterName}</strong> har invitert deg til å bli <strong>${roleLabel}</strong> i <strong>${orgName}</strong> på Ting.</p>
+      <p style="margin: 24px 0;">
+        <a href="${inviteLink}" style="display: inline-block; padding: 12px 24px; background: #6366f1; color: white; text-decoration: none; border-radius: 6px;">Aksepter invitasjon</a>
+      </p>
+      <p style="color: #6b7280; font-size: 0.875rem;">Lenken utløper om 7 dager.</p>
+      <p>Hilsen Ting</p>
+    `;
+    await this.sendEmail({ to: email, subject, text, html, event: 'organization_invitation' });
+  }
 }
 
 export const emailService = new EmailService();

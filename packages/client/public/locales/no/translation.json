@@ -38,7 +38,22 @@
     "noLoans": "Ingen aktive utlån",
     "noReservations": "Ingen kommende reservasjoner",
     "dueDate": "Forfallsdato",
-    "period": "Periode"
+    "period": "Periode",
+    "inviteMembers": "Inviter medlemmer",
+    "inviteEmailPlaceholder": "Skriv e-postadresse...",
+    "roleMember": "Medlem",
+    "roleManager": "Leder",
+    "roleAdmin": "Administrator",
+    "sendInvite": "Send invitasjon",
+    "sending": "Sender...",
+    "inviteSent": "Invitasjon sendt",
+    "inviteFailed": "Kunne ikke sende invitasjon",
+    "alreadyMember": "Denne brukeren er allerede medlem",
+    "inviteLink": "Invitasjonslenke",
+    "copyLink": "Kopier",
+    "currentOrganization": "Din organisasjon",
+    "yourRole": "Din rolle",
+    "noOrganization": "Ikke tilknyttet en organisasjon"
   },
   "auth": {
     "loginTitle": "Logg Inn på Ting",

@@ -634,7 +634,7 @@ router.post(
   "/invitations/send",
   authenticate,
   withOrganizationContext(),
-  requireOrgRole(["ADMIN", "OWNER"]),
+  requireOrgRole(["MEMBER", "MANAGER", "ADMIN", "OWNER"]),
   async (req: AuthRequest, res: Response) => {
     try {
       const { email, role = "MEMBER" } = req.body;
@@ -644,6 +644,17 @@ router.post(
           success: false,
           error: "Email is required",
         });
+      }
+
+      // Validate: only ADMIN/OWNER can invite non-MEMBER roles
+      if (role !== "MEMBER") {
+        const inviterRole = req.membership!.role;
+        if (inviterRole !== "ADMIN" && inviterRole !== "OWNER") {
+          return res.status(403).json({
+            success: false,
+            error: "Only ADMIN or OWNER can invite non-MEMBER roles",
+          });
+        }
       }
 
       // Check if user already member
@@ -679,9 +690,22 @@ router.post(
         },
       });
 
-      // TODO: Send email with invitation link
       const inviteLink = `${process.env.CLIENT_URL || "http://localhost:5173"}/invite/${token}`;
-      console.log(`[DEV] Invitation link for ${email}: ${inviteLink}`);
+
+      // Send invitation email
+      try {
+        const { emailService } = await import("../services/email.js");
+        await emailService.sendOrganizationInvitation(
+          email,
+          req.organization!.name,
+          req.user!.name,
+          inviteLink,
+          role,
+        );
+      } catch (emailError) {
+        console.error("Failed to send invitation email:", emailError);
+        // Don't fail request if email fails
+      }
 
       res.status(201).json({
         success: true,
