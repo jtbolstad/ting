@@ -116,6 +116,15 @@ router.post("/", requireAdmin, async (req: AuthRequest, res: Response) => {
       },
     });
 
+    // Create default category
+    await prisma.category.create({
+      data: {
+        organizationId: organization.id,
+        name: "General",
+        description: "Default category",
+      },
+    });
+
     const membership = await prisma.membership.create({
       data: {
         organizationId: organization.id,
