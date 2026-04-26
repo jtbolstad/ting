@@ -335,6 +335,17 @@ class ApiClient {
     );
   }
 
+  async updateOrganization(id: string, data: {
+    name?: string;
+    description?: string;
+    loanDurationDays?: number;
+  }): Promise<Organization> {
+    return this.request<Organization>(`/organizations/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
+  }
+
   async getOrganizationMembers(): Promise<
     Array<{ membership: Membership; user: User }>
   > {
@@ -383,6 +394,22 @@ class ApiClient {
     return this.request<MemberGroup>("/organizations/groups", {
       method: "POST",
       body: JSON.stringify(data),
+    });
+  }
+
+  async updateGroup(
+    groupId: string,
+    data: { name: string; description?: string },
+  ): Promise<MemberGroup> {
+    return this.request<MemberGroup>(`/organizations/groups/${groupId}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteGroup(groupId: string): Promise<void> {
+    return this.request<void>(`/organizations/groups/${groupId}`, {
+      method: "DELETE",
     });
   }
 

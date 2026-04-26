@@ -302,7 +302,9 @@
       "items": "Items",
       "users": "Users",
       "categories": "Categories",
-      "locations": "Locations"
+      "locations": "Locations",
+      "organization": "Organization",
+      "groups": "Groups"
     },
     "reservations": {
       "title": "Reservations",
@@ -335,6 +337,17 @@
       "update": "Update Location",
       "confirmDelete": "Are you sure you want to delete this location?",
       "noLocations": "No locations created yet."
+    },
+    "organization": {
+      "title": "Organization Settings",
+      "name": "Organization Name",
+      "description": "Description",
+      "loanDurationDays": "Default Loan Duration (days)",
+      "loanDurationHint": "Default number of days for new loans",
+      "save": "Save Settings",
+      "saving": "Saving...",
+      "saved": "Organization settings saved",
+      "saveFailed": "Failed to save settings"
     },
     "loans": {
       "title": "Active Loans",
@@ -382,6 +395,29 @@
         "APPROVED": "Approved",
         "REJECTED": "Rejected"
       }
+    },
+    "groups": {
+      "title": "Member Groups",
+      "addGroup": "Add Group",
+      "editGroup": "Edit Group",
+      "name": "Name",
+      "description": "Description",
+      "members": "Members",
+      "actions": "Actions",
+      "edit": "Edit",
+      "delete": "Delete",
+      "create": "Create Group",
+      "update": "Update Group",
+      "confirmDelete": "Delete Group",
+      "confirmDeleteMessage": "Are you sure you want to delete this group? Members will not be removed from the organization.",
+      "cancel": "Cancel",
+      "noGroups": "No groups created yet.",
+      "createSuccess": "Group created",
+      "createFailed": "Failed to create group",
+      "updateSuccess": "Group updated",
+      "updateFailed": "Failed to update group",
+      "deleteSuccess": "Group deleted",
+      "deleteFailed": "Failed to delete group"
     },
     "users": {
       "title": "Users",

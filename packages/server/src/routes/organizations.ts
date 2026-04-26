@@ -156,6 +156,55 @@ router.post("/", requireAdmin, async (req: AuthRequest, res: Response) => {
   }
 });
 
+// Update organization (OWNER/ADMIN only)
+router.patch(
+  "/:id",
+  authenticate,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { id } = req.params;
+      const { name, description, loanDurationDays } = req.body;
+
+      const org = await prisma.organization.findUnique({ where: { id } });
+      if (!org) {
+        return res.status(404).json({ success: false, error: "Organization not found" });
+      }
+
+      // Check permission
+      const membership = await prisma.membership.findFirst({
+        where: {
+          userId: req.user!.id,
+          organizationId: id,
+          status: "ACTIVE",
+        },
+      });
+
+      if (req.user!.role !== "ADMIN" && (!membership || !["OWNER", "ADMIN"].includes(membership.role))) {
+        return res.status(403).json({ success: false, error: "Only organization admins can edit" });
+      }
+
+      const updated = await prisma.organization.update({
+        where: { id },
+        data: {
+          ...(name && { name }),
+          ...(description !== undefined && { description }),
+          ...(loanDurationDays && { loanDurationDays }),
+        },
+      });
+
+      const response: ApiResponse<Organization> = {
+        success: true,
+        data: serializeOrganization(updated),
+      };
+
+      res.json(response);
+    } catch (error) {
+      console.error("Update organization error:", error);
+      res.status(500).json({ success: false, error: "Failed to update organization" });
+    }
+  },
+);
+
 router.get(
   "/members",
   withOrganizationContext(),
@@ -401,6 +450,67 @@ router.post(
     } catch (error) {
       console.error("Create group error:", error);
       res.status(500).json({ success: false, error: "Failed to create group" });
+    }
+  },
+);
+
+router.patch(
+  "/groups/:groupId",
+  withOrganizationContext(),
+  requireOrgRole("ADMIN"),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { groupId } = req.params;
+      const { name, description } = req.body as {
+        name?: string;
+        description?: string;
+      };
+
+      const group = await prisma.memberGroup.findUnique({ where: { id: groupId } });
+      if (!group || group.organizationId !== req.organization!.id) {
+        return res.status(404).json({ success: false, error: "Group not found" });
+      }
+
+      const updated = await prisma.memberGroup.update({
+        where: { id: groupId },
+        data: {
+          ...(name && { name }),
+          ...(description !== undefined && { description }),
+        },
+      });
+
+      const response: ApiResponse<MemberGroup> = {
+        success: true,
+        data: serializeMemberGroup(updated),
+      };
+
+      res.json(response);
+    } catch (error) {
+      console.error("Update group error:", error);
+      res.status(500).json({ success: false, error: "Failed to update group" });
+    }
+  },
+);
+
+router.delete(
+  "/groups/:groupId",
+  withOrganizationContext(),
+  requireOrgRole("ADMIN"),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { groupId } = req.params;
+
+      const group = await prisma.memberGroup.findUnique({ where: { id: groupId } });
+      if (!group || group.organizationId !== req.organization!.id) {
+        return res.status(404).json({ success: false, error: "Group not found" });
+      }
+
+      await prisma.memberGroup.delete({ where: { id: groupId } });
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Delete group error:", error);
+      res.status(500).json({ success: false, error: "Failed to delete group" });
     }
   },
 );

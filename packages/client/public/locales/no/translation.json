@@ -303,7 +303,9 @@
       "items": "Ting",
       "users": "Brukere",
       "categories": "Kategorier",
-      "locations": "Lokasjoner"
+      "locations": "Lokasjoner",
+      "organization": "Organisasjon",
+      "groups": "Grupper"
     },
     "reservations": {
       "title": "Reservasjoner",
@@ -336,6 +338,17 @@
       "update": "Oppdater lokasjon",
       "confirmDelete": "Er du sikker på at du vil slette denne lokasjonen?",
       "noLocations": "Ingen lokasjoner opprettet ennå."
+    },
+    "organization": {
+      "title": "Organisasjonsinnstillinger",
+      "name": "Organisasjonsnavn",
+      "description": "Beskrivelse",
+      "loanDurationDays": "Standard låneperiode (dager)",
+      "loanDurationHint": "Standard antall dager for nye utlån",
+      "save": "Lagre innstillinger",
+      "saving": "Lagrer...",
+      "saved": "Organisasjonsinnstillinger lagret",
+      "saveFailed": "Kunne ikke lagre innstillinger"
     },
     "loans": {
       "title": "Aktive utlån",
@@ -383,6 +396,29 @@
         "APPROVED": "Godkjent",
         "REJECTED": "Avvist"
       }
+    },
+    "groups": {
+      "title": "Medlemsgrupper",
+      "addGroup": "Legg til gruppe",
+      "editGroup": "Rediger gruppe",
+      "name": "Navn",
+      "description": "Beskrivelse",
+      "members": "Medlemmer",
+      "actions": "Handlinger",
+      "edit": "Rediger",
+      "delete": "Slett",
+      "create": "Opprett gruppe",
+      "update": "Oppdater gruppe",
+      "confirmDelete": "Slett gruppe",
+      "confirmDeleteMessage": "Er du sikker på at du vil slette denne gruppen? Medlemmer vil ikke bli fjernet fra organisasjonen.",
+      "cancel": "Avbryt",
+      "noGroups": "Ingen grupper opprettet ennå.",
+      "createSuccess": "Gruppe opprettet",
+      "createFailed": "Kunne ikke opprette gruppe",
+      "updateSuccess": "Gruppe oppdatert",
+      "updateFailed": "Kunne ikke oppdatere gruppe",
+      "deleteSuccess": "Gruppe slettet",
+      "deleteFailed": "Kunne ikke slette gruppe"
     },
     "users": {
       "title": "Brukere",

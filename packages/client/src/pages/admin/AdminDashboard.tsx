@@ -36,6 +36,8 @@ export function AdminDashboard() {
     | "users"
     | "categories"
     | "locations"
+    | "organization"
+    | "groups"
     | "email"
     | "auditlog"
   >("loans");
@@ -134,9 +136,34 @@ export function AdminDashboard() {
   const [itemCategoryFilter, setItemCategoryFilter] = useState<string>("all");
   const [itemStatusFilter, setItemStatusFilter] = useState<string>("all");
 
+  // Organization form state
+  const [orgForm, setOrgForm] = useState({
+    name: "",
+    description: "",
+    loanDurationDays: 7,
+  });
+  const [orgSaving, setOrgSaving] = useState(false);
+
+  // Groups state
+  const [groups, setGroups] = useState<Array<{ id: string; name: string; description: string | null; memberCount: number }>>([]);
+  const [showAddGroup, setShowAddGroup] = useState(false);
+  const [showEditGroup, setShowEditGroup] = useState(false);
+  const [editingGroup, setEditingGroup] = useState<{ id: string; name: string; description: string | null } | null>(null);
+  const [groupForm, setGroupForm] = useState({ name: "", description: "" });
+
   useEffect(() => {
     loadData();
   }, []);
+
+  useEffect(() => {
+    if (activeOrganization) {
+      setOrgForm({
+        name: activeOrganization.name,
+        description: activeOrganization.description || "",
+        loanDurationDays: activeOrganization.loanDurationDays,
+      });
+    }
+  }, [activeOrganization]);
 
   const loadData = async () => {
     if (!activeOrganizationId) return;
@@ -148,6 +175,7 @@ export function AdminDashboard() {
         usersData,
         locationsData,
         reservationsData,
+        groupsData,
       ] = await Promise.all([
         apiClient.getLoans(),
         apiClient.getItems({
@@ -158,6 +186,7 @@ export function AdminDashboard() {
         apiClient.getUsers(),
         apiClient.getLocations(),
         apiClient.getReservations(),
+        apiClient.getGroups(),
       ]);
       setLoans(loansData.filter((l) => !l.returnedAt));
       setOverdueLoans(
@@ -174,6 +203,7 @@ export function AdminDashboard() {
       setCategories(categoriesData);
       setUsers(usersData);
       setLocations(locationsData);
+      setGroups(groupsData);
     } catch (error) {
       console.error("Failed to load admin data:", error);
     } finally {
@@ -410,6 +440,74 @@ export function AdminDashboard() {
     }
   };
 
+  const handleSaveOrganization = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!activeOrganization) return;
+    setOrgSaving(true);
+    try {
+      await apiClient.updateOrganization(activeOrganization.id, orgForm);
+      toast.success(t("admin.organization.saved"));
+    } catch (error: any) {
+      toast.error(error.message || t("admin.organization.saveFailed"));
+    } finally {
+      setOrgSaving(false);
+    }
+  };
+
+  const handleAddGroup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await apiClient.createGroup({
+        name: groupForm.name,
+        description: groupForm.description || undefined,
+      });
+      setShowAddGroup(false);
+      setGroupForm({ name: "", description: "" });
+      const groupsData = await apiClient.getGroups();
+      setGroups(groupsData);
+      toast.success(t("admin.groups.createSuccess"));
+    } catch (error: any) {
+      toast.error(error.message || t("admin.groups.createFailed"));
+    }
+  };
+
+  const handleEditGroup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingGroup) return;
+    try {
+      await apiClient.updateGroup(editingGroup.id, {
+        name: groupForm.name,
+        description: groupForm.description || undefined,
+      });
+      setShowEditGroup(false);
+      setEditingGroup(null);
+      setGroupForm({ name: "", description: "" });
+      const groupsData = await apiClient.getGroups();
+      setGroups(groupsData);
+      toast.success(t("admin.groups.updateSuccess"));
+    } catch (error: any) {
+      toast.error(error.message || t("admin.groups.updateFailed"));
+    }
+  };
+
+  const handleDeleteGroup = async (id: string) => {
+    const confirmed = await confirm({
+      title: t("admin.groups.confirmDelete"),
+      message: t("admin.groups.confirmDeleteMessage"),
+      confirmText: t("admin.groups.delete"),
+      cancelText: t("admin.groups.cancel"),
+    });
+    if (!confirmed) return;
+    try {
+      await apiClient.deleteGroup(id);
+      const groupsData = await apiClient.getGroups();
+      setGroups(groupsData);
+      toast.success(t("admin.groups.deleteSuccess"));
+    } catch (error: any) {
+      toast.error(error.message || t("admin.groups.deleteFailed"));
+    }
+  };
+
   const handleAddUser = async (e: React.FormEvent) => {
     e.preventDefault();
     setAddUserError("");
@@ -545,6 +643,26 @@ export function AdminDashboard() {
             }`}
           >
             {t("admin.tabs.locations")}
+          </button>
+          <button
+            onClick={() => setActiveTab("organization")}
+            className={`pb-4 px-1 ${
+              activeTab === "organization"
+                ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
+                : "text-gray-500"
+            }`}
+          >
+            {t("admin.tabs.organization")}
+          </button>
+          <button
+            onClick={() => setActiveTab("groups")}
+            className={`pb-4 px-1 ${
+              activeTab === "groups"
+                ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
+                : "text-gray-500"
+            }`}
+          >
+            {t("admin.tabs.groups")}
           </button>
           <button
             onClick={() => {
@@ -1165,6 +1283,142 @@ export function AdminDashboard() {
         </div>
       )}
 
+      {/* Organization Tab */}
+      {activeTab === "organization" && (
+        <div>
+          <h2 className="text-2xl font-bold mb-4">{t("admin.organization.title")}</h2>
+
+          <div className="bg-white rounded-lg shadow p-6 max-w-2xl">
+            <form onSubmit={handleSaveOrganization} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {t("admin.organization.name")}
+                </label>
+                <input
+                  type="text"
+                  value={orgForm.name}
+                  onChange={(e) => setOrgForm({ ...orgForm, name: e.target.value })}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {t("admin.organization.description")}
+                </label>
+                <textarea
+                  value={orgForm.description}
+                  onChange={(e) => setOrgForm({ ...orgForm, description: e.target.value })}
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {t("admin.organization.loanDurationDays")}
+                </label>
+                <input
+                  type="number"
+                  value={orgForm.loanDurationDays}
+                  onChange={(e) => setOrgForm({ ...orgForm, loanDurationDays: parseInt(e.target.value) || 7 })}
+                  min="1"
+                  max="365"
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded"
+                />
+                <p className="text-sm text-gray-500 mt-1">
+                  {t("admin.organization.loanDurationHint")}
+                </p>
+              </div>
+
+              <button
+                type="submit"
+                disabled={orgSaving}
+                className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-400"
+              >
+                {orgSaving ? t("admin.organization.saving") : t("admin.organization.save")}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Groups Tab */}
+      {activeTab === "groups" && (
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-bold">{t("admin.groups.title")}</h2>
+            <button
+              onClick={() => {
+                setGroupForm({ name: "", description: "" });
+                setShowAddGroup(true);
+              }}
+              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+            >
+              {t("admin.groups.addGroup")}
+            </button>
+          </div>
+
+          <div className="bg-white rounded-lg shadow overflow-hidden">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    {t("admin.groups.name")}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    {t("admin.groups.description")}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    {t("admin.groups.members")}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    {t("admin.groups.actions")}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {groups.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="px-6 py-4 text-center text-gray-500">
+                      {t("admin.groups.noGroups")}
+                    </td>
+                  </tr>
+                ) : (
+                  groups.map((group) => (
+                    <tr key={group.id}>
+                      <td className="px-6 py-4 whitespace-nowrap">{group.name}</td>
+                      <td className="px-6 py-4">{group.description || "-"}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{group.memberCount}</td>
+                      <td className="px-6 py-4 whitespace-nowrap space-x-2">
+                        <button
+                          onClick={() => {
+                            setEditingGroup(group);
+                            setGroupForm({ name: group.name, description: group.description || "" });
+                            setShowEditGroup(true);
+                          }}
+                          className="text-indigo-600 hover:text-indigo-900"
+                        >
+                          {t("admin.groups.edit")}
+                        </button>
+                        <button
+                          onClick={() => handleDeleteGroup(group.id)}
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          {t("admin.groups.delete")}
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
       {/* Audit Log Tab */}
       {activeTab === "auditlog" && (
         <div>
@@ -1735,6 +1989,111 @@ export function AdminDashboard() {
                 <button
                   type="button"
                   onClick={() => setShowRejectModal(false)}
+                  className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                >
+                  {t("common.cancel")}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Add Group Modal */}
+      {showAddGroup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full">
+            <h3 className="text-2xl font-bold mb-4">
+              {t("admin.groups.addGroup")}
+            </h3>
+            <form onSubmit={handleAddGroup} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.groups.name")}
+                </label>
+                <input
+                  type="text"
+                  value={groupForm.name}
+                  onChange={(e) => setGroupForm({ ...groupForm, name: e.target.value })}
+                  required
+                  className="w-full px-3 py-2 border rounded"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.groups.description")}
+                </label>
+                <textarea
+                  value={groupForm.description}
+                  onChange={(e) => setGroupForm({ ...groupForm, description: e.target.value })}
+                  className="w-full px-3 py-2 border rounded"
+                  rows={3}
+                />
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                >
+                  {t("admin.groups.create")}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowAddGroup(false)}
+                  className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                >
+                  {t("common.cancel")}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Group Modal */}
+      {showEditGroup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full">
+            <h3 className="text-2xl font-bold mb-4">
+              {t("admin.groups.editGroup")}
+            </h3>
+            <form onSubmit={handleEditGroup} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.groups.name")}
+                </label>
+                <input
+                  type="text"
+                  value={groupForm.name}
+                  onChange={(e) => setGroupForm({ ...groupForm, name: e.target.value })}
+                  required
+                  className="w-full px-3 py-2 border rounded"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.groups.description")}
+                </label>
+                <textarea
+                  value={groupForm.description}
+                  onChange={(e) => setGroupForm({ ...groupForm, description: e.target.value })}
+                  className="w-full px-3 py-2 border rounded"
+                  rows={3}
+                />
+              </div>
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                >
+                  {t("admin.groups.update")}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowEditGroup(false);
+                    setEditingGroup(null);
+                  }}
                   className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
                 >
                   {t("common.cancel")}

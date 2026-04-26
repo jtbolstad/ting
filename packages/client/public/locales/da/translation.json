@@ -302,7 +302,9 @@
       "items": "Ting",
       "users": "Brugere",
       "categories": "Kategorier",
-      "locations": "Lokationer"
+      "locations": "Lokationer",
+      "organization": "Organisation",
+      "groups": "Grupper"
     },
     "reservations": {
       "title": "Reservationer",
@@ -335,6 +337,17 @@
       "update": "Opdater Lokation",
       "confirmDelete": "Er du sikker på, at du vil slette denne lokation?",
       "noLocations": "Ingen lokationer oprettet endnu."
+    },
+    "organization": {
+      "title": "Organisationsindstillinger",
+      "name": "Organisationsnavn",
+      "description": "Beskrivelse",
+      "loanDurationDays": "Standard låneperiode (dage)",
+      "loanDurationHint": "Standard antal dage for nye udlån",
+      "save": "Gem indstillinger",
+      "saving": "Gemmer...",
+      "saved": "Organisationsindstillinger gemt",
+      "saveFailed": "Kunne ikke gemme indstillinger"
     },
     "loans": {
       "title": "Aktive Udlån",
@@ -382,6 +395,29 @@
         "APPROVED": "Godkendt",
         "REJECTED": "Afvist"
       }
+    },
+    "groups": {
+      "title": "Medlemsgrupper",
+      "addGroup": "Tilføj gruppe",
+      "editGroup": "Rediger gruppe",
+      "name": "Navn",
+      "description": "Beskrivelse",
+      "members": "Medlemmer",
+      "actions": "Handlinger",
+      "edit": "Rediger",
+      "delete": "Slet",
+      "create": "Opret gruppe",
+      "update": "Opdater gruppe",
+      "confirmDelete": "Slet gruppe",
+      "confirmDeleteMessage": "Er du sikker på, at du vil slette denne gruppe? Medlemmer vil ikke blive fjernet fra organisationen.",
+      "cancel": "Annuller",
+      "noGroups": "Ingen grupper oprettet endnu.",
+      "createSuccess": "Gruppe oprettet",
+      "createFailed": "Kunne ikke oprette gruppe",
+      "updateSuccess": "Gruppe opdateret",
+      "updateFailed": "Kunne ikke opdatere gruppe",
+      "deleteSuccess": "Gruppe slettet",
+      "deleteFailed": "Kunne ikke slette gruppe"
     },
     "users": {
       "title": "Brugere",
