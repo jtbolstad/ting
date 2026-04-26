@@ -458,6 +458,18 @@ class ApiClient {
     }>>("/organizations/invitations");
   }
 
+  async getInvitation(token: string): Promise<{
+    email: string;
+    organizationName: string;
+    role: string;
+  }> {
+    return this.request<{
+      email: string;
+      organizationName: string;
+      role: string;
+    }>(`/organizations/invitations/${token}`);
+  }
+
   async acceptInvitation(token: string): Promise<{
     membership: Membership;
     organization: Organization;

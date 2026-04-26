@@ -1,19 +1,39 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
 import { TermsPopover } from "../components/TermsPopover";
+import { apiClient } from "../api/client";
 
 export function Register() {
+  const [searchParams] = useSearchParams();
+  const inviteToken = searchParams.get("invite");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [inviteOrgName, setInviteOrgName] = useState("");
   const { register } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  useEffect(() => {
+    if (inviteToken) {
+      loadInvitation();
+    }
+  }, [inviteToken]);
+
+  const loadInvitation = async () => {
+    try {
+      const invitation = await apiClient.getInvitation(inviteToken!);
+      setEmail(invitation.email);
+      setInviteOrgName(invitation.organizationName);
+    } catch (err: any) {
+      setError(err.message || "Invalid invitation");
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,6 +48,16 @@ export function Register() {
 
     try {
       await register(email, password, name, null);
+
+      // If registering via invite, accept invitation after registration
+      if (inviteToken) {
+        try {
+          await apiClient.acceptInvitation(inviteToken);
+        } catch (inviteErr) {
+          console.error("Failed to accept invitation:", inviteErr);
+        }
+      }
+
       navigate("/catalog");
     } catch (err: any) {
       setError(err.message || "Registration failed");
@@ -42,6 +72,12 @@ export function Register() {
         <h2 className="text-3xl font-bold text-center mb-6">
           {t("auth.register.title")}
         </h2>
+
+        {inviteOrgName && (
+          <div className="mb-4 p-3 bg-indigo-50 border border-indigo-200 text-indigo-800 rounded">
+            Invitert til <strong>{inviteOrgName}</strong>
+          </div>
+        )}
 
         {error && (
           <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
@@ -72,7 +108,8 @@ export function Register() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              disabled={!!inviteToken}
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
             />
           </div>
 

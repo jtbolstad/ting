@@ -22,8 +22,8 @@ export function InviteAccept() {
     }
 
     if (!isAuthenticated) {
-      // Redirect to login with return URL
-      navigate(`/login?redirect=/invite/${token}`);
+      // Redirect to registration with invite token
+      navigate(`/register?invite=${token}`);
       return;
     }
 

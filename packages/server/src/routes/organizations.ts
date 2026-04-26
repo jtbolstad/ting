@@ -699,7 +699,7 @@ router.post(
         },
       });
 
-      const inviteLink = `${process.env.CLIENT_URL || "http://localhost:5173"}/invite/${token}`;
+      const inviteLink = `${process.env.CLIENT_URL || "http://localhost:5173"}/register?invite=${token}`;
 
       // Send invitation email
       try {
@@ -772,6 +772,57 @@ router.get(
       res.status(500).json({
         success: false,
         error: "Failed to fetch invitations",
+      });
+    }
+  },
+);
+
+// Get invitation details (public, no auth required)
+router.get(
+  "/invitations/:token",
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { token } = req.params;
+
+      const invitation = await prisma.organizationInvitation.findUnique({
+        where: { token },
+        include: { organization: true },
+      });
+
+      if (!invitation) {
+        return res.status(404).json({
+          success: false,
+          error: "Invitation not found",
+        });
+      }
+
+      if (invitation.usedAt) {
+        return res.status(400).json({
+          success: false,
+          error: "Invitation already used",
+        });
+      }
+
+      if (new Date() > invitation.expiresAt) {
+        return res.status(400).json({
+          success: false,
+          error: "Invitation expired",
+        });
+      }
+
+      res.json({
+        success: true,
+        data: {
+          email: invitation.email,
+          organizationName: invitation.organization.name,
+          role: invitation.role,
+        },
+      });
+    } catch (error) {
+      console.error("Get invitation error:", error);
+      res.status(500).json({
+        success: false,
+        error: "Failed to fetch invitation",
       });
     }
   },
