@@ -537,7 +537,19 @@
     "tabs": {
       "organizations": "Organizations",
       "users": "Users",
+      "waiting": "Waiting Room",
       "emails": "Email Log"
+    },
+    "waiting": {
+      "title": "Waiting Room",
+      "name": "Name",
+      "email": "Email",
+      "registered": "Registered",
+      "actions": "Actions",
+      "noUsers": "No users waiting for organization assignment",
+      "selectOrg": "Select organization...",
+      "assign": "Assign",
+      "assignToOrg": "Assign to Organization"
     },
     "stats": {
       "totalOrganizations": "Total Organizations",

@@ -538,7 +538,19 @@
     "tabs": {
       "organizations": "Organisasjoner",
       "users": "Brukere",
+      "waiting": "Venterom",
       "emails": "E-postlogg"
+    },
+    "waiting": {
+      "title": "Venterom",
+      "name": "Navn",
+      "email": "E-post",
+      "registered": "Registrert",
+      "actions": "Handlinger",
+      "noUsers": "Ingen brukere venter på organisasjonstildeling",
+      "selectOrg": "Velg organisasjon...",
+      "assign": "Tildel",
+      "assignToOrg": "Tildel til organisasjon"
     },
     "stats": {
       "totalOrganizations": "Totalt organisasjoner",

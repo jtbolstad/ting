@@ -63,7 +63,7 @@ function buildAuthResponse(user: any, membershipsData: any[]) {
 router.post("/register", async (req: Request, res: Response) => {
   try {
     const { email, password, name, organizationId } =
-      req.body as CreateUserInput & { organizationId?: string };
+      req.body as CreateUserInput & { organizationId?: string | null };
 
     if (!email || !password || !name) {
       return res.status(400).json({
@@ -72,20 +72,16 @@ router.post("/register", async (req: Request, res: Response) => {
       });
     }
 
-    if (!organizationId) {
-      return res.status(400).json({
-        success: false,
-        error: "organizationId is required",
+    let organization = null;
+    if (organizationId) {
+      organization = await prisma.organization.findUnique({
+        where: { id: organizationId },
       });
-    }
-
-    const organization = await prisma.organization.findUnique({
-      where: { id: organizationId },
-    });
-    if (!organization) {
-      return res
-        .status(404)
-        .json({ success: false, error: "Organization not found" });
+      if (!organization) {
+        return res
+          .status(404)
+          .json({ success: false, error: "Organization not found" });
+      }
     }
 
     const existingUser = await prisma.user.findUnique({ where: { email } });
@@ -106,15 +102,18 @@ router.post("/register", async (req: Request, res: Response) => {
       },
     });
 
-    await prisma.membership.create({
-      data: {
-        userId: user.id,
-        organizationId,
-        role: "MEMBER",
-        status: "ACTIVE",
-        isDefault: true,
-      },
-    });
+    // Create membership only if organizationId provided
+    if (organizationId) {
+      await prisma.membership.create({
+        data: {
+          userId: user.id,
+          organizationId,
+          role: "MEMBER",
+          status: "ACTIVE",
+          isDefault: true,
+        },
+      });
+    }
 
     const membershipsData = await getMemberships(user.id);
     const { serializedUser, token, serializedMemberships, activeMembershipId } =
@@ -130,8 +129,10 @@ router.post("/register", async (req: Request, res: Response) => {
       },
     };
 
-    emailService.sendWelcome(user.email, user.name, organization.name).catch(console.error);
-    audit({ organizationId, actorUserId: user.id, action: "auth.register", entityType: "User", entityId: user.id, metadata: { email: user.email } });
+    if (organization && organizationId) {
+      emailService.sendWelcome(user.email, user.name, organization.name).catch(console.error);
+      audit({ organizationId, actorUserId: user.id, action: "auth.register", entityType: "User", entityId: user.id, metadata: { email: user.email } });
+    }
 
     res.status(201).json(response);
   } catch (error) {
@@ -343,6 +344,37 @@ router.post("/reset-password", async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Reset password error:", error);
     res.status(500).json({ success: false, error: "Failed to reset password" });
+  }
+});
+
+// Get users without organization (waiting room) - platform admin only
+router.get("/waiting-users", authenticate, async (req: AuthRequest, res: Response) => {
+  try {
+    if (req.user!.role !== "ADMIN") {
+      return res.status(403).json({ success: false, error: "Admin access required" });
+    }
+
+    const usersWithoutOrg = await prisma.user.findMany({
+      where: {
+        memberships: {
+          none: {},
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    res.json({
+      success: true,
+      data: usersWithoutOrg.map((u) => ({
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        createdAt: u.createdAt.toISOString(),
+      })),
+    });
+  } catch (error) {
+    console.error("Get waiting users error:", error);
+    res.status(500).json({ success: false, error: "Failed to fetch waiting users" });
   }
 });
 

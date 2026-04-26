@@ -7,7 +7,7 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string, organizationId: string) => Promise<void>;
+  register: (email: string, password: string, name: string, organizationId: string | null) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
   isLoading: boolean;
@@ -113,7 +113,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     applyAuthPayload(response);
   };
 
-  const register = async (email: string, password: string, name: string, organizationId: string) => {
+  const register = async (email: string, password: string, name: string, organizationId: string | null) => {
     const response = await apiClient.register(email, password, name, organizationId);
     applyAuthPayload(response);
   };

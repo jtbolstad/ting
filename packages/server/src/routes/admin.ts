@@ -578,4 +578,64 @@ router.get(
   },
 );
 
+// Assign user to organization
+router.post(
+  "/users/:userId/assign-organization",
+  authenticate,
+  requirePlatformAdmin,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { userId } = req.params;
+      const { organizationId, role = "MEMBER" } = req.body;
+
+      if (!organizationId) {
+        return res.status(400).json({ success: false, error: "organizationId is required" });
+      }
+
+      const [user, org] = await Promise.all([
+        prisma.user.findUnique({ where: { id: userId } }),
+        prisma.organization.findUnique({ where: { id: organizationId } }),
+      ]);
+
+      if (!user) {
+        return res.status(404).json({ success: false, error: "User not found" });
+      }
+
+      if (!org) {
+        return res.status(404).json({ success: false, error: "Organization not found" });
+      }
+
+      const existingMembership = await prisma.membership.findFirst({
+        where: {
+          userId,
+          organizationId,
+        },
+      });
+
+      if (existingMembership) {
+        return res.status(400).json({ success: false, error: "User already member of this organization" });
+      }
+
+      const userMembershipCount = await prisma.membership.count({
+        where: { userId },
+      });
+
+      await prisma.membership.create({
+        data: {
+          userId,
+          organizationId,
+          role,
+          status: "ACTIVE",
+          isDefault: userMembershipCount === 0, // First membership is default
+        },
+      });
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Assign user to organization error:", error);
+      res.status(500).json({ success: false, error: "Failed to assign user" });
+    }
+  },
+);
+
 export default router;

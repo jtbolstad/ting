@@ -37,7 +37,7 @@ export function AdminOverview() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<
-    "organizations" | "users" | "emails"
+    "organizations" | "users" | "waiting" | "emails"
   >("organizations");
   const [emailLogs, setEmailLogs] = useState<
     Array<{
@@ -83,6 +83,15 @@ export function AdminOverview() {
     type: "",
   });
   const [createOrgError, setCreateOrgError] = useState("");
+  const [waitingUsers, setWaitingUsers] = useState<Array<{
+    id: string;
+    name: string;
+    email: string;
+    createdAt: string;
+  }>>([]);
+  const [assigningUserId, setAssigningUserId] = useState<string | null>(null);
+  const [assignOrgId, setAssignOrgId] = useState("");
+  const [assignRole, setAssignRole] = useState("MEMBER");
 
   const { t } = useTranslation();
 
@@ -111,6 +120,29 @@ export function AdminOverview() {
       setEmailLogs(logs);
     } catch (error) {
       console.error("Failed to load email logs:", error);
+    }
+  };
+
+  const loadWaitingUsers = async () => {
+    try {
+      const users = await apiClient.getWaitingUsers();
+      setWaitingUsers(users);
+    } catch (error) {
+      console.error("Failed to load waiting users:", error);
+    }
+  };
+
+  const handleAssignUser = async (userId: string) => {
+    if (!assignOrgId) return;
+    try {
+      await apiClient.assignUserToOrganization(userId, assignOrgId, assignRole);
+      setAssigningUserId(null);
+      setAssignOrgId("");
+      setAssignRole("MEMBER");
+      await loadWaitingUsers();
+      await loadData();
+    } catch (error: any) {
+      alert(error.message || "Failed to assign user");
     }
   };
 
@@ -322,6 +354,19 @@ export function AdminOverview() {
             }`}
           >
             {t("platformAdmin.tabs.users")}
+          </button>
+          <button
+            onClick={() => {
+              setActiveTab("waiting");
+              loadWaitingUsers();
+            }}
+            className={`pb-4 px-1 ${
+              activeTab === "waiting"
+                ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
+                : "text-gray-500"
+            }`}
+          >
+            {t("platformAdmin.tabs.waiting")}
           </button>
           <button
             onClick={() => {
@@ -606,6 +651,99 @@ export function AdminOverview() {
                 </tbody>
               </table>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Waiting Room Tab */}
+      {activeTab === "waiting" && (
+        <div>
+          <h2 className="text-2xl font-bold mb-4">{t("platformAdmin.waiting.title")}</h2>
+          <div className="bg-white rounded-lg shadow overflow-hidden">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    {t("platformAdmin.waiting.name")}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    {t("platformAdmin.waiting.email")}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    {t("platformAdmin.waiting.registered")}
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    {t("platformAdmin.waiting.actions")}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {waitingUsers.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
+                      {t("platformAdmin.waiting.noUsers")}
+                    </td>
+                  </tr>
+                ) : (
+                  waitingUsers.map((user) => (
+                    <tr key={user.id}>
+                      <td className="px-6 py-4 font-medium">{user.name}</td>
+                      <td className="px-6 py-4">{user.email}</td>
+                      <td className="px-6 py-4 text-sm text-gray-500">
+                        {new Date(user.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4">
+                        {assigningUserId === user.id ? (
+                          <div className="flex gap-2 items-center">
+                            <select
+                              value={assignOrgId}
+                              onChange={(e) => setAssignOrgId(e.target.value)}
+                              className="px-2 py-1 border rounded text-sm"
+                            >
+                              <option value="">{t("platformAdmin.waiting.selectOrg")}</option>
+                              {organizations.map((org) => (
+                                <option key={org.id} value={org.id}>
+                                  {org.name}
+                                </option>
+                              ))}
+                            </select>
+                            <select
+                              value={assignRole}
+                              onChange={(e) => setAssignRole(e.target.value)}
+                              className="px-2 py-1 border rounded text-sm"
+                            >
+                              <option value="MEMBER">MEMBER</option>
+                              <option value="MANAGER">MANAGER</option>
+                              <option value="ADMIN">ADMIN</option>
+                            </select>
+                            <button
+                              onClick={() => handleAssignUser(user.id)}
+                              disabled={!assignOrgId}
+                              className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 disabled:bg-gray-400"
+                            >
+                              {t("platformAdmin.waiting.assign")}
+                            </button>
+                            <button
+                              onClick={() => setAssigningUserId(null)}
+                              className="px-3 py-1 bg-gray-300 text-sm rounded hover:bg-gray-400"
+                            >
+                              {t("common.cancel")}
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => setAssigningUserId(user.id)}
+                            className="px-4 py-2 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700"
+                          >
+                            {t("platformAdmin.waiting.assignToOrg")}
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
       )}

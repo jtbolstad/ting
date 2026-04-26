@@ -537,7 +537,19 @@
     "tabs": {
       "organizations": "Organisationer",
       "users": "Brugere",
+      "waiting": "Venteværelse",
       "emails": "E-maillog"
+    },
+    "waiting": {
+      "title": "Venteværelse",
+      "name": "Navn",
+      "email": "E-mail",
+      "registered": "Registreret",
+      "actions": "Handlinger",
+      "noUsers": "Ingen brugere venter på organisationstildeling",
+      "selectOrg": "Vælg organisation...",
+      "assign": "Tildel",
+      "assignToOrg": "Tildel til organisation"
     },
     "stats": {
       "totalOrganizations": "I alt organisationer",

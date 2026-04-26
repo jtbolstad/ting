@@ -80,7 +80,7 @@ class ApiClient {
     email: string,
     password: string,
     name: string,
-    organizationId: string,
+    organizationId: string | null,
   ): Promise<AuthResponse> {
     return this.request<AuthResponse>("/auth/register", {
       method: "POST",
@@ -765,6 +765,22 @@ class ApiClient {
     createdAt: string;
   }>> {
     return this.request(`/admin/email-logs?limit=${limit}`);
+  }
+
+  async getWaitingUsers(): Promise<Array<{
+    id: string;
+    name: string;
+    email: string;
+    createdAt: string;
+  }>> {
+    return this.request("/auth/waiting-users");
+  }
+
+  async assignUserToOrganization(userId: string, organizationId: string, role: string = "MEMBER"): Promise<void> {
+    return this.request(`/admin/users/${userId}/assign-organization`, {
+      method: "POST",
+      body: JSON.stringify({ organizationId, role }),
+    });
   }
 
   async getAuditLogs(params?: {
