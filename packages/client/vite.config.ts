@@ -1,8 +1,25 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-export default defineConfig({
-  plugins: [react()],
+export default defineConfig(({ command }) => ({
+  define: command === 'build' ? {
+    'import.meta.env.VITE_BUILD_TIME': JSON.stringify(new Date().toISOString()),
+  } : {},
+  plugins: [
+    react(),
+    {
+      name: 'inject-build-time',
+      transformIndexHtml: {
+        order: 'pre',
+        handler(html) {
+          return html.replace(
+            '%VITE_BUILD_TIME%',
+            command === 'build' ? new Date().toISOString() : 'dev',
+          )
+        },
+      },
+    },
+  ],
   server: {
     port: 3000,
     proxy: {
@@ -16,4 +33,4 @@ export default defineConfig({
       },
     },
   },
-})
+}))
