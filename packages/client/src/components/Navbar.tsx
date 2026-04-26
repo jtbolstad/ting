@@ -2,12 +2,19 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
+import { useOrganization } from "../context/OrganizationContext";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export function Navbar() {
-  const { isAuthenticated, isAdmin, user, logout } = useAuth();
+  const { isAuthenticated, isAdmin, user, logout, activeMembership } = useAuth();
+  const { organizations } = useOrganization();
   const { t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const activeOrg = activeMembership
+    ? organizations.find(org => org.id === activeMembership.organizationId)
+    : null;
+  const title = activeOrg?.name || t("app.title");
 
   const close = () => setMenuOpen(false);
 
@@ -19,7 +26,7 @@ export function Navbar() {
           {/* Logo + desktop nav links */}
           <div className="flex items-center space-x-8">
             <Link to="/" className="text-2xl font-bold" onClick={close}>
-              {t("app.title")}
+              {title}
             </Link>
             {isAuthenticated && (
               <div className="hidden md:flex items-center space-x-6">
