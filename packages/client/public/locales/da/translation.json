@@ -61,7 +61,31 @@
       "loggingIn": "Logger ind...",
       "submit": "Log Ind",
       "noAccount": "Har du ikke en konto?",
-      "registerLink": "Tilmeld her"
+      "registerLink": "Tilmeld her",
+      "forgotPassword": "Glemt adgangskode?"
+    },
+    "forgotPassword": {
+      "title": "Nulstil adgangskode",
+      "description": "Indtast din e-mailadresse, så sender vi dig et link til at nulstille din adgangskode.",
+      "email": "E-mail",
+      "sending": "Sender...",
+      "submit": "Send nulstillingslink",
+      "backToLogin": "Tilbage til login",
+      "error": "Kunne ikke sende nulstillingslink"
+    },
+    "resetPassword": {
+      "title": "Angiv ny adgangskode",
+      "newPassword": "Ny adgangskode",
+      "confirmPassword": "Bekræft adgangskode",
+      "resetting": "Nulstiller...",
+      "submit": "Nulstil adgangskode",
+      "backToLogin": "Tilbage til login",
+      "passwordMismatch": "Adgangskoderne matcher ikke",
+      "passwordTooShort": "Adgangskode skal være mindst 6 tegn",
+      "error": "Kunne ikke nulstille adgangskode",
+      "invalidToken": "Ugyldigt nulstillingslink",
+      "invalidTokenDescription": "Dette link til nulstilling af adgangskode er ugyldigt eller udløbet.",
+      "requestNew": "Anmod om nyt nulstillingslink"
     },
     "register": {
       "title": "Tilmeld Ting",

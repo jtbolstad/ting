@@ -61,7 +61,31 @@
       "loggingIn": "Logging in...",
       "submit": "Login",
       "noAccount": "Don't have an account?",
-      "registerLink": "Register here"
+      "registerLink": "Register here",
+      "forgotPassword": "Forgot password?"
+    },
+    "forgotPassword": {
+      "title": "Reset Password",
+      "description": "Enter your email address and we'll send you a link to reset your password.",
+      "email": "Email",
+      "sending": "Sending...",
+      "submit": "Send Reset Link",
+      "backToLogin": "Back to login",
+      "error": "Failed to send reset link"
+    },
+    "resetPassword": {
+      "title": "Set New Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "resetting": "Resetting...",
+      "submit": "Reset Password",
+      "backToLogin": "Back to login",
+      "passwordMismatch": "Passwords do not match",
+      "passwordTooShort": "Password must be at least 6 characters",
+      "error": "Failed to reset password",
+      "invalidToken": "Invalid Reset Link",
+      "invalidTokenDescription": "This password reset link is invalid or has expired.",
+      "requestNew": "Request a new reset link"
     },
     "register": {
       "title": "Register for Ting",

@@ -61,7 +61,31 @@
       "loggingIn": "Logger inn...",
       "submit": "Logg Inn",
       "noAccount": "Har du ikke en konto?",
-      "registerLink": "Registrer her"
+      "registerLink": "Registrer her",
+      "forgotPassword": "Glemt passord?"
+    },
+    "forgotPassword": {
+      "title": "Tilbakestill passord",
+      "description": "Skriv inn e-postadressen din, så sender vi deg en lenke for å tilbakestille passordet.",
+      "email": "E-post",
+      "sending": "Sender...",
+      "submit": "Send tilbakestillingslenke",
+      "backToLogin": "Tilbake til innlogging",
+      "error": "Kunne ikke sende tilbakestillingslenke"
+    },
+    "resetPassword": {
+      "title": "Angi nytt passord",
+      "newPassword": "Nytt passord",
+      "confirmPassword": "Bekreft passord",
+      "resetting": "Tilbakestiller...",
+      "submit": "Tilbakestill passord",
+      "backToLogin": "Tilbake til innlogging",
+      "passwordMismatch": "Passordene stemmer ikke overens",
+      "passwordTooShort": "Passord må være minst 6 tegn",
+      "error": "Kunne ikke tilbakestille passord",
+      "invalidToken": "Ugyldig tilbakestillingslenke",
+      "invalidTokenDescription": "Denne lenken for tilbakestilling av passord er ugyldig eller har utløpt.",
+      "requestNew": "Be om ny tilbakestillingslenke"
     },
     "register": {
       "title": "Registrer for Ting",

@@ -8,19 +8,21 @@ datasource db {
 }
 
 model User {
-  id           String        @id @default(cuid())
-  email        String        @unique
-  passwordHash String
-  name         String
-  role         String        @default("MEMBER") // platform role (e.g. SUPERADMIN)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  reservations Reservation[]
-  loans        Loan[]
-  memberships  Membership[]
-  auditLogs    AuditLog[]    @relation("AuditActor")
-  comments     Comment[]
-  reviews      Review[]
+  id                     String        @id @default(cuid())
+  email                  String        @unique
+  passwordHash           String
+  name                   String
+  role                   String        @default("MEMBER") // platform role (e.g. SUPERADMIN)
+  resetPasswordToken     String?       @unique
+  resetPasswordExpiresAt DateTime?
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+  reservations           Reservation[]
+  loans                  Loan[]
+  memberships            Membership[]
+  auditLogs              AuditLog[]    @relation("AuditActor")
+  comments               Comment[]
+  reviews                Review[]
 }
 
 model Organization {

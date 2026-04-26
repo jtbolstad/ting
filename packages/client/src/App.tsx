@@ -8,6 +8,8 @@ import { ConfirmProvider } from "./components/ui/ConfirmModal";
 import { WelcomeBanner } from "./components/WelcomeBanner";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
+import { ForgotPassword } from "./pages/ForgotPassword";
+import { ResetPassword } from "./pages/ResetPassword";
 import { Catalog } from "./pages/Catalog";
 import { ItemDetail } from "./pages/ItemDetail";
 import { Dashboard } from "./pages/Dashboard";
@@ -35,6 +37,8 @@ function App() {
               <Route path="/" element={<Navigate to="/catalog" replace />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/terms" element={<TermsOfService />} />
               <Route path="/catalog" element={<Catalog />} />
               <Route

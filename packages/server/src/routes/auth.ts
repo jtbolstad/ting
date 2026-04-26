@@ -7,6 +7,7 @@ import type {
 } from "@ting/shared";
 import type { Router as ExpressRouter, Request, Response } from "express";
 import { Router } from "express";
+import crypto from "crypto";
 import { authenticate, type AuthRequest } from "../middleware/auth.js";
 import { prisma } from "../prisma.js";
 import {
@@ -254,6 +255,94 @@ router.post("/change-password", authenticate, async (req: AuthRequest, res: Resp
   } catch (error) {
     console.error("Change password error:", error);
     res.status(500).json({ success: false, error: "Failed to change password" });
+  }
+});
+
+// Request password reset
+router.post("/request-reset-password", async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ success: false, error: "Email is required" });
+    }
+
+    const user = await prisma.user.findUnique({ where: { email } });
+
+    // Always return success (prevent email enumeration)
+    if (!user) {
+      return res.json({ success: true, message: "If account exists, reset email sent" });
+    }
+
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        resetPasswordToken: resetToken,
+        resetPasswordExpiresAt: expiresAt,
+      },
+    });
+
+    // Send email with reset link (in dev mode, just log)
+    const resetLink = `${process.env.CLIENT_URL || "http://localhost:5173"}/reset-password?token=${resetToken}`;
+    console.log(`Password reset link for ${email}: ${resetLink}`);
+
+    // TODO: Send actual email in production
+    // await emailService.sendPasswordReset(email, user.name, resetLink);
+
+    res.json({ success: true, message: "If account exists, reset email sent" });
+  } catch (error) {
+    console.error("Request reset password error:", error);
+    res.status(500).json({ success: false, error: "Failed to process request" });
+  }
+});
+
+// Reset password with token
+router.post("/reset-password", async (req: Request, res: Response) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        error: "Token and new password are required",
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        error: "Password must be at least 6 characters",
+      });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { resetPasswordToken: token },
+    });
+
+    if (!user || !user.resetPasswordExpiresAt || user.resetPasswordExpiresAt < new Date()) {
+      return res.status(400).json({
+        success: false,
+        error: "Invalid or expired reset token",
+      });
+    }
+
+    const passwordHash = await hashPassword(newPassword);
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        passwordHash,
+        resetPasswordToken: null,
+        resetPasswordExpiresAt: null,
+      },
+    });
+
+    res.json({ success: true, message: "Password reset successfully" });
+  } catch (error) {
+    console.error("Reset password error:", error);
+    res.status(500).json({ success: false, error: "Failed to reset password" });
   }
 });
 
