@@ -6,8 +6,8 @@ import { useOrganization } from "../context/OrganizationContext";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export function Navbar() {
-  const { isAuthenticated, isAdmin, user, logout, activeMembership } = useAuth();
-  const { organizations } = useOrganization();
+  const { isAuthenticated, isAdmin, user, logout, activeMembership, isPlatformAdmin } = useAuth();
+  const { organizations, activeOrganizationId, setActiveOrganizationId } = useOrganization();
   const { t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -25,9 +25,22 @@ export function Navbar() {
 
           {/* Logo + desktop nav links */}
           <div className="flex items-center space-x-8">
-            <Link to="/" className="text-2xl font-bold" onClick={close}>
-              {title}
-            </Link>
+            {isPlatformAdmin && organizations.length > 0 ? (
+              <select
+                value={activeOrganizationId || ""}
+                onChange={(e) => setActiveOrganizationId(e.target.value || null)}
+                className="text-2xl font-bold bg-transparent border-none text-white cursor-pointer hover:text-indigo-200 focus:outline-none focus:ring-2 focus:ring-white/50 rounded px-2"
+              >
+                <option value="" className="bg-indigo-600">{t("app.title")}</option>
+                {organizations.map(org => (
+                  <option key={org.id} value={org.id} className="bg-indigo-600">{org.name}</option>
+                ))}
+              </select>
+            ) : (
+              <Link to="/" className="text-2xl font-bold" onClick={close}>
+                {title}
+              </Link>
+            )}
             {isAuthenticated && (
               <div className="hidden md:flex items-center space-x-6">
                 <Link to="/catalog" className="hover:text-indigo-200">{t("nav.catalog")}</Link>
