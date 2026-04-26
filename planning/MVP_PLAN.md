@@ -188,10 +188,10 @@
 
 #### 3.4 Registration & Membership Flow
 
-- [ ] Remove organization selector from registration (public registration)
-- [ ] New users registered without org go to "waiting room" (no memberships)
-- [ ] Admins can assign waiting users to their organization
-- [ ] Members can invite others via email (link contains org ID for direct join)
+- ✅ Remove organization selector from registration (public registration)
+- ✅ New users registered without org go to "waiting room" (no memberships)
+- ✅ Admins can assign waiting users to their organization
+- ✅ Members can invite others via email (link contains org ID for direct join)
 
 ---
 
@@ -322,13 +322,13 @@
 ```
 Phase 1 (Critical):  ▓▓▓▓▓▓░░░░  60% - Infrastructure done, org isolation testing needed
 Phase 2 (High):      ▓▓▓▓▓▓▓▓▓░  90% - Dashboard + calendar + reservations complete
-Phase 3 (Medium):    ▓▓▓▓▓▓▓▓▓░  90% - Admin filters + user mgmt + org settings + groups + invitations
+Phase 3 (Medium):    ▓▓▓▓▓▓▓▓▓▓  100% - Admin features + org mgmt + groups + invitations + waiting room
 Phase 4 (Nice):      ▓▓▓▓▓▓▓░░░  70% - i18n complete (en/no/da), images/manuals/audit done
 ```
 
-**Overall MVP Completion: ~78%**
+**Overall MVP Completion: ~80%**
 
-**Estimated Time to MVP:** 2-4 hours of focused development
+**Estimated Time to MVP:** 1-3 hours of focused development
 
 ---
 
