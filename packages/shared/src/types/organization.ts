@@ -10,6 +10,7 @@ export interface Organization {
   slug: string;
   description: string | null;
   type?: OrgType | null;
+  loanDurationDays: number;
   createdAt: string;
   updatedAt: string;
 }

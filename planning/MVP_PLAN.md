@@ -147,8 +147,8 @@
 - ✅ Checkout flow in AdminDashboard
 - ✅ Check-in flow (return item, update status)
 - ✅ Overdue loan highlighting
-- [ ] Set due date based on organization policy (default: 7 days)
-- [ ] Block checkout if item has active reservation
+- ✅ Set due date based on organization policy (default: 7 days)
+- ✅ Block checkout if item has active reservation
 
 #### 2.5 User Dashboard
 

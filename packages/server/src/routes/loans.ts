@@ -116,10 +116,10 @@ router.post("/checkout", async (req: AuthRequest, res: Response) => {
     const { itemId, userId, reservationId, dueDate } =
       req.body as CheckoutInput;
 
-    if (!itemId || !dueDate) {
+    if (!itemId) {
       return res.status(400).json({
         success: false,
-        error: "itemId and dueDate are required",
+        error: "itemId is required",
       });
     }
 
@@ -217,7 +217,13 @@ router.post("/checkout", async (req: AuthRequest, res: Response) => {
           userId: checkoutUserId,
           itemId,
           reservationId: reservationId || null,
-          dueDate: new Date(dueDate),
+          dueDate: dueDate
+            ? new Date(dueDate)
+            : (() => {
+                const d = new Date();
+                d.setDate(d.getDate() + (req.organization!.loanDurationDays ?? 7));
+                return d;
+              })(),
         },
         include: {
           item: { include: { category: true } },

@@ -17,7 +17,7 @@ import type {
 
 export function AdminDashboard() {
   const { t } = useTranslation();
-  const { activeOrganizationId } = useOrganization();
+  const { activeOrganizationId, activeOrganization } = useOrganization();
   const toast = useToast();
   const confirm = useConfirm();
   const [loans, setLoans] = useState<Loan[]>([]);
@@ -562,7 +562,13 @@ export function AdminDashboard() {
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold">{t("admin.loans.title")}</h2>
             <button
-              onClick={() => setShowCheckout(true)}
+              onClick={() => {
+                const days = activeOrganization?.loanDurationDays ?? 7;
+                const d = new Date();
+                d.setDate(d.getDate() + days);
+                setDueDate(d.toISOString().split("T")[0]);
+                setShowCheckout(true);
+              }}
               className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
             >
               {t("admin.loans.checkoutItem")}

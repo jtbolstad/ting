@@ -24,13 +24,14 @@ model User {
 }
 
 model Organization {
-  id          String        @id @default(cuid())
-  name        String
-  slug        String        @unique
-  description String?
-  type        String?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id               String        @id @default(cuid())
+  name             String
+  slug             String        @unique
+  description      String?
+  type             String?
+  loanDurationDays Int           @default(7)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 
   memberships Membership[]
   groups      MemberGroup[]
