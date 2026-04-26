@@ -423,6 +423,55 @@ class ApiClient {
     });
   }
 
+  async sendInvitation(email: string, role?: string): Promise<{
+    id: string;
+    email: string;
+    role: string;
+    inviteLink: string;
+    expiresAt: string;
+  }> {
+    return this.request<{
+      id: string;
+      email: string;
+      role: string;
+      inviteLink: string;
+      expiresAt: string;
+    }>("/organizations/invitations/send", {
+      method: "POST",
+      body: JSON.stringify({ email, role }),
+    });
+  }
+
+  async getInvitations(): Promise<Array<{
+    id: string;
+    email: string;
+    role: string;
+    expiresAt: string;
+    usedAt: string | null;
+    createdAt: string;
+  }>> {
+    return this.request<Array<{
+      id: string;
+      email: string;
+      role: string;
+      expiresAt: string;
+      usedAt: string | null;
+      createdAt: string;
+    }>>("/organizations/invitations");
+  }
+
+  async acceptInvitation(token: string): Promise<{
+    membership: Membership;
+    organization: Organization;
+  }> {
+    return this.request<{
+      membership: Membership;
+      organization: Organization;
+    }>(`/organizations/invitations/${token}/accept`, {
+      method: "POST",
+    });
+  }
+
   // Uploads
   async uploadImage(file: File): Promise<ImageUploadResponse> {
     const formData = new FormData();

@@ -253,6 +253,14 @@
         "completed": "Fuldført"
       }
     },
+    "invite": {
+      "success": "Velkommen!",
+      "error": "Ugyldig invitation",
+      "joinedOrg": "Du er blevet medlem af {{orgName}}",
+      "redirecting": "Videresender til katalog...",
+      "goHome": "Gå til katalog",
+      "acceptFailed": "Kunne ikke acceptere invitation"
+    },
     "history": {
       "title": "Lånehistorik",
       "noHistory": "Ingen tidligere udlån",
@@ -418,6 +426,24 @@
       "updateFailed": "Kunne ikke opdatere gruppe",
       "deleteSuccess": "Gruppe slettet",
       "deleteFailed": "Kunne ikke slette gruppe"
+    },
+    "invitations": {
+      "title": "Afventende invitationer",
+      "inviteButton": "Inviter medlem",
+      "email": "E-mail",
+      "role": "Rolle",
+      "status": "Status",
+      "expires": "Udløber",
+      "send": "Send invitation",
+      "noInvitations": "Ingen afventende invitationer",
+      "accepted": "Accepteret",
+      "expired": "Udløbet",
+      "pending": "Afventer",
+      "linkGenerated": "Invitationslink genereret",
+      "copy": "Kopier",
+      "linkCopied": "Link kopieret til udklipsholder",
+      "sendSuccess": "Invitation sendt",
+      "sendFailed": "Kunne ikke sende invitation"
     },
     "users": {
       "title": "Brugere",

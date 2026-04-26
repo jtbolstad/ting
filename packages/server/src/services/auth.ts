@@ -58,6 +58,7 @@ export function serializeOrganization(org: {
   name: string;
   slug: string;
   description: string | null;
+  loanDurationDays: number;
   createdAt: Date;
   updatedAt: Date;
 }): SharedOrganization {
@@ -66,6 +67,7 @@ export function serializeOrganization(org: {
     name: org.name,
     slug: org.slug,
     description: org.description,
+    loanDurationDays: org.loanDurationDays,
     createdAt: org.createdAt.toISOString(),
     updatedAt: org.updatedAt.toISOString(),
   };

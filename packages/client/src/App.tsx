@@ -10,6 +10,7 @@ import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { ResetPassword } from "./pages/ResetPassword";
+import { InviteAccept } from "./pages/InviteAccept";
 import { Catalog } from "./pages/Catalog";
 import { ItemDetail } from "./pages/ItemDetail";
 import { Dashboard } from "./pages/Dashboard";
@@ -39,6 +40,7 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/invite/:token" element={<InviteAccept />} />
               <Route path="/terms" element={<TermsOfService />} />
               <Route path="/catalog" element={<Catalog />} />
               <Route

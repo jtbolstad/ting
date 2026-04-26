@@ -6,6 +6,7 @@ import type {
 } from "@ting/shared";
 import type { Router as ExpressRouter, Response } from "express";
 import { Router } from "express";
+import crypto from "crypto";
 import {
   authenticate,
   requireAdmin,
@@ -623,6 +624,204 @@ router.post(
       res.status(500).json({
         success: false,
         error: "Failed to reset password",
+      });
+    }
+  },
+);
+
+// Send invitation
+router.post(
+  "/invitations/send",
+  authenticate,
+  withOrganizationContext(),
+  requireOrgRole(["ADMIN", "OWNER"]),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { email, role = "MEMBER" } = req.body;
+
+      if (!email) {
+        return res.status(400).json({
+          success: false,
+          error: "Email is required",
+        });
+      }
+
+      // Check if user already member
+      const existingUser = await prisma.user.findUnique({ where: { email } });
+      if (existingUser) {
+        const existingMembership = await prisma.membership.findFirst({
+          where: {
+            userId: existingUser.id,
+            organizationId: req.organization!.id,
+          },
+        });
+        if (existingMembership) {
+          return res.status(400).json({
+            success: false,
+            error: "User is already a member",
+          });
+        }
+      }
+
+      // Generate token
+      const token = crypto.randomBytes(32).toString("hex");
+      const expiresAt = new Date();
+      expiresAt.setDate(expiresAt.getDate() + 7); // 7 days
+
+      const invitation = await prisma.organizationInvitation.create({
+        data: {
+          organizationId: req.organization!.id,
+          email,
+          token,
+          role,
+          expiresAt,
+          createdBy: req.user!.id,
+        },
+      });
+
+      // TODO: Send email with invitation link
+      const inviteLink = `${process.env.CLIENT_URL || "http://localhost:5173"}/invite/${token}`;
+      console.log(`[DEV] Invitation link for ${email}: ${inviteLink}`);
+
+      res.status(201).json({
+        success: true,
+        data: {
+          id: invitation.id,
+          email: invitation.email,
+          role: invitation.role,
+          inviteLink,
+          expiresAt: invitation.expiresAt,
+        },
+      });
+    } catch (error) {
+      console.error("Send invitation error:", error);
+      res.status(500).json({
+        success: false,
+        error: "Failed to send invitation",
+      });
+    }
+  },
+);
+
+// Get invitations for organization
+router.get(
+  "/invitations",
+  authenticate,
+  withOrganizationContext(),
+  requireOrgRole("MANAGER"),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const invitations = await prisma.organizationInvitation.findMany({
+        where: {
+          organizationId: req.organization!.id,
+        },
+        orderBy: { createdAt: "desc" },
+      });
+
+      res.json({
+        success: true,
+        data: invitations.map((inv) => ({
+          id: inv.id,
+          email: inv.email,
+          role: inv.role,
+          expiresAt: inv.expiresAt,
+          usedAt: inv.usedAt,
+          createdAt: inv.createdAt,
+        })),
+      });
+    } catch (error) {
+      console.error("Get invitations error:", error);
+      res.status(500).json({
+        success: false,
+        error: "Failed to fetch invitations",
+      });
+    }
+  },
+);
+
+// Accept invitation (public, no org context)
+router.post(
+  "/invitations/:token/accept",
+  authenticate,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { token } = req.params;
+
+      const invitation = await prisma.organizationInvitation.findUnique({
+        where: { token },
+        include: { organization: true },
+      });
+
+      if (!invitation) {
+        return res.status(404).json({
+          success: false,
+          error: "Invitation not found",
+        });
+      }
+
+      if (invitation.usedAt) {
+        return res.status(400).json({
+          success: false,
+          error: "Invitation already used",
+        });
+      }
+
+      if (new Date() > invitation.expiresAt) {
+        return res.status(400).json({
+          success: false,
+          error: "Invitation expired",
+        });
+      }
+
+      // Check if user already member
+      const existingMembership = await prisma.membership.findFirst({
+        where: {
+          userId: req.user!.id,
+          organizationId: invitation.organizationId,
+        },
+      });
+
+      if (existingMembership) {
+        return res.status(400).json({
+          success: false,
+          error: "Already a member of this organization",
+        });
+      }
+
+      // Create membership
+      const membership = await prisma.membership.create({
+        data: {
+          userId: req.user!.id,
+          organizationId: invitation.organizationId,
+          role: invitation.role,
+          status: "ACTIVE",
+        },
+        include: {
+          organization: true,
+          groups: {
+            include: { group: true },
+          },
+        },
+      });
+
+      // Mark invitation as used
+      await prisma.organizationInvitation.update({
+        where: { id: invitation.id },
+        data: { usedAt: new Date() },
+      });
+
+      res.json({
+        success: true,
+        data: {
+          membership: serializeMembership(membership),
+          organization: serializeOrganization(invitation.organization),
+        },
+      });
+    } catch (error) {
+      console.error("Accept invitation error:", error);
+      res.status(500).json({
+        success: false,
+        error: "Failed to accept invitation",
       });
     }
   },

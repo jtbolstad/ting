@@ -254,6 +254,14 @@
         "completed": "Fullført"
       }
     },
+    "invite": {
+      "success": "Velkommen!",
+      "error": "Ugyldig invitasjon",
+      "joinedOrg": "Du har blitt medlem av {{orgName}}",
+      "redirecting": "Videresender til katalog...",
+      "goHome": "Gå til katalog",
+      "acceptFailed": "Kunne ikke akseptere invitasjon"
+    },
     "history": {
       "title": "Lånehistorikk",
       "noHistory": "Ingen tidligere utlån",
@@ -419,6 +427,24 @@
       "updateFailed": "Kunne ikke oppdatere gruppe",
       "deleteSuccess": "Gruppe slettet",
       "deleteFailed": "Kunne ikke slette gruppe"
+    },
+    "invitations": {
+      "title": "Ventende invitasjoner",
+      "inviteButton": "Inviter medlem",
+      "email": "E-post",
+      "role": "Rolle",
+      "status": "Status",
+      "expires": "Utløper",
+      "send": "Send invitasjon",
+      "noInvitations": "Ingen ventende invitasjoner",
+      "accepted": "Akseptert",
+      "expired": "Utløpt",
+      "pending": "Venter",
+      "linkGenerated": "Invitasjonslenke generert",
+      "copy": "Kopier",
+      "linkCopied": "Lenke kopiert til utklippstavle",
+      "sendSuccess": "Invitasjon sendt",
+      "sendFailed": "Kunne ikke sende invitasjon"
     },
     "users": {
       "title": "Brukere",

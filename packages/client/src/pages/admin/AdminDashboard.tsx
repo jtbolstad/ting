@@ -151,6 +151,19 @@ export function AdminDashboard() {
   const [editingGroup, setEditingGroup] = useState<{ id: string; name: string; description: string | null } | null>(null);
   const [groupForm, setGroupForm] = useState({ name: "", description: "" });
 
+  // Invitations state
+  const [invitations, setInvitations] = useState<Array<{
+    id: string;
+    email: string;
+    role: string;
+    expiresAt: string;
+    usedAt: string | null;
+    createdAt: string;
+  }>>([]);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [inviteForm, setInviteForm] = useState({ email: "", role: "MEMBER" });
+  const [inviteLink, setInviteLink] = useState("");
+
   useEffect(() => {
     loadData();
   }, []);
@@ -491,13 +504,7 @@ export function AdminDashboard() {
   };
 
   const handleDeleteGroup = async (id: string) => {
-    const confirmed = await confirm({
-      title: t("admin.groups.confirmDelete"),
-      message: t("admin.groups.confirmDeleteMessage"),
-      confirmText: t("admin.groups.delete"),
-      cancelText: t("admin.groups.cancel"),
-    });
-    if (!confirmed) return;
+    if (!(await confirm(t("admin.groups.confirmDeleteMessage")))) return;
     try {
       await apiClient.deleteGroup(id);
       const groupsData = await apiClient.getGroups();
@@ -505,6 +512,29 @@ export function AdminDashboard() {
       toast.success(t("admin.groups.deleteSuccess"));
     } catch (error: any) {
       toast.error(error.message || t("admin.groups.deleteFailed"));
+    }
+  };
+
+  const handleSendInvitation = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const result = await apiClient.sendInvitation(inviteForm.email, inviteForm.role);
+      setInviteLink(result.inviteLink);
+      const invitationsData = await apiClient.getInvitations();
+      setInvitations(invitationsData);
+      setInviteForm({ email: "", role: "MEMBER" });
+      toast.success(t("admin.invitations.sendSuccess"));
+    } catch (error: any) {
+      toast.error(error.message || t("admin.invitations.sendFailed"));
+    }
+  };
+
+  const loadInvitations = async () => {
+    try {
+      const invitationsData = await apiClient.getInvitations();
+      setInvitations(invitationsData);
+    } catch (error) {
+      console.error("Failed to load invitations:", error);
     }
   };
 
@@ -1135,6 +1165,76 @@ export function AdminDashboard() {
                       </td>
                     </tr>
                   ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Invitations Section */}
+          <div className="mt-8">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold">{t("admin.invitations.title")}</h3>
+              <button
+                onClick={() => {
+                  setShowInviteModal(true);
+                  setInviteLink("");
+                  loadInvitations();
+                }}
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              >
+                {t("admin.invitations.inviteButton")}
+              </button>
+            </div>
+
+            <div className="bg-white rounded-lg shadow overflow-hidden">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.invitations.email")}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.invitations.role")}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.invitations.status")}
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.invitations.expires")}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {invitations.length === 0 ? (
+                    <tr>
+                      <td colSpan={4} className="px-6 py-4 text-center text-gray-500">
+                        {t("admin.invitations.noInvitations")}
+                      </td>
+                    </tr>
+                  ) : (
+                    invitations.map((inv) => (
+                      <tr key={inv.id}>
+                        <td className="px-6 py-4">{inv.email}</td>
+                        <td className="px-6 py-4">
+                          <span className="px-2 py-1 text-xs rounded bg-gray-100 text-gray-800">
+                            {inv.role}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          {inv.usedAt ? (
+                            <span className="text-green-600 text-sm">{t("admin.invitations.accepted")}</span>
+                          ) : new Date() > new Date(inv.expiresAt) ? (
+                            <span className="text-red-600 text-sm">{t("admin.invitations.expired")}</span>
+                          ) : (
+                            <span className="text-blue-600 text-sm">{t("admin.invitations.pending")}</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-500">
+                          {new Date(inv.expiresAt).toLocaleDateString()}
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
@@ -2093,6 +2193,89 @@ export function AdminDashboard() {
                   onClick={() => {
                     setShowEditGroup(false);
                     setEditingGroup(null);
+                  }}
+                  className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                >
+                  {t("common.cancel")}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Invite Member Modal */}
+      {showInviteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full">
+            <h3 className="text-2xl font-bold mb-4">
+              {t("admin.invitations.inviteButton")}
+            </h3>
+            <form onSubmit={handleSendInvitation} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.invitations.email")}
+                </label>
+                <input
+                  type="email"
+                  value={inviteForm.email}
+                  onChange={(e) => setInviteForm({ ...inviteForm, email: e.target.value })}
+                  required
+                  className="w-full px-3 py-2 border rounded"
+                  placeholder="user@example.com"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  {t("admin.invitations.role")}
+                </label>
+                <select
+                  value={inviteForm.role}
+                  onChange={(e) => setInviteForm({ ...inviteForm, role: e.target.value })}
+                  className="w-full px-3 py-2 border rounded"
+                >
+                  <option value="MEMBER">MEMBER</option>
+                  <option value="MANAGER">MANAGER</option>
+                  <option value="ADMIN">ADMIN</option>
+                </select>
+              </div>
+              {inviteLink && (
+                <div className="p-3 bg-green-50 rounded">
+                  <p className="text-sm font-medium text-green-800 mb-1">
+                    {t("admin.invitations.linkGenerated")}
+                  </p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={inviteLink}
+                      readOnly
+                      className="flex-1 px-2 py-1 text-sm border rounded bg-white"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(inviteLink);
+                        toast.success(t("admin.invitations.linkCopied"));
+                      }}
+                      className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
+                    >
+                      {t("admin.invitations.copy")}
+                    </button>
+                  </div>
+                </div>
+              )}
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  className="flex-1 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                >
+                  {t("admin.invitations.send")}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowInviteModal(false);
+                    setInviteLink("");
                   }}
                   className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
                 >

@@ -45,6 +45,25 @@ model Organization {
   comments     Comment[]
   reviews      Review[]
   auditLogs    AuditLog[]
+  invitations  OrganizationInvitation[]
+}
+
+model OrganizationInvitation {
+  id             String   @id @default(cuid())
+  organizationId String
+  email          String
+  token          String   @unique
+  role           String   @default("MEMBER")
+  expiresAt      DateTime
+  usedAt         DateTime?
+  createdBy      String
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([email])
+  @@index([token])
 }
 
 model Location {

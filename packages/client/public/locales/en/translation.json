@@ -253,6 +253,14 @@
         "completed": "Completed"
       }
     },
+    "invite": {
+      "success": "Welcome!",
+      "error": "Invalid Invitation",
+      "joinedOrg": "You've joined {{orgName}}",
+      "redirecting": "Redirecting to catalog...",
+      "goHome": "Go to Catalog",
+      "acceptFailed": "Failed to accept invitation"
+    },
     "history": {
       "title": "Loan History",
       "noHistory": "No past loans",
@@ -439,6 +447,24 @@
       "passwordReset": "Password reset successfully",
       "passwordResetFailed": "Failed to reset password",
       "passwordTooShort": "Password must be at least 6 characters"
+    },
+    "invitations": {
+      "title": "Pending Invitations",
+      "inviteButton": "Invite Member",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "expires": "Expires",
+      "send": "Send Invitation",
+      "noInvitations": "No pending invitations",
+      "accepted": "Accepted",
+      "expired": "Expired",
+      "pending": "Pending",
+      "linkGenerated": "Invitation link generated",
+      "copy": "Copy",
+      "linkCopied": "Link copied to clipboard",
+      "sendSuccess": "Invitation sent",
+      "sendFailed": "Failed to send invitation"
     },
     "checkout": {
       "title": "Checkout Item",
