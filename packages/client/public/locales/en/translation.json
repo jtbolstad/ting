@@ -324,7 +324,12 @@
       "checkinTitle": "Return Item",
       "confirmCheckin": "Confirm item checkin?",
       "damageNote": "Damage Note (optional)",
-      "damageNotePlaceholder": "Describe any damage..."
+      "damageNotePlaceholder": "Describe any damage...",
+      "filterStatus": "Filter by status",
+      "statusAll": "All",
+      "statusActive": "Active",
+      "statusReturned": "Returned",
+      "statusOverdue": "Overdue"
     },
     "items": {
       "title": "Items",
@@ -344,6 +349,10 @@
       "confirmDelete": "Are you sure you want to delete this item?",
       "confirmApprove": "Approve this item?",
       "rejectNote": "Reason for rejection (optional)",
+      "filterCategory": "Filter by category",
+      "filterStatus": "Filter by status",
+      "categoryAll": "All categories",
+      "statusAll": "All statuses",
       "approvalValues": {
         "PENDING": "Pending",
         "APPROVED": "Approved",
@@ -356,11 +365,15 @@
       "email": "Email",
       "role": "Role",
       "joined": "Joined",
+      "actions": "Actions",
       "addUser": "Add User",
       "password": "Password",
       "create": "Create User",
       "addSuccess": "User created",
-      "addError": "Could not create user"
+      "addError": "Could not create user",
+      "confirmRoleChange": "Change this user's role?",
+      "roleChanged": "Role updated",
+      "roleChangeFailed": "Failed to update role"
     },
     "checkout": {
       "title": "Checkout Item",

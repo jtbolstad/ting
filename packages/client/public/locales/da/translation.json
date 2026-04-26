@@ -324,7 +324,12 @@
       "checkinTitle": "Lever Værktøj Ind",
       "confirmCheckin": "Bekræft indlevering?",
       "damageNote": "Skadenotat (valgfrit)",
-      "damageNotePlaceholder": "Beskriv eventuelle skader..."
+      "damageNotePlaceholder": "Beskriv eventuelle skader...",
+      "filterStatus": "Filtrer efter status",
+      "statusAll": "Alle",
+      "statusActive": "Aktive",
+      "statusReturned": "Returneret",
+      "statusOverdue": "Forsinket"
     },
     "items": {
       "title": "Værktøjer",
@@ -344,6 +349,10 @@
       "confirmDelete": "Er du sikker på, at du vil slette dette værktøj?",
       "confirmApprove": "Godkend dette værktøj?",
       "rejectNote": "Begrundelse for afvisning (valgfrit)",
+      "filterCategory": "Filtrer efter kategori",
+      "filterStatus": "Filtrer efter status",
+      "categoryAll": "Alle kategorier",
+      "statusAll": "Alle statuser",
       "approvalValues": {
         "PENDING": "Afventer",
         "APPROVED": "Godkendt",
@@ -356,11 +365,15 @@
       "email": "E-mail",
       "role": "Rolle",
       "joined": "Blev Medlem",
+      "actions": "Handlinger",
       "addUser": "Tilføj bruger",
       "password": "Adgangskode",
       "create": "Opret bruger",
       "addSuccess": "Bruger oprettet",
-      "addError": "Kunne ikke oprette bruger"
+      "addError": "Kunne ikke oprette bruger",
+      "confirmRoleChange": "Ændre brugerens rolle?",
+      "roleChanged": "Rolle opdateret",
+      "roleChangeFailed": "Kunne ikke opdatere rolle"
     },
     "checkout": {
       "title": "Udlån Værktøj",

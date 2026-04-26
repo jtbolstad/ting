@@ -325,7 +325,12 @@
       "checkinTitle": "Lever inn verktøy",
       "confirmCheckin": "Bekreft innlevering?",
       "damageNote": "Skadenotat (valgfritt)",
-      "damageNotePlaceholder": "Beskriv eventuelle skader..."
+      "damageNotePlaceholder": "Beskriv eventuelle skader...",
+      "filterStatus": "Filtrer etter status",
+      "statusAll": "Alle",
+      "statusActive": "Aktive",
+      "statusReturned": "Returnert",
+      "statusOverdue": "Forsinket"
     },
     "items": {
       "title": "Verktøy",
@@ -345,6 +350,10 @@
       "confirmDelete": "Er du sikker på at du vil slette dette verktøyet?",
       "confirmApprove": "Godkjenn dette verktøyet?",
       "rejectNote": "Begrunnelse for avvisning (valgfritt)",
+      "filterCategory": "Filtrer etter kategori",
+      "filterStatus": "Filtrer etter status",
+      "categoryAll": "Alle kategorier",
+      "statusAll": "Alle statuser",
       "approvalValues": {
         "PENDING": "Venter",
         "APPROVED": "Godkjent",
@@ -357,11 +366,15 @@
       "email": "E-post",
       "role": "Rolle",
       "joined": "Ble medlem",
+      "actions": "Handlinger",
       "addUser": "Legg til bruker",
       "password": "Passord",
       "create": "Opprett bruker",
       "addSuccess": "Bruker opprettet",
-      "addError": "Kunne ikke opprette bruker"
+      "addError": "Kunne ikke opprette bruker",
+      "confirmRoleChange": "Endre brukerens rolle?",
+      "roleChanged": "Rolle oppdatert",
+      "roleChangeFailed": "Kunne ikke oppdatere rolle"
     },
     "checkout": {
       "title": "Lån ut verktøy",

@@ -27,7 +27,7 @@ export function AdminDashboard() {
   );
   const [items, setItems] = useState<Item[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<Array<{ membership: any; user: User }>>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<
     | "loans"
@@ -129,6 +129,11 @@ export function AdminDashboard() {
   const [testEmailText, setTestEmailText] = useState("");
   const [testEmailSending, setTestEmailSending] = useState(false);
 
+  // Filter states
+  const [loanStatusFilter, setLoanStatusFilter] = useState<"all" | "active" | "returned" | "overdue">("all");
+  const [itemCategoryFilter, setItemCategoryFilter] = useState<string>("all");
+  const [itemStatusFilter, setItemStatusFilter] = useState<string>("all");
+
   useEffect(() => {
     loadData();
   }, []);
@@ -167,7 +172,7 @@ export function AdminDashboard() {
       );
       setItems(itemsData.items);
       setCategories(categoriesData);
-      setUsers(usersData.map((item) => item.user));
+      setUsers(usersData);
       setLocations(locationsData);
     } catch (error) {
       console.error("Failed to load admin data:", error);
@@ -377,6 +382,17 @@ export function AdminDashboard() {
     }
   };
 
+  const handleChangeRole = async (membershipId: string, newRole: string) => {
+    if (!(await confirm(t("admin.users.confirmRoleChange")))) return;
+    try {
+      await apiClient.updateMembership(membershipId, { role: newRole as any });
+      toast.success(t("admin.users.roleChanged"));
+      await loadData();
+    } catch (error: any) {
+      toast.error(error.message || t("admin.users.roleChangeFailed"));
+    }
+  };
+
   const handleAddUser = async (e: React.FormEvent) => {
     e.preventDefault();
     setAddUserError("");
@@ -575,6 +591,23 @@ export function AdminDashboard() {
             </button>
           </div>
 
+          {/* Loan Status Filter */}
+          <div className="mb-4 flex gap-2">
+            <label className="text-sm font-medium text-gray-700 flex items-center">
+              {t("admin.loans.filterStatus")}:
+            </label>
+            <select
+              value={loanStatusFilter}
+              onChange={(e) => setLoanStatusFilter(e.target.value as any)}
+              className="px-3 py-1 border border-gray-300 rounded text-sm"
+            >
+              <option value="all">{t("admin.loans.statusAll")}</option>
+              <option value="active">{t("admin.loans.statusActive")}</option>
+              <option value="returned">{t("admin.loans.statusReturned")}</option>
+              <option value="overdue">{t("admin.loans.statusOverdue")}</option>
+            </select>
+          </div>
+
           <div className="bg-white rounded-lg shadow overflow-hidden">
             <div className="overflow-x-auto">
               <table className="min-w-full">
@@ -598,7 +631,15 @@ export function AdminDashboard() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {loans.map((loan) => {
+                  {loans
+                    .filter((loan) => {
+                      const isOverdue = new Date(loan.dueDate) < new Date() && !loan.returnedAt;
+                      if (loanStatusFilter === "active") return !loan.returnedAt;
+                      if (loanStatusFilter === "returned") return !!loan.returnedAt;
+                      if (loanStatusFilter === "overdue") return isOverdue;
+                      return true;
+                    })
+                    .map((loan) => {
                     const isOverdue = new Date(loan.dueDate) < new Date();
                     return (
                       <tr
@@ -732,6 +773,43 @@ export function AdminDashboard() {
             </button>
           </div>
 
+          {/* Item Filters */}
+          <div className="mb-4 flex gap-4">
+            <div className="flex gap-2 items-center">
+              <label className="text-sm font-medium text-gray-700">
+                {t("admin.items.filterCategory")}:
+              </label>
+              <select
+                value={itemCategoryFilter}
+                onChange={(e) => setItemCategoryFilter(e.target.value)}
+                className="px-3 py-1 border border-gray-300 rounded text-sm"
+              >
+                <option value="all">{t("admin.items.categoryAll")}</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex gap-2 items-center">
+              <label className="text-sm font-medium text-gray-700">
+                {t("admin.items.filterStatus")}:
+              </label>
+              <select
+                value={itemStatusFilter}
+                onChange={(e) => setItemStatusFilter(e.target.value)}
+                className="px-3 py-1 border border-gray-300 rounded text-sm"
+              >
+                <option value="all">{t("admin.items.statusAll")}</option>
+                <option value="AVAILABLE">AVAILABLE</option>
+                <option value="CHECKED_OUT">CHECKED_OUT</option>
+                <option value="MAINTENANCE">MAINTENANCE</option>
+                <option value="RETIRED">RETIRED</option>
+              </select>
+            </div>
+          </div>
+
           <div className="bg-white rounded-lg shadow overflow-hidden">
             <div className="overflow-x-auto">
               <table className="min-w-full">
@@ -755,7 +833,13 @@ export function AdminDashboard() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {items.map((item) => (
+                  {items
+                    .filter((item) => {
+                      if (itemCategoryFilter !== "all" && item.categoryId !== itemCategoryFilter) return false;
+                      if (itemStatusFilter !== "all" && item.status !== itemStatusFilter) return false;
+                      return true;
+                    })
+                    .map((item) => (
                     <tr key={item.id}>
                       <td className="px-6 py-4 font-medium">
                         <Link
@@ -863,26 +947,46 @@ export function AdminDashboard() {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                       {t("admin.users.joined")}
                     </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      {t("admin.users.actions")}
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {users.map((user) => (
+                  {users.map(({ user, membership }) => (
                     <tr key={user.id}>
                       <td className="px-6 py-4 font-medium">{user.name}</td>
                       <td className="px-6 py-4">{user.email}</td>
                       <td className="px-6 py-4">
                         <span
                           className={`px-2 py-1 text-xs rounded ${
-                            user.role === "ADMIN"
+                            membership.role === "OWNER"
                               ? "bg-purple-100 text-purple-800"
-                              : "bg-gray-100 text-gray-800"
+                              : membership.role === "ADMIN"
+                                ? "bg-blue-100 text-blue-800"
+                                : membership.role === "MANAGER"
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-gray-100 text-gray-800"
                           }`}
                         >
-                          {user.role}
+                          {membership.role}
                         </span>
                       </td>
                       <td className="px-6 py-4 text-sm">
-                        {new Date(user.createdAt).toLocaleDateString()}
+                        {new Date(membership.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4">
+                        {membership.role !== "OWNER" && (
+                          <select
+                            value={membership.role}
+                            onChange={(e) => handleChangeRole(membership.id, e.target.value)}
+                            className="px-2 py-1 border border-gray-300 rounded text-sm"
+                          >
+                            <option value="MEMBER">MEMBER</option>
+                            <option value="MANAGER">MANAGER</option>
+                            <option value="ADMIN">ADMIN</option>
+                          </select>
+                        )}
                       </td>
                     </tr>
                   ))}

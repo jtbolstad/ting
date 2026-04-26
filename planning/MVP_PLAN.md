@@ -169,9 +169,9 @@
 - ✅ Stats cards: total items, active loans, overdue loans, members
 - ✅ Item approval/rejection with rejection notes
 - ✅ Location management (CRUD)
-- [ ] Filter loans by status (active, returned, overdue)
-- [ ] Filter items by category and status
-- [ ] User management: view members, change roles
+- ✅ Filter loans by status (active, returned, overdue)
+- ✅ Filter items by category and status
+- ✅ User management: view members, change roles
 
 #### 3.2 Category Management
 
