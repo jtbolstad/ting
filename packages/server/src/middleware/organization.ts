@@ -138,7 +138,7 @@ export function requireOrgRole(minRole: OrgRole | OrgRole[]) {
 
 export const resolveOrganizationPublic = withOrganizationContext({
   requireMembership: false,
-  allowDefault: false,
+  allowDefault: true,
 });
 
 export function hasOrgRole(req: AuthRequest, minRole: OrgRole) {
