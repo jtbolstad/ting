@@ -207,6 +207,10 @@
       "dueDate": "Due Date",
       "overdue": "OVERDUE",
       "return": "Return",
+      "extend": "Extend",
+      "extendPrompt": "Extend loan by how many days? (1-30)",
+      "extendSuccess": "Loan extended by {{days}} days",
+      "extendInvalid": "Days must be between 1 and 30",
       "actions": "Actions"
     },
     "reservations": {
@@ -239,6 +243,24 @@
       "note": "Note",
       "statusPending": "Awaiting Approval",
       "statusRejected": "Rejected"
+    },
+    "membership": {
+      "title": "Membership Information",
+      "organization": "Organization",
+      "role": "Role",
+      "joined": "Joined",
+      "status": "Status",
+      "roles": {
+        "member": "Member",
+        "manager": "Manager",
+        "admin": "Admin",
+        "owner": "Owner"
+      },
+      "statuses": {
+        "active": "Active",
+        "pending": "Pending",
+        "suspended": "Suspended"
+      }
     }
   },
   "admin": {
@@ -566,6 +588,7 @@
     "reservationFailed": "Failed to create reservation",
     "cancelFailed": "Failed to cancel reservation",
     "returnFailed": "Failed to return item",
+    "extendFailed": "Failed to extend loan",
     "commentFailed": "Failed to post comment",
     "updateCommentFailed": "Failed to update comment",
     "deleteCommentFailed": "Failed to delete comment",

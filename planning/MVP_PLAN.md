@@ -155,10 +155,10 @@
 - ✅ Show user's active loans with due dates
 - ✅ Show user's upcoming reservations
 - ✅ Show overdue status prominently
-- [ ] Show pending approval items submitted by the user
-- [ ] Quick actions: extend loan, cancel reservation (only cancel implemented)
-- [ ] Show membership info for active organization
-- [ ] Calendar view tab (components built, not integrated)
+- ✅ Show pending approval items submitted by the user
+- ✅ Quick actions: extend loan, cancel reservation
+- ✅ Show membership info for active organization
+- ✅ Calendar view tab
 
 ---
 

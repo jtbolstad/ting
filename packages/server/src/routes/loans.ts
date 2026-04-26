@@ -339,4 +339,87 @@ router.post("/:id/checkin", async (req: AuthRequest, res: Response) => {
   }
 });
 
+// Extend loan due date
+router.post("/:id/extend", async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { days } = req.body;
+
+    if (!days || typeof days !== "number" || days < 1 || days > 30) {
+      return res.status(400).json({
+        success: false,
+        error: "Days must be a number between 1 and 30",
+      });
+    }
+
+    const loan = await prisma.loan.findUnique({
+      where: { id },
+      include: { item: true, user: true },
+    });
+
+    if (!loan) {
+      return res.status(404).json({ success: false, error: "Loan not found" });
+    }
+
+    if (loan.organizationId !== req.organization!.id) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Loan not found in this organization" });
+    }
+
+    if (loan.returnedAt) {
+      return res
+        .status(400)
+        .json({ success: false, error: "Cannot extend returned loan" });
+    }
+
+    // Only admins or the user who checked it out can extend
+    if (
+      loan.userId !== req.user!.id &&
+      !(req.user!.role === "ADMIN" || hasOrgRole(req, "MANAGER"))
+    ) {
+      return res.status(403).json({ success: false, error: "Forbidden" });
+    }
+
+    const oldDueDate = new Date(loan.dueDate);
+    const newDueDate = new Date(loan.dueDate);
+    newDueDate.setDate(newDueDate.getDate() + days);
+
+    const updated = await prisma.loan.update({
+      where: { id },
+      data: { dueDate: newDueDate },
+      include: {
+        item: { include: { category: true } },
+        user: true,
+        reservation: true,
+      },
+    });
+
+    audit({
+      organizationId: req.organization!.id,
+      actorUserId: req.user!.id,
+      action: "loan.extended",
+      entityType: "Loan",
+      entityId: updated.id,
+      metadata: {
+        itemId: loan.itemId,
+        userId: loan.userId,
+        oldDueDate: oldDueDate.toISOString(),
+        newDueDate: newDueDate.toISOString(),
+        extensionDays: days,
+      },
+    });
+
+    const response: ApiResponse<Loan> = {
+      success: true,
+      data: serializeLoan(updated),
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error("Extend loan error:", error);
+    res.status(500).json({ success: false, error: "Failed to extend loan" });
+  }
+});
+
 export default router;

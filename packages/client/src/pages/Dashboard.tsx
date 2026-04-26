@@ -5,12 +5,14 @@ import { useToast } from "../components/ui/Toast";
 import { useConfirm } from "../components/ui/ConfirmModal";
 import { Spinner } from "../components/ui/Spinner";
 import { ReservationCalendar } from "../components/calendar/ReservationCalendar";
+import { useAuth } from "../context/AuthContext";
 import type { Reservation, Loan, Item } from "@ting/shared";
 
 export function Dashboard() {
   const { t } = useTranslation();
   const toast = useToast();
   const confirm = useConfirm();
+  const { activeMembership } = useAuth();
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [loans, setLoans] = useState<Loan[]>([]);
   const [loanHistory, setLoanHistory] = useState<Loan[]>([]);
@@ -64,6 +66,25 @@ export function Dashboard() {
     }
   };
 
+  const handleExtendLoan = async (loanId: string) => {
+    const daysStr = prompt(t("dashboard.loans.extendPrompt"), "7");
+    if (!daysStr) return;
+
+    const days = parseInt(daysStr, 10);
+    if (isNaN(days) || days < 1 || days > 30) {
+      toast.error(t("dashboard.loans.extendInvalid"));
+      return;
+    }
+
+    try {
+      await apiClient.extendLoan(loanId, days);
+      toast.success(t("dashboard.loans.extendSuccess", { days }));
+      await loadData();
+    } catch (error: any) {
+      toast.error(error.message || t("errors.extendFailed"));
+    }
+  };
+
   if (loading) {
     return <Spinner />;
   }
@@ -112,6 +133,49 @@ export function Dashboard() {
       {/* List Tab */}
       {activeTab === "list" && (
         <>
+          {/* Membership Info */}
+          {activeMembership && (
+            <div className="mb-6 bg-white rounded-lg shadow p-6">
+              <h2 className="text-xl font-bold mb-3">
+                {t("dashboard.membership.title")}
+              </h2>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="text-gray-500">
+                    {t("dashboard.membership.organization")}:
+                  </span>
+                  <span className="ml-2 font-medium">
+                    {activeMembership.organization?.name || "—"}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-gray-500">
+                    {t("dashboard.membership.role")}:
+                  </span>
+                  <span className="ml-2 font-medium">
+                    {t(`dashboard.membership.roles.${activeMembership.role.toLowerCase()}`, activeMembership.role)}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-gray-500">
+                    {t("dashboard.membership.joined")}:
+                  </span>
+                  <span className="ml-2 font-medium">
+                    {new Date(activeMembership.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-gray-500">
+                    {t("dashboard.membership.status")}:
+                  </span>
+                  <span className="ml-2 font-medium">
+                    {t(`dashboard.membership.statuses.${activeMembership.status.toLowerCase()}`, activeMembership.status)}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="lg:grid lg:grid-cols-2 lg:gap-8">
             {/* Current Loans */}
             <div className="mb-8 lg:mb-0">
@@ -179,12 +243,20 @@ export function Dashboard() {
                                 </span>
                               </td>
                               <td className="px-6 py-4">
-                                <button
-                                  onClick={() => handleReturnItem(loan.id)}
-                                  className="text-indigo-600 hover:text-indigo-900"
-                                >
-                                  {t("dashboard.loans.return")}
-                                </button>
+                                <div className="flex gap-3">
+                                  <button
+                                    onClick={() => handleExtendLoan(loan.id)}
+                                    className="text-blue-600 hover:text-blue-900"
+                                  >
+                                    {t("dashboard.loans.extend")}
+                                  </button>
+                                  <button
+                                    onClick={() => handleReturnItem(loan.id)}
+                                    className="text-indigo-600 hover:text-indigo-900"
+                                  >
+                                    {t("dashboard.loans.return")}
+                                  </button>
+                                </div>
                               </td>
                             </tr>
                           );

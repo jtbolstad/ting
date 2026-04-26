@@ -208,6 +208,10 @@
       "dueDate": "Forfallsdato",
       "overdue": "FORSINKET",
       "return": "Lever inn",
+      "extend": "Forleng",
+      "extendPrompt": "Forleng lån med hvor mange dager? (1-30)",
+      "extendSuccess": "Lånet forlenget med {{days}} dager",
+      "extendInvalid": "Antall dager må være mellom 1 og 30",
       "actions": "Handlinger"
     },
     "reservations": {
@@ -240,6 +244,24 @@
       "note": "Notat",
       "statusPending": "Venter på godkjenning",
       "statusRejected": "Avvist"
+    },
+    "membership": {
+      "title": "Medlemsinformasjon",
+      "organization": "Organisasjon",
+      "role": "Rolle",
+      "joined": "Ble medlem",
+      "status": "Status",
+      "roles": {
+        "member": "Medlem",
+        "manager": "Leder",
+        "admin": "Administrator",
+        "owner": "Eier"
+      },
+      "statuses": {
+        "active": "Aktiv",
+        "pending": "Venter",
+        "suspended": "Suspendert"
+      }
     }
   },
   "admin": {
@@ -567,6 +589,7 @@
     "reservationFailed": "Kunne ikke opprette reservasjon",
     "cancelFailed": "Kunne ikke avbryte reservasjon",
     "returnFailed": "Kunne ikke levere inn verktøy",
+    "extendFailed": "Kunne ikke forlenge lån",
     "commentFailed": "Kunne ikke publisere kommentar",
     "updateCommentFailed": "Kunne ikke oppdatere kommentar",
     "deleteCommentFailed": "Kunne ikke slette kommentar",

@@ -42,9 +42,15 @@ export function withOrganizationContext(options?: OrgContextOptions) {
       let organizationId = headerOrgId || queryOrgId || undefined;
       let organization =
         organizationId
-          ? await prisma.organization.findUnique({ where: { id: organizationId } })
+          ? await prisma.organization.findUnique({
+              where: { id: organizationId },
+              select: { id: true, name: true, slug: true, description: true, type: true, loanDurationDays: true, createdAt: true, updatedAt: true },
+            })
           : queryOrgSlug
-            ? await prisma.organization.findUnique({ where: { slug: queryOrgSlug } })
+            ? await prisma.organization.findUnique({
+                where: { slug: queryOrgSlug },
+                select: { id: true, name: true, slug: true, description: true, type: true, loanDurationDays: true, createdAt: true, updatedAt: true },
+              })
             : null;
 
       let membership = req.membership ?? null;

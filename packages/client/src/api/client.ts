@@ -276,6 +276,13 @@ class ApiClient {
     });
   }
 
+  async extendLoan(loanId: string, days: number): Promise<Loan> {
+    return this.request<Loan>(`/loans/${loanId}/extend`, {
+      method: "POST",
+      body: JSON.stringify({ days }),
+    });
+  }
+
   // Users
   async getUsers(): Promise<Array<{ membership: Membership; user: User }>> {
     return this.request<Array<{ membership: Membership; user: User }>>(
