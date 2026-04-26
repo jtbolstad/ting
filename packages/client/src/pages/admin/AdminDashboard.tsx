@@ -1449,7 +1449,7 @@ export function AdminDashboard() {
                   className="w-full px-3 py-2 border rounded"
                 >
                   <option value="">{t("admin.checkout.selectUser")}</option>
-                  {users.map((user) => (
+                  {users.map(({ user }) => (
                     <option key={user.id} value={user.id}>
                       {user.name} ({user.email})
                     </option>
