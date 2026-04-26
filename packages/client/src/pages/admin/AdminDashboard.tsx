@@ -6,7 +6,14 @@ import { useOrganization } from "../../context/OrganizationContext";
 import { useToast } from "../../components/ui/Toast";
 import { useConfirm } from "../../components/ui/ConfirmModal";
 import { Spinner } from "../../components/ui/Spinner";
-import type { Item, Category, Loan, Location, User } from "@ting/shared";
+import type {
+  Item,
+  Category,
+  Loan,
+  Location,
+  User,
+  Reservation,
+} from "@ting/shared";
 
 export function AdminDashboard() {
   const { t } = useTranslation();
@@ -15,12 +22,16 @@ export function AdminDashboard() {
   const confirm = useConfirm();
   const [loans, setLoans] = useState<Loan[]>([]);
   const [overdueLoans, setOverdueLoans] = useState<Loan[]>([]);
+  const [pendingReservations, setPendingReservations] = useState<Reservation[]>(
+    [],
+  );
   const [items, setItems] = useState<Item[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<
     | "loans"
+    | "reservations"
     | "items"
     | "users"
     | "categories"
@@ -125,21 +136,33 @@ export function AdminDashboard() {
   const loadData = async () => {
     if (!activeOrganizationId) return;
     try {
-      const [loansData, itemsData, categoriesData, usersData, locationsData] =
-        await Promise.all([
-          apiClient.getLoans(),
-          apiClient.getItems({
-            organizationId: activeOrganizationId,
-            limit: 100,
-          }),
-          apiClient.getCategories(activeOrganizationId),
-          apiClient.getUsers(),
-          apiClient.getLocations(),
-        ]);
+      const [
+        loansData,
+        itemsData,
+        categoriesData,
+        usersData,
+        locationsData,
+        reservationsData,
+      ] = await Promise.all([
+        apiClient.getLoans(),
+        apiClient.getItems({
+          organizationId: activeOrganizationId,
+          limit: 100,
+        }),
+        apiClient.getCategories(activeOrganizationId),
+        apiClient.getUsers(),
+        apiClient.getLocations(),
+        apiClient.getReservations(),
+      ]);
       setLoans(loansData.filter((l) => !l.returnedAt));
       setOverdueLoans(
         loansData.filter(
           (l) => !l.returnedAt && new Date(l.dueDate) < new Date(),
+        ),
+      );
+      setPendingReservations(
+        reservationsData.filter(
+          (r) => r.status === "PENDING" || r.status === "CONFIRMED",
         ),
       );
       setItems(itemsData.items);
@@ -150,6 +173,26 @@ export function AdminDashboard() {
       console.error("Failed to load admin data:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleConfirmReservation = async (id: string) => {
+    try {
+      await apiClient.confirmReservation(id);
+      await loadData();
+      toast.success(t("admin.reservations.confirmed"));
+    } catch (error: any) {
+      toast.error(error.message || t("admin.reservations.confirmFailed"));
+    }
+  };
+
+  const handleCancelReservation = async (id: string) => {
+    if (!(await confirm(t("admin.reservations.confirmCancel")))) return;
+    try {
+      await apiClient.cancelReservation(id);
+      await loadData();
+    } catch (error: any) {
+      toast.error(error.message || t("admin.reservations.cancelFailed"));
     }
   };
 
@@ -412,6 +455,25 @@ export function AdminDashboard() {
             {t("admin.tabs.loans")}
           </button>
           <button
+            onClick={() => setActiveTab("reservations")}
+            className={`pb-4 px-1 flex items-center gap-1 ${
+              activeTab === "reservations"
+                ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
+                : "text-gray-500"
+            }`}
+          >
+            {t("admin.tabs.reservations")}
+            {pendingReservations.filter((r) => r.status === "PENDING").length >
+              0 && (
+              <span className="ml-1 inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold rounded-full bg-yellow-100 text-yellow-800">
+                {
+                  pendingReservations.filter((r) => r.status === "PENDING")
+                    .length
+                }
+              </span>
+            )}
+          </button>
+          <button
             onClick={() => setActiveTab("items")}
             className={`pb-4 px-1 ${
               activeTab === "items"
@@ -569,6 +631,85 @@ export function AdminDashboard() {
               </table>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Reservations Tab */}
+      {activeTab === "reservations" && (
+        <div>
+          <h2 className="text-2xl font-bold mb-4">
+            {t("admin.reservations.title")}
+          </h2>
+          {pendingReservations.length === 0 ? (
+            <p className="text-gray-500">{t("admin.reservations.none")}</p>
+          ) : (
+            <div className="bg-white rounded-lg shadow overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="min-w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        {t("admin.reservations.item")}
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        {t("admin.reservations.user")}
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        {t("admin.reservations.period")}
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        {t("admin.reservations.status")}
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        {t("admin.reservations.actions")}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {pendingReservations.map((r) => (
+                      <tr key={r.id}>
+                        <td className="px-6 py-4 font-medium">
+                          {r.item?.name}
+                        </td>
+                        <td className="px-6 py-4 text-sm">{r.user?.name}</td>
+                        <td className="px-6 py-4 text-sm text-gray-500">
+                          {new Date(r.startDate).toLocaleDateString()} –{" "}
+                          {new Date(r.endDate).toLocaleDateString()}
+                        </td>
+                        <td className="px-6 py-4">
+                          {r.status === "PENDING" ? (
+                            <span className="px-2 py-1 text-xs rounded bg-yellow-100 text-yellow-800">
+                              {t("admin.reservations.statusPending")}
+                            </span>
+                          ) : (
+                            <span className="px-2 py-1 text-xs rounded bg-green-100 text-green-800">
+                              {t("admin.reservations.statusConfirmed")}
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 flex gap-3">
+                          {r.status === "PENDING" && (
+                            <button
+                              onClick={() => handleConfirmReservation(r.id)}
+                              className="text-green-600 hover:text-green-900 text-sm"
+                            >
+                              {t("admin.reservations.confirm")}
+                            </button>
+                          )}
+                          <button
+                            onClick={() => handleCancelReservation(r.id)}
+                            className="text-red-600 hover:text-red-900 text-sm"
+                          >
+                            {t("admin.reservations.cancel")}
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

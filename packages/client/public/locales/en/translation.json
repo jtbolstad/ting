@@ -244,10 +244,28 @@
     },
     "tabs": {
       "loans": "Loans",
+      "reservations": "Reservations",
       "items": "Items",
       "users": "Users",
       "categories": "Categories",
       "locations": "Locations"
+    },
+    "reservations": {
+      "title": "Reservations",
+      "none": "No active reservations",
+      "item": "Item",
+      "user": "User",
+      "period": "Period",
+      "status": "Status",
+      "actions": "Actions",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "confirmed": "Reservation confirmed",
+      "confirmFailed": "Failed to confirm reservation",
+      "cancelFailed": "Failed to cancel reservation",
+      "confirmCancel": "Cancel this reservation?",
+      "statusPending": "Pending",
+      "statusConfirmed": "Confirmed"
     },
     "locations": {
       "title": "Locations",

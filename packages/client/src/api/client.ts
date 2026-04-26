@@ -243,6 +243,10 @@ class ApiClient {
     return this.request<void>(`/reservations/${id}`, { method: "DELETE" });
   }
 
+  async confirmReservation(id: string): Promise<Reservation> {
+    return this.request<Reservation>(`/reservations/${id}/confirm`, { method: "POST" });
+  }
+
   // Loans
   async getLoans(params?: {
     active?: boolean;

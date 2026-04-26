@@ -125,11 +125,11 @@
 
 #### 2.2 Reservation System
 
-- [ ] Date conflict detection works correctly
-- [ ] Reservation status flow (PENDING → CONFIRMED → COMPLETED → CANCELLED)
-- [ ] Convert reservation to loan on checkout
-- [ ] Cancel reservation flow in dashboard
-- [ ] Block checkout if item has active reservation
+- ✅ Date conflict detection works correctly
+- ✅ Reservation status flow (PENDING → CONFIRMED → COMPLETED → CANCELLED)
+- ✅ Convert reservation to loan on checkout
+- ✅ Cancel reservation flow in dashboard
+- ✅ Block checkout if item has active reservation
 
 #### 2.3 Calendar & Availability
 

@@ -244,10 +244,28 @@
     },
     "tabs": {
       "loans": "Udlån",
-      "items": "Værktøjer",
+      "reservations": "Reservationer",
+      "items": "Ting",
       "users": "Brugere",
       "categories": "Kategorier",
       "locations": "Lokationer"
+    },
+    "reservations": {
+      "title": "Reservationer",
+      "none": "Ingen aktive reservationer",
+      "item": "Ting",
+      "user": "Bruger",
+      "period": "Periode",
+      "status": "Status",
+      "actions": "Handlinger",
+      "confirm": "Bekræft",
+      "cancel": "Annuller",
+      "confirmed": "Reservation bekræftet",
+      "confirmFailed": "Kunne ikke bekræfte reservation",
+      "cancelFailed": "Kunne ikke annullere reservation",
+      "confirmCancel": "Annuller denne reservation?",
+      "statusPending": "Afventer",
+      "statusConfirmed": "Bekræftet"
     },
     "locations": {
       "title": "Lokationer",

@@ -157,7 +157,27 @@ router.post("/checkout", async (req: AuthRequest, res: Response) => {
       });
     }
 
-    // If reservationId provided, verify it belongs to the user
+    // Block checkout if a confirmed reservation from another user is active
+    const today = new Date();
+    const blockingReservation = await prisma.reservation.findFirst({
+      where: {
+        itemId,
+        organizationId: req.organization!.id,
+        status: "CONFIRMED",
+        endDate: { gte: today },
+        userId: { not: checkoutUserId },
+        ...(reservationId ? {} : {}), // always block if not the same user
+      },
+    });
+
+    if (blockingReservation) {
+      return res.status(409).json({
+        success: false,
+        error: "Item has an active reservation. Checkout must be linked to that reservation.",
+      });
+    }
+
+    // If reservationId provided, verify it's valid, confirmed, belongs to the user, and matches the item
     if (reservationId) {
       const reservation = await prisma.reservation.findUnique({
         where: { id: reservationId },
@@ -171,6 +191,20 @@ router.post("/checkout", async (req: AuthRequest, res: Response) => {
         return res.status(404).json({
           success: false,
           error: "Reservation not found or does not belong to user",
+        });
+      }
+
+      if (reservation.itemId !== itemId) {
+        return res.status(400).json({
+          success: false,
+          error: "Reservation is for a different item",
+        });
+      }
+
+      if (reservation.status !== "CONFIRMED") {
+        return res.status(400).json({
+          success: false,
+          error: "Reservation must be CONFIRMED before checkout",
         });
       }
     }

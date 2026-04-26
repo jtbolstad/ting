@@ -245,10 +245,28 @@
     },
     "tabs": {
       "loans": "Utlån",
-      "items": "Verktøy",
+      "reservations": "Reservasjoner",
+      "items": "Ting",
       "users": "Brukere",
       "categories": "Kategorier",
       "locations": "Lokasjoner"
+    },
+    "reservations": {
+      "title": "Reservasjoner",
+      "none": "Ingen aktive reservasjoner",
+      "item": "Ting",
+      "user": "Bruker",
+      "period": "Periode",
+      "status": "Status",
+      "actions": "Handlinger",
+      "confirm": "Bekreft",
+      "cancel": "Avbryt",
+      "confirmed": "Reservasjon bekreftet",
+      "confirmFailed": "Kunne ikke bekrefte reservasjon",
+      "cancelFailed": "Kunne ikke avbryte reservasjon",
+      "confirmCancel": "Avbryt denne reservasjonen?",
+      "statusPending": "Venter",
+      "statusConfirmed": "Bekreftet"
     },
     "locations": {
       "title": "Lokasjoner",

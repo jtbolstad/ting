@@ -9,6 +9,7 @@ import { Router } from "express";
 import { authenticate, type AuthRequest } from "../middleware/auth.js";
 import {
   hasOrgRole,
+  requireOrgRole,
   withOrganizationContext,
 } from "../middleware/organization.js";
 import { prisma } from "../prisma.js";
@@ -173,7 +174,7 @@ router.post("/", async (req: AuthRequest, res: Response) => {
       });
     }
 
-    // Check for conflicts
+    // Check for conflicts (other reservations)
     const conflicts = await prisma.reservation.findMany({
       where: {
         itemId,
@@ -194,6 +195,26 @@ router.post("/", async (req: AuthRequest, res: Response) => {
       });
     }
 
+    // Check for active loans overlapping the requested period
+    const loanConflicts = await prisma.loan.findMany({
+      where: {
+        itemId,
+        organizationId: req.organization!.id,
+        returnedAt: null,
+        AND: [{ checkedOutAt: { lte: end } }, { dueDate: { gte: start } }],
+      },
+    });
+
+    if (loanConflicts.length > 0) {
+      return res.status(409).json({
+        success: false,
+        error: "Item is currently checked out during the selected dates",
+      });
+    }
+
+    const isManager = hasOrgRole(req, 'MANAGER') || req.user!.role === 'ADMIN';
+    const initialStatus = isManager ? "CONFIRMED" : "PENDING";
+
     const reservation = await prisma.reservation.create({
       data: {
         organizationId: req.organization!.id,
@@ -201,7 +222,7 @@ router.post("/", async (req: AuthRequest, res: Response) => {
         itemId,
         startDate: start,
         endDate: end,
-        status: "CONFIRMED",
+        status: initialStatus,
       },
       include: {
         item: { include: { category: true } },
@@ -233,6 +254,49 @@ router.post("/", async (req: AuthRequest, res: Response) => {
       .json({ success: false, error: "Failed to create reservation" });
   }
 });
+
+// Confirm reservation (MANAGER+)
+router.post(
+  "/:id/confirm",
+  requireOrgRole("MANAGER"),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { id } = req.params;
+      const reservation = await prisma.reservation.findUnique({
+        where: { id },
+        include: { item: true, user: true },
+      });
+
+      if (!reservation || reservation.organizationId !== req.organization!.id) {
+        return res.status(404).json({ success: false, error: "Reservation not found" });
+      }
+      if (reservation.status !== "PENDING") {
+        return res.status(400).json({ success: false, error: "Only PENDING reservations can be confirmed" });
+      }
+
+      const updated = await prisma.reservation.update({
+        where: { id },
+        data: { status: "CONFIRMED" },
+        include: { item: { include: { category: true } }, user: true },
+      });
+
+      emailService.sendReservationConfirmed(
+        updated.user.email,
+        updated.user.name,
+        updated.item.name,
+        updated.startDate,
+        updated.endDate,
+      ).catch((e) => console.error('Failed to send confirm email:', e));
+
+      audit({ organizationId: req.organization!.id, actorUserId: req.user!.id, action: "reservation.confirmed", entityType: "Reservation", entityId: id, metadata: { itemId: reservation.itemId, userId: reservation.userId } });
+
+      res.json({ success: true, data: serializeReservation(updated) });
+    } catch (error) {
+      console.error("Confirm reservation error:", error);
+      res.status(500).json({ success: false, error: "Failed to confirm reservation" });
+    }
+  },
+);
 
 // Update reservation
 router.patch("/:id", async (req: AuthRequest, res: Response) => {
