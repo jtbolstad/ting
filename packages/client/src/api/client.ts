@@ -166,6 +166,17 @@ class ApiClient {
     return this.request<void>(`/items/${id}`, { method: "DELETE" });
   }
 
+  async getMyPendingItems(): Promise<Item[]> {
+    return this.request<Item[]>('/items/my-pending');
+  }
+
+  async updateItemStatus(id: string, status: string): Promise<Item> {
+    return this.request<Item>(`/items/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    });
+  }
+
   // Categories
   async getCategories(organizationId: string): Promise<Category[]> {
     return this.request<Category[]>(
@@ -646,6 +657,36 @@ class ApiClient {
     createdAt: string;
   }>> {
     return this.request(`/admin/email-logs?limit=${limit}`);
+  }
+
+  async getAuditLogs(params?: {
+    limit?: number;
+    orgId?: string;
+    action?: string;
+    userId?: string;
+    from?: string;
+    to?: string;
+  }): Promise<Array<{
+    id: string;
+    organizationId: string;
+    organization: { id: string; name: string } | null;
+    actorUserId: string | null;
+    actor: { id: string; name: string; email: string } | null;
+    action: string;
+    entityType: string;
+    entityId: string | null;
+    description: string | null;
+    metadata: string | null;
+    createdAt: string;
+  }>> {
+    const qs = new URLSearchParams();
+    if (params?.limit) qs.set("limit", String(params.limit));
+    if (params?.orgId) qs.set("orgId", params.orgId);
+    if (params?.action) qs.set("action", params.action);
+    if (params?.userId) qs.set("userId", params.userId);
+    if (params?.from) qs.set("from", params.from);
+    if (params?.to) qs.set("to", params.to);
+    return this.request(`/admin/audit-logs?${qs.toString()}`);
   }
 
   async sendTestEmail(to: string, subject: string, text: string): Promise<void> {

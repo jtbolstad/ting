@@ -17,6 +17,7 @@ import {
 } from "../middleware/organization.js";
 import { prisma } from "../prisma.js";
 import { emailService } from "../services/email.js";
+import { audit } from "../services/auditLog.js";
 
 const router: ExpressRouter = Router();
 
@@ -73,6 +74,30 @@ function serializeItem(item: any): Item {
     reviewCount: reviewCount || undefined,
   };
 }
+
+// Get user's own pending/rejected items
+router.get(
+  "/my-pending",
+  authenticate,
+  withOrganizationContext(),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const items = await prisma.item.findMany({
+        where: {
+          organizationId: req.organization!.id,
+          ownerId: req.user!.id,
+          approvalStatus: { in: ['PENDING', 'REJECTED'] },
+        },
+        include: { category: true, location: true, tags: true, images: { orderBy: { position: 'asc' as const } } },
+        orderBy: { createdAt: 'desc' },
+      });
+      res.json({ success: true, data: items.map(serializeItem) });
+    } catch (error) {
+      console.error("My pending items error:", error);
+      res.status(500).json({ success: false, error: "Failed to fetch pending items" });
+    }
+  },
+);
 
 // List/search items
 router.get(
@@ -292,6 +317,7 @@ router.post(
         }
       }
 
+      audit({ organizationId: req.organization!.id, actorUserId: req.user!.id, action: "item.created", entityType: "Item", entityId: item.id, metadata: { name: item.name, ownerType: item.ownerType } });
       res.status(201).json({ success: true, data: serializeItem(item) });
     } catch (error) {
       console.error("Create item error:", error);
@@ -331,6 +357,7 @@ router.post(
         }
       }
 
+      audit({ organizationId: req.organization!.id, actorUserId: req.user!.id, action: "item.approved", entityType: "Item", entityId: item.id, metadata: { name: item.name } });
       res.json({ success: true, data: serializeItem(item) });
     } catch (error) {
       console.error("Approve item error:", error);
@@ -372,6 +399,7 @@ router.post(
         }
       }
 
+      audit({ organizationId: req.organization!.id, actorUserId: req.user!.id, action: "item.rejected", entityType: "Item", entityId: item.id, metadata: { name: item.name, note } });
       res.json({ success: true, data: serializeItem(item) });
     } catch (error) {
       console.error("Reject item error:", error);
@@ -436,10 +464,68 @@ router.patch(
         include: { category: true, location: true, tags: true, images: { orderBy: { position: 'asc' as const } }, manuals: true },
       });
 
+      audit({ organizationId: req.organization!.id, actorUserId: req.user!.id, action: "item.updated", entityType: "Item", entityId: item.id, metadata: { changedFields: Object.keys(updateData) } });
       res.json({ success: true, data: serializeItem(item) });
     } catch (error) {
       console.error("Update item error:", error);
       res.status(500).json({ success: false, error: "Failed to update item" });
+    }
+  },
+);
+
+// Status transition (MANAGER+)
+const VALID_TRANSITIONS: Record<string, string[]> = {
+  AVAILABLE: ['MAINTENANCE', 'RETIRED'],
+  CHECKED_OUT: ['AVAILABLE', 'MAINTENANCE'],
+  MAINTENANCE: ['AVAILABLE', 'RETIRED'],
+  RETIRED: ['AVAILABLE'],
+};
+
+router.patch(
+  "/:id/status",
+  authenticate,
+  withOrganizationContext(),
+  requireOrgRole("MANAGER"),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { id: slugOrId } = req.params;
+      const id = await resolveItemId(slugOrId, req.organization!.id) ?? slugOrId;
+      const { status } = req.body as { status: string };
+
+      if (!status) {
+        return res.status(400).json({ success: false, error: "Status is required" });
+      }
+
+      const existing = await prisma.item.findFirst({ where: { id, organizationId: req.organization!.id } });
+      if (!existing) return res.status(404).json({ success: false, error: "Item not found" });
+
+      const allowed = VALID_TRANSITIONS[existing.status] ?? [];
+      if (!allowed.includes(status)) {
+        return res.status(400).json({
+          success: false,
+          error: `Invalid transition from ${existing.status} to ${status}. Allowed: ${allowed.join(', ') || 'none'}`,
+        });
+      }
+
+      const item = await prisma.item.update({
+        where: { id },
+        data: { status: status as any },
+        include: { category: true, location: true, tags: true, images: { orderBy: { position: 'asc' as const } } },
+      });
+
+      audit({
+        organizationId: req.organization!.id,
+        actorUserId: req.user!.id,
+        action: "item.status_changed",
+        entityType: "Item",
+        entityId: item.id,
+        metadata: { fromStatus: existing.status, toStatus: status },
+      });
+
+      res.json({ success: true, data: serializeItem(item) });
+    } catch (error) {
+      console.error("Status transition error:", error);
+      res.status(500).json({ success: false, error: "Failed to update item status" });
     }
   },
 );
@@ -467,6 +553,7 @@ router.delete(
       }
 
       await prisma.item.delete({ where: { id } });
+      audit({ organizationId: req.organization!.id, actorUserId: req.user!.id, action: "item.deleted", entityType: "Item", entityId: id, metadata: { name: existing.name } });
       res.json({ success: true });
     } catch (error) {
       console.error("Delete item error:", error);

@@ -539,4 +539,43 @@ router.get(
   },
 );
 
+// Audit log (platform admin only)
+// Supports filtering: ?orgId=&action=&userId=&from=&to=&limit=
+router.get(
+  "/audit-logs",
+  authenticate,
+  requirePlatformAdmin,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const limit = Math.min(parseInt((req.query.limit as string) || '100'), 1000);
+      const { orgId, action, userId, from, to } = req.query as Record<string, string | undefined>;
+
+      const where: any = {};
+      if (orgId) where.organizationId = orgId;
+      if (action) where.action = { contains: action };
+      if (userId) where.actorUserId = userId;
+      if (from || to) {
+        where.createdAt = {};
+        if (from) where.createdAt.gte = new Date(from);
+        if (to) where.createdAt.lte = new Date(to);
+      }
+
+      const logs = await prisma.auditLog.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        take: limit,
+        include: {
+          actor: { select: { id: true, name: true, email: true } },
+          organization: { select: { id: true, name: true } },
+        },
+      });
+
+      res.json({ success: true, data: logs });
+    } catch (error) {
+      console.error('Audit log error:', error);
+      res.status(500).json({ success: false, error: 'Failed to fetch audit logs' });
+    }
+  },
+);
+
 export default router;

@@ -20,7 +20,13 @@ export function AdminDashboard() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<
-    "loans" | "items" | "users" | "categories" | "locations" | "email"
+    | "loans"
+    | "items"
+    | "users"
+    | "categories"
+    | "locations"
+    | "email"
+    | "auditlog"
   >("loans");
 
   // Checkout modal state
@@ -86,6 +92,25 @@ export function AdminDashboard() {
     }>
   >([]);
   const [emailLogsLoading, setEmailLogsLoading] = useState(false);
+
+  // Audit log state
+  const [auditLogs, setAuditLogs] = useState<
+    Array<{
+      id: string;
+      organizationId: string;
+      organization: { id: string; name: string } | null;
+      actorUserId: string | null;
+      actor: { id: string; name: string; email: string } | null;
+      action: string;
+      entityType: string;
+      entityId: string | null;
+      description: string | null;
+      metadata: string | null;
+      createdAt: string;
+    }>
+  >([]);
+  const [auditLogsLoading, setAuditLogsLoading] = useState(false);
+  const [auditActionFilter, setAuditActionFilter] = useState("");
 
   // Test email form state
   const [testEmailTo, setTestEmailTo] = useState("");
@@ -425,6 +450,26 @@ export function AdminDashboard() {
             }`}
           >
             {t("admin.tabs.locations")}
+          </button>
+          <button
+            onClick={() => {
+              setActiveTab("auditlog");
+              if (auditLogs.length === 0) {
+                setAuditLogsLoading(true);
+                apiClient
+                  .getAuditLogs({ limit: 200 })
+                  .then(setAuditLogs)
+                  .catch(console.error)
+                  .finally(() => setAuditLogsLoading(false));
+              }
+            }}
+            className={`pb-4 px-1 ${
+              activeTab === "auditlog"
+                ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
+                : "text-gray-500"
+            }`}
+          >
+            Aktivitetslogg
           </button>
           <button
             onClick={() => {
@@ -831,6 +876,114 @@ export function AdminDashboard() {
                           >
                             {t("admin.locations.delete")}
                           </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Audit Log Tab */}
+      {activeTab === "auditlog" && (
+        <div>
+          <div className="flex items-center gap-3 mb-4 flex-wrap">
+            <h2 className="text-2xl font-bold">Aktivitetslogg</h2>
+            <input
+              type="text"
+              placeholder="Filtrer hendelse (f.eks. loan.checkout)"
+              value={auditActionFilter}
+              onChange={(e) => setAuditActionFilter(e.target.value)}
+              className="px-3 py-1.5 border rounded text-sm w-64"
+            />
+            <button
+              onClick={() => {
+                setAuditLogsLoading(true);
+                apiClient
+                  .getAuditLogs({
+                    limit: 200,
+                    action: auditActionFilter || undefined,
+                  })
+                  .then(setAuditLogs)
+                  .catch(console.error)
+                  .finally(() => setAuditLogsLoading(false));
+              }}
+              className="text-sm text-indigo-600 hover:underline"
+            >
+              Oppdater
+            </button>
+          </div>
+          {auditLogsLoading ? (
+            <p className="text-gray-500">Laster...</p>
+          ) : auditLogs.length === 0 ? (
+            <p className="text-gray-500">Ingen hendelser logget ennå.</p>
+          ) : (
+            <div className="bg-white rounded-lg shadow overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="min-w-full text-sm">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase whitespace-nowrap">
+                        Tid
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        Hendelse
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        Bruker
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        Org
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        Entitet
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                        Data
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {auditLogs.map((log) => (
+                      <tr key={log.id} className="hover:bg-gray-50">
+                        <td className="px-4 py-3 text-gray-500 whitespace-nowrap">
+                          {new Date(log.createdAt).toLocaleString("no")}
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded text-xs font-mono">
+                            {log.action}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          {log.actor ? (
+                            <span title={log.actor.email}>
+                              {log.actor.name}
+                            </span>
+                          ) : (
+                            <span className="text-gray-400">–</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap text-gray-600">
+                          {log.organization?.name ??
+                            log.organizationId.slice(-6)}
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap text-gray-600">
+                          {log.entityType}
+                          {log.entityId && (
+                            <span className="ml-1 text-xs text-gray-400">
+                              {log.entityId.slice(-6)}
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-xs text-gray-500 max-w-xs truncate">
+                          {log.metadata ? (
+                            <span title={log.metadata}>{log.metadata}</span>
+                          ) : (
+                            "–"
+                          )}
                         </td>
                       </tr>
                     ))}

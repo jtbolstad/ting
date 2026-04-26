@@ -9,6 +9,7 @@ import {
 } from "../middleware/organization.js";
 import { prisma } from "../prisma.js";
 import { emailService } from "../services/email.js";
+import { audit } from "../services/auditLog.js";
 
 const router: ExpressRouter = Router();
 
@@ -209,6 +210,8 @@ router.post("/checkout", async (req: AuthRequest, res: Response) => {
       loan.dueDate,
     ).catch(console.error);
 
+    audit({ organizationId: req.organization!.id, actorUserId: req.user!.id, action: "loan.checkout", entityType: "Loan", entityId: loan.id, metadata: { itemId, userId: checkoutUserId, dueDate } });
+
     const response: ApiResponse<Loan> = {
       success: true,
       data: serializeLoan(loan),
@@ -281,6 +284,8 @@ router.post("/:id/checkin", async (req: AuthRequest, res: Response) => {
       updated.user.name,
       updated.item.name,
     ).catch(console.error);
+
+    audit({ organizationId: req.organization!.id, actorUserId: req.user!.id, action: "loan.checkin", entityType: "Loan", entityId: updated.id, metadata: { itemId: loan.itemId, userId: loan.userId, returnedAt: updated.returnedAt } });
 
     const response: ApiResponse<Loan> = {
       success: true,

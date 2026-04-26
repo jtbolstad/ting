@@ -17,6 +17,7 @@ import {
   serializeUser,
 } from "../services/auth.js";
 import { emailService } from "../services/email.js";
+import { audit } from "../services/auditLog.js";
 
 const router: ExpressRouter = Router();
 const membershipInclude = {
@@ -129,6 +130,7 @@ router.post("/register", async (req: Request, res: Response) => {
     };
 
     emailService.sendWelcome(user.email, user.name, organization.name).catch(console.error);
+    audit({ organizationId, actorUserId: user.id, action: "auth.register", entityType: "User", entityId: user.id, metadata: { email: user.email } });
 
     res.status(201).json(response);
   } catch (error) {
@@ -178,6 +180,11 @@ router.post("/login", async (req: Request, res: Response) => {
         activeMembershipId,
       },
     };
+
+    const loginOrgId = membershipsData[0]?.organizationId;
+    if (loginOrgId) {
+      audit({ organizationId: loginOrgId, actorUserId: user.id, action: "auth.login.success", entityType: "User", entityId: user.id, metadata: { email: user.email } });
+    }
 
     res.json(response);
   } catch (error) {

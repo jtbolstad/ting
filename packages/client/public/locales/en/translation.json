@@ -222,6 +222,15 @@
       "noHistory": "No past loans",
       "returned": "Returned",
       "damage": "Damage Note"
+    },
+    "pendingItems": {
+      "title": "My Submitted Items",
+      "item": "Item",
+      "submitted": "Submitted",
+      "status": "Status",
+      "note": "Note",
+      "statusPending": "Awaiting Approval",
+      "statusRejected": "Rejected"
     }
   },
   "admin": {

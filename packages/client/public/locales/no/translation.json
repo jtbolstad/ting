@@ -223,6 +223,15 @@
       "noHistory": "Ingen tidligere utlån",
       "returned": "Returnert",
       "damage": "Skadenotat"
+    },
+    "pendingItems": {
+      "title": "Mine innmeldte ting",
+      "item": "Ting",
+      "submitted": "Innmeldt",
+      "status": "Status",
+      "note": "Notat",
+      "statusPending": "Venter på godkjenning",
+      "statusRejected": "Avvist"
     }
   },
   "admin": {

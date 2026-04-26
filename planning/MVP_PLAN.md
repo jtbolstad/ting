@@ -30,6 +30,7 @@
 - ✅ Email: reservation cancelled by admin (method ready, not wired to route)
 - ✅ Email: reservation reminder 1 day before (method ready, needs cron job)
 - ✅ Audit logging system
+- ✅ Audit log service wired to routes (auth, items, loans, reservations) — DB + structured JSON console
 - ✅ Test seed data for Oslo & Bergen organizations
 - ✅ Image upload API with multer and sharp
 - ✅ Image processing (resize, WebP conversion, thumbnails)
@@ -117,10 +118,10 @@
 - ✅ Item manuals (PDF upload, external links, text notes)
 - ✅ Item ownership model (ORGANIZATION or MEMBER owned)
 - ✅ Item approval workflow (PENDING → APPROVED / REJECTED)
-- [ ] Ensure item creation includes categoryId validation
-- [ ] Status transitions (AVAILABLE → CHECKED_OUT → MAINTENANCE → RETIRED)
-- [ ] Item search works across name + description
-- [ ] Show pending items to submitting member in their dashboard
+- ✅ Ensure item creation includes categoryId validation
+- ✅ Status transitions (AVAILABLE → CHECKED_OUT → MAINTENANCE → RETIRED)
+- ✅ Item search works across name + description
+- ✅ Show pending items to submitting member in their dashboard
 
 #### 2.2 Reservation System
 
@@ -268,7 +269,7 @@
 - [ ] Extend loan duration
 - [ ] Late fees calculation
 - [ ] Export reports (CSV)
-- [ ] Audit log viewer
+- ✅ Audit log viewer
 
 ---
 
@@ -445,10 +446,10 @@ Strukturert hendelseslogging for sporing av brukeraktivitet, feilsøking og frem
 
 #### Fase 1 – Strukturert serverlogging (backend)
 
-- Bruk eksisterende `AuditLog`-modell i Prisma eller utvid til en egen `EventLog`-tabell
-- Logg til database + structured console (JSON) via Winston eller Pino
-- Legg til `EventLogger`-service i `packages/server/src/services/`
-- Kall fra routes/middleware etter vellykkede operasjoner
+- ✅ Bruk eksisterende `AuditLog`-modell i Prisma
+- ✅ `audit()` service i `packages/server/src/services/auditLog.ts`
+- ✅ Strukturert JSON console logging
+- ✅ Kalt fra routes: `auth.register`, `auth.login.success`, `item.created/updated/deleted/approved/rejected`, `loan.checkout/checkin`, `reservation.created/cancelled`
 
 **Hendelsesformat:**
 
@@ -466,8 +467,8 @@ Strukturert hendelseslogging for sporing av brukeraktivitet, feilsøking og frem
 
 #### Fase 2 – Admin loggvisning
 
-- [ ] API-endepunkt: `GET /admin/events?type=&userId=&from=&to=&limit=`
-- [ ] Admin UI: hendelseslogg-tabell med filtrering og paginering
+- ✅ API-endepunkt: `GET /api/admin/audit-logs?action=&userId=&orgId=&from=&to=&limit=`
+- ✅ Admin UI: "Aktivitetslogg"-fane i AdminDashboard med tabell og tekstfilter
 - [ ] Vis siste N hendelser på AdminDashboard som aktivitetsstrøm
 
 #### Fase 3 – Analyse og varsler (post-MVP)
@@ -489,5 +490,6 @@ Strukturert hendelseslogging for sporing av brukeraktivitet, feilsøking og frem
 - ✅ `AuditLog`-modell i Prisma (kan utvides eller gjenbrukes)
 - ✅ Organization middleware (orgId tilgjengelig i alle autentiserte routes)
 - ✅ JWT-auth (userId tilgjengelig i req.user)
-- [ ] Mangler: strukturert JSON-logging til fil/ekstern tjeneste
-- [ ] Mangler: admin UI for å se logger
+- ✅ `audit()` service implementert — strukturert JSON til console + DB
+- ✅ Wired til auth, items, loans, reservations
+- ✅ Admin UI: "Aktivitetslogg"-fane med filtrering (`/api/admin/audit-logs`)
