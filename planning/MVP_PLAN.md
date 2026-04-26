@@ -184,7 +184,14 @@
 - [ ] View/edit organization details
 - [ ] Manage member groups (backend endpoints exist)
 - [ ] Assign members to groups
-- [ ] Invite new members (email-based)
+- [ ] Invite new members (email-based invitation link with org ID)
+
+#### 3.4 Registration & Membership Flow
+
+- [ ] Remove organization selector from registration (public registration)
+- [ ] New users registered without org go to "waiting room" (no memberships)
+- [ ] Admins can assign waiting users to their organization
+- [ ] Members can invite others via email (link contains org ID for direct join)
 
 ---
 
