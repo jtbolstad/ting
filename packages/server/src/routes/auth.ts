@@ -271,7 +271,7 @@ router.post("/request-reset-password", async (req: Request, res: Response) => {
 
     // Always return success (prevent email enumeration)
     if (!user) {
-      return res.json({ success: true, message: "If account exists, reset email sent" });
+      return res.json({ success: true, data: { message: "If account exists, reset email sent" } });
     }
 
     const resetToken = crypto.randomBytes(32).toString("hex");
@@ -292,7 +292,7 @@ router.post("/request-reset-password", async (req: Request, res: Response) => {
     // TODO: Send actual email in production
     // await emailService.sendPasswordReset(email, user.name, resetLink);
 
-    res.json({ success: true, message: "If account exists, reset email sent" });
+    res.json({ success: true, data: { message: "If account exists, reset email sent" } });
   } catch (error) {
     console.error("Request reset password error:", error);
     res.status(500).json({ success: false, error: "Failed to process request" });
@@ -339,7 +339,7 @@ router.post("/reset-password", async (req: Request, res: Response) => {
       },
     });
 
-    res.json({ success: true, message: "Password reset successfully" });
+    res.json({ success: true, data: { message: "Password reset successfully" } });
   } catch (error) {
     console.error("Reset password error:", error);
     res.status(500).json({ success: false, error: "Failed to reset password" });
