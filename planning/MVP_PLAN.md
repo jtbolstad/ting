@@ -137,8 +137,8 @@
 - ✅ DateRangePicker component with availability feedback
 - ✅ AvailabilityTimeline component (60-day horizontal timeline)
 - ✅ Calendar integrated into ItemDetail page
-- [ ] ReservationCalendar for Dashboard (month/week view, click to view/cancel)
-- [ ] Availability preview on catalog cards ("Available now" / "Next available: date")
+- ✅ ReservationCalendar for Dashboard (month/week view, click to view/cancel)
+- ✅ Availability preview on catalog cards ("Available now" / "Next available: date")
 - [ ] Mobile-responsive calendar design
 - [ ] Translations for calendar UI (en, no, da)
 

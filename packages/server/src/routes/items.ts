@@ -72,7 +72,8 @@ function serializeItem(item: any): Item {
     updatedAt: item.updatedAt.toISOString(),
     averageRating: averageRating ? Number(averageRating.toFixed(1)) : undefined,
     reviewCount: reviewCount || undefined,
-  };
+    nextAvailableDate: item.loans && item.loans.length > 0 ? item.loans[0].dueDate.toISOString() : null,
+  } as Item;
 }
 
 // Get user's own pending/rejected items
@@ -144,6 +145,11 @@ router.get(
             tags: true,
             images: { orderBy: { position: 'asc' as const } },
             _count: { select: { reviews: true } },
+            loans: {
+              where: { returnedAt: null },
+              orderBy: { dueDate: 'asc' as const },
+              take: 1,
+            },
           },
           skip,
           take,

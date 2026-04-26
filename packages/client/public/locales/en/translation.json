@@ -91,6 +91,10 @@
       "checkedOut": "Checked Out",
       "maintenance": "Maintenance",
       "retired": "Retired"
+    },
+    "availability": {
+      "availableNow": "Available now",
+      "nextAvailable": "Next available: {{date}}"
     }
   },
   "categories": {
@@ -177,6 +181,10 @@
   "dashboard": {
     "title": "My Dashboard",
     "loading": "Loading dashboard...",
+    "tabs": {
+      "list": "My Items",
+      "calendar": "Calendar"
+    },
     "confirmCancel": "Are you sure you want to cancel this reservation?",
     "confirmReturn": "Confirm item return?",
     "currentLoans": "Current Loans",
@@ -604,7 +612,10 @@
       "reserved": "Reserved",
       "checkedOut": "Checked Out",
       "selected": "Selected",
-      "today": "Today"
+      "today": "Today",
+      "confirmed": "Confirmed reservation",
+      "pending": "Pending reservation",
+      "loan": "Active loan"
     }
   },
   "tags": {

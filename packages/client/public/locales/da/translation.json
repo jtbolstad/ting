@@ -91,6 +91,10 @@
       "checkedOut": "Udlånt",
       "maintenance": "Vedligeholdelse",
       "retired": "Udgået"
+    },
+    "availability": {
+      "availableNow": "Tilgængelig nu",
+      "nextAvailable": "Næste ledige: {{date}}"
     }
   },
   "categories": {
@@ -178,6 +182,10 @@
     "title": "Min Oversigt",
     "loading": "Indlæser oversigt...",
     "confirmCancel": "Er du sikker på, at du vil annullere denne reservation?",
+    "tabs": {
+      "list": "Mine ting",
+      "calendar": "Kalender"
+    },
     "confirmReturn": "Bekræft indlevering?",
     "currentLoans": "Aktive Udlån",
     "myReservations": "Mine Reservationer",
@@ -604,7 +612,10 @@
       "reserved": "Reserveret",
       "checkedOut": "Udlånt",
       "selected": "Valgt",
-      "today": "I dag"
+      "today": "I dag",
+      "confirmed": "Bekræftet reservation",
+      "pending": "Afventer bekræftelse",
+      "loan": "Aktivt udlån"
     }
   },
   "tags": {

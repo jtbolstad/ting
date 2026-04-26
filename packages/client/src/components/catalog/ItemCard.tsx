@@ -16,7 +16,7 @@ export function ItemCard({ item }: ItemCardProps) {
       className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow overflow-hidden"
     >
       <div className="h-48 bg-gray-200 flex items-center justify-center">
-        {(item.images?.[0]?.url || item.imageUrl) ? (
+        {item.images?.[0]?.url || item.imageUrl ? (
           <img
             src={item.images?.[0]?.url ?? item.imageUrl!}
             alt={item.name}
@@ -48,13 +48,16 @@ export function ItemCard({ item }: ItemCardProps) {
         {item.tags && item.tags.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-1">
             {item.tags.slice(0, 4).map((tag) => (
-              <span key={tag} className="px-1.5 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">
+              <span
+                key={tag}
+                className="px-1.5 py-0.5 bg-gray-100 text-gray-600 text-xs rounded"
+              >
                 {tag}
               </span>
             ))}
           </div>
         )}
-        <div className="mt-3">
+        <div className="mt-3 flex items-center gap-2 flex-wrap">
           <span
             className={`inline-block px-2 py-1 text-xs rounded ${
               item.status === "AVAILABLE"
@@ -62,7 +65,13 @@ export function ItemCard({ item }: ItemCardProps) {
                 : "bg-red-100 text-red-800"
             }`}
           >
-            {t(`catalog.status.${item.status.toLowerCase()}`)}
+            {item.status === "AVAILABLE"
+              ? t("catalog.availability.availableNow")
+              : item.nextAvailableDate
+                ? t("catalog.availability.nextAvailable", {
+                    date: new Date(item.nextAvailableDate).toLocaleDateString(),
+                  })
+                : t(`catalog.status.${item.status.toLowerCase()}`)}
           </span>
         </div>
       </div>

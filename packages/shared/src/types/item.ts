@@ -91,6 +91,7 @@ export interface Item {
   updatedAt: string;
   averageRating?: number;
   reviewCount?: number;
+  nextAvailableDate?: string | null;
 }
 
 export interface CreateItemInput {

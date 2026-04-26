@@ -5,7 +5,7 @@ export const mockUser: User = {
   id: 'user-lars-id',
   email: 'lars@ting.com',
   name: 'Lars Nilsen',
-  role: 'MEMBER',
+  role: 'USER',
   createdAt: '2024-01-01T00:00:00.000Z',
   updatedAt: '2024-01-01T00:00:00.000Z',
 };

@@ -92,6 +92,10 @@
       "checked_out": "Utlånt",
       "maintenance": "Vedlikehold",
       "retired": "Utgått"
+    },
+    "availability": {
+      "availableNow": "Tilgjengelig nå",
+      "nextAvailable": "Neste ledige: {{date}}"
     }
   },
   "categories": {
@@ -179,6 +183,10 @@
     "title": "Min oversikt",
     "loading": "Laster oversikt...",
     "confirmCancel": "Er du sikker på at du vil avbryte denne reservasjonen?",
+    "tabs": {
+      "list": "Mine ting",
+      "calendar": "Kalender"
+    },
     "confirmReturn": "Bekreft innlevering?",
     "currentLoans": "Aktive utlån",
     "myReservations": "Mine reservasjoner",
@@ -605,7 +613,10 @@
       "reserved": "Reservert",
       "checkedOut": "Utlånt",
       "selected": "Valgt",
-      "today": "I dag"
+      "today": "I dag",
+      "confirmed": "Bekreftet reservasjon",
+      "pending": "Venter på bekreftelse",
+      "loan": "Aktivt utlån"
     }
   },
   "tags": {
