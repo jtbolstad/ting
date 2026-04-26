@@ -166,7 +166,8 @@ export function AdminDashboard() {
 
   useEffect(() => {
     loadData();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeOrganizationId]);
 
   useEffect(() => {
     if (activeOrganization) {
