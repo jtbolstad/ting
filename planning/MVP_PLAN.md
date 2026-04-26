@@ -181,10 +181,10 @@
 
 #### 3.3 Organization Management (for OWNER/ADMIN)
 
-- [ ] View/edit organization details
-- [ ] Manage member groups (backend endpoints exist)
-- [ ] Assign members to groups
-- [ ] Invite new members (email-based invitation link with org ID)
+- ✅ View/edit organization details
+- ✅ Manage member groups (CRUD UI + backend)
+- [ ] Assign members to groups (backend exists, UI needed)
+- ✅ Invite new members (email-based invitation link with org ID)
 
 #### 3.4 Registration & Membership Flow
 
@@ -322,13 +322,13 @@
 ```
 Phase 1 (Critical):  ▓▓▓▓▓▓░░░░  60% - Infrastructure done, org isolation testing needed
 Phase 2 (High):      ▓▓▓▓▓▓▓▓▓░  90% - Dashboard + calendar + reservations complete
-Phase 3 (Medium):    ▓▓▓▓▓▓▓▓░░  80% - Admin filters + user mgmt + categories complete
+Phase 3 (Medium):    ▓▓▓▓▓▓▓▓▓░  90% - Admin filters + user mgmt + org settings + groups + invitations
 Phase 4 (Nice):      ▓▓▓▓▓▓▓░░░  70% - i18n complete (en/no/da), images/manuals/audit done
 ```
 
-**Overall MVP Completion: ~75%**
+**Overall MVP Completion: ~78%**
 
-**Estimated Time to MVP:** 3-5 hours of focused development
+**Estimated Time to MVP:** 2-4 hours of focused development
 
 ---
 
