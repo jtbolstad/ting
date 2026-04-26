@@ -695,10 +695,15 @@ router.post(
       // Send invitation email
       try {
         const { emailService } = await import("../services/email.js");
+        // Fetch inviter's full name from DB
+        const inviter = await prisma.user.findUnique({
+          where: { id: req.user!.id },
+          select: { name: true },
+        });
         await emailService.sendOrganizationInvitation(
           email,
           req.organization!.name,
-          req.user!.name,
+          inviter?.name || req.user!.email,
           inviteLink,
           role,
         );
