@@ -53,7 +53,7 @@ export function EditItem() {
     try {
       const [item, categoriesData, locationsData] = await Promise.all([
         apiClient.getItem(id!),
-        apiClient.getCategories(activeOrganizationId!),
+        apiClient.getCategories(),
         apiClient.getLocations(),
       ]);
 

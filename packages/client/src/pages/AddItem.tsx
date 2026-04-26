@@ -47,7 +47,7 @@ export function AddItem() {
   const loadCategories = async () => {
     try {
       const [cats, locs] = await Promise.all([
-        apiClient.getCategories(activeOrganizationId!),
+        apiClient.getCategories(),
         apiClient.getLocations(),
       ]);
       setCategories(cats);

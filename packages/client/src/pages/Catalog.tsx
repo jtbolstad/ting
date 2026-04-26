@@ -30,7 +30,7 @@ export function Catalog() {
           q: searchQuery || undefined,
           categoryId: categoryFilter || undefined,
         }),
-        apiClient.getCategories(activeOrganizationId),
+        apiClient.getCategories(),
       ]);
       setItems(itemsResponse.items);
       setCategories(categoriesData);

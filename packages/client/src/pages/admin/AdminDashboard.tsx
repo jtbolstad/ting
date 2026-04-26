@@ -196,7 +196,7 @@ export function AdminDashboard() {
           organizationId: activeOrganizationId,
           limit: 100,
         }),
-        apiClient.getCategories(activeOrganizationId),
+        apiClient.getCategories(),
         apiClient.getUsers(),
         apiClient.getLocations(),
         apiClient.getReservations(),

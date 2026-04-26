@@ -192,10 +192,8 @@ class ApiClient {
   }
 
   // Categories
-  async getCategories(organizationId: string): Promise<Category[]> {
-    return this.request<Category[]>(
-      `/categories?organizationId=${organizationId}`,
-    );
+  async getCategories(): Promise<Category[]> {
+    return this.request<Category[]>("/categories");
   }
 
   async createCategory(data: {
