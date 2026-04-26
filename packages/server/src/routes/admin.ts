@@ -457,26 +457,39 @@ router.delete(
     try {
       const { orgId } = req.params;
 
-      // Check if organization has items or active memberships
-      const itemCount = await prisma.item.count({
-        where: { organizationId: orgId },
-      });
+      // Delete all related data in correct order
+      await prisma.$transaction(async (tx) => {
+        // Delete reviews, comments, manuals
+        await tx.review.deleteMany({ where: { organizationId: orgId } });
+        await tx.comment.deleteMany({ where: { organizationId: orgId } });
+        await tx.itemManual.deleteMany({ where: { item: { organizationId: orgId } } });
+        await tx.itemImage.deleteMany({ where: { item: { organizationId: orgId } } });
 
-      if (itemCount > 0) {
-        return res.status(400).json({
-          success: false,
-          error: "Cannot delete organization with items. Delete items first.",
-        });
-      }
+        // Delete loans and reservations
+        await tx.loan.deleteMany({ where: { organizationId: orgId } });
+        await tx.reservation.deleteMany({ where: { organizationId: orgId } });
 
-      // Delete all memberships first
-      await prisma.membership.deleteMany({
-        where: { organizationId: orgId },
-      });
+        // Delete items
+        await tx.item.deleteMany({ where: { organizationId: orgId } });
 
-      // Then delete the organization
-      await prisma.organization.delete({
-        where: { id: orgId },
+        // Delete categories
+        await tx.category.deleteMany({ where: { organizationId: orgId } });
+
+        // Delete groups
+        await tx.memberGroupMembership.deleteMany({ where: { group: { organizationId: orgId } } });
+        await tx.memberGroup.deleteMany({ where: { organizationId: orgId } });
+
+        // Delete locations
+        await tx.location.deleteMany({ where: { organizationId: orgId } });
+
+        // Delete invitations
+        await tx.organizationInvitation.deleteMany({ where: { organizationId: orgId } });
+
+        // Delete memberships
+        await tx.membership.deleteMany({ where: { organizationId: orgId } });
+
+        // Finally delete organization
+        await tx.organization.delete({ where: { id: orgId } });
       });
 
       const response: ApiResponse<{ deleted: boolean }> = {
