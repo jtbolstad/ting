@@ -17,6 +17,7 @@ import {
 } from "../middleware/organization.js";
 import { prisma } from "../prisma.js";
 import {
+  hashPassword,
   serializeMemberGroup,
   serializeMembership,
   serializeOrganization,
@@ -458,6 +459,61 @@ router.post(
       res
         .status(500)
         .json({ success: false, error: "Failed to add member to group" });
+    }
+  },
+);
+
+// Reset user password (org admin/owner)
+router.post(
+  "/members/:membershipId/reset-password",
+  authenticate,
+  withOrganizationContext(),
+  requireOrgRole(["ADMIN", "OWNER"]),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { membershipId } = req.params;
+      const { newPassword } = req.body;
+
+      if (!newPassword || newPassword.length < 6) {
+        return res.status(400).json({
+          success: false,
+          error: "newPassword is required and must be at least 6 characters",
+        });
+      }
+
+      const membership = await prisma.membership.findUnique({
+        where: { id: membershipId },
+        include: { user: true },
+      });
+
+      if (!membership || membership.organizationId !== req.organization!.id) {
+        return res.status(404).json({
+          success: false,
+          error: "Membership not found",
+        });
+      }
+
+      // Prevent resetting owner password unless you are owner
+      if (membership.role === "OWNER" && req.membership!.role !== "OWNER") {
+        return res.status(403).json({
+          success: false,
+          error: "Cannot reset owner password",
+        });
+      }
+
+      const passwordHash = await hashPassword(newPassword);
+      await prisma.user.update({
+        where: { id: membership.userId },
+        data: { passwordHash },
+      });
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Reset password error:", error);
+      res.status(500).json({
+        success: false,
+        error: "Failed to reset password",
+      });
     }
   },
 );

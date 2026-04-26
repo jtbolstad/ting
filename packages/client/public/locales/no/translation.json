@@ -374,7 +374,12 @@
       "addError": "Kunne ikke opprette bruker",
       "confirmRoleChange": "Endre brukerens rolle?",
       "roleChanged": "Rolle oppdatert",
-      "roleChangeFailed": "Kunne ikke oppdatere rolle"
+      "roleChangeFailed": "Kunne ikke oppdatere rolle",
+      "resetPassword": "Tilbakestill passord",
+      "resetPasswordPrompt": "Skriv inn nytt passord (min 6 tegn):",
+      "passwordReset": "Passord tilbakestilt",
+      "passwordResetFailed": "Kunne ikke tilbakestille passord",
+      "passwordTooShort": "Passord må være minst 6 tegn"
     },
     "checkout": {
       "title": "Lån ut verktøy",

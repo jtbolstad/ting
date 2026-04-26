@@ -393,6 +393,23 @@ export function AdminDashboard() {
     }
   };
 
+  const handleResetPassword = async (membershipId: string) => {
+    const newPassword = prompt(t("admin.users.resetPasswordPrompt"));
+    if (!newPassword) return;
+
+    if (newPassword.length < 6) {
+      toast.error(t("admin.users.passwordTooShort"));
+      return;
+    }
+
+    try {
+      await apiClient.resetUserPassword(membershipId, newPassword);
+      toast.success(t("admin.users.passwordReset"));
+    } catch (error: any) {
+      toast.error(error.message || t("admin.users.passwordResetFailed"));
+    }
+  };
+
   const handleAddUser = async (e: React.FormEvent) => {
     e.preventDefault();
     setAddUserError("");
@@ -976,17 +993,27 @@ export function AdminDashboard() {
                         {new Date(membership.createdAt).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4">
-                        {membership.role !== "OWNER" && (
-                          <select
-                            value={membership.role}
-                            onChange={(e) => handleChangeRole(membership.id, e.target.value)}
-                            className="px-2 py-1 border border-gray-300 rounded text-sm"
-                          >
-                            <option value="MEMBER">MEMBER</option>
-                            <option value="MANAGER">MANAGER</option>
-                            <option value="ADMIN">ADMIN</option>
-                          </select>
-                        )}
+                        <div className="flex gap-3 items-center">
+                          {membership.role !== "OWNER" && (
+                            <select
+                              value={membership.role}
+                              onChange={(e) => handleChangeRole(membership.id, e.target.value)}
+                              className="px-2 py-1 border border-gray-300 rounded text-sm"
+                            >
+                              <option value="MEMBER">MEMBER</option>
+                              <option value="MANAGER">MANAGER</option>
+                              <option value="ADMIN">ADMIN</option>
+                            </select>
+                          )}
+                          {membership.role !== "OWNER" && (
+                            <button
+                              onClick={() => handleResetPassword(membership.id)}
+                              className="text-orange-600 hover:text-orange-900 text-sm"
+                            >
+                              {t("admin.users.resetPassword")}
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}

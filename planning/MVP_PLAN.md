@@ -171,7 +171,7 @@
 - ✅ Location management (CRUD)
 - ✅ Filter loans by status (active, returned, overdue)
 - ✅ Filter items by category and status
-- ✅ User management: view members, change roles
+- ✅ User management: view members, change roles, reset passwords
 
 #### 3.2 Category Management
 
@@ -273,6 +273,8 @@
 - ✅ Admin: Filter loans by status
 - ✅ Admin: Filter items by category/status
 - ✅ User: View membership info
+- ✅ User: Change own password (Profile page)
+- ✅ Admin: Reset user passwords
 
 ---
 

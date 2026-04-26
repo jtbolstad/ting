@@ -373,7 +373,12 @@
       "addError": "Could not create user",
       "confirmRoleChange": "Change this user's role?",
       "roleChanged": "Role updated",
-      "roleChangeFailed": "Failed to update role"
+      "roleChangeFailed": "Failed to update role",
+      "resetPassword": "Reset Password",
+      "resetPasswordPrompt": "Enter new password (min 6 characters):",
+      "passwordReset": "Password reset successfully",
+      "passwordResetFailed": "Failed to reset password",
+      "passwordTooShort": "Password must be at least 6 characters"
     },
     "checkout": {
       "title": "Checkout Item",

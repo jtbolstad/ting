@@ -373,7 +373,12 @@
       "addError": "Kunne ikke oprette bruger",
       "confirmRoleChange": "Ændre brugerens rolle?",
       "roleChanged": "Rolle opdateret",
-      "roleChangeFailed": "Kunne ikke opdatere rolle"
+      "roleChangeFailed": "Kunne ikke opdatere rolle",
+      "resetPassword": "Nulstil adgangskode",
+      "resetPasswordPrompt": "Indtast ny adgangskode (min 6 tegn):",
+      "passwordReset": "Adgangskode nulstillet",
+      "passwordResetFailed": "Kunne ikke nulstille adgangskode",
+      "passwordTooShort": "Adgangskode skal være mindst 6 tegn"
     },
     "checkout": {
       "title": "Udlån Værktøj",

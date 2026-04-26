@@ -349,6 +349,13 @@ class ApiClient {
     });
   }
 
+  async resetUserPassword(membershipId: string, newPassword: string): Promise<void> {
+    return this.request<void>(`/organizations/members/${membershipId}/reset-password`, {
+      method: "POST",
+      body: JSON.stringify({ newPassword }),
+    });
+  }
+
   async getGroups(): Promise<Array<MemberGroup & { memberCount: number }>> {
     return this.request<Array<MemberGroup & { memberCount: number }>>(
       "/organizations/groups",
