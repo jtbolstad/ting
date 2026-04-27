@@ -432,34 +432,6 @@ export function AdminDashboard() {
     }
   };
 
-  const handleChangeRole = async (membershipId: string, newRole: string) => {
-    if (!(await confirm(t("admin.users.confirmRoleChange")))) return;
-    try {
-      await apiClient.updateMembership(membershipId, { role: newRole as any });
-      toast.success(t("admin.users.roleChanged"));
-      await loadData();
-    } catch (error: any) {
-      toast.error(error.message || t("admin.users.roleChangeFailed"));
-    }
-  };
-
-  const handleResetPassword = async (membershipId: string) => {
-    const newPassword = prompt(t("admin.users.resetPasswordPrompt"));
-    if (!newPassword) return;
-
-    if (newPassword.length < 6) {
-      toast.error(t("admin.users.passwordTooShort"));
-      return;
-    }
-
-    try {
-      await apiClient.resetUserPassword(membershipId, newPassword);
-      toast.success(t("admin.users.passwordReset"));
-    } catch (error: any) {
-      toast.error(error.message || t("admin.users.passwordResetFailed"));
-    }
-  };
-
   const handleOpenEdit = (user: User, membership: any) => {
     setEditingUser({ user, membership });
     setEditUserRole(membership.role);
