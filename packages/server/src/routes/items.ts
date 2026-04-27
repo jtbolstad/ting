@@ -115,10 +115,19 @@ router.get(
       const where: any = { organizationId: req.organization!.id };
 
       if (q) {
+        const tagMatches = await prisma.itemTag.findMany({
+          where: {
+            name: { contains: q },
+            item: { organizationId: req.organization!.id },
+          },
+          select: { itemId: true },
+        });
+        const tagItemIds = tagMatches.map((t) => t.itemId);
+
         where.OR = [
           { name: { contains: q } },
           { description: { contains: q } },
-          { tags: { some: { name: { contains: q } } } },
+          ...(tagItemIds.length > 0 ? [{ id: { in: tagItemIds } }] : []),
         ];
       }
       if (categoryId) where.categoryId = categoryId;
