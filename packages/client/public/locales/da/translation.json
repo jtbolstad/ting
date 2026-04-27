@@ -479,7 +479,14 @@
       "resetPasswordPrompt": "Indtast ny adgangskode (min 6 tegn):",
       "passwordReset": "Adgangskode nulstillet",
       "passwordResetFailed": "Kunne ikke nulstille adgangskode",
-      "passwordTooShort": "Adgangskode skal være mindst 6 tegn"
+      "passwordTooShort": "Adgangskode skal være mindst 6 tegn",
+      "edit": "Rediger",
+      "editUser": "Rediger bruger",
+      "newPassword": "Ny adgangskode",
+      "removeFromOrg": "Fjern fra organisation",
+      "confirmRemove": "Fjerne denne bruger fra organisationen?",
+      "removed": "Bruger fjernet fra organisation",
+      "removeFailed": "Kunne ikke fjerne bruger"
     },
     "checkout": {
       "title": "Udlån Værktøj",
@@ -596,7 +603,12 @@
       "addToOrg": "Tilføj til organisation...",
       "add": "Tilføj",
       "save": "Gem ændringer",
-      "cancel": "Annuller"
+      "cancel": "Annuller",
+      "newPassword": "Ny adgangskode",
+      "resetPassword": "Nulstil adgangskode",
+      "deleteUser": "Slet bruger",
+      "confirmDelete": "Slet denne bruger permanent? Dette kan ikke fortrydes.",
+      "deleteFailed": "Kunne ikke slette bruger"
     },
     "deleteOrg": {
       "title": "Slet organisation",

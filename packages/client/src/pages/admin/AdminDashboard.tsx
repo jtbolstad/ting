@@ -92,6 +92,12 @@ export function AdminDashboard() {
   const [newUser, setNewUser] = useState({ name: "", email: "", password: "" });
   const [addUserError, setAddUserError] = useState("");
 
+  // Edit user modal state
+  const [editingUser, setEditingUser] = useState<{ user: User; membership: any } | null>(null);
+  const [editUserRole, setEditUserRole] = useState("");
+  const [editUserPassword, setEditUserPassword] = useState("");
+  const [editUserError, setEditUserError] = useState("");
+
   // Email log state
   const [emailLogs, setEmailLogs] = useState<
     Array<{
@@ -451,6 +457,62 @@ export function AdminDashboard() {
       toast.success(t("admin.users.passwordReset"));
     } catch (error: any) {
       toast.error(error.message || t("admin.users.passwordResetFailed"));
+    }
+  };
+
+  const handleOpenEdit = (user: User, membership: any) => {
+    setEditingUser({ user, membership });
+    setEditUserRole(membership.role);
+    setEditUserPassword("");
+    setEditUserError("");
+  };
+
+  const handleCloseEdit = () => {
+    setEditingUser(null);
+    setEditUserRole("");
+    setEditUserPassword("");
+    setEditUserError("");
+  };
+
+  const handleSaveEditRole = async () => {
+    if (!editingUser || editUserRole === editingUser.membership.role) return;
+    if (!(await confirm(t("admin.users.confirmRoleChange")))) return;
+    try {
+      await apiClient.updateMembership(editingUser.membership.id, { role: editUserRole as any });
+      toast.success(t("admin.users.roleChanged"));
+      setEditingUser((prev) => prev ? { ...prev, membership: { ...prev.membership, role: editUserRole } } : null);
+      await loadData();
+    } catch (error: any) {
+      setEditUserError(error.message || t("admin.users.roleChangeFailed"));
+    }
+  };
+
+  const handleEditResetPassword = async () => {
+    if (!editingUser || !editUserPassword) return;
+    if (editUserPassword.length < 6) {
+      setEditUserError(t("admin.users.passwordTooShort"));
+      return;
+    }
+    try {
+      await apiClient.resetUserPassword(editingUser.membership.id, editUserPassword);
+      toast.success(t("admin.users.passwordReset"));
+      setEditUserPassword("");
+      setEditUserError("");
+    } catch (error: any) {
+      setEditUserError(error.message || t("admin.users.passwordResetFailed"));
+    }
+  };
+
+  const handleRemoveFromOrg = async () => {
+    if (!editingUser) return;
+    if (!(await confirm(t("admin.users.confirmRemove")))) return;
+    try {
+      await apiClient.removeMember(editingUser.membership.id);
+      toast.success(t("admin.users.removed"));
+      handleCloseEdit();
+      await loadData();
+    } catch (error: any) {
+      setEditUserError(error.message || t("admin.users.removeFailed"));
     }
   };
 
@@ -1142,27 +1204,14 @@ export function AdminDashboard() {
                         {new Date(membership.createdAt).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex gap-3 items-center">
-                          {membership.role !== "OWNER" && (
-                            <select
-                              value={membership.role}
-                              onChange={(e) => handleChangeRole(membership.id, e.target.value)}
-                              className="px-2 py-1 border border-gray-300 rounded text-sm"
-                            >
-                              <option value="MEMBER">MEMBER</option>
-                              <option value="MANAGER">MANAGER</option>
-                              <option value="ADMIN">ADMIN</option>
-                            </select>
-                          )}
-                          {membership.role !== "OWNER" && (
-                            <button
-                              onClick={() => handleResetPassword(membership.id)}
-                              className="text-orange-600 hover:text-orange-900 text-sm"
-                            >
-                              {t("admin.users.resetPassword")}
-                            </button>
-                          )}
-                        </div>
+                        {membership.role !== "OWNER" && (
+                          <button
+                            onClick={() => handleOpenEdit(user, membership)}
+                            className="text-indigo-600 hover:text-indigo-900 text-sm"
+                          >
+                            {t("admin.users.edit")}
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -2576,6 +2625,88 @@ export function AdminDashboard() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit User Modal */}
+      {editingUser && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-md w-full">
+            <h3 className="text-xl font-bold mb-4">{t("admin.users.editUser")}</h3>
+            {editUserError && (
+              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm">
+                {editUserError}
+              </div>
+            )}
+            <div className="space-y-4">
+              <div>
+                <div className="text-sm font-medium text-gray-500">{t("admin.users.name")}</div>
+                <div className="font-medium">{editingUser.user.name}</div>
+              </div>
+              <div>
+                <div className="text-sm font-medium text-gray-500">{t("admin.users.email")}</div>
+                <div>{editingUser.user.email}</div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">{t("admin.users.role")}</label>
+                <div className="flex gap-2">
+                  <select
+                    value={editUserRole}
+                    onChange={(e) => setEditUserRole(e.target.value)}
+                    className="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  >
+                    <option value="MEMBER">MEMBER</option>
+                    <option value="MANAGER">MANAGER</option>
+                    <option value="ADMIN">ADMIN</option>
+                  </select>
+                  <button
+                    type="button"
+                    onClick={handleSaveEditRole}
+                    disabled={editUserRole === editingUser.membership.role}
+                    className="px-3 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-400 text-sm"
+                  >
+                    {t("common.save")}
+                  </button>
+                </div>
+              </div>
+              <div className="border-t pt-4">
+                <label className="block text-sm font-medium mb-1">{t("admin.users.newPassword")}</label>
+                <div className="flex gap-2">
+                  <input
+                    type="password"
+                    value={editUserPassword}
+                    onChange={(e) => setEditUserPassword(e.target.value)}
+                    placeholder="••••••"
+                    className="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleEditResetPassword}
+                    disabled={!editUserPassword}
+                    className="px-3 py-2 bg-orange-600 text-white rounded hover:bg-orange-700 disabled:bg-gray-400 text-sm"
+                  >
+                    {t("admin.users.resetPassword")}
+                  </button>
+                </div>
+              </div>
+              <div className="border-t pt-4 flex gap-2">
+                <button
+                  type="button"
+                  onClick={handleRemoveFromOrg}
+                  className="flex-1 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
+                >
+                  {t("admin.users.removeFromOrg")}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCloseEdit}
+                  className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400 text-sm"
+                >
+                  {t("common.cancel")}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

@@ -4,6 +4,7 @@ import { Router } from "express";
 import { authenticate, type AuthRequest } from "../middleware/auth.js";
 import { prisma } from "../prisma.js";
 import { emailService } from "../services/email.js";
+import { hashPassword } from "../services/auth.js";
 
 const router: ExpressRouter = Router();
 
@@ -649,6 +650,64 @@ router.post(
       res.status(500).json({ success: false, error: "Failed to assign user" });
     }
   },
+);
+
+// Reset user password (platform admin only)
+router.post(
+  "/users/:userId/reset-password",
+  authenticate,
+  requirePlatformAdmin,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { userId } = req.params;
+      const { newPassword } = req.body;
+
+      if (!newPassword || newPassword.length < 6) {
+        return res.status(400).json({ success: false, error: "Password must be at least 6 characters" });
+      }
+
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      if (!user) {
+        return res.status(404).json({ success: false, error: "User not found" });
+      }
+
+      const passwordHash = await hashPassword(newPassword);
+      await prisma.user.update({ where: { id: userId }, data: { passwordHash } });
+
+      res.json({ success: true, data: { message: "Password reset successfully" } });
+    } catch (error) {
+      console.error("Admin reset password error:", error);
+      res.status(500).json({ success: false, error: "Failed to reset password" });
+    }
+  }
+);
+
+// Delete user (platform admin only)
+router.delete(
+  "/users/:userId",
+  authenticate,
+  requirePlatformAdmin,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { userId } = req.params;
+
+      if (req.user!.id === userId) {
+        return res.status(400).json({ success: false, error: "Cannot delete your own account" });
+      }
+
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      if (!user) {
+        return res.status(404).json({ success: false, error: "User not found" });
+      }
+
+      await prisma.user.delete({ where: { id: userId } });
+
+      res.json({ success: true, data: { deleted: true } });
+    } catch (error) {
+      console.error("Admin delete user error:", error);
+      res.status(500).json({ success: false, error: "Failed to delete user" });
+    }
+  }
 );
 
 export default router;

@@ -379,6 +379,25 @@ class ApiClient {
     });
   }
 
+  async removeMember(membershipId: string): Promise<{ deleted: boolean }> {
+    return this.request(`/organizations/members/${membershipId}`, {
+      method: "DELETE",
+    });
+  }
+
+  async adminResetUserPassword(userId: string, newPassword: string): Promise<void> {
+    return this.request<void>(`/admin/users/${userId}/reset-password`, {
+      method: "POST",
+      body: JSON.stringify({ newPassword }),
+    });
+  }
+
+  async adminDeleteUser(userId: string): Promise<{ deleted: boolean }> {
+    return this.request(`/admin/users/${userId}`, {
+      method: "DELETE",
+    });
+  }
+
   async getGroups(): Promise<Array<MemberGroup & { memberCount: number }>> {
     return this.request<Array<MemberGroup & { memberCount: number }>>(
       "/organizations/groups",

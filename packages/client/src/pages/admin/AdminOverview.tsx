@@ -59,6 +59,7 @@ export function AdminOverview() {
     role: "",
   });
   const [editError, setEditError] = useState("");
+  const [editResetPassword, setEditResetPassword] = useState("");
   const [availableOrgsForUser, setAvailableOrgsForUser] = useState<
     Organization[]
   >([]);
@@ -193,7 +194,36 @@ export function AdminOverview() {
     setEditingUserId(null);
     setEditUserForm({ name: "", email: "", role: "" });
     setEditError("");
+    setEditResetPassword("");
     setSelectedOrgToAdd("");
+  };
+
+  const handleResetPassword = async () => {
+    if (!editingUserId || !editResetPassword) return;
+    if (editResetPassword.length < 6) {
+      setEditError(t("admin.users.passwordTooShort"));
+      return;
+    }
+    try {
+      setEditError("");
+      await apiClient.adminResetUserPassword(editingUserId, editResetPassword);
+      setEditResetPassword("");
+    } catch (error: any) {
+      setEditError(error.message || t("admin.users.passwordResetFailed"));
+    }
+  };
+
+  const handleDeleteUser = async () => {
+    if (!editingUserId) return;
+    if (!window.confirm(t("platformAdmin.editUser.confirmDelete"))) return;
+    try {
+      await apiClient.adminDeleteUser(editingUserId);
+      setEditingUserId(null);
+      setEditResetPassword("");
+      await loadData();
+    } catch (error: any) {
+      setEditError(error.message || t("platformAdmin.editUser.deleteFailed"));
+    }
   };
 
   const handleAddOrganization = async () => {
@@ -976,6 +1006,28 @@ export function AdminOverview() {
                 )}
               </div>
 
+              <div className="border-t pt-4">
+                <label className="block text-sm font-medium mb-1">
+                  {t("platformAdmin.editUser.newPassword")}
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="password"
+                    value={editResetPassword}
+                    onChange={(e) => setEditResetPassword(e.target.value)}
+                    placeholder="••••••"
+                    className="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleResetPassword}
+                    disabled={!editResetPassword}
+                    className="px-3 py-2 bg-orange-600 text-white rounded hover:bg-orange-700 disabled:bg-gray-400 text-sm"
+                  >
+                    {t("platformAdmin.editUser.resetPassword")}
+                  </button>
+                </div>
+              </div>
               <div className="flex gap-2 border-t pt-4">
                 <button
                   type="submit"
@@ -989,6 +1041,15 @@ export function AdminOverview() {
                   className="flex-1 py-2 bg-gray-300 rounded hover:bg-gray-400"
                 >
                   {t("platformAdmin.editUser.cancel")}
+                </button>
+              </div>
+              <div className="border-t pt-4">
+                <button
+                  type="button"
+                  onClick={handleDeleteUser}
+                  className="w-full py-2 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
+                >
+                  {t("platformAdmin.editUser.deleteUser")}
                 </button>
               </div>
             </form>

@@ -461,7 +461,14 @@
       "resetPasswordPrompt": "Enter new password (min 6 characters):",
       "passwordReset": "Password reset successfully",
       "passwordResetFailed": "Failed to reset password",
-      "passwordTooShort": "Password must be at least 6 characters"
+      "passwordTooShort": "Password must be at least 6 characters",
+      "edit": "Edit",
+      "editUser": "Edit User",
+      "newPassword": "New Password",
+      "removeFromOrg": "Remove from Organization",
+      "confirmRemove": "Remove this user from the organization?",
+      "removed": "User removed from organization",
+      "removeFailed": "Failed to remove user"
     },
     "invitations": {
       "title": "Pending Invitations",
@@ -596,7 +603,12 @@
       "addToOrg": "Add to organization...",
       "add": "Add",
       "save": "Save Changes",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "newPassword": "New Password",
+      "resetPassword": "Reset Password",
+      "deleteUser": "Delete User",
+      "confirmDelete": "Permanently delete this user? This cannot be undone.",
+      "deleteFailed": "Failed to delete user"
     },
     "deleteOrg": {
       "title": "Delete Organization",

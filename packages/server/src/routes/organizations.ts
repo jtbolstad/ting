@@ -394,6 +394,36 @@ router.patch(
   },
 );
 
+router.delete(
+  "/members/:membershipId",
+  withOrganizationContext(),
+  requireOrgRole(["ADMIN", "OWNER"]),
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { membershipId } = req.params;
+
+      const membership = await prisma.membership.findUnique({
+        where: { id: membershipId },
+      });
+
+      if (!membership || membership.organizationId !== req.organization!.id) {
+        return res.status(404).json({ success: false, error: "Membership not found" });
+      }
+
+      if (membership.role === "OWNER") {
+        return res.status(400).json({ success: false, error: "Cannot remove organization owner" });
+      }
+
+      await prisma.membership.delete({ where: { id: membershipId } });
+
+      res.json({ success: true, data: { deleted: true } });
+    } catch (error) {
+      console.error("Delete membership error:", error);
+      res.status(500).json({ success: false, error: "Failed to remove member" });
+    }
+  },
+);
+
 router.get(
   "/groups",
   withOrganizationContext(),

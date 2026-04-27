@@ -480,7 +480,14 @@
       "resetPasswordPrompt": "Skriv inn nytt passord (min 6 tegn):",
       "passwordReset": "Passord tilbakestilt",
       "passwordResetFailed": "Kunne ikke tilbakestille passord",
-      "passwordTooShort": "Passord må være minst 6 tegn"
+      "passwordTooShort": "Passord må være minst 6 tegn",
+      "edit": "Rediger",
+      "editUser": "Rediger bruker",
+      "newPassword": "Nytt passord",
+      "removeFromOrg": "Fjern fra organisasjon",
+      "confirmRemove": "Fjerne denne brukeren fra organisasjonen?",
+      "removed": "Bruker fjernet fra organisasjon",
+      "removeFailed": "Kunne ikke fjerne bruker"
     },
     "checkout": {
       "title": "Lån ut verktøy",
@@ -597,7 +604,12 @@
       "addToOrg": "Legg til i organisasjon...",
       "add": "Legg til",
       "save": "Lagre endringer",
-      "cancel": "Avbryt"
+      "cancel": "Avbryt",
+      "newPassword": "Nytt passord",
+      "resetPassword": "Tilbakestill passord",
+      "deleteUser": "Slett bruker",
+      "confirmDelete": "Slett denne brukeren permanent? Dette kan ikke angres.",
+      "deleteFailed": "Kunne ikke slette bruker"
     },
     "deleteOrg": {
       "title": "Slett organisasjon",
