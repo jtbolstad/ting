@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig(({ command }) => ({
   define: command === 'build' ? {
-    'import.meta.env.VITE_BUILD_TIME': JSON.stringify(new Date().toISOString()),
+    'import.meta.env.VITE_BUILD_TIME': JSON.stringify(new Date().toLocaleString('no-NO', { timeZone: 'Europe/Oslo' })),
   } : {},
   plugins: [
     react(),
@@ -14,7 +14,7 @@ export default defineConfig(({ command }) => ({
         handler(html) {
           return html.replace(
             '%VITE_BUILD_TIME%',
-            command === 'build' ? new Date().toISOString() : 'dev',
+            command === 'build' ? new Date().toLocaleString('no-NO', { timeZone: 'Europe/Oslo' }) : 'dev',
           )
         },
       },
