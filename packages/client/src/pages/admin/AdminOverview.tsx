@@ -551,7 +551,7 @@ export function AdminOverview() {
                             >
                               {isOrgAdmin
                                 ? t("admin.userRole.orgAdmin")
-                                : t("admin.userRole.user")}
+                                : t("admin.userRole.member")}
                             </span>
                           </div>
                         );
@@ -614,7 +614,7 @@ export function AdminOverview() {
                             ? t("admin.userRole.orgAdmin")
                             : user.role === "ADMIN"
                               ? t("admin.userRole.admin")
-                              : t("admin.userRole.user")}
+                              : t("admin.userRole.member")}
                         </span>
                       </td>
                       <td className="px-6 py-4">
@@ -899,7 +899,7 @@ export function AdminOverview() {
                   <option value="">
                     {t("platformAdmin.editUser.selectRole")}
                   </option>
-                  <option value="USER">{t("admin.userRole.user")}</option>
+                  <option value="MEMBER">{t("admin.userRole.member")}</option>
                   <option value="ORG_ADMIN">
                     {t("admin.userRole.orgAdmin")}
                   </option>

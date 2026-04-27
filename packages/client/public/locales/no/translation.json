@@ -507,7 +507,7 @@
       "confirmDelete": "Er du sikker på at du vil slette denne kategorien? Dette vil feile hvis kategorien har verktøy."
     },
     "userRole": {
-      "user": "Bruker",
+      "member": "Medlem",
       "orgAdmin": "Organisasjonsadmin",
       "admin": "Plattformadmin"
     },
