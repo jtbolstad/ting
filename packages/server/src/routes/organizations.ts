@@ -657,12 +657,15 @@ router.post(
 
       // Validate: only ADMIN/OWNER can invite non-MEMBER roles
       if (role !== "MEMBER") {
-        const inviterRole = req.membership!.role;
-        if (inviterRole !== "ADMIN" && inviterRole !== "OWNER") {
-          return res.status(403).json({
-            success: false,
-            error: "Only ADMIN or OWNER can invite non-MEMBER roles",
-          });
+        // Platform admin can invite any role
+        if (req.user!.role !== "ADMIN") {
+          const inviterRole = req.membership?.role;
+          if (inviterRole !== "ADMIN" && inviterRole !== "OWNER") {
+            return res.status(403).json({
+              success: false,
+              error: "Only ADMIN or OWNER can invite non-MEMBER roles",
+            });
+          }
         }
       }
 
