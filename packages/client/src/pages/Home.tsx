@@ -12,13 +12,13 @@ export function Home() {
       <section className="bg-orange-800 text-white py-20 px-4">
         <div className="container mx-auto max-w-3xl text-center">
           <p className="text-orange-200 text-sm font-semibold uppercase tracking-widest mb-3">
-            1{t("home.hero.byline")}
+            {t("home.hero.byline")}
           </p>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            2{t("home.hero.title")}
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-balance">
+            {t("home.hero.title")}
           </h1>
-          <p className="text-lg md:text-xl text-orange-100 mb-8 max-w-2xl mx-auto">
-            3{t("home.hero.subtitle")}
+          <p className="text-lg md:text-xl text-orange-100 mb-8 max-w-2xl mx-auto text-balance">
+            {t("home.hero.subtitle")}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -59,10 +59,10 @@ export function Home() {
       {/* What's available */}
       <section className="py-16 px-4">
         <div className="container mx-auto max-w-4xl">
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-3">
+          <h2 className="text-3xl font-bold text-center text-gray-800 mb-3 text-balance">
             {t("home.available.title")}
           </h2>
-          <p className="text-center text-gray-500 mb-10">{t("home.available.subtitle")}</p>
+          <p className="text-center text-gray-500 mb-10 text-balance">{t("home.available.subtitle")}</p>
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             {(["tents", "speakers", "smoke", "projector"] as const).map((item) => (
               <div
@@ -70,8 +70,8 @@ export function Home() {
                 className="bg-white rounded-lg p-5 text-center shadow-sm border border-stone-200"
               >
                 <div className="text-3xl mb-2">{t(`home.available.items.${item}.icon`)}</div>
-                <div className="font-semibold text-gray-800">{t(`home.available.items.${item}.name`)}</div>
-                <div className="text-sm text-gray-500 mt-1">{t(`home.available.items.${item}.detail`)}</div>
+                <div className="font-semibold text-gray-800 text-balance">{t(`home.available.items.${item}.name`)}</div>
+                <div className="text-sm text-gray-500 mt-1 text-balance">{t(`home.available.items.${item}.detail`)}</div>
               </div>
             ))}
           </div>
@@ -89,7 +89,7 @@ export function Home() {
       {/* How it works */}
       <section className="bg-white py-16 px-4">
         <div className="container mx-auto max-w-4xl">
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">
+          <h2 className="text-3xl font-bold text-center text-gray-800 mb-12 text-balance">
             {t("home.howItWorks.title")}
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -98,10 +98,10 @@ export function Home() {
                 <div className="w-14 h-14 bg-orange-700 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
                   {i + 1}
                 </div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                <h3 className="text-xl font-semibold text-gray-800 mb-2 text-balance">
                   {t(`home.howItWorks.${step}.title`)}
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-balance">
                   {t(`home.howItWorks.${step}.description`)}
                 </p>
               </div>
@@ -115,13 +115,13 @@ export function Home() {
         <div className="container mx-auto max-w-4xl grid md:grid-cols-2 gap-8">
           <div className="bg-white rounded-xl p-8 shadow-sm border border-stone-200">
             <div className="text-3xl mb-3">📦</div>
-            <h3 className="text-xl font-bold text-gray-800 mb-2">{t("home.lendOut.title")}</h3>
-            <p className="text-gray-600">{t("home.lendOut.description")}</p>
+            <h3 className="text-xl font-bold text-gray-800 mb-2 text-balance">{t("home.lendOut.title")}</h3>
+            <p className="text-gray-600 text-balance">{t("home.lendOut.description")}</p>
           </div>
           <div className="bg-white rounded-xl p-8 shadow-sm border border-stone-200">
             <div className="text-3xl mb-3">💡</div>
-            <h3 className="text-xl font-bold text-gray-800 mb-2">{t("home.requestTip.title")}</h3>
-            <p className="text-gray-600">{t("home.requestTip.description")}</p>
+            <h3 className="text-xl font-bold text-gray-800 mb-2 text-balance">{t("home.requestTip.title")}</h3>
+            <p className="text-gray-600 text-balance">{t("home.requestTip.description")}</p>
           </div>
         </div>
       </section>
@@ -129,8 +129,8 @@ export function Home() {
       {/* About HPV */}
       <section className="bg-orange-800 text-white py-16 px-4">
         <div className="container mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold mb-4">{t("home.about.title")}</h2>
-          <p className="text-orange-100 text-lg leading-relaxed mb-6">
+          <h2 className="text-3xl font-bold mb-4 text-balance">{t("home.about.title")}</h2>
+          <p className="text-orange-100 text-lg leading-relaxed mb-6 text-balance">
             {t("home.about.description")}
           </p>
           <a
@@ -148,10 +148,10 @@ export function Home() {
       {!isAuthenticated && (
         <section className="py-16 px-4 bg-stone-100">
           <div className="container mx-auto max-w-xl text-center">
-            <h2 className="text-3xl font-bold text-gray-800 mb-3">
+            <h2 className="text-3xl font-bold text-gray-800 mb-3 text-balance">
               {t("home.cta.title")}
             </h2>
-            <p className="text-gray-600 mb-8">{t("home.cta.description")}</p>
+            <p className="text-gray-600 mb-8 text-balance">{t("home.cta.description")}</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 to="/register"
