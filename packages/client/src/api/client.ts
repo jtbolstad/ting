@@ -137,8 +137,8 @@ class ApiClient {
     page?: number;
     limit?: number;
   }): Promise<PaginatedResponse<Item>> {
-    // Filter out undefined values and organizationId (sent via header instead)
     const queryParams: Record<string, string> = {};
+    queryParams.organizationId = params.organizationId;
     if (params.q) queryParams.q = params.q;
     if (params.categoryId) queryParams.categoryId = params.categoryId;
     if (params.status) queryParams.status = params.status;
@@ -192,8 +192,9 @@ class ApiClient {
   }
 
   // Categories
-  async getCategories(): Promise<Category[]> {
-    return this.request<Category[]>("/categories");
+  async getCategories(organizationId?: string): Promise<Category[]> {
+    const query = organizationId ? `?organizationId=${organizationId}` : "";
+    return this.request<Category[]>(`/categories${query}`);
   }
 
   async createCategory(data: {
