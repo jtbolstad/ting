@@ -50,4 +50,4 @@
 - Flerspråklig støtte (norsk, engelsk, dansk)
 - Kommentarer og vurderinger på items
 - Revisionslogg (audit log)
-- Deploy til Fly.io
+- Deploy til VPS

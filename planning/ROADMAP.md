@@ -144,7 +144,7 @@ Focus: replace the generic Tailwind-default look with a distinct, warm visual id
 |------|-----|------|--------|------|-------|
 | ✅ | T49 | P0 | M | Establish TDD workflow | Vitest (unit + component) and Playwright (E2E) configured; TDD_RULES.md in place |
 | [ ] | T41 | P0 | M | Increase test coverage | Server routes for categories, comments, loans, locations, reservations, reviews, users have no tests. Two E2E spec files (app.spec.ts, complete.spec.ts) overlap — consolidate into one. Target: >80% coverage on server routes |
-| [ ] | T42 | P0 | M | CI pipeline on PRs (GitHub Actions) | `fly-deploy.yml` exists for CD (deploy on push to main) but no test/lint/build step runs on PRs. Add a separate CI workflow |
+| [ ] | T42 | P0 | M | CI pipeline on PRs (GitHub Actions) | `deploy-vps.yml` exists for CD (deploy on push to main) but no test/lint/build step runs on PRs. Add a separate CI workflow |
 | [ ] | T43 | P1 | S | Environment config validation on startup | Zod/envalid |
 | [ ] | T44 | P1 | S | Structured logging | pino/winston instead of console.log |
 | [ ] | T50 | P1 | S | SQLite backup procedure | Scheduled backup of db file on VPS (cron + offsite copy) |
