@@ -10,7 +10,7 @@ import { useOrganization } from "../context/OrganizationContext";
 import { Spinner } from "../components/ui/Spinner";
 
 export function Catalog() {
-  const { activeOrganizationId, activeOrganization } = useOrganization();
+  const { activeOrganizationId, activeOrganization, isLoading: orgLoading } = useOrganization();
   const [items, setItems] = useState<Item[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -64,7 +64,7 @@ export function Catalog() {
     });
   };
 
-  if (loading) {
+  if (loading || orgLoading) {
     return <Spinner />;
   }
 
