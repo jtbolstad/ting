@@ -1,0 +1,867 @@
+{
+  "app": {
+    "title": "ٹنگ بائبلیوتیکیت",
+    "subtitle": "کمیونٹی لینڈنگ لائبریری"
+  },
+  "nav": {
+    "catalog": "کیٹلاگ",
+    "addItem": "آئٹم شامل کریں",
+    "dashboard": "میرا ڈیش بورڈ",
+    "admin": "ایڈمن",
+    "terms": "سروس کی شرائط",
+    "login": "لاگ ان",
+    "register": "رجسٹر کریں",
+    "logout": "لاگ آؤٹ",
+    "hello": "ہیلو، {{name}}",
+    "profile": "پروفائل"
+  },
+  "profile": {
+    "title": "میرا پروفائل",
+    "userInfo": "صارف کی معلومات",
+    "organization": "تنظیم",
+    "terms": "سروس کی شرائط",
+    "changeName": "نام تبدیل کریں",
+    "save": "محفوظ کریں",
+    "saving": "محفوظ ہو رہا ہے...",
+    "nameUpdated": "نام اپڈیٹ ہو گیا",
+    "nameUpdateFailed": "نام اپڈیٹ نہیں ہو سکا",
+    "changePassword": "پاسورڈ تبدیل کریں",
+    "currentPassword": "موجودہ پاسورڈ",
+    "newPassword": "نیا پاسورڈ",
+    "confirmPassword": "نئے پاسورڈ کی تصدیق کریں",
+    "passwordChanged": "پاسورڈ تبدیل ہو گیا",
+    "passwordChangeFailed": "پاسورڈ تبدیل نہیں ہو سکا",
+    "passwordMismatch": "پاسورڈ مطابقت نہیں رکھتے",
+    "activity": "میری سرگرمی",
+    "activeLoans": "فعال قرضے",
+    "upcomingReservations": "آنے والی بکنگ",
+    "noLoans": "کوئی فعال قرضہ نہیں",
+    "noReservations": "کوئی آنے والی بکنگ نہیں",
+    "dueDate": "واپسی کی تاریخ",
+    "period": "مدت",
+    "inviteMembers": "اراکین کو مدعو کریں",
+    "inviteEmailPlaceholder": "ای میل پتہ درج کریں...",
+    "roleMember": "رکن",
+    "roleManager": "منیجر",
+    "roleAdmin": "ایڈمنسٹریٹر",
+    "sendInvite": "دعوت نامہ بھیجیں",
+    "sending": "بھیج رہا ہے...",
+    "inviteSent": "دعوت نامہ بھیجا گیا",
+    "inviteFailed": "دعوت نامہ نہیں بھیجا جا سکا",
+    "alreadyMember": "یہ صارف پہلے سے رکن ہے",
+    "inviteLink": "دعوت نامے کا لنک",
+    "copyLink": "کاپی کریں",
+    "currentOrganization": "آپ کی تنظیم",
+    "yourRole": "آپ کا کردار",
+    "noOrganization": "کسی تنظیم سے منسلک نہیں"
+  },
+  "auth": {
+    "loginTitle": "ٹنگ میں لاگ ان کریں",
+    "registerTitle": "ٹنگ کے لیے رجسٹر کریں",
+    "email": "ای میل",
+    "password": "پاسورڈ",
+    "name": "نام",
+    "loginButton": "لاگ ان",
+    "registerButton": "رجسٹر کریں",
+    "loggingIn": "لاگ ان ہو رہا ہے...",
+    "registering": "رجسٹر ہو رہا ہے...",
+    "alreadyHaveAccount": "پہلے سے اکاؤنٹ ہے؟",
+    "dontHaveAccount": "اکاؤنٹ نہیں ہے؟",
+    "loginHere": "یہاں لاگ ان کریں",
+    "registerHere": "یہاں رجسٹر کریں",
+    "login": {
+      "title": "ٹنگ میں لاگ ان کریں",
+      "email": "ای میل",
+      "password": "پاسورڈ",
+      "loggingIn": "لاگ ان ہو رہا ہے...",
+      "submit": "لاگ ان",
+      "noAccount": "اکاؤنٹ نہیں ہے؟",
+      "registerLink": "یہاں رجسٹر کریں",
+      "forgotPassword": "پاسورڈ بھول گئے؟"
+    },
+    "forgotPassword": {
+      "title": "پاسورڈ ری سیٹ کریں",
+      "description": "اپنا ای میل پتہ درج کریں اور ہم آپ کو پاسورڈ ری سیٹ کرنے کا لنک بھیجیں گے۔",
+      "email": "ای میل",
+      "sending": "بھیج رہا ہے...",
+      "submit": "ری سیٹ لنک بھیجیں",
+      "backToLogin": "لاگ ان پر واپس جائیں",
+      "error": "ری سیٹ لنک بھیجنے میں ناکامی"
+    },
+    "resetPassword": {
+      "title": "نیا پاسورڈ مقرر کریں",
+      "newPassword": "نیا پاسورڈ",
+      "confirmPassword": "پاسورڈ کی تصدیق کریں",
+      "resetting": "ری سیٹ ہو رہا ہے...",
+      "submit": "پاسورڈ ری سیٹ کریں",
+      "backToLogin": "لاگ ان پر واپس جائیں",
+      "passwordMismatch": "پاسورڈ مطابقت نہیں رکھتے",
+      "passwordTooShort": "پاسورڈ کم از کم 6 حروف کا ہونا چاہیے",
+      "error": "پاسورڈ ری سیٹ کرنے میں ناکامی",
+      "invalidToken": "غلط ری سیٹ لنک",
+      "invalidTokenDescription": "یہ پاسورڈ ری سیٹ لنک غلط یا میعاد ختم ہو چکا ہے۔",
+      "requestNew": "نئے ری سیٹ لنک کی درخواست کریں"
+    },
+    "register": {
+      "title": "ٹنگ کے لیے رجسٹر کریں",
+      "name": "نام",
+      "email": "ای میل",
+      "password": "پاسورڈ",
+      "registering": "رجسٹر ہو رہا ہے...",
+      "submit": "رجسٹر کریں",
+      "hasAccount": "پہلے سے اکاؤنٹ ہے؟",
+      "loginLink": "یہاں لاگ ان کریں",
+      "acceptTerms": "میں نے پڑھا اور قبول کیا",
+      "termsLink": "سروس کی شرائط",
+      "termsRequired": "رجسٹر کرنے کے لیے سروس کی شرائط قبول کرنا ضروری ہے"
+    }
+  },
+  "catalog": {
+    "title": "کیٹلاگ",
+    "searchPlaceholder": "آئٹم تلاش کریں...",
+    "search": "تلاش",
+    "searchButton": "تلاش",
+    "categories": "زمرہ جات",
+    "allItems": "تمام آئٹم",
+    "loading": "کیٹلاگ لوڈ ہو رہا ہے...",
+    "noItems": "کوئی آئٹم نہیں ملا",
+    "status": {
+      "available": "دستیاب",
+      "checkedOut": "چیک آؤٹ",
+      "maintenance": "دیکھ بھال",
+      "retired": "ریٹائرڈ"
+    },
+    "availability": {
+      "availableNow": "ابھی دستیاب",
+      "nextAvailable": "اگلی دستیابی: {{date}}"
+    }
+  },
+  "categories": {
+    "Power Tools": "پاور ٹولز",
+    "Hand Tools": "ہینڈ ٹولز",
+    "Gardening": "باغبانی",
+    "Camping & Outdoor": "کیمپنگ اور آؤٹ ڈور",
+    "Sports Equipment": "کھیلوں کا سامان",
+    "Electronics": "الیکٹرانکس",
+    "Party & Events": "پارٹی اور تقریبات",
+    "Kitchen Appliances": "کچن کے آلات"
+  },
+  "item": {
+    "details": "آئٹم کی تفصیلات",
+    "description": "تفصیل",
+    "category": "زمرہ",
+    "status": "حالت",
+    "location": "مقام",
+    "loading": "آئٹم لوڈ ہو رہا ہے...",
+    "notFound": "آئٹم نہیں ملا",
+    "noDescription": "کوئی تفصیل دستیاب نہیں۔",
+    "reserveNow": "ابھی بک کریں",
+    "reserving": "بکنگ بنائی جا رہی ہے...",
+    "startDate": "شروع کی تاریخ",
+    "endDate": "اختتام کی تاریخ",
+    "loginToReserve": "بک کرنے کے لیے لاگ ان کریں",
+    "edit": "آئٹم ترمیم کریں",
+    "manuals": {
+      "title": "دستورالعمل",
+      "noManuals": "کوئی دستورالعمل نہیں۔",
+      "addManual": "دستورالعمل شامل کریں",
+      "label": "عنوان",
+      "labelPlaceholder": "مثلاً صارف دستورالعمل، حفاظتی گائیڈ",
+      "type": "قسم",
+      "typePdf": "PDF",
+      "typeLink": "بیرونی لنک",
+      "typeText": "متن",
+      "url": "URL",
+      "urlPlaceholder": "https://...",
+      "content": "مواد",
+      "contentPlaceholder": "دستورالعمل کا مواد درج کریں...",
+      "uploadPdf": "PDF اپلوڈ کریں",
+      "uploading": "اپلوڈ ہو رہا ہے...",
+      "add": "شامل کریں",
+      "adding": "شامل ہو رہا ہے...",
+      "delete": "حذف کریں",
+      "confirmDelete": "کیا آپ واقعی اس دستورالعمل کو حذف کرنا چاہتے ہیں؟",
+      "loginRequired": "دستورالعمل منظم کرنے کے لیے لاگ ان کریں۔"
+    },
+    "condition": {
+      "label": "حالت",
+      "unknown": "نامعلوم",
+      "good": "اچھا",
+      "fair": "ٹھیک",
+      "needsRepair": "مرمت کی ضرورت"
+    },
+    "images": {
+      "label": "تصاویر",
+      "primary": "بنیادی",
+      "addImages": "تصاویر شامل کریں",
+      "uploading": "اپلوڈ ہو رہا ہے...",
+      "delete": "تصویر حذف کریں",
+      "moveLeft": "بائیں منتقل کریں",
+      "moveRight": "دائیں منتقل کریں",
+      "hint": "پہلی تصویر بنیادی تصویر کے طور پر استعمال ہوتی ہے",
+      "filesSelected": "فائلیں منتخب",
+      "noFiles": "کوئی فائل منتخب نہیں"
+    },
+    "availability": {
+      "title": "دستیابی (اگلے {{days}} دن)"
+    },
+    "reserve": {
+      "title": "یہ آئٹم بک کریں",
+      "showCalendar": "کیلنڈر دکھائیں",
+      "hideCalendar": "کیلنڈر چھپائیں",
+      "loginRequired": "اس آئٹم کو بک کرنے کے لیے لاگ ان کریں۔",
+      "loginLink": "یہاں لاگ ان کریں",
+      "startDate": "شروع کی تاریخ",
+      "endDate": "اختتام کی تاریخ",
+      "creating": "بکنگ بنائی جا رہی ہے...",
+      "submit": "آئٹم بک کریں"
+    }
+  },
+  "dashboard": {
+    "title": "میرا ڈیش بورڈ",
+    "loading": "ڈیش بورڈ لوڈ ہو رہا ہے...",
+    "tabs": {
+      "list": "میرے آئٹم",
+      "calendar": "کیلنڈر"
+    },
+    "confirmCancel": "کیا آپ واقعی یہ بکنگ منسوخ کرنا چاہتے ہیں؟",
+    "confirmReturn": "آئٹم واپسی کی تصدیق کریں؟",
+    "currentLoans": "موجودہ قرضے",
+    "myReservations": "میری بکنگ",
+    "noLoans": "کوئی فعال قرضہ نہیں",
+    "noReservations": "کوئی فعال بکنگ نہیں",
+    "item": "آئٹم",
+    "checkedOut": "چیک آؤٹ",
+    "dueDate": "واپسی کی تاریخ",
+    "overdue": "میعاد ختم",
+    "return": "واپس کریں",
+    "cancel": "منسوخ کریں",
+    "actions": "اقدامات",
+    "loanHistory": "قرض کی تاریخ",
+    "loans": {
+      "title": "موجودہ قرضے",
+      "noLoans": "آپ کا کوئی فعال قرضہ نہیں",
+      "item": "آئٹم",
+      "checkedOut": "چیک آؤٹ",
+      "dueDate": "واپسی کی تاریخ",
+      "overdue": "میعاد ختم",
+      "return": "واپس کریں",
+      "extend": "بڑھائیں",
+      "extendPrompt": "کتنے دن قرضہ بڑھائیں؟ (1-30)",
+      "extendSuccess": "قرضہ {{days}} دن بڑھا دیا گیا",
+      "extendInvalid": "دن 1 سے 30 کے درمیان ہونے چاہئیں",
+      "actions": "اقدامات"
+    },
+    "reservations": {
+      "title": "میری بکنگ",
+      "noReservations": "آپ کی کوئی فعال بکنگ نہیں",
+      "item": "آئٹم",
+      "startDate": "شروع کی تاریخ",
+      "endDate": "اختتام کی تاریخ",
+      "status": "حالت",
+      "actions": "اقدامات",
+      "cancel": "منسوخ کریں",
+      "statusValues": {
+        "pending": "زیر التواء",
+        "confirmed": "تصدیق شدہ",
+        "cancelled": "منسوخ",
+        "completed": "مکمل"
+      }
+    },
+    "invite": {
+      "success": "خوش آمدید!",
+      "error": "غلط دعوت نامہ",
+      "joinedOrg": "آپ {{orgName}} میں شامل ہو گئے",
+      "redirecting": "کیٹلاگ پر منتقل ہو رہا ہے...",
+      "goHome": "کیٹلاگ پر جائیں",
+      "acceptFailed": "دعوت نامہ قبول کرنے میں ناکامی"
+    },
+    "history": {
+      "title": "قرض کی تاریخ",
+      "noHistory": "کوئی پرانا قرضہ نہیں",
+      "returned": "واپس کیا گیا",
+      "damage": "نقصان کا نوٹ"
+    },
+    "pendingItems": {
+      "title": "میرے جمع کردہ آئٹم",
+      "item": "آئٹم",
+      "submitted": "جمع کی گئی",
+      "status": "حالت",
+      "note": "نوٹ",
+      "statusPending": "منظوری کا انتظار",
+      "statusRejected": "مسترد"
+    },
+    "membership": {
+      "title": "رکنیت کی معلومات",
+      "organization": "تنظیم",
+      "role": "کردار",
+      "joined": "شامل ہوئے",
+      "status": "حالت",
+      "roles": {
+        "member": "رکن",
+        "manager": "منیجر",
+        "admin": "ایڈمن",
+        "owner": "مالک"
+      },
+      "statuses": {
+        "active": "فعال",
+        "pending": "زیر التواء",
+        "suspended": "معطل"
+      }
+    }
+  },
+  "admin": {
+    "title": "ایڈمن ڈیش بورڈ",
+    "loading": "لوڈ ہو رہا ہے...",
+    "stats": {
+      "totalItems": "کل آئٹم",
+      "available": "دستیاب",
+      "activeLoans": "فعال قرضے",
+      "overdue": "میعاد ختم"
+    },
+    "tabs": {
+      "loans": "قرضے",
+      "reservations": "بکنگ",
+      "items": "آئٹم",
+      "users": "صارفین",
+      "categories": "زمرہ جات",
+      "locations": "مقامات",
+      "organization": "تنظیم",
+      "groups": "گروپ"
+    },
+    "reservations": {
+      "title": "بکنگ",
+      "none": "کوئی فعال بکنگ نہیں",
+      "item": "آئٹم",
+      "user": "صارف",
+      "period": "مدت",
+      "status": "حالت",
+      "actions": "اقدامات",
+      "confirm": "تصدیق کریں",
+      "cancel": "منسوخ کریں",
+      "confirmed": "بکنگ تصدیق شدہ",
+      "confirmFailed": "بکنگ تصدیق کرنے میں ناکامی",
+      "cancelFailed": "بکنگ منسوخ کرنے میں ناکامی",
+      "confirmCancel": "یہ بکنگ منسوخ کریں؟",
+      "statusPending": "زیر التواء",
+      "statusConfirmed": "تصدیق شدہ"
+    },
+    "locations": {
+      "title": "مقامات",
+      "addLocation": "مقام شامل کریں",
+      "editLocation": "مقام ترمیم کریں",
+      "name": "نام",
+      "address": "پتہ",
+      "description": "تفصیل",
+      "actions": "اقدامات",
+      "edit": "ترمیم کریں",
+      "delete": "حذف کریں",
+      "create": "مقام بنائیں",
+      "update": "مقام اپڈیٹ کریں",
+      "confirmDelete": "کیا آپ واقعی اس مقام کو حذف کرنا چاہتے ہیں؟",
+      "noLocations": "ابھی تک کوئی مقام نہیں بنایا گیا۔"
+    },
+    "organization": {
+      "title": "تنظیم کی ترتیبات",
+      "name": "تنظیم کا نام",
+      "description": "تفصیل",
+      "loanDurationDays": "ڈیفالٹ قرض کی مدت (دن)",
+      "loanDurationHint": "نئے قرضوں کے لیے ڈیفالٹ دنوں کی تعداد",
+      "save": "ترتیبات محفوظ کریں",
+      "saving": "محفوظ ہو رہا ہے...",
+      "saved": "تنظیم کی ترتیبات محفوظ ہو گئیں",
+      "saveFailed": "ترتیبات محفوظ کرنے میں ناکامی"
+    },
+    "loans": {
+      "title": "فعال قرضے",
+      "checkoutItem": "آئٹم چیک آؤٹ کریں",
+      "item": "آئٹم",
+      "user": "صارف",
+      "checkedOut": "چیک آؤٹ",
+      "dueDate": "واپسی کی تاریخ",
+      "actions": "اقدامات",
+      "checkin": "چیک ان",
+      "checkinTitle": "آئٹم واپس کریں",
+      "confirmCheckin": "آئٹم چیک ان کی تصدیق کریں؟",
+      "damageNote": "نقصان کا نوٹ (اختیاری)",
+      "damageNotePlaceholder": "کسی نقصان کو بیان کریں...",
+      "filterStatus": "حالت سے فلٹر کریں",
+      "statusAll": "تمام",
+      "statusActive": "فعال",
+      "statusReturned": "واپس کیا گیا",
+      "statusOverdue": "میعاد ختم"
+    },
+    "items": {
+      "title": "آئٹم",
+      "addItem": "آئٹم شامل کریں",
+      "newItem": "نیا آئٹم شامل کریں",
+      "name": "نام",
+      "category": "زمرہ",
+      "description": "تفصیل",
+      "status": "حالت",
+      "approvalStatus": "منظوری",
+      "actions": "اقدامات",
+      "selectCategory": "زمرہ منتخب کریں",
+      "edit": "ترمیم کریں",
+      "delete": "حذف کریں",
+      "approve": "منظور کریں",
+      "reject": "مسترد کریں",
+      "confirmDelete": "کیا آپ واقعی اس آئٹم کو حذف کرنا چاہتے ہیں؟",
+      "confirmApprove": "یہ آئٹم منظور کریں؟",
+      "rejectNote": "مسترد کرنے کی وجہ (اختیاری)",
+      "filterCategory": "زمرے سے فلٹر کریں",
+      "filterStatus": "حالت سے فلٹر کریں",
+      "categoryAll": "تمام زمرے",
+      "statusAll": "تمام حالتیں",
+      "approvalValues": {
+        "PENDING": "زیر التواء",
+        "APPROVED": "منظور شدہ",
+        "REJECTED": "مسترد"
+      }
+    },
+    "groups": {
+      "title": "رکن گروپ",
+      "addGroup": "گروپ شامل کریں",
+      "editGroup": "گروپ ترمیم کریں",
+      "name": "نام",
+      "description": "تفصیل",
+      "members": "اراکین",
+      "actions": "اقدامات",
+      "edit": "ترمیم کریں",
+      "delete": "حذف کریں",
+      "create": "گروپ بنائیں",
+      "update": "گروپ اپڈیٹ کریں",
+      "confirmDelete": "گروپ حذف کریں",
+      "confirmDeleteMessage": "کیا آپ واقعی اس گروپ کو حذف کرنا چاہتے ہیں؟ اراکین کو تنظیم سے نہیں ہٹایا جائے گا۔",
+      "cancel": "منسوخ کریں",
+      "noGroups": "ابھی تک کوئی گروپ نہیں بنایا گیا۔",
+      "createSuccess": "گروپ بنایا گیا",
+      "createFailed": "گروپ بنانے میں ناکامی",
+      "updateSuccess": "گروپ اپڈیٹ ہو گیا",
+      "updateFailed": "گروپ اپڈیٹ کرنے میں ناکامی",
+      "deleteSuccess": "گروپ حذف ہو گیا",
+      "deleteFailed": "گروپ حذف کرنے میں ناکامی"
+    },
+    "users": {
+      "title": "صارفین",
+      "name": "نام",
+      "email": "ای میل",
+      "role": "کردار",
+      "joined": "شامل ہوئے",
+      "actions": "اقدامات",
+      "addUser": "صارف شامل کریں",
+      "password": "پاسورڈ",
+      "create": "صارف بنائیں",
+      "addSuccess": "صارف بنایا گیا",
+      "addError": "صارف نہیں بنایا جا سکا",
+      "confirmRoleChange": "اس صارف کا کردار تبدیل کریں؟",
+      "roleChanged": "کردار اپڈیٹ ہو گیا",
+      "roleChangeFailed": "کردار اپڈیٹ کرنے میں ناکامی",
+      "resetPassword": "پاسورڈ ری سیٹ کریں",
+      "resetPasswordPrompt": "نیا پاسورڈ درج کریں (کم از کم 6 حروف):",
+      "passwordReset": "پاسورڈ کامیابی سے ری سیٹ ہو گیا",
+      "passwordResetFailed": "پاسورڈ ری سیٹ کرنے میں ناکامی",
+      "passwordTooShort": "پاسورڈ کم از کم 6 حروف کا ہونا چاہیے",
+      "edit": "ترمیم کریں",
+      "editUser": "صارف ترمیم کریں",
+      "newPassword": "نیا پاسورڈ",
+      "removeFromOrg": "تنظیم سے ہٹائیں",
+      "confirmRemove": "اس صارف کو تنظیم سے ہٹائیں؟",
+      "removed": "صارف تنظیم سے ہٹا دیا گیا",
+      "removeFailed": "صارف ہٹانے میں ناکامی"
+    },
+    "invitations": {
+      "title": "زیر التواء دعوت نامے",
+      "inviteButton": "رکن کو مدعو کریں",
+      "email": "ای میل",
+      "role": "کردار",
+      "status": "حالت",
+      "expires": "میعاد",
+      "send": "دعوت نامہ بھیجیں",
+      "noInvitations": "کوئی زیر التواء دعوت نامہ نہیں",
+      "accepted": "قبول شدہ",
+      "expired": "میعاد ختم",
+      "pending": "زیر التواء",
+      "linkGenerated": "دعوت نامے کا لنک بنایا گیا",
+      "copy": "کاپی کریں",
+      "linkCopied": "لنک کلپ بورڈ میں کاپی ہو گیا",
+      "sendSuccess": "دعوت نامہ بھیجا گیا",
+      "sendFailed": "دعوت نامہ بھیجنے میں ناکامی"
+    },
+    "checkout": {
+      "title": "آئٹم چیک آؤٹ کریں",
+      "itemLabel": "آئٹم",
+      "userLabel": "صارف",
+      "dueDate": "واپسی کی تاریخ",
+      "selectItem": "ایک آئٹم منتخب کریں",
+      "selectUser": "ایک صارف منتخب کریں",
+      "submit": "چیک آؤٹ",
+      "cancel": "منسوخ کریں"
+    },
+    "categories": {
+      "title": "زمرہ جات",
+      "addCategory": "زمرہ شامل کریں",
+      "editCategory": "زمرہ ترمیم کریں",
+      "name": "نام",
+      "description": "تفصیل",
+      "itemCount": "آئٹم",
+      "actions": "اقدامات",
+      "edit": "ترمیم کریں",
+      "delete": "حذف کریں",
+      "create": "زمرہ بنائیں",
+      "update": "زمرہ اپڈیٹ کریں",
+      "confirmDelete": "کیا آپ واقعی اس زمرے کو حذف کرنا چاہتے ہیں؟ اگر زمرے میں آئٹم ہیں تو یہ ناکام ہو جائے گا۔"
+    },
+    "userRole": {
+      "member": "رکن",
+      "orgAdmin": "تنظیم ایڈمن",
+      "admin": "پلیٹ فارم ایڈمن"
+    },
+    "organizations": {
+      "title": "تنظیمیں",
+      "createButton": "تنظیم بنائیں",
+      "type": "قسم",
+      "editModal": {
+        "title": "تنظیم ترمیم کریں"
+      },
+      "createModal": {
+        "title": "تنظیم بنائیں"
+      },
+      "form": {
+        "name": "نام",
+        "type": "قسم",
+        "slug": "سلگ",
+        "description": "تفصیل",
+        "save": "محفوظ کریں",
+        "create": "بنائیں",
+        "cancel": "منسوخ کریں"
+      },
+      "table": {
+        "name": "نام",
+        "members": "اراکین",
+        "items": "آئٹم",
+        "actions": "اقدامات",
+        "view": "دیکھیں",
+        "edit": "ترمیم کریں",
+        "delete": "حذف کریں"
+      },
+      "details": {
+        "slug": "سلگ",
+        "description": "تفصیل",
+        "items": "آئٹم",
+        "members": "اراکین",
+        "role": "کردار"
+      }
+    }
+  },
+  "platformAdmin": {
+    "title": "پلیٹ فارم ایڈمن جائزہ",
+    "tabs": {
+      "organizations": "تنظیمیں",
+      "users": "صارفین",
+      "waiting": "انتظاری کمرہ",
+      "emails": "ای میل لاگ"
+    },
+    "waiting": {
+      "title": "انتظاری کمرہ",
+      "name": "نام",
+      "email": "ای میل",
+      "registered": "رجسٹرڈ",
+      "actions": "اقدامات",
+      "noUsers": "کوئی صارف تنظیم کی تفویض کے انتظار میں نہیں",
+      "selectOrg": "تنظیم منتخب کریں...",
+      "assign": "تفویض کریں",
+      "assignToOrg": "تنظیم کو تفویض کریں"
+    },
+    "stats": {
+      "totalOrganizations": "کل تنظیمیں",
+      "totalUsers": "کل صارفین",
+      "totalItems": "کل آئٹم"
+    },
+    "users": {
+      "title": "تمام صارفین",
+      "table": {
+        "name": "نام",
+        "email": "ای میل",
+        "role": "کردار",
+        "organizations": "تنظیمیں",
+        "joined": "شامل ہوئے",
+        "actions": "اقدامات",
+        "edit": "ترمیم کریں",
+        "none": "کوئی نہیں"
+      }
+    },
+    "editUser": {
+      "title": "صارف ترمیم کریں",
+      "name": "نام",
+      "email": "ای میل",
+      "role": "کردار",
+      "selectRole": "کردار منتخب کریں...",
+      "organizations": "تنظیمیں",
+      "noOrganizations": "کسی تنظیم کا رکن نہیں",
+      "remove": "ہٹائیں",
+      "addToOrg": "تنظیم میں شامل کریں...",
+      "add": "شامل کریں",
+      "save": "تبدیلیاں محفوظ کریں",
+      "cancel": "منسوخ کریں",
+      "newPassword": "نیا پاسورڈ",
+      "resetPassword": "پاسورڈ ری سیٹ کریں",
+      "deleteUser": "صارف حذف کریں",
+      "confirmDelete": "یہ صارف مستقل طور پر حذف کریں؟ یہ واپس نہیں ہو سکتا۔",
+      "deleteFailed": "صارف حذف کرنے میں ناکامی"
+    },
+    "deleteOrg": {
+      "title": "تنظیم حذف کریں",
+      "confirm": "کیا آپ واقعی اس تنظیم کو حذف کرنا چاہتے ہیں؟ یہ عمل واپس نہیں ہو سکتا۔ یقینی بنائیں کہ تنظیم میں کوئی آئٹم نہ ہو۔",
+      "delete": "حذف کریں",
+      "cancel": "منسوخ کریں"
+    },
+    "orgDetails": {
+      "memberRole": "کردار"
+    }
+  },
+  "comments": {
+    "title": "تبصرے",
+    "placeholder": "تبصرہ شامل کریں...",
+    "submit": "تبصرہ پوسٹ کریں",
+    "submitting": "پوسٹ ہو رہا ہے...",
+    "noComments": "ابھی تک کوئی تبصرہ نہیں۔ پہلا تبصرہ کریں!",
+    "loginRequired": "تبصرہ چھوڑنے کے لیے لاگ ان کریں۔",
+    "confirmDelete": "کیا آپ واقعی یہ تبصرہ حذف کرنا چاہتے ہیں؟",
+    "edited": "ترمیم شدہ",
+    "justNow": "ابھی ابھی",
+    "minutesAgo": "{{count}} منٹ پہلے",
+    "minutesAgo_plural": "{{count}} منٹ پہلے",
+    "hoursAgo": "{{count}} گھنٹہ پہلے",
+    "hoursAgo_plural": "{{count}} گھنٹے پہلے",
+    "daysAgo": "{{count}} دن پہلے",
+    "daysAgo_plural": "{{count}} دن پہلے"
+  },
+  "reviews": {
+    "title": "جائزے",
+    "loading": "جائزے لوڈ ہو رہے ہیں...",
+    "writeReview": "جائزہ لکھیں",
+    "yourRating": "آپ کی درجہ بندی",
+    "comment": "تبصرہ",
+    "optional": "اختیاری",
+    "commentPlaceholder": "اس آئٹم کے ساتھ اپنا تجربہ شیئر کریں...",
+    "submit": "جائزہ جمع کریں",
+    "submitting": "جمع ہو رہا ہے...",
+    "yourReview": "آپ کا جائزہ",
+    "allReviews": "تمام جائزے",
+    "noReviews": "ابھی تک کوئی جائزہ نہیں۔ پہلا جائزہ لکھیں!",
+    "anonymous": "گمنام",
+    "confirmDelete": "کیا آپ واقعی اپنا جائزہ حذف کرنا چاہتے ہیں؟",
+    "totalCount": "{{count}} جائزہ",
+    "totalCount_plural": "{{count}} جائزے",
+    "errors": {
+      "ratingRequired": "براہ کرم درجہ بندی منتخب کریں",
+      "submitFailed": "جائزہ جمع کرنے میں ناکامی",
+      "deleteFailed": "جائزہ حذف کرنے میں ناکامی"
+    }
+  },
+  "addItem": {
+    "title": "نیا آئٹم شامل کریں",
+    "description": "اپنی کمیونٹی کے ساتھ ایک ٹول یا آئٹم شیئر کریں",
+    "name": "آئٹم کا نام",
+    "namePlaceholder": "مثلاً الیکٹرک ڈرل، کیمپنگ ٹینٹ وغیرہ",
+    "category": "زمرہ",
+    "selectCategory": "زمرہ منتخب کریں",
+    "location": "مقام (اختیاری)",
+    "selectLocation": "مقام منتخب کریں",
+    "noLocation": "کوئی مقام نہیں",
+    "descriptionLabel": "تفصیل",
+    "descriptionPlaceholder": "آئٹم، اس کی حالت اور کوئی اہم تفصیلات بیان کریں...",
+    "imageUrl": "تصویر URL (اختیاری)",
+    "imageUrlPlaceholder": "https://example.com/image.jpg",
+    "imageUrlHint": "آئٹم کی تصویر کا لنک دیں",
+    "submit": "آئٹم شامل کریں",
+    "creating": "شامل ہو رہا ہے...",
+    "selectOrganization": "پہلے ایک تنظیم منتخب کریں",
+    "loadCategoriesError": "زمرے لوڈ کرنے میں ناکامی",
+    "manualLabel": "صارف دستورالعمل (PDF، اختیاری)",
+    "manualChooseFile": "PDF فائل منتخب کریں",
+    "manualNoFile": "کوئی فائل منتخب نہیں",
+    "manualHint": "اس آئٹم کے لیے PDF صارف دستورالعمل اپلوڈ کریں",
+    "uploadingManual": "PDF اپلوڈ ہو رہا ہے..."
+  },
+  "editItem": {
+    "title": "آئٹم ترمیم کریں",
+    "description": "آئٹم کی تفصیلات اپڈیٹ کریں",
+    "name": "آئٹم کا نام",
+    "category": "زمرہ",
+    "selectCategory": "زمرہ منتخب کریں",
+    "location": "مقام",
+    "selectLocation": "مقام منتخب کریں",
+    "noLocation": "کوئی مقام نہیں",
+    "status": "حالت",
+    "descriptionLabel": "تفصیل",
+    "descriptionPlaceholder": "آئٹم، اس کی حالت اور کوئی اہم تفصیلات بیان کریں...",
+    "imageUrl": "تصویر",
+    "submit": "تبدیلیاں محفوظ کریں",
+    "updating": "اپڈیٹ ہو رہا ہے...",
+    "selectOrganization": "پہلے ایک تنظیم منتخب کریں",
+    "loadError": "آئٹم لوڈ کرنے میں ناکامی"
+  },
+  "welcome": {
+    "title": "ٹنگ میں خوش آمدید!",
+    "subtitle": "ادھار لینے کے لیے آئٹم تلاش کرنے کے لیے کیٹلاگ دیکھیں، یا اپنا شامل کریں۔",
+    "browseCatalog": "کیٹلاگ دیکھیں",
+    "dismiss": "برخاست"
+  },
+  "common": {
+    "loading": "لوڈ ہو رہا ہے...",
+    "error": "خطا",
+    "success": "کامیابی",
+    "close": "بند کریں",
+    "save": "محفوظ کریں",
+    "delete": "حذف کریں",
+    "edit": "ترمیم کریں",
+    "cancel": "منسوخ کریں",
+    "confirm": "تصدیق کریں",
+    "yes": "ہاں",
+    "no": "نہیں"
+  },
+  "errors": {
+    "loginFailed": "لاگ ان ناکام",
+    "registerFailed": "رجسٹریشن ناکام",
+    "invalidCredentials": "غلط اسناد",
+    "required": "یہ فیلڈ ضروری ہے",
+    "emailInvalid": "غلط ای میل پتہ",
+    "reservationFailed": "بکنگ بنانے میں ناکامی",
+    "cancelFailed": "بکنگ منسوخ کرنے میں ناکامی",
+    "returnFailed": "آئٹم واپس کرنے میں ناکامی",
+    "extendFailed": "قرضہ بڑھانے میں ناکامی",
+    "commentFailed": "تبصرہ پوسٹ کرنے میں ناکامی",
+    "updateCommentFailed": "تبصرہ اپڈیٹ کرنے میں ناکامی",
+    "deleteCommentFailed": "تبصرہ حذف کرنے میں ناکامی",
+    "createItemFailed": "آئٹم بنانے میں ناکامی",
+    "updateItemFailed": "آئٹم اپڈیٹ کرنے میں ناکامی"
+  },
+  "messages": {
+    "reservationSuccess": "بکنگ کامیابی سے بنائی گئی!",
+    "reservationCancelled": "بکنگ منسوخ",
+    "itemReturned": "آئٹم کامیابی سے واپس ہو گیا",
+    "confirmCancel": "کیا آپ واقعی یہ بکنگ منسوخ کرنا چاہتے ہیں؟",
+    "confirmReturn": "آئٹم واپسی کی تصدیق کریں؟",
+    "confirmDelete": "کیا آپ واقعی اس آئٹم کو حذف کرنا چاہتے ہیں؟"
+  },
+  "calendar": {
+    "loading": "دستیابی لوڈ ہو رہی ہے...",
+    "availableNow": "ابھی دستیاب",
+    "nextAvailable": "اگلی دستیابی: {{date}}",
+    "fullyBooked": "مکمل بک ({{days}} دن)",
+    "nextDays": "اگلے {{days}} دن",
+    "today": "آج",
+    "available": "دستیاب",
+    "reserved": "بک شدہ",
+    "checkedOut": "چیک آؤٹ",
+    "selected": "منتخب",
+    "checkingAvailability": "دستیابی جانچ رہا ہے...",
+    "availableForDates": "منتخب تاریخوں کے لیے دستیاب",
+    "notAvailable": "دستیاب نہیں - موجودہ بکنگ یا قرضے سے ٹکراؤ",
+    "clickToStart": "شروع کرنے کے لیے ایک تاریخ پر کلک کریں، پھر انتخاب مکمل کرنے کے لیے دوسری تاریخ پر کلک کریں",
+    "grayedOutInfo": "سرمئی تاریخیں پہلے سے بک شدہ یا چیک آؤٹ ہیں",
+    "maxBooking": "زیادہ سے زیادہ بکنگ: {{days}} دن آگے",
+    "completeSelection": "اپنا انتخاب مکمل کرنے کے لیے کسی اور دستیاب تاریخ پر کلک کریں",
+    "weekdays": {
+      "sun": "اتوار",
+      "mon": "پیر",
+      "tue": "منگل",
+      "wed": "بدھ",
+      "thu": "جمعرات",
+      "fri": "جمعہ",
+      "sat": "ہفتہ"
+    },
+    "legend": {
+      "available": "دستیاب",
+      "reserved": "بک شدہ",
+      "checkedOut": "چیک آؤٹ",
+      "selected": "منتخب",
+      "today": "آج",
+      "confirmed": "تصدیق شدہ بکنگ",
+      "pending": "زیر التواء بکنگ",
+      "loan": "فعال قرضہ"
+    }
+  },
+  "tags": {
+    "label": "ٹیگ",
+    "placeholder": "ٹیگ شامل کریں...",
+    "hint": "ٹیگ شامل کرنے کے لیے Enter یا کوما دبائیں",
+    "remove": "ٹیگ {{tag}} ہٹائیں"
+  },
+  "notFound": {
+    "title": "اوہ!",
+    "message": "لگتا ہے یہ ٹول بھٹک گیا ہے۔ جو صفحہ آپ ڈھونڈ رہے ہیں وہ موجود نہیں۔",
+    "backToCatalog": "کیٹلاگ پر واپس جائیں"
+  },
+  "organizationType": {
+    "neighborhood": "محلہ",
+    "school": "اسکول / میکر اسپیس",
+    "company": "کمپنی / ورک شاپ",
+    "friends": "دوستوں کا گروپ",
+    "noType": "— کوئی قسم نہیں —",
+    "suggestions": "تجاویز:"
+  },
+  "home": {
+    "hero": {
+      "byline": "ہاوکیتو اور پرنسڈال ویل",
+      "title": "جو چاہیں حاصل کریں — بغیر مالکیت کے",
+      "subtitle": "ٹنگ بائبلیوتیکیت HPV کی ہاوکیتو اور پرنسڈال کے اراکین کے لیے ادھار سروس ہے۔ ضرورت پڑنے پر سامان ادھار لیں — بالکل مفت۔",
+      "browseCatalog": "کیٹلاگ دیکھیں",
+      "login": "لاگ ان"
+    },
+    "membersOnly": {
+      "notice": "یہ سروس فی الحال صرف HPV اراکین کے لیے ہے۔ ہم غیر اراکین کے لیے حل پر غور کر رہے ہیں۔ ابھی تک رکن نہیں؟ یہاں سائن اپ کریں"
+    },
+    "available": {
+      "title": "پہلے سے دستیاب",
+      "subtitle": "اور ہم مزید شامل کرتے رہتے ہیں — ٹولز، کرسیاں، میزیں، PA سسٹم اور لائٹنگ رگ۔",
+      "viewAll": "مکمل کیٹلاگ دیکھیں",
+      "items": {
+        "tents": { "icon": "⛺", "name": "گارڈن ٹینٹ", "detail": "2 عدد، 3×3 میٹر" },
+        "speakers": { "icon": "🔊", "name": "اسپیکر", "detail": "2× JBL پارٹی باکس 320" },
+        "smoke": { "icon": "💨", "name": "دھواں مشین", "detail": "تقریبات کے لیے" },
+        "projector": { "icon": "📽️", "name": "پروجیکٹر", "detail": "طاقتور، جلد آ رہا ہے" }
+      }
+    },
+    "howItWorks": {
+      "title": "یہ کیسے کام کرتا ہے",
+      "step1": {
+        "title": "جو چاہیں تلاش کریں",
+        "description": "کیٹلاگ دیکھیں اور جانیں کیا دستیاب ہے۔"
+      },
+      "step2": {
+        "title": "بک کریں",
+        "description": "تاریخیں منتخب کریں اور آن لائن بک کریں۔ کوئی فون کال نہیں۔"
+      },
+      "step3": {
+        "title": "ادھار لیں اور واپس کریں",
+        "description": "آئٹم اٹھائیں، استعمال کریں، اور مکمل ہونے پر واپس کریں۔"
+      }
+    },
+    "lendOut": {
+      "title": "اپنی چیزیں ادھار دیں",
+      "description": "آپ اپنے آئٹم بھی لائبریری میں شامل کر سکتے ہیں اور انہیں دیگر HPV اراکین کے لیے دستیاب کر سکتے ہیں۔"
+    },
+    "requestTip": {
+      "title": "کچھ غائب ہے؟",
+      "description": "ہمیں ایک اشارہ دیں کہ آپ کیا چاہتے ہیں کہ لائبریری حاصل کرے۔ ہم اراکین کی ضروریات سنتے ہیں۔"
+    },
+    "about": {
+      "title": "HPV اور ٹنگ بائبلیوتیکیت کے بارے میں",
+      "description": "ہاوکیتو اور پرنسڈال ویل (HPV) اپنے اراکین کے لیے ایک ادھار لائبریری بنا رہا ہے — کمیونٹی ہاؤس کی فروخت سے حاصل رقم سے۔ کھیلوں کے سامان کے لیے Bua کی طرح، لیکن باقی سب چیزوں کے لیے۔ جوانوں اور بوڑھوں کے لیے، چاہے آپ اپارٹمنٹ، گھر یا ٹاؤن ہاؤس میں رہتے ہوں۔",
+      "readMore": "hpvel.no پر پروجیکٹ کے بارے میں مزید پڑھیں"
+    },
+    "cta": {
+      "title": "کیا آپ HPV رکن ہیں؟",
+      "description": "ادھار لائبریری تک رسائی حاصل کرنے کے لیے یہاں رجسٹر کریں۔",
+      "register": "رجسٹر کریں",
+      "login": "لاگ ان",
+      "notMember": "ابھی تک HPV رکن نہیں؟ یہاں سائن اپ کریں"
+    },
+    "nav": {
+      "home": "ہوم"
+    }
+  }
+}

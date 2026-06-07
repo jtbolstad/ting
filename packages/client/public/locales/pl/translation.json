@@ -1,0 +1,863 @@
+{
+  "app": {
+    "title": "Tingbiblioteket",
+    "subtitle": "Biblioteka Pożyczalna Społeczności"
+  },
+  "nav": {
+    "catalog": "Katalog",
+    "addItem": "Dodaj Przedmiot",
+    "dashboard": "Mój Panel",
+    "admin": "Admin",
+    "terms": "Regulamin",
+    "login": "Zaloguj się",
+    "register": "Zarejestruj się",
+    "logout": "Wyloguj się",
+    "hello": "Cześć, {{name}}",
+    "profile": "Profil"
+  },
+  "profile": {
+    "title": "Mój Profil",
+    "userInfo": "Informacje o Użytkowniku",
+    "organization": "Organizacja",
+    "terms": "Regulamin",
+    "changeName": "Zmień imię",
+    "save": "Zapisz",
+    "saving": "Zapisywanie...",
+    "nameUpdated": "Imię zaktualizowane",
+    "nameUpdateFailed": "Nie można zaktualizować imienia",
+    "changePassword": "Zmień hasło",
+    "currentPassword": "Aktualne hasło",
+    "newPassword": "Nowe hasło",
+    "confirmPassword": "Potwierdź nowe hasło",
+    "passwordChanged": "Hasło zmienione",
+    "passwordChangeFailed": "Nie można zmienić hasła",
+    "passwordMismatch": "Hasła nie są zgodne",
+    "activity": "Moja aktywność",
+    "activeLoans": "Aktywne wypożyczenia",
+    "upcomingReservations": "Nadchodzące rezerwacje",
+    "noLoans": "Brak aktywnych wypożyczeń",
+    "noReservations": "Brak nadchodzących rezerwacji",
+    "dueDate": "Termin zwrotu",
+    "period": "Okres",
+    "inviteMembers": "Zaproś członków",
+    "inviteEmailPlaceholder": "Wprowadź adres e-mail...",
+    "roleMember": "Członek",
+    "roleManager": "Menedżer",
+    "roleAdmin": "Administrator",
+    "sendInvite": "Wyślij zaproszenie",
+    "sending": "Wysyłanie...",
+    "inviteSent": "Zaproszenie wysłane",
+    "inviteFailed": "Nie można wysłać zaproszenia",
+    "alreadyMember": "Ten użytkownik jest już członkiem",
+    "inviteLink": "Link zaproszenia",
+    "copyLink": "Kopiuj",
+    "currentOrganization": "Twoja organizacja",
+    "yourRole": "Twoja rola",
+    "noOrganization": "Nie powiązany z żadną organizacją"
+  },
+  "auth": {
+    "loginTitle": "Zaloguj się do Ting",
+    "registerTitle": "Zarejestruj się w Ting",
+    "email": "E-mail",
+    "password": "Hasło",
+    "name": "Imię",
+    "loginButton": "Zaloguj się",
+    "registerButton": "Zarejestruj się",
+    "loggingIn": "Logowanie...",
+    "registering": "Rejestrowanie...",
+    "alreadyHaveAccount": "Masz już konto?",
+    "dontHaveAccount": "Nie masz konta?",
+    "loginHere": "Zaloguj się tutaj",
+    "registerHere": "Zarejestruj się tutaj",
+    "login": {
+      "title": "Zaloguj się do Ting",
+      "email": "E-mail",
+      "password": "Hasło",
+      "loggingIn": "Logowanie...",
+      "submit": "Zaloguj się",
+      "noAccount": "Nie masz konta?",
+      "registerLink": "Zarejestruj się tutaj",
+      "forgotPassword": "Zapomniałeś hasła?"
+    },
+    "forgotPassword": {
+      "title": "Resetowanie Hasła",
+      "description": "Podaj swój adres e-mail, a wyślemy Ci link do zresetowania hasła.",
+      "email": "E-mail",
+      "sending": "Wysyłanie...",
+      "submit": "Wyślij Link",
+      "backToLogin": "Wróć do logowania",
+      "error": "Nie można wysłać linku resetowania"
+    },
+    "resetPassword": {
+      "title": "Ustaw Nowe Hasło",
+      "newPassword": "Nowe Hasło",
+      "confirmPassword": "Potwierdź Hasło",
+      "resetting": "Resetowanie...",
+      "submit": "Resetuj Hasło",
+      "backToLogin": "Wróć do logowania",
+      "passwordMismatch": "Hasła nie są zgodne",
+      "passwordTooShort": "Hasło musi mieć co najmniej 6 znaków",
+      "error": "Nie można zresetować hasła",
+      "invalidToken": "Nieprawidłowy Link Resetowania",
+      "invalidTokenDescription": "Ten link resetowania hasła jest nieprawidłowy lub wygasł.",
+      "requestNew": "Poproś o nowy link"
+    },
+    "register": {
+      "title": "Zarejestruj się w Ting",
+      "name": "Imię",
+      "email": "E-mail",
+      "password": "Hasło",
+      "registering": "Rejestrowanie...",
+      "submit": "Zarejestruj się",
+      "hasAccount": "Masz już konto?",
+      "loginLink": "Zaloguj się tutaj",
+      "acceptTerms": "Przeczytałem i akceptuję",
+      "termsLink": "Regulamin",
+      "termsRequired": "Musisz zaakceptować regulamin, aby się zarejestrować"
+    }
+  },
+  "catalog": {
+    "title": "Katalog",
+    "searchPlaceholder": "Szukaj przedmiotów...",
+    "search": "Szukaj",
+    "searchButton": "Szukaj",
+    "categories": "Kategorie",
+    "allItems": "Wszystkie Przedmioty",
+    "loading": "Ładowanie katalogu...",
+    "noItems": "Nie znaleziono przedmiotów",
+    "status": {
+      "available": "Dostępny",
+      "checkedOut": "Wypożyczony",
+      "maintenance": "W Naprawie",
+      "retired": "Wycofany"
+    },
+    "availability": {
+      "availableNow": "Dostępny teraz",
+      "nextAvailable": "Następna dostępność: {{date}}"
+    }
+  },
+  "categories": {
+    "Power Tools": "Narzędzia Elektryczne",
+    "Hand Tools": "Narzędzia Ręczne",
+    "Gardening": "Ogrodnictwo",
+    "Camping & Outdoor": "Camping i Outdoor",
+    "Sports Equipment": "Sprzęt Sportowy",
+    "Electronics": "Elektronika",
+    "Party & Events": "Imprezy i Wydarzenia",
+    "Kitchen Appliances": "Sprzęt Kuchenny"
+  },
+  "item": {
+    "details": "Szczegóły Przedmiotu",
+    "description": "Opis",
+    "category": "Kategoria",
+    "status": "Status",
+    "location": "Lokalizacja",
+    "loading": "Ładowanie przedmiotu...",
+    "notFound": "Nie znaleziono przedmiotu",
+    "noDescription": "Brak opisu.",
+    "reserveNow": "Zarezerwuj Teraz",
+    "reserving": "Tworzenie rezerwacji...",
+    "startDate": "Data Rozpoczęcia",
+    "endDate": "Data Zakończenia",
+    "loginToReserve": "Zaloguj się, aby zarezerwować ten przedmiot",
+    "edit": "Edytuj Przedmiot",
+    "manuals": {
+      "title": "Instrukcje",
+      "noManuals": "Brak instrukcji.",
+      "addManual": "Dodaj Instrukcję",
+      "label": "Tytuł",
+      "labelPlaceholder": "np. Instrukcja obsługi, Poradnik bezpieczeństwa",
+      "type": "Typ",
+      "typePdf": "PDF",
+      "typeLink": "Link zewnętrzny",
+      "typeText": "Tekst",
+      "url": "URL",
+      "urlPlaceholder": "https://...",
+      "content": "Treść",
+      "contentPlaceholder": "Wprowadź treść instrukcji...",
+      "uploadPdf": "Prześlij PDF",
+      "uploading": "Przesyłanie...",
+      "add": "Dodaj",
+      "adding": "Dodawanie...",
+      "delete": "Usuń",
+      "confirmDelete": "Czy na pewno chcesz usunąć tę instrukcję?",
+      "loginRequired": "Zaloguj się, aby zarządzać instrukcjami."
+    },
+    "condition": {
+      "label": "Stan",
+      "unknown": "Nieznany",
+      "good": "Dobry",
+      "fair": "Dostateczny",
+      "needsRepair": "Wymaga Naprawy"
+    },
+    "images": {
+      "label": "Zdjęcia",
+      "primary": "Główne",
+      "addImages": "Dodaj zdjęcia",
+      "uploading": "Przesyłanie...",
+      "delete": "Usuń zdjęcie",
+      "moveLeft": "Przesuń w lewo",
+      "moveRight": "Przesuń w prawo",
+      "hint": "Pierwsze zdjęcie jest używane jako główny obraz",
+      "filesSelected": "pliki wybrane",
+      "noFiles": "Nie wybrano plików"
+    },
+    "availability": {
+      "title": "Dostępność (Następne {{days}} Dni)"
+    },
+    "reserve": {
+      "title": "Zarezerwuj Ten Przedmiot",
+      "showCalendar": "Pokaż Kalendarz",
+      "hideCalendar": "Ukryj Kalendarz",
+      "loginRequired": "Zaloguj się, aby zarezerwować ten przedmiot.",
+      "loginLink": "Zaloguj się tutaj",
+      "startDate": "Data Rozpoczęcia",
+      "endDate": "Data Zakończenia",
+      "creating": "Tworzenie rezerwacji...",
+      "submit": "Zarezerwuj Przedmiot"
+    }
+  },
+  "dashboard": {
+    "title": "Mój Panel",
+    "loading": "Ładowanie panelu...",
+    "tabs": {
+      "list": "Moje Przedmioty",
+      "calendar": "Kalendarz"
+    },
+    "confirmCancel": "Czy na pewno chcesz anulować tę rezerwację?",
+    "confirmReturn": "Potwierdzić zwrot przedmiotu?",
+    "currentLoans": "Aktualne Wypożyczenia",
+    "myReservations": "Moje Rezerwacje",
+    "noLoans": "Brak aktywnych wypożyczeń",
+    "noReservations": "Brak aktywnych rezerwacji",
+    "item": "Przedmiot",
+    "checkedOut": "Wypożyczony",
+    "dueDate": "Termin Zwrotu",
+    "overdue": "ZALEGŁY",
+    "return": "Zwróć",
+    "cancel": "Anuluj",
+    "actions": "Akcje",
+    "loanHistory": "Historia Wypożyczeń",
+    "loans": {
+      "title": "Aktualne Wypożyczenia",
+      "noLoans": "Nie masz aktywnych wypożyczeń",
+      "item": "Przedmiot",
+      "checkedOut": "Wypożyczony",
+      "dueDate": "Termin Zwrotu",
+      "overdue": "ZALEGŁY",
+      "return": "Zwróć",
+      "extend": "Przedłuż",
+      "extendPrompt": "Przedłużyć wypożyczenie o ile dni? (1-30)",
+      "extendSuccess": "Wypożyczenie przedłużone o {{days}} dni",
+      "extendInvalid": "Liczba dni musi być między 1 a 30",
+      "actions": "Akcje"
+    },
+    "reservations": {
+      "title": "Moje Rezerwacje",
+      "noReservations": "Nie masz aktywnych rezerwacji",
+      "item": "Przedmiot",
+      "startDate": "Data Rozpoczęcia",
+      "endDate": "Data Zakończenia",
+      "status": "Status",
+      "actions": "Akcje",
+      "cancel": "Anuluj",
+      "statusValues": {
+        "pending": "Oczekująca",
+        "confirmed": "Potwierdzona",
+        "cancelled": "Anulowana",
+        "completed": "Zakończona"
+      }
+    },
+    "invite": {
+      "success": "Witaj!",
+      "error": "Nieprawidłowe Zaproszenie",
+      "joinedOrg": "Dołączyłeś do {{orgName}}",
+      "redirecting": "Przekierowanie do katalogu...",
+      "goHome": "Przejdź do Katalogu",
+      "acceptFailed": "Nie można zaakceptować zaproszenia"
+    },
+    "history": {
+      "title": "Historia Wypożyczeń",
+      "noHistory": "Brak poprzednich wypożyczeń",
+      "returned": "Zwrócony",
+      "damage": "Nota o Uszkodzeniu"
+    },
+    "pendingItems": {
+      "title": "Moje Zgłoszone Przedmioty",
+      "item": "Przedmiot",
+      "submitted": "Zgłoszony",
+      "status": "Status",
+      "note": "Uwaga",
+      "statusPending": "Oczekuje na Zatwierdzenie",
+      "statusRejected": "Odrzucony"
+    },
+    "membership": {
+      "title": "Informacje o Członkostwie",
+      "organization": "Organizacja",
+      "role": "Rola",
+      "joined": "Dołączył",
+      "status": "Status",
+      "roles": {
+        "member": "Członek",
+        "manager": "Menedżer",
+        "admin": "Admin",
+        "owner": "Właściciel"
+      },
+      "statuses": {
+        "active": "Aktywny",
+        "pending": "Oczekujący",
+        "suspended": "Zawieszony"
+      }
+    }
+  },
+  "admin": {
+    "title": "Panel Administracyjny",
+    "loading": "Ładowanie...",
+    "stats": {
+      "totalItems": "Łączna Liczba Przedmiotów",
+      "available": "Dostępne",
+      "activeLoans": "Aktywne Wypożyczenia",
+      "overdue": "Zaległe"
+    },
+    "tabs": {
+      "loans": "Wypożyczenia",
+      "reservations": "Rezerwacje",
+      "items": "Przedmioty",
+      "users": "Użytkownicy",
+      "categories": "Kategorie",
+      "locations": "Lokalizacje",
+      "organization": "Organizacja",
+      "groups": "Grupy"
+    },
+    "reservations": {
+      "title": "Rezerwacje",
+      "none": "Brak aktywnych rezerwacji",
+      "item": "Przedmiot",
+      "user": "Użytkownik",
+      "period": "Okres",
+      "status": "Status",
+      "actions": "Akcje",
+      "confirm": "Potwierdź",
+      "cancel": "Anuluj",
+      "confirmed": "Rezerwacja potwierdzona",
+      "confirmFailed": "Nie można potwierdzić rezerwacji",
+      "cancelFailed": "Nie można anulować rezerwacji",
+      "confirmCancel": "Anulować tę rezerwację?",
+      "statusPending": "Oczekująca",
+      "statusConfirmed": "Potwierdzona"
+    },
+    "locations": {
+      "title": "Lokalizacje",
+      "addLocation": "Dodaj Lokalizację",
+      "editLocation": "Edytuj Lokalizację",
+      "name": "Nazwa",
+      "address": "Adres",
+      "description": "Opis",
+      "actions": "Akcje",
+      "edit": "Edytuj",
+      "delete": "Usuń",
+      "create": "Utwórz Lokalizację",
+      "update": "Zaktualizuj Lokalizację",
+      "confirmDelete": "Czy na pewno chcesz usunąć tę lokalizację?",
+      "noLocations": "Nie utworzono jeszcze lokalizacji."
+    },
+    "organization": {
+      "title": "Ustawienia Organizacji",
+      "name": "Nazwa Organizacji",
+      "description": "Opis",
+      "loanDurationDays": "Domyślny Czas Wypożyczenia (dni)",
+      "loanDurationHint": "Domyślna liczba dni dla nowych wypożyczeń",
+      "save": "Zapisz Ustawienia",
+      "saving": "Zapisywanie...",
+      "saved": "Ustawienia organizacji zapisane",
+      "saveFailed": "Nie można zapisać ustawień"
+    },
+    "loans": {
+      "title": "Aktywne Wypożyczenia",
+      "checkoutItem": "Wypożycz Przedmiot",
+      "item": "Przedmiot",
+      "user": "Użytkownik",
+      "checkedOut": "Wypożyczony",
+      "dueDate": "Termin Zwrotu",
+      "actions": "Akcje",
+      "checkin": "Zwróć",
+      "checkinTitle": "Zwróć Przedmiot",
+      "confirmCheckin": "Potwierdzić zwrot przedmiotu?",
+      "damageNote": "Nota o Uszkodzeniu (opcjonalnie)",
+      "damageNotePlaceholder": "Opisz wszelkie uszkodzenia...",
+      "filterStatus": "Filtruj według statusu",
+      "statusAll": "Wszystkie",
+      "statusActive": "Aktywne",
+      "statusReturned": "Zwrócone",
+      "statusOverdue": "Zaległe"
+    },
+    "items": {
+      "title": "Przedmioty",
+      "addItem": "Dodaj Przedmiot",
+      "newItem": "Dodaj Nowy Przedmiot",
+      "name": "Nazwa",
+      "category": "Kategoria",
+      "description": "Opis",
+      "status": "Status",
+      "approvalStatus": "Zatwierdzenie",
+      "actions": "Akcje",
+      "selectCategory": "Wybierz kategorię",
+      "edit": "Edytuj",
+      "delete": "Usuń",
+      "approve": "Zatwierdź",
+      "reject": "Odrzuć",
+      "confirmDelete": "Czy na pewno chcesz usunąć ten przedmiot?",
+      "confirmApprove": "Zatwierdzić ten przedmiot?",
+      "rejectNote": "Powód odrzucenia (opcjonalnie)",
+      "filterCategory": "Filtruj według kategorii",
+      "filterStatus": "Filtruj według statusu",
+      "categoryAll": "Wszystkie kategorie",
+      "statusAll": "Wszystkie statusy",
+      "approvalValues": {
+        "PENDING": "Oczekujący",
+        "APPROVED": "Zatwierdzony",
+        "REJECTED": "Odrzucony"
+      }
+    },
+    "groups": {
+      "title": "Grupy Członków",
+      "addGroup": "Dodaj Grupę",
+      "editGroup": "Edytuj Grupę",
+      "name": "Nazwa",
+      "description": "Opis",
+      "members": "Członkowie",
+      "actions": "Akcje",
+      "edit": "Edytuj",
+      "delete": "Usuń",
+      "create": "Utwórz Grupę",
+      "update": "Zaktualizuj Grupę",
+      "confirmDelete": "Usuń Grupę",
+      "confirmDeleteMessage": "Czy na pewno chcesz usunąć tę grupę? Członkowie nie zostaną usunięci z organizacji.",
+      "cancel": "Anuluj",
+      "noGroups": "Nie utworzono jeszcze grup.",
+      "createSuccess": "Grupa utworzona",
+      "createFailed": "Nie można utworzyć grupy",
+      "updateSuccess": "Grupa zaktualizowana",
+      "updateFailed": "Nie można zaktualizować grupy",
+      "deleteSuccess": "Grupa usunięta",
+      "deleteFailed": "Nie można usunąć grupy"
+    },
+    "users": {
+      "title": "Użytkownicy",
+      "name": "Nazwa",
+      "email": "E-mail",
+      "role": "Rola",
+      "joined": "Dołączył",
+      "actions": "Akcje",
+      "addUser": "Dodaj Użytkownika",
+      "password": "Hasło",
+      "create": "Utwórz Użytkownika",
+      "addSuccess": "Użytkownik utworzony",
+      "addError": "Nie można utworzyć użytkownika",
+      "confirmRoleChange": "Zmienić rolę tego użytkownika?",
+      "roleChanged": "Rola zaktualizowana",
+      "roleChangeFailed": "Nie można zaktualizować roli",
+      "resetPassword": "Resetuj Hasło",
+      "resetPasswordPrompt": "Wprowadź nowe hasło (min. 6 znaków):",
+      "passwordReset": "Hasło zresetowane pomyślnie",
+      "passwordResetFailed": "Nie można zresetować hasła",
+      "passwordTooShort": "Hasło musi mieć co najmniej 6 znaków",
+      "edit": "Edytuj",
+      "editUser": "Edytuj Użytkownika",
+      "newPassword": "Nowe Hasło",
+      "removeFromOrg": "Usuń z Organizacji",
+      "confirmRemove": "Usunąć tego użytkownika z organizacji?",
+      "removed": "Użytkownik usunięty z organizacji",
+      "removeFailed": "Nie można usunąć użytkownika"
+    },
+    "invitations": {
+      "title": "Oczekujące Zaproszenia",
+      "inviteButton": "Zaproś Członka",
+      "email": "E-mail",
+      "role": "Rola",
+      "status": "Status",
+      "expires": "Wygasa",
+      "send": "Wyślij Zaproszenie",
+      "noInvitations": "Brak oczekujących zaproszeń",
+      "accepted": "Zaakceptowane",
+      "expired": "Wygasłe",
+      "pending": "Oczekujące",
+      "linkGenerated": "Wygenerowano link zaproszenia",
+      "copy": "Kopiuj",
+      "linkCopied": "Link skopiowany do schowka",
+      "sendSuccess": "Zaproszenie wysłane",
+      "sendFailed": "Nie można wysłać zaproszenia"
+    },
+    "checkout": {
+      "title": "Wypożycz Przedmiot",
+      "itemLabel": "Przedmiot",
+      "userLabel": "Użytkownik",
+      "dueDate": "Termin Zwrotu",
+      "selectItem": "Wybierz przedmiot",
+      "selectUser": "Wybierz użytkownika",
+      "submit": "Wypożycz",
+      "cancel": "Anuluj"
+    },
+    "categories": {
+      "title": "Kategorie",
+      "addCategory": "Dodaj Kategorię",
+      "editCategory": "Edytuj Kategorię",
+      "name": "Nazwa",
+      "description": "Opis",
+      "itemCount": "Przedmioty",
+      "actions": "Akcje",
+      "edit": "Edytuj",
+      "delete": "Usuń",
+      "create": "Utwórz Kategorię",
+      "update": "Zaktualizuj Kategorię",
+      "confirmDelete": "Czy na pewno chcesz usunąć tę kategorię? Operacja nie powiedzie się, jeśli kategoria ma przedmioty."
+    },
+    "userRole": {
+      "member": "Członek",
+      "orgAdmin": "Admin Organizacji",
+      "admin": "Admin Platformy"
+    },
+    "organizations": {
+      "title": "Organizacje",
+      "createButton": "Utwórz Organizację",
+      "type": "Typ",
+      "editModal": { "title": "Edytuj Organizację" },
+      "createModal": { "title": "Utwórz Organizację" },
+      "form": {
+        "name": "Nazwa",
+        "type": "Typ",
+        "slug": "Slug",
+        "description": "Opis",
+        "save": "Zapisz",
+        "create": "Utwórz",
+        "cancel": "Anuluj"
+      },
+      "table": {
+        "name": "Nazwa",
+        "members": "Członkowie",
+        "items": "Przedmioty",
+        "actions": "Akcje",
+        "view": "Zobacz",
+        "edit": "Edytuj",
+        "delete": "Usuń"
+      },
+      "details": {
+        "slug": "Slug",
+        "description": "Opis",
+        "items": "Przedmioty",
+        "members": "Członkowie",
+        "role": "Rola"
+      }
+    }
+  },
+  "platformAdmin": {
+    "title": "Przegląd Administratora Platformy",
+    "tabs": {
+      "organizations": "Organizacje",
+      "users": "Użytkownicy",
+      "waiting": "Poczekalnia",
+      "emails": "Dziennik E-maili"
+    },
+    "waiting": {
+      "title": "Poczekalnia",
+      "name": "Nazwa",
+      "email": "E-mail",
+      "registered": "Zarejestrowany",
+      "actions": "Akcje",
+      "noUsers": "Brak użytkowników oczekujących na przypisanie do organizacji",
+      "selectOrg": "Wybierz organizację...",
+      "assign": "Przypisz",
+      "assignToOrg": "Przypisz do Organizacji"
+    },
+    "stats": {
+      "totalOrganizations": "Łączna Liczba Organizacji",
+      "totalUsers": "Łączna Liczba Użytkowników",
+      "totalItems": "Łączna Liczba Przedmiotów"
+    },
+    "users": {
+      "title": "Wszyscy Użytkownicy",
+      "table": {
+        "name": "Nazwa",
+        "email": "E-mail",
+        "role": "Rola",
+        "organizations": "Organizacje",
+        "joined": "Dołączył",
+        "actions": "Akcje",
+        "edit": "Edytuj",
+        "none": "Brak"
+      }
+    },
+    "editUser": {
+      "title": "Edytuj Użytkownika",
+      "name": "Nazwa",
+      "email": "E-mail",
+      "role": "Rola",
+      "selectRole": "Wybierz rolę...",
+      "organizations": "Organizacje",
+      "noOrganizations": "Nie jest członkiem żadnej organizacji",
+      "remove": "Usuń",
+      "addToOrg": "Dodaj do organizacji...",
+      "add": "Dodaj",
+      "save": "Zapisz Zmiany",
+      "cancel": "Anuluj",
+      "newPassword": "Nowe Hasło",
+      "resetPassword": "Resetuj Hasło",
+      "deleteUser": "Usuń Użytkownika",
+      "confirmDelete": "Trwale usunąć tego użytkownika? Tej operacji nie można cofnąć.",
+      "deleteFailed": "Nie można usunąć użytkownika"
+    },
+    "deleteOrg": {
+      "title": "Usuń Organizację",
+      "confirm": "Czy na pewno chcesz usunąć tę organizację? Tej operacji nie można cofnąć. Upewnij się, że organizacja nie ma przedmiotów.",
+      "delete": "Usuń",
+      "cancel": "Anuluj"
+    },
+    "orgDetails": {
+      "memberRole": "Rola"
+    }
+  },
+  "comments": {
+    "title": "Komentarze",
+    "placeholder": "Dodaj komentarz...",
+    "submit": "Opublikuj Komentarz",
+    "submitting": "Publikowanie...",
+    "noComments": "Brak komentarzy. Bądź pierwszy!",
+    "loginRequired": "Zaloguj się, aby dodać komentarz.",
+    "confirmDelete": "Czy na pewno chcesz usunąć ten komentarz?",
+    "edited": "edytowany",
+    "justNow": "przed chwilą",
+    "minutesAgo": "{{count}} minutę temu",
+    "minutesAgo_plural": "{{count}} minut temu",
+    "hoursAgo": "{{count}} godzinę temu",
+    "hoursAgo_plural": "{{count}} godzin temu",
+    "daysAgo": "{{count}} dzień temu",
+    "daysAgo_plural": "{{count}} dni temu"
+  },
+  "reviews": {
+    "title": "Recenzje",
+    "loading": "Ładowanie recenzji...",
+    "writeReview": "Napisz Recenzję",
+    "yourRating": "Twoja Ocena",
+    "comment": "Komentarz",
+    "optional": "opcjonalnie",
+    "commentPlaceholder": "Podziel się swoimi doświadczeniami z tym przedmiotem...",
+    "submit": "Wyślij Recenzję",
+    "submitting": "Wysyłanie...",
+    "yourReview": "Twoja Recenzja",
+    "allReviews": "Wszystkie Recenzje",
+    "noReviews": "Brak recenzji. Bądź pierwszym recenzentem!",
+    "anonymous": "Anonimowy",
+    "confirmDelete": "Czy na pewno chcesz usunąć swoją recenzję?",
+    "totalCount": "{{count}} recenzja",
+    "totalCount_plural": "{{count}} recenzji",
+    "errors": {
+      "ratingRequired": "Proszę wybrać ocenę",
+      "submitFailed": "Nie można wysłać recenzji",
+      "deleteFailed": "Nie można usunąć recenzji"
+    }
+  },
+  "addItem": {
+    "title": "Dodaj Nowy Przedmiot",
+    "description": "Udostępnij narzędzie lub przedmiot swojej społeczności",
+    "name": "Nazwa Przedmiotu",
+    "namePlaceholder": "np. Wiertarka Elektryczna, Namiot Kempingowy, itp.",
+    "category": "Kategoria",
+    "selectCategory": "Wybierz kategorię",
+    "location": "Lokalizacja (opcjonalnie)",
+    "selectLocation": "Wybierz lokalizację",
+    "noLocation": "Brak lokalizacji",
+    "descriptionLabel": "Opis",
+    "descriptionPlaceholder": "Opisz przedmiot, jego stan i wszelkie ważne szczegóły...",
+    "imageUrl": "URL Obrazu (opcjonalnie)",
+    "imageUrlPlaceholder": "https://przykład.com/obraz.jpg",
+    "imageUrlHint": "Podaj link do obrazu przedmiotu",
+    "submit": "Dodaj Przedmiot",
+    "creating": "Dodawanie...",
+    "selectOrganization": "Najpierw wybierz organizację",
+    "loadCategoriesError": "Nie można załadować kategorii",
+    "manualLabel": "Instrukcja Obsługi (PDF, opcjonalnie)",
+    "manualChooseFile": "Wybierz plik PDF",
+    "manualNoFile": "Nie wybrano pliku",
+    "manualHint": "Prześlij instrukcję obsługi w formacie PDF dla tego przedmiotu",
+    "uploadingManual": "Przesyłanie PDF..."
+  },
+  "editItem": {
+    "title": "Edytuj Przedmiot",
+    "description": "Zaktualizuj szczegóły przedmiotu",
+    "name": "Nazwa Przedmiotu",
+    "category": "Kategoria",
+    "selectCategory": "Wybierz kategorię",
+    "location": "Lokalizacja",
+    "selectLocation": "Wybierz lokalizację",
+    "noLocation": "Brak lokalizacji",
+    "status": "Status",
+    "descriptionLabel": "Opis",
+    "descriptionPlaceholder": "Opisz przedmiot, jego stan i wszelkie ważne szczegóły...",
+    "imageUrl": "Obraz",
+    "submit": "Zapisz Zmiany",
+    "updating": "Aktualizowanie...",
+    "selectOrganization": "Najpierw wybierz organizację",
+    "loadError": "Nie można załadować przedmiotu"
+  },
+  "welcome": {
+    "title": "Witaj w Ting!",
+    "subtitle": "Przeglądaj katalog, aby znaleźć narzędzia do wypożyczenia, lub dodaj własne.",
+    "browseCatalog": "Przeglądaj katalog",
+    "dismiss": "Zamknij"
+  },
+  "common": {
+    "loading": "Ładowanie...",
+    "error": "Błąd",
+    "success": "Sukces",
+    "close": "Zamknij",
+    "save": "Zapisz",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "cancel": "Anuluj",
+    "confirm": "Potwierdź",
+    "yes": "Tak",
+    "no": "Nie"
+  },
+  "errors": {
+    "loginFailed": "Logowanie nie powiodło się",
+    "registerFailed": "Rejestracja nie powiodła się",
+    "invalidCredentials": "Nieprawidłowe dane logowania",
+    "required": "To pole jest wymagane",
+    "emailInvalid": "Nieprawidłowy adres e-mail",
+    "reservationFailed": "Nie można utworzyć rezerwacji",
+    "cancelFailed": "Nie można anulować rezerwacji",
+    "returnFailed": "Nie można zwrócić przedmiotu",
+    "extendFailed": "Nie można przedłużyć wypożyczenia",
+    "commentFailed": "Nie można opublikować komentarza",
+    "updateCommentFailed": "Nie można zaktualizować komentarza",
+    "deleteCommentFailed": "Nie można usunąć komentarza",
+    "createItemFailed": "Nie można utworzyć przedmiotu",
+    "updateItemFailed": "Nie można zaktualizować przedmiotu"
+  },
+  "messages": {
+    "reservationSuccess": "Rezerwacja utworzona pomyślnie!",
+    "reservationCancelled": "Rezerwacja anulowana",
+    "itemReturned": "Przedmiot zwrócony pomyślnie",
+    "confirmCancel": "Czy na pewno chcesz anulować tę rezerwację?",
+    "confirmReturn": "Potwierdzić zwrot przedmiotu?",
+    "confirmDelete": "Czy na pewno chcesz usunąć ten przedmiot?"
+  },
+  "calendar": {
+    "loading": "Ładowanie dostępności...",
+    "availableNow": "Dostępny teraz",
+    "nextAvailable": "Następna dostępność: {{date}}",
+    "fullyBooked": "Całkowicie zarezerwowany ({{days}} dni)",
+    "nextDays": "Następne {{days}} dni",
+    "today": "Dziś",
+    "available": "Dostępny",
+    "reserved": "Zarezerwowany",
+    "checkedOut": "Wypożyczony",
+    "selected": "Wybrany",
+    "checkingAvailability": "Sprawdzanie dostępności...",
+    "availableForDates": "Dostępny na wybrane daty",
+    "notAvailable": "Niedostępny — konflikt z istniejącą rezerwacją lub wypożyczeniem",
+    "clickToStart": "Kliknij datę, aby rozpocząć, następnie kliknij inną datę, aby zakończyć wybór",
+    "grayedOutInfo": "Wyszarzone daty są już zarezerwowane lub wypożyczone",
+    "maxBooking": "Maksymalna rezerwacja: {{days}} dni z góry",
+    "completeSelection": "Kliknij inną dostępną datę, aby zakończyć wybór",
+    "weekdays": {
+      "sun": "Nd",
+      "mon": "Pn",
+      "tue": "Wt",
+      "wed": "Śr",
+      "thu": "Cz",
+      "fri": "Pt",
+      "sat": "Sb"
+    },
+    "legend": {
+      "available": "Dostępny",
+      "reserved": "Zarezerwowany",
+      "checkedOut": "Wypożyczony",
+      "selected": "Wybrany",
+      "today": "Dziś",
+      "confirmed": "Potwierdzona rezerwacja",
+      "pending": "Oczekująca rezerwacja",
+      "loan": "Aktywne wypożyczenie"
+    }
+  },
+  "tags": {
+    "label": "Tagi",
+    "placeholder": "Dodaj tagi...",
+    "hint": "Naciśnij Enter lub przecinek, aby dodać tag",
+    "remove": "Usuń tag {{tag}}"
+  },
+  "notFound": {
+    "title": "Ups!",
+    "message": "Wygląda na to, że to narzędzie gdzieś się zapodziało. Strona, której szukasz, nie istnieje.",
+    "backToCatalog": "Wróć do Katalogu"
+  },
+  "organizationType": {
+    "neighborhood": "Sąsiedztwo",
+    "school": "Szkoła / Makerspace",
+    "company": "Firma / Warsztat",
+    "friends": "Grupa Przyjaciół",
+    "noType": "— Brak typu —",
+    "suggestions": "Sugestie:"
+  },
+  "home": {
+    "hero": {
+      "byline": "Hauketo og Prinsdal Vel",
+      "title": "Zdobądź to, czego potrzebujesz — bez kupowania",
+      "subtitle": "Tingbiblioteket to serwis pożyczkowy HPV dla członków w Hauketo og Prinsdal. Pożyczaj sprzęt, gdy go potrzebujesz — bezpłatnie.",
+      "browseCatalog": "Przeglądaj Katalog",
+      "login": "Zaloguj się"
+    },
+    "membersOnly": {
+      "notice": "Ta usługa jest obecnie dostępna tylko dla członków HPV. Rozważamy rozwiązania dla nieczłonków. Nie jesteś jeszcze członkiem? Zapisz się na"
+    },
+    "available": {
+      "title": "Już dostępne",
+      "subtitle": "I stale dodajemy więcej — narzędzia, krzesła, stoły, systemy nagłośnienia i oświetlenie.",
+      "viewAll": "Zobacz pełny katalog",
+      "items": {
+        "tents": { "icon": "⛺", "name": "Namioty Ogrodowe", "detail": "2 szt., 3×3 m" },
+        "speakers": { "icon": "🔊", "name": "Głośniki", "detail": "2× JBL Partybox 320" },
+        "smoke": { "icon": "💨", "name": "Wytwornica Dymu", "detail": "Na imprezy" },
+        "projector": { "icon": "📽️", "name": "Projektor", "detail": "Wydajny, wkrótce" }
+      }
+    },
+    "howItWorks": {
+      "title": "Jak to działa",
+      "step1": {
+        "title": "Znajdź to, czego potrzebujesz",
+        "description": "Przeglądaj katalog i sprawdź, co jest dostępne."
+      },
+      "step2": {
+        "title": "Zarezerwuj",
+        "description": "Wybierz daty i zarezerwuj online. Bez telefonów."
+      },
+      "step3": {
+        "title": "Pożycz i zwróć",
+        "description": "Odbierz przedmiot, użyj go i zwróć po skończeniu."
+      }
+    },
+    "lendOut": {
+      "title": "Pożycz swoje rzeczy",
+      "description": "Możesz też dodać własne przedmioty do biblioteki i udostępnić je innym członkom HPV."
+    },
+    "requestTip": {
+      "title": "Czegoś brakuje?",
+      "description": "Wyślij nam wskazówkę, co chciałbyś, żeby biblioteka nabyła. Słuchamy tego, czego potrzebują członkowie."
+    },
+    "about": {
+      "title": "O HPV i Tingbiblioteket",
+      "description": "Hauketo og Prinsdal Vel (HPV) buduje bibliotekę pożyczalną dla swoich członków — finansowaną z wpływów ze sprzedaży domu wspólnoty. Jak Bua dla sprzętu sportowego, ale dla wszystkiego innego. Dla młodych i starszych, niezależnie od tego, czy mieszkasz w mieszkaniu, domu czy szeregowcu.",
+      "readMore": "Przeczytaj więcej o projekcie na hpvel.no"
+    },
+    "cta": {
+      "title": "Jesteś członkiem HPV?",
+      "description": "Zarejestruj się tutaj, aby uzyskać dostęp do biblioteki pożyczalnej.",
+      "register": "Zarejestruj się",
+      "login": "Zaloguj się",
+      "notMember": "Nie jesteś jeszcze członkiem HPV? Dołącz na"
+    },
+    "nav": {
+      "home": "Strona główna"
+    }
+  }
+}

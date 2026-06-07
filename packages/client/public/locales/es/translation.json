@@ -1,0 +1,863 @@
+{
+  "app": {
+    "title": "Tingbiblioteket",
+    "subtitle": "Biblioteca Comunitaria de Préstamos"
+  },
+  "nav": {
+    "catalog": "Catálogo",
+    "addItem": "Añadir Artículo",
+    "dashboard": "Mi Panel",
+    "admin": "Admin",
+    "terms": "Términos de Servicio",
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "logout": "Cerrar Sesión",
+    "hello": "Hola, {{name}}",
+    "profile": "Perfil"
+  },
+  "profile": {
+    "title": "Mi Perfil",
+    "userInfo": "Información de Usuario",
+    "organization": "Organización",
+    "terms": "Términos de Servicio",
+    "changeName": "Cambiar nombre",
+    "save": "Guardar",
+    "saving": "Guardando...",
+    "nameUpdated": "Nombre actualizado",
+    "nameUpdateFailed": "No se pudo actualizar el nombre",
+    "changePassword": "Cambiar contraseña",
+    "currentPassword": "Contraseña actual",
+    "newPassword": "Nueva contraseña",
+    "confirmPassword": "Confirmar nueva contraseña",
+    "passwordChanged": "Contraseña cambiada",
+    "passwordChangeFailed": "No se pudo cambiar la contraseña",
+    "passwordMismatch": "Las contraseñas no coinciden",
+    "activity": "Mi actividad",
+    "activeLoans": "Préstamos activos",
+    "upcomingReservations": "Próximas reservas",
+    "noLoans": "Sin préstamos activos",
+    "noReservations": "Sin reservas próximas",
+    "dueDate": "Fecha de devolución",
+    "period": "Período",
+    "inviteMembers": "Invitar miembros",
+    "inviteEmailPlaceholder": "Introduce el correo electrónico...",
+    "roleMember": "Miembro",
+    "roleManager": "Gestor",
+    "roleAdmin": "Administrador",
+    "sendInvite": "Enviar invitación",
+    "sending": "Enviando...",
+    "inviteSent": "Invitación enviada",
+    "inviteFailed": "No se pudo enviar la invitación",
+    "alreadyMember": "Este usuario ya es miembro",
+    "inviteLink": "Enlace de invitación",
+    "copyLink": "Copiar",
+    "currentOrganization": "Tu organización",
+    "yourRole": "Tu rol",
+    "noOrganization": "No asociado a ninguna organización"
+  },
+  "auth": {
+    "loginTitle": "Iniciar sesión en Ting",
+    "registerTitle": "Registrarse en Ting",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "name": "Nombre",
+    "loginButton": "Iniciar Sesión",
+    "registerButton": "Registrarse",
+    "loggingIn": "Iniciando sesión...",
+    "registering": "Registrando...",
+    "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+    "dontHaveAccount": "¿No tienes una cuenta?",
+    "loginHere": "Inicia sesión aquí",
+    "registerHere": "Regístrate aquí",
+    "login": {
+      "title": "Iniciar sesión en Ting",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "loggingIn": "Iniciando sesión...",
+      "submit": "Iniciar Sesión",
+      "noAccount": "¿No tienes una cuenta?",
+      "registerLink": "Regístrate aquí",
+      "forgotPassword": "¿Olvidaste tu contraseña?"
+    },
+    "forgotPassword": {
+      "title": "Restablecer Contraseña",
+      "description": "Introduce tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.",
+      "email": "Correo electrónico",
+      "sending": "Enviando...",
+      "submit": "Enviar Enlace",
+      "backToLogin": "Volver al inicio de sesión",
+      "error": "No se pudo enviar el enlace de restablecimiento"
+    },
+    "resetPassword": {
+      "title": "Establecer Nueva Contraseña",
+      "newPassword": "Nueva Contraseña",
+      "confirmPassword": "Confirmar Contraseña",
+      "resetting": "Restableciendo...",
+      "submit": "Restablecer Contraseña",
+      "backToLogin": "Volver al inicio de sesión",
+      "passwordMismatch": "Las contraseñas no coinciden",
+      "passwordTooShort": "La contraseña debe tener al menos 6 caracteres",
+      "error": "No se pudo restablecer la contraseña",
+      "invalidToken": "Enlace de Restablecimiento Inválido",
+      "invalidTokenDescription": "Este enlace de restablecimiento es inválido o ha expirado.",
+      "requestNew": "Solicitar un nuevo enlace"
+    },
+    "register": {
+      "title": "Registrarse en Ting",
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "registering": "Registrando...",
+      "submit": "Registrarse",
+      "hasAccount": "¿Ya tienes una cuenta?",
+      "loginLink": "Inicia sesión aquí",
+      "acceptTerms": "He leído y acepto los",
+      "termsLink": "Términos de Servicio",
+      "termsRequired": "Debes aceptar los términos de servicio para registrarte"
+    }
+  },
+  "catalog": {
+    "title": "Catálogo",
+    "searchPlaceholder": "Buscar artículos...",
+    "search": "Buscar",
+    "searchButton": "Buscar",
+    "categories": "Categorías",
+    "allItems": "Todos los Artículos",
+    "loading": "Cargando catálogo...",
+    "noItems": "No se encontraron artículos",
+    "status": {
+      "available": "Disponible",
+      "checkedOut": "Prestado",
+      "maintenance": "En Mantenimiento",
+      "retired": "Retirado"
+    },
+    "availability": {
+      "availableNow": "Disponible ahora",
+      "nextAvailable": "Próxima disponibilidad: {{date}}"
+    }
+  },
+  "categories": {
+    "Power Tools": "Herramientas Eléctricas",
+    "Hand Tools": "Herramientas Manuales",
+    "Gardening": "Jardinería",
+    "Camping & Outdoor": "Camping y Exterior",
+    "Sports Equipment": "Equipamiento Deportivo",
+    "Electronics": "Electrónica",
+    "Party & Events": "Fiestas y Eventos",
+    "Kitchen Appliances": "Electrodomésticos de Cocina"
+  },
+  "item": {
+    "details": "Detalles del Artículo",
+    "description": "Descripción",
+    "category": "Categoría",
+    "status": "Estado",
+    "location": "Ubicación",
+    "loading": "Cargando artículo...",
+    "notFound": "Artículo no encontrado",
+    "noDescription": "Sin descripción disponible.",
+    "reserveNow": "Reservar Ahora",
+    "reserving": "Creando reserva...",
+    "startDate": "Fecha de Inicio",
+    "endDate": "Fecha de Fin",
+    "loginToReserve": "Inicia sesión para reservar este artículo",
+    "edit": "Editar Artículo",
+    "manuals": {
+      "title": "Manuales",
+      "noManuals": "Sin manuales añadidos.",
+      "addManual": "Añadir Manual",
+      "label": "Título",
+      "labelPlaceholder": "p. ej. Manual de Usuario, Guía de Seguridad",
+      "type": "Tipo",
+      "typePdf": "PDF",
+      "typeLink": "Enlace externo",
+      "typeText": "Texto",
+      "url": "URL",
+      "urlPlaceholder": "https://...",
+      "content": "Contenido",
+      "contentPlaceholder": "Introduce el contenido del manual...",
+      "uploadPdf": "Subir PDF",
+      "uploading": "Subiendo...",
+      "add": "Añadir",
+      "adding": "Añadiendo...",
+      "delete": "Eliminar",
+      "confirmDelete": "¿Seguro que quieres eliminar este manual?",
+      "loginRequired": "Inicia sesión para gestionar manuales."
+    },
+    "condition": {
+      "label": "Estado",
+      "unknown": "Desconocido",
+      "good": "Bueno",
+      "fair": "Regular",
+      "needsRepair": "Necesita Reparación"
+    },
+    "images": {
+      "label": "Fotos",
+      "primary": "Principal",
+      "addImages": "Añadir fotos",
+      "uploading": "Subiendo...",
+      "delete": "Eliminar foto",
+      "moveLeft": "Mover a la izquierda",
+      "moveRight": "Mover a la derecha",
+      "hint": "La primera foto se usa como imagen principal",
+      "filesSelected": "archivos seleccionados",
+      "noFiles": "Ningún archivo seleccionado"
+    },
+    "availability": {
+      "title": "Disponibilidad (Próximos {{days}} Días)"
+    },
+    "reserve": {
+      "title": "Reservar Este Artículo",
+      "showCalendar": "Mostrar Calendario",
+      "hideCalendar": "Ocultar Calendario",
+      "loginRequired": "Inicia sesión para reservar este artículo.",
+      "loginLink": "Inicia sesión aquí",
+      "startDate": "Fecha de Inicio",
+      "endDate": "Fecha de Fin",
+      "creating": "Creando reserva...",
+      "submit": "Reservar Artículo"
+    }
+  },
+  "dashboard": {
+    "title": "Mi Panel",
+    "loading": "Cargando panel...",
+    "tabs": {
+      "list": "Mis Artículos",
+      "calendar": "Calendario"
+    },
+    "confirmCancel": "¿Seguro que quieres cancelar esta reserva?",
+    "confirmReturn": "¿Confirmar devolución del artículo?",
+    "currentLoans": "Préstamos Actuales",
+    "myReservations": "Mis Reservas",
+    "noLoans": "Sin préstamos activos",
+    "noReservations": "Sin reservas activas",
+    "item": "Artículo",
+    "checkedOut": "Prestado",
+    "dueDate": "Fecha de Devolución",
+    "overdue": "VENCIDO",
+    "return": "Devolver",
+    "cancel": "Cancelar",
+    "actions": "Acciones",
+    "loanHistory": "Historial de Préstamos",
+    "loans": {
+      "title": "Préstamos Actuales",
+      "noLoans": "No tienes préstamos activos",
+      "item": "Artículo",
+      "checkedOut": "Prestado",
+      "dueDate": "Fecha de Devolución",
+      "overdue": "VENCIDO",
+      "return": "Devolver",
+      "extend": "Extender",
+      "extendPrompt": "¿Extender el préstamo cuántos días? (1-30)",
+      "extendSuccess": "Préstamo extendido {{days}} días",
+      "extendInvalid": "Los días deben estar entre 1 y 30",
+      "actions": "Acciones"
+    },
+    "reservations": {
+      "title": "Mis Reservas",
+      "noReservations": "No tienes reservas activas",
+      "item": "Artículo",
+      "startDate": "Fecha de Inicio",
+      "endDate": "Fecha de Fin",
+      "status": "Estado",
+      "actions": "Acciones",
+      "cancel": "Cancelar",
+      "statusValues": {
+        "pending": "Pendiente",
+        "confirmed": "Confirmado",
+        "cancelled": "Cancelado",
+        "completed": "Completado"
+      }
+    },
+    "invite": {
+      "success": "¡Bienvenido!",
+      "error": "Invitación Inválida",
+      "joinedOrg": "Te has unido a {{orgName}}",
+      "redirecting": "Redirigiendo al catálogo...",
+      "goHome": "Ir al Catálogo",
+      "acceptFailed": "No se pudo aceptar la invitación"
+    },
+    "history": {
+      "title": "Historial de Préstamos",
+      "noHistory": "Sin préstamos anteriores",
+      "returned": "Devuelto",
+      "damage": "Nota de Daño"
+    },
+    "pendingItems": {
+      "title": "Mis Artículos Enviados",
+      "item": "Artículo",
+      "submitted": "Enviado",
+      "status": "Estado",
+      "note": "Nota",
+      "statusPending": "Pendiente de Aprobación",
+      "statusRejected": "Rechazado"
+    },
+    "membership": {
+      "title": "Información de Membresía",
+      "organization": "Organización",
+      "role": "Rol",
+      "joined": "Unido",
+      "status": "Estado",
+      "roles": {
+        "member": "Miembro",
+        "manager": "Gestor",
+        "admin": "Admin",
+        "owner": "Propietario"
+      },
+      "statuses": {
+        "active": "Activo",
+        "pending": "Pendiente",
+        "suspended": "Suspendido"
+      }
+    }
+  },
+  "admin": {
+    "title": "Panel de Administración",
+    "loading": "Cargando...",
+    "stats": {
+      "totalItems": "Total de Artículos",
+      "available": "Disponibles",
+      "activeLoans": "Préstamos Activos",
+      "overdue": "Vencidos"
+    },
+    "tabs": {
+      "loans": "Préstamos",
+      "reservations": "Reservas",
+      "items": "Artículos",
+      "users": "Usuarios",
+      "categories": "Categorías",
+      "locations": "Ubicaciones",
+      "organization": "Organización",
+      "groups": "Grupos"
+    },
+    "reservations": {
+      "title": "Reservas",
+      "none": "Sin reservas activas",
+      "item": "Artículo",
+      "user": "Usuario",
+      "period": "Período",
+      "status": "Estado",
+      "actions": "Acciones",
+      "confirm": "Confirmar",
+      "cancel": "Cancelar",
+      "confirmed": "Reserva confirmada",
+      "confirmFailed": "No se pudo confirmar la reserva",
+      "cancelFailed": "No se pudo cancelar la reserva",
+      "confirmCancel": "¿Cancelar esta reserva?",
+      "statusPending": "Pendiente",
+      "statusConfirmed": "Confirmado"
+    },
+    "locations": {
+      "title": "Ubicaciones",
+      "addLocation": "Añadir Ubicación",
+      "editLocation": "Editar Ubicación",
+      "name": "Nombre",
+      "address": "Dirección",
+      "description": "Descripción",
+      "actions": "Acciones",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "create": "Crear Ubicación",
+      "update": "Actualizar Ubicación",
+      "confirmDelete": "¿Seguro que quieres eliminar esta ubicación?",
+      "noLocations": "No se han creado ubicaciones todavía."
+    },
+    "organization": {
+      "title": "Configuración de la Organización",
+      "name": "Nombre de la Organización",
+      "description": "Descripción",
+      "loanDurationDays": "Duración de Préstamo Predeterminada (días)",
+      "loanDurationHint": "Número de días predeterminado para nuevos préstamos",
+      "save": "Guardar Configuración",
+      "saving": "Guardando...",
+      "saved": "Configuración guardada",
+      "saveFailed": "No se pudo guardar la configuración"
+    },
+    "loans": {
+      "title": "Préstamos Activos",
+      "checkoutItem": "Prestar Artículo",
+      "item": "Artículo",
+      "user": "Usuario",
+      "checkedOut": "Prestado",
+      "dueDate": "Fecha de Devolución",
+      "actions": "Acciones",
+      "checkin": "Devolver",
+      "checkinTitle": "Devolver Artículo",
+      "confirmCheckin": "¿Confirmar devolución del artículo?",
+      "damageNote": "Nota de Daño (opcional)",
+      "damageNotePlaceholder": "Describe cualquier daño...",
+      "filterStatus": "Filtrar por estado",
+      "statusAll": "Todos",
+      "statusActive": "Activo",
+      "statusReturned": "Devuelto",
+      "statusOverdue": "Vencido"
+    },
+    "items": {
+      "title": "Artículos",
+      "addItem": "Añadir Artículo",
+      "newItem": "Añadir Nuevo Artículo",
+      "name": "Nombre",
+      "category": "Categoría",
+      "description": "Descripción",
+      "status": "Estado",
+      "approvalStatus": "Aprobación",
+      "actions": "Acciones",
+      "selectCategory": "Seleccionar categoría",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "confirmDelete": "¿Seguro que quieres eliminar este artículo?",
+      "confirmApprove": "¿Aprobar este artículo?",
+      "rejectNote": "Motivo de rechazo (opcional)",
+      "filterCategory": "Filtrar por categoría",
+      "filterStatus": "Filtrar por estado",
+      "categoryAll": "Todas las categorías",
+      "statusAll": "Todos los estados",
+      "approvalValues": {
+        "PENDING": "Pendiente",
+        "APPROVED": "Aprobado",
+        "REJECTED": "Rechazado"
+      }
+    },
+    "groups": {
+      "title": "Grupos de Miembros",
+      "addGroup": "Añadir Grupo",
+      "editGroup": "Editar Grupo",
+      "name": "Nombre",
+      "description": "Descripción",
+      "members": "Miembros",
+      "actions": "Acciones",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "create": "Crear Grupo",
+      "update": "Actualizar Grupo",
+      "confirmDelete": "Eliminar Grupo",
+      "confirmDeleteMessage": "¿Seguro que quieres eliminar este grupo? Los miembros no serán eliminados de la organización.",
+      "cancel": "Cancelar",
+      "noGroups": "No se han creado grupos todavía.",
+      "createSuccess": "Grupo creado",
+      "createFailed": "No se pudo crear el grupo",
+      "updateSuccess": "Grupo actualizado",
+      "updateFailed": "No se pudo actualizar el grupo",
+      "deleteSuccess": "Grupo eliminado",
+      "deleteFailed": "No se pudo eliminar el grupo"
+    },
+    "users": {
+      "title": "Usuarios",
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "role": "Rol",
+      "joined": "Unido",
+      "actions": "Acciones",
+      "addUser": "Añadir Usuario",
+      "password": "Contraseña",
+      "create": "Crear Usuario",
+      "addSuccess": "Usuario creado",
+      "addError": "No se pudo crear el usuario",
+      "confirmRoleChange": "¿Cambiar el rol de este usuario?",
+      "roleChanged": "Rol actualizado",
+      "roleChangeFailed": "No se pudo actualizar el rol",
+      "resetPassword": "Restablecer Contraseña",
+      "resetPasswordPrompt": "Introduce la nueva contraseña (mín. 6 caracteres):",
+      "passwordReset": "Contraseña restablecida con éxito",
+      "passwordResetFailed": "No se pudo restablecer la contraseña",
+      "passwordTooShort": "La contraseña debe tener al menos 6 caracteres",
+      "edit": "Editar",
+      "editUser": "Editar Usuario",
+      "newPassword": "Nueva Contraseña",
+      "removeFromOrg": "Eliminar de la Organización",
+      "confirmRemove": "¿Eliminar a este usuario de la organización?",
+      "removed": "Usuario eliminado de la organización",
+      "removeFailed": "No se pudo eliminar al usuario"
+    },
+    "invitations": {
+      "title": "Invitaciones Pendientes",
+      "inviteButton": "Invitar Miembro",
+      "email": "Correo electrónico",
+      "role": "Rol",
+      "status": "Estado",
+      "expires": "Expira",
+      "send": "Enviar Invitación",
+      "noInvitations": "Sin invitaciones pendientes",
+      "accepted": "Aceptado",
+      "expired": "Expirado",
+      "pending": "Pendiente",
+      "linkGenerated": "Enlace de invitación generado",
+      "copy": "Copiar",
+      "linkCopied": "Enlace copiado al portapapeles",
+      "sendSuccess": "Invitación enviada",
+      "sendFailed": "No se pudo enviar la invitación"
+    },
+    "checkout": {
+      "title": "Prestar Artículo",
+      "itemLabel": "Artículo",
+      "userLabel": "Usuario",
+      "dueDate": "Fecha de Devolución",
+      "selectItem": "Seleccionar artículo",
+      "selectUser": "Seleccionar usuario",
+      "submit": "Prestar",
+      "cancel": "Cancelar"
+    },
+    "categories": {
+      "title": "Categorías",
+      "addCategory": "Añadir Categoría",
+      "editCategory": "Editar Categoría",
+      "name": "Nombre",
+      "description": "Descripción",
+      "itemCount": "Artículos",
+      "actions": "Acciones",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "create": "Crear Categoría",
+      "update": "Actualizar Categoría",
+      "confirmDelete": "¿Seguro que quieres eliminar esta categoría? Fallará si la categoría tiene artículos."
+    },
+    "userRole": {
+      "member": "Miembro",
+      "orgAdmin": "Admin de Organización",
+      "admin": "Admin de Plataforma"
+    },
+    "organizations": {
+      "title": "Organizaciones",
+      "createButton": "Crear Organización",
+      "type": "Tipo",
+      "editModal": { "title": "Editar Organización" },
+      "createModal": { "title": "Crear Organización" },
+      "form": {
+        "name": "Nombre",
+        "type": "Tipo",
+        "slug": "Slug",
+        "description": "Descripción",
+        "save": "Guardar",
+        "create": "Crear",
+        "cancel": "Cancelar"
+      },
+      "table": {
+        "name": "Nombre",
+        "members": "Miembros",
+        "items": "Artículos",
+        "actions": "Acciones",
+        "view": "Ver",
+        "edit": "Editar",
+        "delete": "Eliminar"
+      },
+      "details": {
+        "slug": "Slug",
+        "description": "Descripción",
+        "items": "Artículos",
+        "members": "Miembros",
+        "role": "Rol"
+      }
+    }
+  },
+  "platformAdmin": {
+    "title": "Vista General del Admin de Plataforma",
+    "tabs": {
+      "organizations": "Organizaciones",
+      "users": "Usuarios",
+      "waiting": "Sala de Espera",
+      "emails": "Registro de Correos"
+    },
+    "waiting": {
+      "title": "Sala de Espera",
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "registered": "Registrado",
+      "actions": "Acciones",
+      "noUsers": "No hay usuarios esperando asignación de organización",
+      "selectOrg": "Seleccionar organización...",
+      "assign": "Asignar",
+      "assignToOrg": "Asignar a Organización"
+    },
+    "stats": {
+      "totalOrganizations": "Total de Organizaciones",
+      "totalUsers": "Total de Usuarios",
+      "totalItems": "Total de Artículos"
+    },
+    "users": {
+      "title": "Todos los Usuarios",
+      "table": {
+        "name": "Nombre",
+        "email": "Correo electrónico",
+        "role": "Rol",
+        "organizations": "Organizaciones",
+        "joined": "Unido",
+        "actions": "Acciones",
+        "edit": "Editar",
+        "none": "Ninguno"
+      }
+    },
+    "editUser": {
+      "title": "Editar Usuario",
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "role": "Rol",
+      "selectRole": "Seleccionar rol...",
+      "organizations": "Organizaciones",
+      "noOrganizations": "No es miembro de ninguna organización",
+      "remove": "Eliminar",
+      "addToOrg": "Añadir a organización...",
+      "add": "Añadir",
+      "save": "Guardar Cambios",
+      "cancel": "Cancelar",
+      "newPassword": "Nueva Contraseña",
+      "resetPassword": "Restablecer Contraseña",
+      "deleteUser": "Eliminar Usuario",
+      "confirmDelete": "¿Eliminar permanentemente este usuario? Esta acción no se puede deshacer.",
+      "deleteFailed": "No se pudo eliminar al usuario"
+    },
+    "deleteOrg": {
+      "title": "Eliminar Organización",
+      "confirm": "¿Seguro que quieres eliminar esta organización? Esta acción no se puede deshacer. Asegúrate de que la organización no tenga artículos.",
+      "delete": "Eliminar",
+      "cancel": "Cancelar"
+    },
+    "orgDetails": {
+      "memberRole": "Rol"
+    }
+  },
+  "comments": {
+    "title": "Comentarios",
+    "placeholder": "Añadir un comentario...",
+    "submit": "Publicar Comentario",
+    "submitting": "Publicando...",
+    "noComments": "Aún no hay comentarios. ¡Sé el primero en comentar!",
+    "loginRequired": "Inicia sesión para dejar un comentario.",
+    "confirmDelete": "¿Seguro que quieres eliminar este comentario?",
+    "edited": "editado",
+    "justNow": "justo ahora",
+    "minutesAgo": "hace {{count}} minuto",
+    "minutesAgo_plural": "hace {{count}} minutos",
+    "hoursAgo": "hace {{count}} hora",
+    "hoursAgo_plural": "hace {{count}} horas",
+    "daysAgo": "hace {{count}} día",
+    "daysAgo_plural": "hace {{count}} días"
+  },
+  "reviews": {
+    "title": "Reseñas",
+    "loading": "Cargando reseñas...",
+    "writeReview": "Escribir una Reseña",
+    "yourRating": "Tu Valoración",
+    "comment": "Comentario",
+    "optional": "opcional",
+    "commentPlaceholder": "Comparte tu experiencia con este artículo...",
+    "submit": "Enviar Reseña",
+    "submitting": "Enviando...",
+    "yourReview": "Tu Reseña",
+    "allReviews": "Todas las Reseñas",
+    "noReviews": "Aún no hay reseñas. ¡Sé el primero en reseñar este artículo!",
+    "anonymous": "Anónimo",
+    "confirmDelete": "¿Seguro que quieres eliminar tu reseña?",
+    "totalCount": "{{count}} reseña",
+    "totalCount_plural": "{{count}} reseñas",
+    "errors": {
+      "ratingRequired": "Por favor selecciona una valoración",
+      "submitFailed": "No se pudo enviar la reseña",
+      "deleteFailed": "No se pudo eliminar la reseña"
+    }
+  },
+  "addItem": {
+    "title": "Añadir Nuevo Artículo",
+    "description": "Comparte una herramienta o artículo con tu comunidad",
+    "name": "Nombre del Artículo",
+    "namePlaceholder": "p. ej., Taladro Eléctrico, Tienda de Campaña, etc.",
+    "category": "Categoría",
+    "selectCategory": "Seleccionar una categoría",
+    "location": "Ubicación (opcional)",
+    "selectLocation": "Seleccionar una ubicación",
+    "noLocation": "Sin ubicación",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Describe el artículo, su estado y cualquier detalle importante...",
+    "imageUrl": "URL de Imagen (opcional)",
+    "imageUrlPlaceholder": "https://ejemplo.com/imagen.jpg",
+    "imageUrlHint": "Proporciona un enlace a una imagen del artículo",
+    "submit": "Añadir Artículo",
+    "creating": "Añadiendo...",
+    "selectOrganization": "Por favor selecciona una organización primero",
+    "loadCategoriesError": "No se pudieron cargar las categorías",
+    "manualLabel": "Manual de Usuario (PDF, opcional)",
+    "manualChooseFile": "Elegir archivo PDF",
+    "manualNoFile": "Ningún archivo elegido",
+    "manualHint": "Sube un manual de usuario en PDF para este artículo",
+    "uploadingManual": "Subiendo PDF..."
+  },
+  "editItem": {
+    "title": "Editar Artículo",
+    "description": "Actualizar detalles del artículo",
+    "name": "Nombre del Artículo",
+    "category": "Categoría",
+    "selectCategory": "Seleccionar una categoría",
+    "location": "Ubicación",
+    "selectLocation": "Seleccionar una ubicación",
+    "noLocation": "Sin ubicación",
+    "status": "Estado",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Describe el artículo, su estado y cualquier detalle importante...",
+    "imageUrl": "Imagen",
+    "submit": "Guardar Cambios",
+    "updating": "Actualizando...",
+    "selectOrganization": "Por favor selecciona una organización primero",
+    "loadError": "No se pudo cargar el artículo"
+  },
+  "welcome": {
+    "title": "¡Bienvenido a Ting!",
+    "subtitle": "Explora el catálogo para encontrar herramientas para pedir prestado, o añade las tuyas.",
+    "browseCatalog": "Explorar catálogo",
+    "dismiss": "Cerrar"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "close": "Cerrar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "yes": "Sí",
+    "no": "No"
+  },
+  "errors": {
+    "loginFailed": "Error al iniciar sesión",
+    "registerFailed": "Error al registrarse",
+    "invalidCredentials": "Credenciales inválidas",
+    "required": "Este campo es obligatorio",
+    "emailInvalid": "Dirección de correo inválida",
+    "reservationFailed": "No se pudo crear la reserva",
+    "cancelFailed": "No se pudo cancelar la reserva",
+    "returnFailed": "No se pudo devolver el artículo",
+    "extendFailed": "No se pudo extender el préstamo",
+    "commentFailed": "No se pudo publicar el comentario",
+    "updateCommentFailed": "No se pudo actualizar el comentario",
+    "deleteCommentFailed": "No se pudo eliminar el comentario",
+    "createItemFailed": "No se pudo crear el artículo",
+    "updateItemFailed": "No se pudo actualizar el artículo"
+  },
+  "messages": {
+    "reservationSuccess": "¡Reserva creada con éxito!",
+    "reservationCancelled": "Reserva cancelada",
+    "itemReturned": "Artículo devuelto con éxito",
+    "confirmCancel": "¿Seguro que quieres cancelar esta reserva?",
+    "confirmReturn": "¿Confirmar devolución del artículo?",
+    "confirmDelete": "¿Seguro que quieres eliminar este artículo?"
+  },
+  "calendar": {
+    "loading": "Cargando disponibilidad...",
+    "availableNow": "Disponible ahora",
+    "nextAvailable": "Próxima disponibilidad: {{date}}",
+    "fullyBooked": "Totalmente reservado ({{days}} días)",
+    "nextDays": "Próximos {{days}} días",
+    "today": "Hoy",
+    "available": "Disponible",
+    "reserved": "Reservado",
+    "checkedOut": "Prestado",
+    "selected": "Seleccionado",
+    "checkingAvailability": "Verificando disponibilidad...",
+    "availableForDates": "Disponible para las fechas seleccionadas",
+    "notAvailable": "No disponible - conflicto con reserva o préstamo existente",
+    "clickToStart": "Haz clic en una fecha para empezar, luego en otra para completar la selección",
+    "grayedOutInfo": "Las fechas en gris ya están reservadas o prestadas",
+    "maxBooking": "Reserva máxima: {{days}} días de antelación",
+    "completeSelection": "Haz clic en otra fecha disponible para completar tu selección",
+    "weekdays": {
+      "sun": "Dom",
+      "mon": "Lun",
+      "tue": "Mar",
+      "wed": "Mié",
+      "thu": "Jue",
+      "fri": "Vie",
+      "sat": "Sáb"
+    },
+    "legend": {
+      "available": "Disponible",
+      "reserved": "Reservado",
+      "checkedOut": "Prestado",
+      "selected": "Seleccionado",
+      "today": "Hoy",
+      "confirmed": "Reserva confirmada",
+      "pending": "Reserva pendiente",
+      "loan": "Préstamo activo"
+    }
+  },
+  "tags": {
+    "label": "Etiquetas",
+    "placeholder": "Añadir etiquetas...",
+    "hint": "Pulsa Enter o coma para añadir una etiqueta",
+    "remove": "Eliminar etiqueta {{tag}}"
+  },
+  "notFound": {
+    "title": "¡Ups!",
+    "message": "Parece que esta herramienta se ha perdido. La página que buscas no existe.",
+    "backToCatalog": "Volver al Catálogo"
+  },
+  "organizationType": {
+    "neighborhood": "Barrio",
+    "school": "Escuela / Makerspace",
+    "company": "Empresa / Taller",
+    "friends": "Grupo de Amigos",
+    "noType": "— Sin tipo —",
+    "suggestions": "Sugerencias:"
+  },
+  "home": {
+    "hero": {
+      "byline": "Hauketo og Prinsdal Vel",
+      "title": "Obtén lo que necesitas — sin tener que comprarlo",
+      "subtitle": "Tingbiblioteket es el servicio de préstamo de HPV para miembros en Hauketo og Prinsdal. Toma prestado lo que necesitas — sin coste.",
+      "browseCatalog": "Ver Catálogo",
+      "login": "Iniciar Sesión"
+    },
+    "membersOnly": {
+      "notice": "Este servicio es actualmente solo para miembros de HPV. Estamos considerando soluciones para no miembros. ¿Aún no eres miembro? Regístrate en"
+    },
+    "available": {
+      "title": "Ya disponible",
+      "subtitle": "Y continuamos añadiendo más — herramientas, sillas, mesas, sistemas de sonido y equipos de iluminación.",
+      "viewAll": "Ver catálogo completo",
+      "items": {
+        "tents": { "icon": "⛺", "name": "Tiendas de Jardín", "detail": "2 uds., 3×3 m" },
+        "speakers": { "icon": "🔊", "name": "Altavoces", "detail": "2× JBL Partybox 320" },
+        "smoke": { "icon": "💨", "name": "Máquina de Humo", "detail": "Para eventos" },
+        "projector": { "icon": "📽️", "name": "Proyector", "detail": "Potente, próximamente" }
+      }
+    },
+    "howItWorks": {
+      "title": "Cómo funciona",
+      "step1": {
+        "title": "Encuentra lo que necesitas",
+        "description": "Explora el catálogo y ve qué está disponible."
+      },
+      "step2": {
+        "title": "Resérvalo",
+        "description": "Elige tus fechas y reserva online. Sin llamadas telefónicas."
+      },
+      "step3": {
+        "title": "Toma prestado y devuelve",
+        "description": "Recoge el artículo, úsalo y devuélvelo cuando hayas terminado."
+      }
+    },
+    "lendOut": {
+      "title": "Presta tus propias cosas",
+      "description": "También puedes añadir tus propios artículos a la biblioteca y ponerlos a disposición de otros miembros de HPV."
+    },
+    "requestTip": {
+      "title": "¿Falta algo?",
+      "description": "Envíanos un consejo sobre lo que te gustaría que adquiriese la biblioteca. Escuchamos lo que los miembros necesitan."
+    },
+    "about": {
+      "title": "Sobre HPV y Tingbiblioteket",
+      "description": "Hauketo og Prinsdal Vel (HPV) está construyendo una biblioteca de préstamos para sus miembros — financiada con los ingresos de la venta de la casa comunitaria. Como Bua para equipamiento deportivo, pero para todo lo demás. Para jóvenes y mayores, tanto si vives en apartamento, casa o adosado.",
+      "readMore": "Lee más sobre el proyecto en hpvel.no"
+    },
+    "cta": {
+      "title": "¿Eres miembro de HPV?",
+      "description": "Regístrate aquí para acceder a la biblioteca de préstamos.",
+      "register": "Registrarse",
+      "login": "Iniciar Sesión",
+      "notMember": "¿Aún no eres miembro de HPV? Únete en"
+    },
+    "nav": {
+      "home": "Inicio"
+    }
+  }
+}

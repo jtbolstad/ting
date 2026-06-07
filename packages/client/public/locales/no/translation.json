@@ -807,7 +807,7 @@
   "home": {
     "hero": {
       "byline": "Hauketo og Prinsdal Vel",
-      "title": "Det du trenger – uten å eie",
+      "title": "Ting du trenger – uten å eie",
       "subtitle": "Tingbiblioteket er HPVs utlånstjeneste for medlemmer i Hauketo og Prinsdal. Lån utstyr når du trenger det – gratis.",
       "browseCatalog": "Se katalogen",
       "login": "Logg inn"
@@ -821,15 +821,27 @@
       "viewAll": "Se hele katalogen",
       "items": {
         "tents": { "icon": "⛺", "name": "Hagetelt", "detail": "2 stk, 3×3 m" },
-        "speakers": { "icon": "🔊", "name": "Høyttalere", "detail": "2× JBL Partybox 320" },
-        "smoke": { "icon": "💨", "name": "Røykmaskin", "detail": "Til arrangement" },
-        "projector": { "icon": "📽️", "name": "Projektor", "detail": "Kraftig, på vei" }
+        "speakers": {
+          "icon": "🔊",
+          "name": "Høyttalere",
+          "detail": "2× JBL Partybox 320"
+        },
+        "smoke": {
+          "icon": "💨",
+          "name": "Røykmaskin",
+          "detail": "Til arrangement"
+        },
+        "projector": {
+          "icon": "📽️",
+          "name": "Projektor",
+          "detail": "Kraftig, på vei"
+        }
       }
     },
     "howItWorks": {
-      "title": "Slik fungerer det",
+      "title": "Slik fungerer ting",
       "step1": {
-        "title": "Finn det du trenger",
+        "title": "Finn ting du trenger",
         "description": "Bla i katalogen og se hva som er tilgjengelig."
       },
       "step2": {
@@ -843,11 +855,11 @@
     },
     "lendOut": {
       "title": "Lån ut dine egne ting",
-      "description": "Du kan også legge inn egne gjenstander i biblioteket og gjøre dem tilgjengelige for andre HPV-medlemmer."
+      "description": "Du kan også legge inn egne ting i biblioteket og gjøre tingene tilgjengelige for andre HPV-medlemmer."
     },
     "requestTip": {
       "title": "Savner du noe?",
-      "description": "Send oss et tips om hva du ønsker at biblioteket skal skaffe. Vi lytter til hva medlemmene trenger."
+      "description": "Send oss et tips om ting du ønsker at biblioteket skal skaffe. Vi lytter til hva medlemmene trenger!"
     },
     "about": {
       "title": "Om HPV og Tingbiblioteket",
