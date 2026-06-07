@@ -805,36 +805,60 @@
   },
   "home": {
     "hero": {
-      "title": "Borrow tools from your community",
-      "subtitle": "Tingbiblioteket is a community lending library where members share tools, equipment, and more — so you don't have to buy what you only need once.",
+      "byline": "Hauketo og Prinsdal Vel",
+      "title": "Get what you need — without owning it",
+      "subtitle": "Tingbiblioteket is HPV's lending service for members in Hauketo og Prinsdal. Borrow equipment when you need it — free of charge.",
       "browseCatalog": "Browse Catalog",
-      "joinFree": "Join for Free",
-      "login": "Already a member? Log in"
+      "login": "Log in"
+    },
+    "membersOnly": {
+      "notice": "This service is currently for HPV members only. We are considering solutions for non-members. Not a member yet? Sign up at"
+    },
+    "available": {
+      "title": "Already available",
+      "subtitle": "And we're continuously adding more — tools, chairs, tables, PA systems, and lighting rigs.",
+      "viewAll": "View full catalog",
+      "items": {
+        "tents": { "icon": "⛺", "name": "Garden Tents", "detail": "2 pcs, 3×3 m" },
+        "speakers": { "icon": "🔊", "name": "Speakers", "detail": "2× JBL Partybox 320" },
+        "smoke": { "icon": "💨", "name": "Smoke Machine", "detail": "For events" },
+        "projector": { "icon": "📽️", "name": "Projector", "detail": "Powerful, coming soon" }
+      }
     },
     "howItWorks": {
       "title": "How it works",
       "step1": {
         "title": "Find what you need",
-        "description": "Browse the catalog to discover tools and equipment available in your community."
+        "description": "Browse the catalog and see what's available."
       },
       "step2": {
         "title": "Reserve it",
-        "description": "Pick your dates and reserve the item online. No calls, no hassle."
+        "description": "Pick your dates and reserve online. No phone calls needed."
       },
       "step3": {
         "title": "Borrow and return",
-        "description": "Collect the item from the library, use it, and return it when you're done."
+        "description": "Pick up the item, use it, and return it when you're done."
       }
     },
+    "lendOut": {
+      "title": "Lend out your own things",
+      "description": "You can also add your own items to the library and make them available to other HPV members."
+    },
+    "requestTip": {
+      "title": "Missing something?",
+      "description": "Send us a tip about what you'd like the library to acquire. We listen to what members need."
+    },
     "about": {
-      "title": "About Tingbiblioteket",
-      "description": "We believe most tools spend more time in a drawer than in use. By sharing what we own, we reduce waste, save money, and build stronger communities. Tingbiblioteket makes it easy to lend and borrow within your neighborhood, school, or organization."
+      "title": "About HPV and Tingbiblioteket",
+      "description": "Hauketo og Prinsdal Vel (HPV) is building a lending library for its members — funded by the proceeds from the sale of the community house. Like Bua for sports equipment, but for everything else. For young and old, whether you live in an apartment, house, or townhouse.",
+      "readMore": "Read more about the project at hpvel.no"
     },
     "cta": {
-      "title": "Ready to get started?",
-      "description": "Join your local library and start borrowing today.",
-      "register": "Create an account",
-      "login": "Log in"
+      "title": "Are you an HPV member?",
+      "description": "Register here to get access to the lending library.",
+      "register": "Register",
+      "login": "Log in",
+      "notMember": "Not an HPV member yet? Sign up at"
     },
     "nav": {
       "home": "Home"

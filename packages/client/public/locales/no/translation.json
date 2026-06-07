@@ -806,36 +806,60 @@
   },
   "home": {
     "hero": {
-      "title": "Lån verktøy fra nærmiljøet",
-      "subtitle": "Tingbiblioteket er en felles utlånstjeneste der medlemmer deler verktøy, utstyr og mer — så du slipper å kjøpe det du bare trenger én gang.",
+      "byline": "Hauketo og Prinsdal Vel",
+      "title": "Det du trenger – uten å eie",
+      "subtitle": "Tingbiblioteket er HPVs utlånstjeneste for medlemmer i Hauketo og Prinsdal. Lån utstyr når du trenger det – gratis.",
       "browseCatalog": "Se katalogen",
-      "joinFree": "Bli medlem",
-      "login": "Allerede medlem? Logg inn"
+      "login": "Logg inn"
+    },
+    "membersOnly": {
+      "notice": "Tjenesten er foreløpig for HPV-medlemmer. Vi vurderer løsninger for ikke-medlemmer. Ikke medlem ennå? Meld deg inn på"
+    },
+    "available": {
+      "title": "Vi har allerede",
+      "subtitle": "Og vi vurderer stadig mer – verktøy, stoler, bord, PA-anlegg og lysrigg.",
+      "viewAll": "Se hele katalogen",
+      "items": {
+        "tents": { "icon": "⛺", "name": "Hagetelt", "detail": "2 stk, 3×3 m" },
+        "speakers": { "icon": "🔊", "name": "Høyttalere", "detail": "2× JBL Partybox 320" },
+        "smoke": { "icon": "💨", "name": "Røykmaskin", "detail": "Til arrangement" },
+        "projector": { "icon": "📽️", "name": "Projektor", "detail": "Kraftig, på vei" }
+      }
     },
     "howItWorks": {
       "title": "Slik fungerer det",
       "step1": {
         "title": "Finn det du trenger",
-        "description": "Bla i katalogen og oppdag verktøy og utstyr tilgjengelig i ditt nærmiljø."
+        "description": "Bla i katalogen og se hva som er tilgjengelig."
       },
       "step2": {
-        "title": "Reserver det",
-        "description": "Velg datoer og reserver på nett. Ingen telefonsamtaler, ingen mas."
+        "title": "Reserver",
+        "description": "Velg datoer og reserver på nett. Ingen telefonsamtaler."
       },
       "step3": {
         "title": "Lån og lever tilbake",
-        "description": "Hent tingen fra biblioteket, bruk den, og lever den tilbake når du er ferdig."
+        "description": "Hent tingen, bruk den, og lever den tilbake når du er ferdig."
       }
     },
+    "lendOut": {
+      "title": "Lån ut dine egne ting",
+      "description": "Du kan også legge inn egne gjenstander i biblioteket og gjøre dem tilgjengelige for andre HPV-medlemmer."
+    },
+    "requestTip": {
+      "title": "Savner du noe?",
+      "description": "Send oss et tips om hva du ønsker at biblioteket skal skaffe. Vi lytter til hva medlemmene trenger."
+    },
     "about": {
-      "title": "Om Tingbiblioteket",
-      "description": "Vi tror de fleste verktøy tilbringer mer tid i en skuff enn i bruk. Ved å dele det vi eier, reduserer vi sløsing, sparer penger og bygger sterkere lokalsamfunn. Tingbiblioteket gjør det enkelt å låne og leie ut i nabolaget, skolen eller organisasjonen din."
+      "title": "Om HPV og Tingbiblioteket",
+      "description": "Hauketo og Prinsdal Vel (HPV) ønsker å tilby et tingbibliotek for sine medlemmer – finansiert med fondet etter salget av velhuset. Som Bua er det for sportsutstyr, men for alle andre ting. For unge og gamle, enten du bor i blokk, enebolig eller rekkehus.",
+      "readMore": "Les mer om prosjektet på hpvel.no"
     },
     "cta": {
-      "title": "Klar til å komme i gang?",
-      "description": "Bli med i ditt lokale bibliotek og begynn å låne i dag.",
-      "register": "Opprett konto",
-      "login": "Logg inn"
+      "title": "Er du HPV-medlem?",
+      "description": "Registrer deg her for å få tilgang til tingbiblioteket.",
+      "register": "Registrer deg",
+      "login": "Logg inn",
+      "notMember": "Ikke HPV-medlem ennå? Meld deg inn på"
     },
     "nav": {
       "home": "Hjem"

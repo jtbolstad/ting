@@ -19,7 +19,7 @@ export function Navbar() {
   const close = () => setMenuOpen(false);
 
   return (
-    <nav className="bg-indigo-600 text-white shadow-lg" aria-label="Hovednavigasjon">
+    <nav className="bg-orange-800 text-white shadow-lg" aria-label="Hovednavigasjon">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
 
@@ -29,11 +29,11 @@ export function Navbar() {
               <select
                 value={activeOrganizationId || ""}
                 onChange={(e) => setActiveOrganizationId(e.target.value || null)}
-                className="text-2xl font-bold bg-transparent border-none text-white cursor-pointer hover:text-indigo-200 focus:outline-none focus:ring-2 focus:ring-white/50 rounded px-2"
+                className="text-2xl font-bold bg-transparent border-none text-white cursor-pointer hover:text-orange-200 focus:outline-none focus:ring-2 focus:ring-white/50 rounded px-2"
               >
-                <option value="" className="bg-indigo-600">{t("app.title")}</option>
+                <option value="" className="bg-orange-800">{t("app.title")}</option>
                 {organizations.map(org => (
-                  <option key={org.id} value={org.id} className="bg-indigo-600">{org.name}</option>
+                  <option key={org.id} value={org.id} className="bg-orange-800">{org.name}</option>
                 ))}
               </select>
             ) : (
@@ -42,15 +42,15 @@ export function Navbar() {
               </Link>
             )}
             <div className="hidden md:flex items-center space-x-6">
-              <Link to="/catalog" className="hover:text-indigo-200">{t("nav.catalog")}</Link>
+              <Link to="/catalog" className="hover:text-orange-200">{t("nav.catalog")}</Link>
               {isAuthenticated && (
                 <>
-                  <Link to="/items/add" className="hover:text-indigo-200">{t("nav.addItem")}</Link>
-                  <Link to="/dashboard" className="hover:text-indigo-200">{t("nav.dashboard")}</Link>
+                  <Link to="/items/add" className="hover:text-orange-200">{t("nav.addItem")}</Link>
+                  <Link to="/dashboard" className="hover:text-orange-200">{t("nav.dashboard")}</Link>
                   {isAdmin && (
-                    <Link to="/admin" className="hover:text-indigo-200">{t("nav.admin")}</Link>
+                    <Link to="/admin" className="hover:text-orange-200">{t("nav.admin")}</Link>
                   )}
-                  <Link to="/profile" className="hover:text-indigo-200">{t("nav.profile")}</Link>
+                  <Link to="/profile" className="hover:text-orange-200">{t("nav.profile")}</Link>
                 </>
               )}
             </div>
@@ -64,24 +64,21 @@ export function Navbar() {
                 <span className="text-sm">{t("nav.hello", { name: user?.name })}</span>
                 <button
                   onClick={logout}
-                  className="px-4 py-2 bg-indigo-700 rounded hover:bg-indigo-800"
+                  className="px-4 py-2 bg-orange-700 rounded hover:bg-orange-900"
                 >
                   {t("nav.logout")}
                 </button>
               </>
             ) : (
               <>
-                <Link to="/login" className="px-4 py-2 hover:text-indigo-200">{t("nav.login")}</Link>
-                {/* <Link to="/register" className="px-4 py-2 bg-indigo-700 rounded hover:bg-indigo-800">
-                  {t("nav.register")}
-                </Link> */}
+                <Link to="/login" className="px-4 py-2 hover:text-orange-200">{t("nav.login")}</Link>
               </>
             )}
           </div>
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden p-2 rounded hover:bg-indigo-700"
+            className="md:hidden p-2 rounded hover:bg-orange-700"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle menu"
           >
@@ -98,21 +95,21 @@ export function Navbar() {
 
       {/* Mobile drawer */}
       {menuOpen && (
-        <div className="md:hidden bg-indigo-700 px-4 pb-4 space-y-1">
+        <div className="md:hidden bg-orange-900 px-4 pb-4 space-y-1">
           {isAuthenticated ? (
             <>
-              <Link to="/catalog" onClick={close} className="block py-2 hover:text-indigo-200">{t("nav.catalog")}</Link>
-              <Link to="/items/add" onClick={close} className="block py-2 hover:text-indigo-200">{t("nav.addItem")}</Link>
-              <Link to="/dashboard" onClick={close} className="block py-2 hover:text-indigo-200">{t("nav.dashboard")}</Link>
+              <Link to="/catalog" onClick={close} className="block py-2 hover:text-orange-200">{t("nav.catalog")}</Link>
+              <Link to="/items/add" onClick={close} className="block py-2 hover:text-orange-200">{t("nav.addItem")}</Link>
+              <Link to="/dashboard" onClick={close} className="block py-2 hover:text-orange-200">{t("nav.dashboard")}</Link>
               {isAdmin && (
-                <Link to="/admin" onClick={close} className="block py-2 hover:text-indigo-200">{t("nav.admin")}</Link>
+                <Link to="/admin" onClick={close} className="block py-2 hover:text-orange-200">{t("nav.admin")}</Link>
               )}
-              <Link to="/profile" onClick={close} className="block py-2 hover:text-indigo-200">{t("nav.profile")}</Link>
-              <div className="pt-3 border-t border-indigo-500 flex items-center justify-between">
+              <Link to="/profile" onClick={close} className="block py-2 hover:text-orange-200">{t("nav.profile")}</Link>
+              <div className="pt-3 border-t border-orange-700 flex items-center justify-between">
                 <span className="text-sm">{t("nav.hello", { name: user?.name })}</span>
                 <button
                   onClick={() => { logout(); close(); }}
-                  className="px-4 py-2 bg-indigo-800 rounded hover:bg-indigo-900 text-sm"
+                  className="px-4 py-2 bg-orange-800 rounded hover:bg-orange-700 text-sm"
                 >
                   {t("nav.logout")}
                 </button>
@@ -120,12 +117,12 @@ export function Navbar() {
             </>
           ) : (
             <>
-              <Link to="/catalog" onClick={close} className="block py-2 hover:text-indigo-200">{t("nav.catalog")}</Link>
-              <Link to="/login" onClick={close} className="block py-2 hover:text-indigo-200">{t("nav.login")}</Link>
-              <Link to="/register" onClick={close} className="block py-2 hover:text-indigo-200">{t("nav.register")}</Link>
+              <Link to="/catalog" onClick={close} className="block py-2 hover:text-orange-200">{t("nav.catalog")}</Link>
+              <Link to="/login" onClick={close} className="block py-2 hover:text-orange-200">{t("nav.login")}</Link>
+              <Link to="/register" onClick={close} className="block py-2 hover:text-orange-200">{t("nav.register")}</Link>
             </>
           )}
-          <div className="pt-3 border-t border-indigo-500 flex items-center gap-4">
+          <div className="pt-3 border-t border-orange-700 flex items-center gap-4">
             <LanguageSwitcher />
           </div>
         </div>
