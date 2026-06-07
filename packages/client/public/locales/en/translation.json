@@ -802,5 +802,42 @@
     "friends": "Friend Group",
     "noType": "— No type —",
     "suggestions": "Suggestions:"
+  },
+  "home": {
+    "hero": {
+      "title": "Borrow tools from your community",
+      "subtitle": "Tingbiblioteket is a community lending library where members share tools, equipment, and more — so you don't have to buy what you only need once.",
+      "browseCatalog": "Browse Catalog",
+      "joinFree": "Join for Free",
+      "login": "Already a member? Log in"
+    },
+    "howItWorks": {
+      "title": "How it works",
+      "step1": {
+        "title": "Find what you need",
+        "description": "Browse the catalog to discover tools and equipment available in your community."
+      },
+      "step2": {
+        "title": "Reserve it",
+        "description": "Pick your dates and reserve the item online. No calls, no hassle."
+      },
+      "step3": {
+        "title": "Borrow and return",
+        "description": "Collect the item from the library, use it, and return it when you're done."
+      }
+    },
+    "about": {
+      "title": "About Tingbiblioteket",
+      "description": "We believe most tools spend more time in a drawer than in use. By sharing what we own, we reduce waste, save money, and build stronger communities. Tingbiblioteket makes it easy to lend and borrow within your neighborhood, school, or organization."
+    },
+    "cta": {
+      "title": "Ready to get started?",
+      "description": "Join your local library and start borrowing today.",
+      "register": "Create an account",
+      "login": "Log in"
+    },
+    "nav": {
+      "home": "Home"
+    }
   }
 }

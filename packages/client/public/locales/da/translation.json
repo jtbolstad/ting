@@ -802,5 +802,42 @@
     "friends": "Vennegruppe",
     "noType": "— Ingen type —",
     "suggestions": "Forslag:"
+  },
+  "home": {
+    "hero": {
+      "title": "Lån værktøj fra dit lokalsamfund",
+      "subtitle": "Tingbiblioteket er et fælles udlånsbibliotek, hvor medlemmer deler værktøj, udstyr og mere — så du ikke behøver at købe det, du kun har brug for én gang.",
+      "browseCatalog": "Se kataloget",
+      "joinFree": "Bliv medlem",
+      "login": "Allerede medlem? Log ind"
+    },
+    "howItWorks": {
+      "title": "Sådan fungerer det",
+      "step1": {
+        "title": "Find det du har brug for",
+        "description": "Gennemse kataloget og find værktøj og udstyr tilgængeligt i dit lokalsamfund."
+      },
+      "step2": {
+        "title": "Reservér det",
+        "description": "Vælg datoer og reservér online. Ingen telefonopkald, ingen besvær."
+      },
+      "step3": {
+        "title": "Lån og aflever",
+        "description": "Hent tingen fra biblioteket, brug den, og aflever den, når du er færdig."
+      }
+    },
+    "about": {
+      "title": "Om Tingbiblioteket",
+      "description": "Vi tror, at de fleste værktøjer tilbringer mere tid i en skuffe end i brug. Ved at dele det vi ejer, reducerer vi spild, sparer penge og bygger stærkere fællesskaber. Tingbiblioteket gør det nemt at låne og udlåne i dit nabolag, din skole eller organisation."
+    },
+    "cta": {
+      "title": "Klar til at komme i gang?",
+      "description": "Bliv en del af dit lokale bibliotek og begynd at låne i dag.",
+      "register": "Opret konto",
+      "login": "Log ind"
+    },
+    "nav": {
+      "home": "Hjem"
+    }
   }
 }

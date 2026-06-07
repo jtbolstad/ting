@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { OrganizationProvider } from "./context/OrganizationContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
@@ -21,6 +21,7 @@ import { AdminOverview } from "./pages/admin/AdminOverview";
 import { TermsOfService } from "./pages/TermsOfService";
 import { Profile } from "./pages/Profile";
 import { NotFound } from "./pages/NotFound";
+import { Home } from "./pages/Home";
 
 function App() {
   return (
@@ -35,7 +36,7 @@ function App() {
             <WelcomeBanner />
             <main id="main-content">
             <Routes>
-              <Route path="/" element={<Navigate to="/catalog" replace />} />
+              <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />

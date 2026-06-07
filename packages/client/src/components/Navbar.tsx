@@ -41,17 +41,19 @@ export function Navbar() {
                 {title}
               </Link>
             )}
-            {isAuthenticated && (
-              <div className="hidden md:flex items-center space-x-6">
-                <Link to="/catalog" className="hover:text-indigo-200">{t("nav.catalog")}</Link>
-                <Link to="/items/add" className="hover:text-indigo-200">{t("nav.addItem")}</Link>
-                <Link to="/dashboard" className="hover:text-indigo-200">{t("nav.dashboard")}</Link>
-                {isAdmin && (
-                  <Link to="/admin" className="hover:text-indigo-200">{t("nav.admin")}</Link>
-                )}
-                <Link to="/profile" className="hover:text-indigo-200">{t("nav.profile")}</Link>
-              </div>
-            )}
+            <div className="hidden md:flex items-center space-x-6">
+              <Link to="/catalog" className="hover:text-indigo-200">{t("nav.catalog")}</Link>
+              {isAuthenticated && (
+                <>
+                  <Link to="/items/add" className="hover:text-indigo-200">{t("nav.addItem")}</Link>
+                  <Link to="/dashboard" className="hover:text-indigo-200">{t("nav.dashboard")}</Link>
+                  {isAdmin && (
+                    <Link to="/admin" className="hover:text-indigo-200">{t("nav.admin")}</Link>
+                  )}
+                  <Link to="/profile" className="hover:text-indigo-200">{t("nav.profile")}</Link>
+                </>
+              )}
+            </div>
           </div>
 
           {/* Desktop right side */}
@@ -118,6 +120,7 @@ export function Navbar() {
             </>
           ) : (
             <>
+              <Link to="/catalog" onClick={close} className="block py-2 hover:text-indigo-200">{t("nav.catalog")}</Link>
               <Link to="/login" onClick={close} className="block py-2 hover:text-indigo-200">{t("nav.login")}</Link>
               <Link to="/register" onClick={close} className="block py-2 hover:text-indigo-200">{t("nav.register")}</Link>
             </>
