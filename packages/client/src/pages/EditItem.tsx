@@ -160,7 +160,7 @@ export function EditItem() {
               value={formData.name}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
             />
           </div>
 
@@ -177,7 +177,7 @@ export function EditItem() {
               value={formData.categoryId}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
             >
               <option value="">{t("editItem.selectCategory")}</option>
               {categories.map((category) => (
@@ -202,7 +202,7 @@ export function EditItem() {
               value={formData.status}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
             >
               <option value="AVAILABLE">{t("catalog.status.available")}</option>
               <option value="CHECKED_OUT">
@@ -229,7 +229,7 @@ export function EditItem() {
               name="condition"
               value={formData.condition}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
             >
               <option value="">{t("item.condition.unknown")}</option>
               <option value="GOOD">{t("item.condition.good")}</option>
@@ -252,7 +252,7 @@ export function EditItem() {
                 name="locationId"
                 value={formData.locationId}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
               >
                 <option value="">{t("editItem.noLocation")}</option>
                 {locations.map((loc) => (
@@ -277,7 +277,7 @@ export function EditItem() {
               value={formData.description}
               onChange={handleChange}
               rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
               placeholder={t("editItem.descriptionPlaceholder")}
             />
           </div>
@@ -298,7 +298,7 @@ export function EditItem() {
             <button
               type="submit"
               disabled={submitting}
-              className="flex-1 py-2 px-4 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className="flex-1 py-2 px-4 bg-orange-700 text-white rounded hover:bg-orange-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
               {submitting ? t("editItem.updating") : t("editItem.submit")}
             </button>

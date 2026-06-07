@@ -39,17 +39,17 @@ export function TagInput({ tags, onChange, label }: TagInputProps) {
           {label}
         </label>
       )}
-      <div className="flex flex-wrap gap-1.5 p-2 border border-gray-300 rounded focus-within:ring-2 focus-within:ring-indigo-500 bg-white min-h-[42px]">
+      <div className="flex flex-wrap gap-1.5 p-2 border border-gray-300 rounded focus-within:ring-2 focus-within:ring-orange-400 bg-white min-h-[42px]">
         {tags.map((tag) => (
           <span
             key={tag}
-            className="inline-flex items-center gap-1 px-2 py-0.5 bg-indigo-100 text-indigo-800 text-sm rounded"
+            className="inline-flex items-center gap-1 px-2 py-0.5 bg-orange-100 text-orange-700 text-sm rounded"
           >
             {tag}
             <button
               type="button"
               onClick={() => removeTag(tag)}
-              className="text-indigo-500 hover:text-indigo-800 leading-none"
+              className="text-orange-400 hover:text-orange-700 leading-none"
               aria-label={t("tags.remove", { tag })}
             >
               ×

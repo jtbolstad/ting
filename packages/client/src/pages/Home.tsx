@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export function Home() {
@@ -12,13 +12,13 @@ export function Home() {
       <section className="bg-orange-800 text-white py-20 px-4">
         <div className="container mx-auto max-w-3xl text-center">
           <p className="text-orange-200 text-sm font-semibold uppercase tracking-widest mb-3">
-            {t("home.hero.byline")}
+            1{t("home.hero.byline")}
           </p>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            {t("home.hero.title")}
+            2{t("home.hero.title")}
           </h1>
           <p className="text-lg md:text-xl text-orange-100 mb-8 max-w-2xl mx-auto">
-            {t("home.hero.subtitle")}
+            3{t("home.hero.subtitle")}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -42,8 +42,8 @@ export function Home() {
       {/* Members only notice */}
       <section className="bg-orange-50 border-b border-orange-200 py-4 px-4">
         <div className="container mx-auto max-w-3xl text-center">
-          <p className="text-orange-800 text-sm">
-            {t("home.membersOnly.notice")}{" "}
+          <p className="text-orange-800 text-sm balance">
+            {t("home.membersOnly.notice")}
             <a
               href="https://hpvel.no"
               target="_blank"

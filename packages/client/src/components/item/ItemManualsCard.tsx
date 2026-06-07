@@ -92,7 +92,7 @@ export function ItemManualsCard({ itemId }: ItemManualsCardProps) {
         {isAdmin && !showForm && (
           <button
             onClick={() => setShowForm(true)}
-            className="px-3 py-1 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700"
+            className="px-3 py-1 text-sm bg-orange-700 text-white rounded hover:bg-orange-800"
           >
             {t("item.manuals.addManual")}
           </button>
@@ -120,7 +120,7 @@ export function ItemManualsCard({ itemId }: ItemManualsCardProps) {
                   href={manual.url!}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm font-medium text-indigo-600 hover:underline"
+                  className="text-sm font-medium text-orange-500 hover:underline"
                 >
                   {manual.label}
                 </a>
@@ -221,7 +221,7 @@ export function ItemManualsCard({ itemId }: ItemManualsCardProps) {
             <button
               type="submit"
               disabled={submitting || (type === "PDF" && !url)}
-              className="px-4 py-2 bg-indigo-600 text-white rounded text-sm hover:bg-indigo-700 disabled:opacity-50"
+              className="px-4 py-2 bg-orange-700 text-white rounded text-sm hover:bg-orange-800 disabled:opacity-50"
             >
               {submitting ? t("item.manuals.adding") : t("item.manuals.add")}
             </button>

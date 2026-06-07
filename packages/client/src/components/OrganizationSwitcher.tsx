@@ -36,8 +36,8 @@ export function OrganizationSwitcher({ variant = 'dark' }: { variant?: 'dark' | 
       <select
         id="org-switcher"
         className={isLight
-          ? "border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          : "bg-indigo-500/50 border border-indigo-200 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/70"
+          ? "border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+          : "bg-orange-400/50 border border-orange-200 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/70"
         }
         value={activeOrganizationId ?? ""}
         onChange={handleChange}

@@ -605,7 +605,7 @@ export function AdminDashboard() {
         <h1 className="text-4xl font-bold">{t("admin.title")}</h1>
         <Link
           to="/admin/overview"
-          className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+          className="px-4 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
         >
           Platform Overview
         </Link>
@@ -614,7 +614,7 @@ export function AdminDashboard() {
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div className="bg-white p-6 rounded-lg shadow">
-          <div className="text-3xl font-bold text-indigo-600">
+          <div className="text-3xl font-bold text-orange-500">
             {items.length}
           </div>
           <div className="text-gray-600">{t("admin.stats.totalItems")}</div>
@@ -644,7 +644,7 @@ export function AdminDashboard() {
             onClick={() => setActiveTab("loans")}
             className={`pb-4 px-1 ${
               activeTab === "loans"
-                ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
+                ? "border-b-2 border-orange-500 text-orange-500 font-medium"
                 : "text-gray-500"
             }`}
           >
@@ -654,7 +654,7 @@ export function AdminDashboard() {
             onClick={() => setActiveTab("reservations")}
             className={`pb-4 px-1 flex items-center gap-1 ${
               activeTab === "reservations"
-                ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
+                ? "border-b-2 border-orange-500 text-orange-500 font-medium"
                 : "text-gray-500"
             }`}
           >
@@ -673,7 +673,7 @@ export function AdminDashboard() {
             onClick={() => setActiveTab("items")}
             className={`pb-4 px-1 ${
               activeTab === "items"
-                ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
+                ? "border-b-2 border-orange-500 text-orange-500 font-medium"
                 : "text-gray-500"
             }`}
           >
@@ -683,7 +683,7 @@ export function AdminDashboard() {
             onClick={() => setActiveTab("users")}
             className={`pb-4 px-1 ${
               activeTab === "users"
-                ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
+                ? "border-b-2 border-orange-500 text-orange-500 font-medium"
                 : "text-gray-500"
             }`}
           >
@@ -693,7 +693,7 @@ export function AdminDashboard() {
             onClick={() => setActiveTab("categories")}
             className={`pb-4 px-1 ${
               activeTab === "categories"
-                ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
+                ? "border-b-2 border-orange-500 text-orange-500 font-medium"
                 : "text-gray-500"
             }`}
           >
@@ -703,7 +703,7 @@ export function AdminDashboard() {
             onClick={() => setActiveTab("locations")}
             className={`pb-4 px-1 ${
               activeTab === "locations"
-                ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
+                ? "border-b-2 border-orange-500 text-orange-500 font-medium"
                 : "text-gray-500"
             }`}
           >
@@ -713,7 +713,7 @@ export function AdminDashboard() {
             onClick={() => setActiveTab("organization")}
             className={`pb-4 px-1 ${
               activeTab === "organization"
-                ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
+                ? "border-b-2 border-orange-500 text-orange-500 font-medium"
                 : "text-gray-500"
             }`}
           >
@@ -723,7 +723,7 @@ export function AdminDashboard() {
             onClick={() => setActiveTab("groups")}
             className={`pb-4 px-1 ${
               activeTab === "groups"
-                ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
+                ? "border-b-2 border-orange-500 text-orange-500 font-medium"
                 : "text-gray-500"
             }`}
           >
@@ -743,7 +743,7 @@ export function AdminDashboard() {
             }}
             className={`pb-4 px-1 ${
               activeTab === "auditlog"
-                ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
+                ? "border-b-2 border-orange-500 text-orange-500 font-medium"
                 : "text-gray-500"
             }`}
           >
@@ -763,7 +763,7 @@ export function AdminDashboard() {
             }}
             className={`pb-4 px-1 ${
               activeTab === "email"
-                ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
+                ? "border-b-2 border-orange-500 text-orange-500 font-medium"
                 : "text-gray-500"
             }`}
           >
@@ -785,7 +785,7 @@ export function AdminDashboard() {
                 setDueDate(d.toISOString().split("T")[0]);
                 setShowCheckout(true);
               }}
-              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+              className="px-4 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
             >
               {t("admin.loans.checkoutItem")}
             </button>
@@ -866,7 +866,7 @@ export function AdminDashboard() {
                         <td className="px-6 py-4">
                           <button
                             onClick={() => openCheckin(loan.id)}
-                            className="text-indigo-600 hover:text-indigo-900"
+                            className="text-orange-500 hover:text-orange-800"
                           >
                             {t("admin.loans.checkin")}
                           </button>
@@ -967,7 +967,7 @@ export function AdminDashboard() {
             <h2 className="text-2xl font-bold">{t("admin.items.title")}</h2>
             <button
               onClick={() => setShowAddItem(true)}
-              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+              className="px-4 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
             >
               {t("admin.items.addItem")}
             </button>
@@ -1044,7 +1044,7 @@ export function AdminDashboard() {
                       <td className="px-6 py-4 font-medium">
                         <Link
                           to={`/items/${item.slug ?? item.id}`}
-                          className="text-indigo-600 hover:underline"
+                          className="text-orange-500 hover:underline"
                         >
                           {item.name}
                         </Link>
@@ -1095,7 +1095,7 @@ export function AdminDashboard() {
                         )}
                         <Link
                           to={`/items/${item.slug ?? item.id}/edit`}
-                          className="text-indigo-600 hover:text-indigo-900"
+                          className="text-orange-500 hover:text-orange-800"
                         >
                           {t("admin.items.edit")}
                         </Link>
@@ -1125,7 +1125,7 @@ export function AdminDashboard() {
                 setShowAddUser(true);
                 setAddUserError("");
               }}
-              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+              className="px-4 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
             >
               {t("admin.users.addUser")}
             </button>
@@ -1179,7 +1179,7 @@ export function AdminDashboard() {
                         {membership.role !== "OWNER" && (
                           <button
                             onClick={() => handleOpenEdit(user, membership)}
-                            className="text-indigo-600 hover:text-indigo-900 text-sm"
+                            className="text-orange-500 hover:text-orange-800 text-sm"
                           >
                             {t("admin.users.edit")}
                           </button>
@@ -1273,7 +1273,7 @@ export function AdminDashboard() {
             </h2>
             <button
               onClick={() => setShowAddCategory(true)}
-              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+              className="px-4 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
             >
               {t("admin.categories.addCategory")}
             </button>
@@ -1314,7 +1314,7 @@ export function AdminDashboard() {
                       <td className="px-6 py-4 space-x-3">
                         <button
                           onClick={() => openEditCategory(category)}
-                          className="text-indigo-600 hover:text-indigo-900"
+                          className="text-orange-500 hover:text-orange-800"
                         >
                           {t("admin.categories.edit")}
                         </button>
@@ -1341,7 +1341,7 @@ export function AdminDashboard() {
             <h2 className="text-2xl font-bold">{t("admin.locations.title")}</h2>
             <button
               onClick={() => setShowAddLocation(true)}
-              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+              className="px-4 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
             >
               {t("admin.locations.addLocation")}
             </button>
@@ -1384,7 +1384,7 @@ export function AdminDashboard() {
                         <td className="px-6 py-4 space-x-3">
                           <button
                             onClick={() => openEditLocation(location)}
-                            className="text-indigo-600 hover:text-indigo-900"
+                            className="text-orange-500 hover:text-orange-800"
                           >
                             {t("admin.locations.edit")}
                           </button>
@@ -1458,7 +1458,7 @@ export function AdminDashboard() {
               <button
                 type="submit"
                 disabled={orgSaving}
-                className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-400"
+                className="px-4 py-2 bg-orange-700 text-white rounded hover:bg-orange-800 disabled:bg-gray-400"
               >
                 {orgSaving ? t("admin.organization.saving") : t("admin.organization.save")}
               </button>
@@ -1477,7 +1477,7 @@ export function AdminDashboard() {
                 setGroupForm({ name: "", description: "" });
                 setShowAddGroup(true);
               }}
-              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+              className="px-4 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
             >
               {t("admin.groups.addGroup")}
             </button>
@@ -1521,7 +1521,7 @@ export function AdminDashboard() {
                             setGroupForm({ name: group.name, description: group.description || "" });
                             setShowEditGroup(true);
                           }}
-                          className="text-indigo-600 hover:text-indigo-900"
+                          className="text-orange-500 hover:text-orange-800"
                         >
                           {t("admin.groups.edit")}
                         </button>
@@ -1565,7 +1565,7 @@ export function AdminDashboard() {
                   .catch(console.error)
                   .finally(() => setAuditLogsLoading(false));
               }}
-              className="text-sm text-indigo-600 hover:underline"
+              className="text-sm text-orange-500 hover:underline"
             >
               Oppdater
             </button>
@@ -1607,7 +1607,7 @@ export function AdminDashboard() {
                           {new Date(log.createdAt).toLocaleString("no")}
                         </td>
                         <td className="px-4 py-3">
-                          <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded text-xs font-mono">
+                          <span className="px-2 py-0.5 bg-orange-50 text-orange-600 rounded text-xs font-mono">
                             {log.action}
                           </span>
                         </td>
@@ -1721,7 +1721,7 @@ export function AdminDashboard() {
                 <button
                   type="submit"
                   disabled={testEmailSending}
-                  className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:opacity-50"
+                  className="px-4 py-2 bg-orange-700 text-white rounded hover:bg-orange-800 disabled:opacity-50"
                 >
                   {testEmailSending ? "Sender..." : "Send"}
                 </button>
@@ -1742,7 +1742,7 @@ export function AdminDashboard() {
                     .catch(console.error)
                     .finally(() => setEmailLogsLoading(false));
                 }}
-                className="text-sm text-indigo-600 hover:underline"
+                className="text-sm text-orange-500 hover:underline"
               >
                 Oppdater
               </button>
@@ -1875,7 +1875,7 @@ export function AdminDashboard() {
               <div className="flex gap-2">
                 <button
                   type="submit"
-                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                  className="flex-1 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
                 >
                   {t("admin.checkout.submit")}
                 </button>
@@ -1932,7 +1932,7 @@ export function AdminDashboard() {
               <div className="flex gap-2">
                 <button
                   type="submit"
-                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                  className="flex-1 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
                 >
                   {t("admin.loans.checkin")}
                 </button>
@@ -2007,7 +2007,7 @@ export function AdminDashboard() {
               <div className="flex gap-2">
                 <button
                   type="submit"
-                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                  className="flex-1 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
                 >
                   {t("admin.items.addItem")}
                 </button>
@@ -2065,7 +2065,7 @@ export function AdminDashboard() {
               <div className="flex gap-2">
                 <button
                   type="submit"
-                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                  className="flex-1 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
                 >
                   {t("admin.categories.create")}
                 </button>
@@ -2155,7 +2155,7 @@ export function AdminDashboard() {
               <div className="flex gap-2">
                 <button
                   type="submit"
-                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                  className="flex-1 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
                 >
                   {t("admin.groups.create")}
                 </button>
@@ -2206,7 +2206,7 @@ export function AdminDashboard() {
               <div className="flex gap-2">
                 <button
                   type="submit"
-                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                  className="flex-1 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
                 >
                   {t("admin.groups.update")}
                 </button>
@@ -2366,7 +2366,7 @@ export function AdminDashboard() {
               <div className="flex gap-2">
                 <button
                   type="submit"
-                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                  className="flex-1 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
                 >
                   {t("admin.locations.create")}
                 </button>
@@ -2440,7 +2440,7 @@ export function AdminDashboard() {
               <div className="flex gap-2">
                 <button
                   type="submit"
-                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                  className="flex-1 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
                 >
                   {t("admin.locations.update")}
                 </button>
@@ -2518,7 +2518,7 @@ export function AdminDashboard() {
               <div className="flex gap-2">
                 <button
                   type="submit"
-                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                  className="flex-1 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
                 >
                   {t("admin.users.create")}
                 </button>
@@ -2580,7 +2580,7 @@ export function AdminDashboard() {
               <div className="flex gap-2">
                 <button
                   type="submit"
-                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                  className="flex-1 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
                 >
                   {t("admin.categories.update")}
                 </button>
@@ -2626,7 +2626,7 @@ export function AdminDashboard() {
                   <select
                     value={editUserRole}
                     onChange={(e) => setEditUserRole(e.target.value)}
-                    className="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
                   >
                     <option value="MEMBER">MEMBER</option>
                     <option value="MANAGER">MANAGER</option>
@@ -2636,7 +2636,7 @@ export function AdminDashboard() {
                     type="button"
                     onClick={handleSaveEditRole}
                     disabled={editUserRole === editingUser.membership.role}
-                    className="px-3 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-400 text-sm"
+                    className="px-3 py-2 bg-orange-700 text-white rounded hover:bg-orange-800 disabled:bg-gray-400 text-sm"
                   >
                     {t("common.save")}
                   </button>
@@ -2650,7 +2650,7 @@ export function AdminDashboard() {
                     value={editUserPassword}
                     onChange={(e) => setEditUserPassword(e.target.value)}
                     placeholder="••••••"
-                    className="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
                   />
                   <button
                     type="button"

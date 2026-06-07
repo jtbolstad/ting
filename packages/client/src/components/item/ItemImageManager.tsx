@@ -57,10 +57,10 @@ export function ItemImageManager({ itemId, images, onChange }: ItemImageManagerP
               <img
                 src={img.url}
                 alt=""
-                className={`w-full h-full object-cover rounded border-2 ${i === 0 ? "border-indigo-400" : "border-gray-200"}`}
+                className={`w-full h-full object-cover rounded border-2 ${i === 0 ? "border-orange-300" : "border-gray-200"}`}
               />
               {i === 0 && (
-                <span className="absolute top-1 left-1 text-xs bg-indigo-600 text-white px-1 rounded">
+                <span className="absolute top-1 left-1 text-xs bg-orange-700 text-white px-1 rounded">
                   {t("item.images.primary")}
                 </span>
               )}

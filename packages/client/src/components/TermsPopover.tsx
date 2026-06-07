@@ -88,7 +88,7 @@ export function TermsPopover({ id }: TermsPopoverProps) {
         <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 flex justify-end gap-3">
           <button
             onClick={handleClose}
-            className="px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors"
+            className="px-6 py-2 bg-orange-700 text-white rounded hover:bg-orange-800 transition-colors"
           >
             {t("common.close")}
           </button>

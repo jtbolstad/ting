@@ -61,21 +61,21 @@ export function ForgotPassword() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2 px-4 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-400"
+            className="w-full py-2 px-4 bg-orange-700 text-white rounded hover:bg-orange-800 disabled:bg-gray-400"
           >
             {loading ? t('auth.forgotPassword.sending') : t('auth.forgotPassword.submit')}
           </button>
         </form>
 
         <p className="mt-4 text-center text-sm text-gray-600">
-          <Link to="/login" className="text-indigo-600 hover:text-indigo-800">
+          <Link to="/login" className="text-orange-500 hover:text-orange-700">
             {t('auth.forgotPassword.backToLogin')}
           </Link>
         </p>

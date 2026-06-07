@@ -46,7 +46,7 @@ export function ItemDetailsCard({ item }: ItemDetailsCardProps) {
                   key={img.id}
                   type="button"
                   onClick={() => setActiveIndex(i)}
-                  className={`flex-shrink-0 w-14 h-14 rounded overflow-hidden border-2 transition-colors ${i === activeIndex ? "border-indigo-500" : "border-transparent"}`}
+                  className={`flex-shrink-0 w-14 h-14 rounded overflow-hidden border-2 transition-colors ${i === activeIndex ? "border-orange-400" : "border-transparent"}`}
                 >
                   <img src={img.url} alt="" className="w-full h-full object-cover" />
                 </button>
@@ -110,7 +110,7 @@ export function ItemDetailsCard({ item }: ItemDetailsCardProps) {
           {item.tags && item.tags.length > 0 && (
             <div className="mb-6 flex flex-wrap gap-1.5">
               {item.tags.map((tag) => (
-                <span key={tag} className="px-2 py-0.5 bg-indigo-50 text-indigo-700 text-sm rounded border border-indigo-100">
+                <span key={tag} className="px-2 py-0.5 bg-orange-50 text-orange-600 text-sm rounded border border-orange-100">
                   {tag}
                 </span>
               ))}

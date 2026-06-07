@@ -126,13 +126,13 @@ export function Profile() {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="flex-1 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
               required
             />
             <button
               type="submit"
               disabled={nameSaving}
-              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:opacity-50"
+              className="px-4 py-2 bg-orange-700 text-white rounded hover:bg-orange-800 disabled:opacity-50"
             >
               {nameSaving ? t("profile.saving") : t("profile.save")}
             </button>
@@ -151,7 +151,7 @@ export function Profile() {
               placeholder={t("profile.currentPassword")}
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
               required
             />
             <input
@@ -159,7 +159,7 @@ export function Profile() {
               placeholder={t("profile.newPassword")}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
               required
             />
             <input
@@ -167,13 +167,13 @@ export function Profile() {
               placeholder={t("profile.confirmPassword")}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
               required
             />
             <button
               type="submit"
               disabled={pwSaving}
-              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:opacity-50"
+              className="px-4 py-2 bg-orange-700 text-white rounded hover:bg-orange-800 disabled:opacity-50"
             >
               {pwSaving ? t("profile.saving") : t("profile.save")}
             </button>
@@ -198,7 +198,7 @@ export function Profile() {
                   <ul className="space-y-1">
                     {loans.map((loan) => (
                       <li key={loan.id} className="flex justify-between text-sm">
-                        <Link to={`/items/${loan.item?.slug ?? loan.itemId}`} className="text-indigo-600 hover:underline">
+                        <Link to={`/items/${loan.item?.slug ?? loan.itemId}`} className="text-orange-500 hover:underline">
                           {loan.item?.name ?? loan.itemId}
                         </Link>
                         <span className="text-gray-500">
@@ -217,7 +217,7 @@ export function Profile() {
                   <ul className="space-y-1">
                     {reservations.map((res) => (
                       <li key={res.id} className="flex justify-between text-sm">
-                        <Link to={`/items/${res.item?.slug ?? res.itemId}`} className="text-indigo-600 hover:underline">
+                        <Link to={`/items/${res.item?.slug ?? res.itemId}`} className="text-orange-500 hover:underline">
                           {res.item?.name ?? res.itemId}
                         </Link>
                         <span className="text-gray-500">
@@ -260,7 +260,7 @@ export function Profile() {
                   placeholder={t("profile.inviteEmailPlaceholder")}
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
                   required
                 />
                 <div className="flex gap-2">
@@ -269,7 +269,7 @@ export function Profile() {
                     <select
                       value={inviteRole}
                       onChange={(e) => setInviteRole(e.target.value)}
-                      className="px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
                     >
                       <option value="MEMBER">{t("profile.roleMember")}</option>
                       <option value="MANAGER">{t("profile.roleManager")}</option>
@@ -279,7 +279,7 @@ export function Profile() {
                   <button
                     type="submit"
                     disabled={inviteSending}
-                    className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:opacity-50"
+                    className="px-4 py-2 bg-orange-700 text-white rounded hover:bg-orange-800 disabled:opacity-50"
                   >
                     {inviteSending ? t("profile.sending") : t("profile.sendInvite")}
                   </button>
@@ -293,13 +293,13 @@ export function Profile() {
                   {inviteMsg.link && (
                     <div className="mt-2 p-2 bg-gray-50 rounded text-xs break-all">
                       <p className="text-gray-600 mb-1">{t("profile.inviteLink")}:</p>
-                      <code className="text-indigo-600">{inviteMsg.link}</code>
+                      <code className="text-orange-500">{inviteMsg.link}</code>
                       <button
                         type="button"
                         onClick={() => {
                           navigator.clipboard.writeText(inviteMsg.link!);
                         }}
-                        className="ml-2 text-indigo-600 hover:text-indigo-800"
+                        className="ml-2 text-orange-500 hover:text-orange-700"
                       >
                         {t("profile.copyLink")}
                       </button>

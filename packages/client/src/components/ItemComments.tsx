@@ -131,12 +131,12 @@ export function ItemComments({ itemId }: ItemCommentsProps) {
             onChange={(e) => setNewComment(e.target.value)}
             placeholder={t("comments.placeholder")}
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
           />
           <button
             type="submit"
             disabled={submitting || !newComment.trim()}
-            className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="px-4 py-2 bg-orange-700 text-white rounded hover:bg-orange-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             {submitting ? t("comments.submitting") : t("comments.submit")}
           </button>
@@ -178,7 +178,7 @@ export function ItemComments({ itemId }: ItemCommentsProps) {
                   <div className="flex space-x-2">
                     <button
                       onClick={() => handleStartEdit(comment)}
-                      className="text-sm text-indigo-600 hover:text-indigo-800"
+                      className="text-sm text-orange-500 hover:text-orange-700"
                     >
                       {t("common.edit")}
                     </button>
@@ -198,12 +198,12 @@ export function ItemComments({ itemId }: ItemCommentsProps) {
                     value={editContent}
                     onChange={(e) => setEditContent(e.target.value)}
                     rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
                   />
                   <div className="flex space-x-2">
                     <button
                       onClick={() => handleUpdateComment(comment.id)}
-                      className="px-3 py-1 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700"
+                      className="px-3 py-1 bg-orange-700 text-white text-sm rounded hover:bg-orange-800"
                     >
                       {t("common.save")}
                     </button>

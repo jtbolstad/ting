@@ -49,7 +49,7 @@ export function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
             />
           </div>
 
@@ -63,28 +63,28 @@ export function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2 px-4 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-400"
+            className="w-full py-2 px-4 bg-orange-700 text-white rounded hover:bg-orange-800 disabled:bg-gray-400"
           >
             {loading ? t('auth.login.loggingIn') : t('auth.login.submit')}
           </button>
         </form>
 
         <p className="mt-2 text-center text-sm">
-          <Link to="/forgot-password" className="text-indigo-600 hover:text-indigo-800">
+          <Link to="/forgot-password" className="text-orange-500 hover:text-orange-700">
             {t('auth.login.forgotPassword')}
           </Link>
         </p>
 
         <p className="mt-4 text-center text-sm text-gray-600">
           {t('auth.login.noAccount')}{' '}
-          <Link to="/register" className="text-indigo-600 hover:text-indigo-800">
+          <Link to="/register" className="text-orange-500 hover:text-orange-700">
             {t('auth.login.registerLink')}
           </Link>
         </p>

@@ -211,7 +211,7 @@ export function ItemAvailabilityCalendar({
             if (!isCurrentMonth) {
               bgColor = "bg-gray-50";
             } else if (status.type === "selected") {
-              bgColor = "bg-indigo-500 text-white";
+              bgColor = "bg-orange-400 text-white";
               textColor = "text-white";
               cursor = "cursor-pointer";
             } else if (status.type === "loan") {
@@ -273,7 +273,7 @@ export function ItemAvailabilityCalendar({
             <span>{t("calendar.legend.checkedOut")}</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-indigo-500 rounded"></div>
+            <div className="w-4 h-4 bg-orange-400 rounded"></div>
             <span>{t("calendar.legend.selected")}</span>
           </div>
           <div className="flex items-center gap-2">

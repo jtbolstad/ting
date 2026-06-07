@@ -158,7 +158,7 @@ export function AddItem() {
               value={formData.name}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
               placeholder={t("addItem.namePlaceholder")}
             />
           </div>
@@ -176,7 +176,7 @@ export function AddItem() {
               value={formData.categoryId}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
             >
               <option value="">{t("addItem.selectCategory")}</option>
               {categories.map((category) => (
@@ -200,7 +200,7 @@ export function AddItem() {
                 name="locationId"
                 value={formData.locationId}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
               >
                 <option value="">{t("addItem.noLocation")}</option>
                 {locations.map((loc) => (
@@ -225,7 +225,7 @@ export function AddItem() {
               value={formData.description}
               onChange={handleChange}
               rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
               placeholder={t("addItem.descriptionPlaceholder")}
             />
           </div>
@@ -303,7 +303,7 @@ export function AddItem() {
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 py-2 px-4 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className="flex-1 py-2 px-4 bg-orange-700 text-white rounded hover:bg-orange-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
               {uploading ? t("addItem.uploadingManual") : loading ? t("addItem.creating") : t("addItem.submit")}
             </button>

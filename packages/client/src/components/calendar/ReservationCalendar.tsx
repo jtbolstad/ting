@@ -148,7 +148,7 @@ export function ReservationCalendar({
               <div
                 className={`text-xs font-medium mb-1 w-6 h-6 flex items-center justify-center rounded-full ${
                   isToday
-                    ? "bg-indigo-600 text-white"
+                    ? "bg-orange-700 text-white"
                     : isCurrentMonth
                       ? "text-gray-900"
                       : "text-gray-400"
@@ -214,7 +214,7 @@ export function ReservationCalendar({
               <div className="font-medium">
                 <Link
                   to={`/items/${selectedReservation.item?.slug ?? selectedReservation.itemId}`}
-                  className="text-indigo-600 hover:underline"
+                  className="text-orange-500 hover:underline"
                 >
                   {selectedReservation.item?.name}
                 </Link>
@@ -267,7 +267,7 @@ export function ReservationCalendar({
               <div className="font-medium">
                 <Link
                   to={`/items/${selectedLoan.item?.slug ?? selectedLoan.itemId}`}
-                  className="text-indigo-600 hover:underline"
+                  className="text-orange-500 hover:underline"
                 >
                   {selectedLoan.item?.name}
                 </Link>

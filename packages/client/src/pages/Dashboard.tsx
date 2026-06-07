@@ -100,7 +100,7 @@ export function Dashboard() {
             onClick={() => setActiveTab("list")}
             className={`pb-3 px-1 text-sm font-medium ${
               activeTab === "list"
-                ? "border-b-2 border-indigo-600 text-indigo-600"
+                ? "border-b-2 border-orange-500 text-orange-500"
                 : "text-gray-500 hover:text-gray-700"
             }`}
           >
@@ -110,7 +110,7 @@ export function Dashboard() {
             onClick={() => setActiveTab("calendar")}
             className={`pb-3 px-1 text-sm font-medium ${
               activeTab === "calendar"
-                ? "border-b-2 border-indigo-600 text-indigo-600"
+                ? "border-b-2 border-orange-500 text-orange-500"
                 : "text-gray-500 hover:text-gray-700"
             }`}
           >
@@ -252,7 +252,7 @@ export function Dashboard() {
                                   </button>
                                   <button
                                     onClick={() => handleReturnItem(loan.id)}
-                                    className="text-indigo-600 hover:text-indigo-900"
+                                    className="text-orange-500 hover:text-orange-800"
                                   >
                                     {t("dashboard.loans.return")}
                                   </button>

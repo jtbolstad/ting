@@ -74,7 +74,7 @@ export function Register() {
         </h2>
 
         {inviteOrgName && (
-          <div className="mb-4 p-3 bg-indigo-50 border border-indigo-200 text-indigo-800 rounded">
+          <div className="mb-4 p-3 bg-orange-50 border border-orange-200 text-orange-700 rounded">
             Invitert til <strong>{inviteOrgName}</strong>
           </div>
         )}
@@ -95,7 +95,7 @@ export function Register() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
             />
           </div>
 
@@ -109,7 +109,7 @@ export function Register() {
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled={!!inviteToken}
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400 disabled:bg-gray-100 disabled:cursor-not-allowed"
             />
           </div>
 
@@ -123,7 +123,7 @@ export function Register() {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
             />
           </div>
 
@@ -142,7 +142,7 @@ export function Register() {
                 type="button"
                 // @ts-ignore - popovertarget is not yet in TypeScript types
                 popovertarget="terms-popover"
-                className="text-indigo-600 hover:text-indigo-800 underline"
+                className="text-orange-500 hover:text-orange-700 underline"
               >
                 {t("auth.register.termsLink")}
               </button>
@@ -154,7 +154,7 @@ export function Register() {
           <button
             type="submit"
             disabled={loading || !acceptedTerms}
-            className="w-full py-2 px-4 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-400"
+            className="w-full py-2 px-4 bg-orange-700 text-white rounded hover:bg-orange-800 disabled:bg-gray-400"
           >
             {loading
               ? t("auth.register.registering")
@@ -164,7 +164,7 @@ export function Register() {
 
         <p className="mt-4 text-center text-sm text-gray-600">
           {t("auth.register.hasAccount")}{" "}
-          <Link to="/login" className="text-indigo-600 hover:text-indigo-800">
+          <Link to="/login" className="text-orange-500 hover:text-orange-700">
             {t("auth.register.loginLink")}
           </Link>
         </p>

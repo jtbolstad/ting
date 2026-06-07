@@ -70,7 +70,7 @@ export function ItemReservationForm({
         <button
           type="button"
           onClick={() => setShowCalendar(!showCalendar)}
-          className="text-indigo-600 hover:underline text-sm"
+          className="text-orange-500 hover:underline text-sm"
         >
           {showCalendar
             ? t("item.reserve.hideCalendar")
@@ -84,7 +84,7 @@ export function ItemReservationForm({
             {t("item.reserve.loginRequired")}{" "}
             <button
               onClick={() => navigate("/login")}
-              className="text-indigo-600 hover:underline"
+              className="text-orange-500 hover:underline"
             >
               {t("item.reserve.loginLink")}
             </button>
@@ -130,7 +130,7 @@ export function ItemReservationForm({
                     onChange={(e) => setStartDate(e.target.value)}
                     min={new Date().toISOString().split("T")[0]}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
                   />
                 </div>
 
@@ -144,7 +144,7 @@ export function ItemReservationForm({
                     onChange={(e) => setEndDate(e.target.value)}
                     min={startDate || new Date().toISOString().split("T")[0]}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
                   />
                 </div>
               </div>
@@ -152,7 +152,7 @@ export function ItemReservationForm({
               <button
                 type="submit"
                 disabled={reserving || !startDate || !endDate}
-                className="w-full py-3 px-4 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                className="w-full py-3 px-4 bg-orange-700 text-white rounded hover:bg-orange-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
                 {reserving
                   ? t("item.reserve.creating")

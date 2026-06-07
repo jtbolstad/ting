@@ -65,7 +65,7 @@ export function InviteAccept() {
           <p className="text-gray-600 mb-6">{error}</p>
           <button
             onClick={() => navigate("/")}
-            className="px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+            className="px-6 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
           >
             {t("invite.goHome")}
           </button>

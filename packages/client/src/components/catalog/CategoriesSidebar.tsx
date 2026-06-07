@@ -23,7 +23,7 @@ export function CategoriesSidebar({
           onClick={() => onCategoryChange("")}
           className={`flex-shrink-0 px-3 py-1.5 rounded-full text-sm border ${
             !selectedCategory
-              ? "bg-indigo-600 text-white border-indigo-600"
+              ? "bg-orange-700 text-white border-orange-500"
               : "bg-white text-gray-700 border-gray-300"
           }`}
         >
@@ -35,7 +35,7 @@ export function CategoriesSidebar({
             onClick={() => onCategoryChange(cat.id)}
             className={`flex-shrink-0 px-3 py-1.5 rounded-full text-sm border ${
               selectedCategory === cat.id
-                ? "bg-indigo-600 text-white border-indigo-600"
+                ? "bg-orange-700 text-white border-orange-500"
                 : "bg-white text-gray-700 border-gray-300"
             }`}
           >
@@ -55,7 +55,7 @@ export function CategoriesSidebar({
             onClick={() => onCategoryChange("")}
             className={`block w-full text-left px-3 py-2 rounded ${
               !selectedCategory
-                ? "bg-indigo-100 text-indigo-700"
+                ? "bg-orange-100 text-orange-600"
                 : "hover:bg-gray-100"
             }`}
           >
@@ -67,7 +67,7 @@ export function CategoriesSidebar({
               onClick={() => onCategoryChange(cat.id)}
               className={`block w-full text-left px-3 py-2 rounded ${
                 selectedCategory === cat.id
-                  ? "bg-indigo-100 text-indigo-700"
+                  ? "bg-orange-100 text-orange-600"
                   : "hover:bg-gray-100"
               }`}
             >

@@ -133,7 +133,7 @@ export function ItemReviews({ itemId }: ItemReviewsProps) {
           {!showForm ? (
             <button
               onClick={() => setShowForm(true)}
-              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+              className="px-4 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
             >
               {t("reviews.writeReview")}
             </button>
@@ -158,7 +158,7 @@ export function ItemReviews({ itemId }: ItemReviewsProps) {
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
                   placeholder={t("reviews.commentPlaceholder")}
                 />
               </div>
@@ -173,7 +173,7 @@ export function ItemReviews({ itemId }: ItemReviewsProps) {
                 <button
                   type="submit"
                   disabled={submitting || rating === 0}
-                  className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-400"
+                  className="px-4 py-2 bg-orange-700 text-white rounded hover:bg-orange-800 disabled:bg-gray-400"
                 >
                   {submitting ? t("reviews.submitting") : t("reviews.submit")}
                 </button>

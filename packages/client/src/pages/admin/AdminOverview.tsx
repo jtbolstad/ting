@@ -339,7 +339,7 @@ export function AdminOverview() {
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white p-6 rounded-lg shadow">
-          <div className="text-3xl font-bold text-indigo-600">
+          <div className="text-3xl font-bold text-orange-500">
             {organizations.length}
           </div>
           <div className="text-gray-600">
@@ -369,7 +369,7 @@ export function AdminOverview() {
             onClick={() => setActiveTab("organizations")}
             className={`pb-4 px-1 ${
               activeTab === "organizations"
-                ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
+                ? "border-b-2 border-orange-500 text-orange-500 font-medium"
                 : "text-gray-500"
             }`}
           >
@@ -379,7 +379,7 @@ export function AdminOverview() {
             onClick={() => setActiveTab("users")}
             className={`pb-4 px-1 ${
               activeTab === "users"
-                ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
+                ? "border-b-2 border-orange-500 text-orange-500 font-medium"
                 : "text-gray-500"
             }`}
           >
@@ -392,7 +392,7 @@ export function AdminOverview() {
             }}
             className={`pb-4 px-1 ${
               activeTab === "waiting"
-                ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
+                ? "border-b-2 border-orange-500 text-orange-500 font-medium"
                 : "text-gray-500"
             }`}
           >
@@ -405,7 +405,7 @@ export function AdminOverview() {
             }}
             className={`pb-4 px-1 ${
               activeTab === "emails"
-                ? "border-b-2 border-indigo-600 text-indigo-600 font-medium"
+                ? "border-b-2 border-orange-500 text-orange-500 font-medium"
                 : "text-gray-500"
             }`}
           >
@@ -425,7 +425,7 @@ export function AdminOverview() {
               </h2>
               <button
                 onClick={() => setCreatingOrg(true)}
-                className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                className="px-4 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
               >
                 {t("admin.organizations.createButton")}
               </button>
@@ -475,15 +475,15 @@ export function AdminOverview() {
                             onClick={() => handleSelectOrg(org.id)}
                             className={`text-sm px-3 py-1 rounded ${
                               selectedOrgId === org.id
-                                ? "bg-indigo-600 text-white"
-                                : "text-indigo-600 hover:text-indigo-900"
+                                ? "bg-orange-700 text-white"
+                                : "text-orange-500 hover:text-orange-800"
                             }`}
                           >
                             {t("admin.organizations.table.view")}
                           </button>
                           <button
                             onClick={() => handleEditOrganization(org)}
-                            className="text-sm px-3 py-1 text-indigo-600 hover:text-indigo-900"
+                            className="text-sm px-3 py-1 text-orange-500 hover:text-orange-800"
                           >
                             {t("admin.organizations.table.edit")}
                           </button>
@@ -506,7 +506,7 @@ export function AdminOverview() {
                 <div className="space-x-2">
                   <button
                     onClick={() => handleEditOrganization(selectedOrgDetails)}
-                    className="px-3 py-1 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                    className="px-3 py-1 text-sm bg-orange-700 text-white rounded hover:bg-orange-800"
                   >
                     {t("admin.organizations.table.edit")}
                   </button>
@@ -566,7 +566,7 @@ export function AdminOverview() {
                         return (
                           <div
                             key={member.userId}
-                            className={`p-3 rounded text-sm flex items-start justify-between ${isOrgAdmin ? "bg-indigo-50 border border-indigo-200" : "bg-gray-50"}`}
+                            className={`p-3 rounded text-sm flex items-start justify-between ${isOrgAdmin ? "bg-orange-50 border border-orange-200" : "bg-gray-50"}`}
                           >
                             <div>
                               <div className="font-medium">
@@ -577,7 +577,7 @@ export function AdminOverview() {
                               </div>
                             </div>
                             <span
-                              className={`ml-2 mt-0.5 text-xs px-2 py-0.5 rounded font-medium whitespace-nowrap ${isOrgAdmin ? "bg-indigo-100 text-indigo-800" : "bg-gray-200 text-gray-600"}`}
+                              className={`ml-2 mt-0.5 text-xs px-2 py-0.5 rounded font-medium whitespace-nowrap ${isOrgAdmin ? "bg-orange-100 text-orange-700" : "bg-gray-200 text-gray-600"}`}
                             >
                               {isOrgAdmin
                                 ? t("admin.userRole.orgAdmin")
@@ -636,7 +636,7 @@ export function AdminOverview() {
                             user.role === "ADMIN"
                               ? "bg-purple-100 text-purple-800"
                               : user.role === "ORG_ADMIN"
-                                ? "bg-indigo-100 text-indigo-800"
+                                ? "bg-orange-100 text-orange-700"
                                 : "bg-gray-100 text-gray-800"
                           }`}
                         >
@@ -657,7 +657,7 @@ export function AdminOverview() {
                             user.memberships.map((m) => (
                               <span
                                 key={m.organizationId}
-                                className="inline-block bg-indigo-100 text-indigo-800 px-2 py-1 text-xs rounded"
+                                className="inline-block bg-orange-100 text-orange-700 px-2 py-1 text-xs rounded"
                               >
                                 {m.organizationName}
                               </span>
@@ -671,7 +671,7 @@ export function AdminOverview() {
                       <td className="px-6 py-4">
                         <button
                           onClick={() => handleEditUser(user)}
-                          className="text-indigo-600 hover:text-indigo-900 text-sm"
+                          className="text-orange-500 hover:text-orange-800 text-sm"
                         >
                           {t("platformAdmin.users.table.edit")}
                         </button>
@@ -763,7 +763,7 @@ export function AdminOverview() {
                         ) : (
                           <button
                             onClick={() => setAssigningUserId(user.id)}
-                            className="px-4 py-2 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700"
+                            className="px-4 py-2 bg-orange-700 text-white text-sm rounded hover:bg-orange-800"
                           >
                             {t("platformAdmin.waiting.assignToOrg")}
                           </button>
@@ -787,7 +787,7 @@ export function AdminOverview() {
             </h2>
             <button
               onClick={loadEmailLogs}
-              className="px-3 py-1.5 text-sm bg-indigo-600 text-white rounded hover:bg-indigo-700"
+              className="px-3 py-1.5 text-sm bg-orange-700 text-white rounded hover:bg-orange-800"
             >
               {t("common.loading") === "Loading..."
                 ? "Refresh"
@@ -834,7 +834,7 @@ export function AdminOverview() {
                         </td>
                         <td className="px-4 py-3 text-sm">{log.to}</td>
                         <td className="px-4 py-3">
-                          <span className="inline-block px-2 py-0.5 text-xs rounded bg-indigo-100 text-indigo-800 font-mono">
+                          <span className="inline-block px-2 py-0.5 text-xs rounded bg-orange-100 text-orange-700 font-mono">
                             {log.event}
                           </span>
                         </td>
@@ -895,7 +895,7 @@ export function AdminOverview() {
                     onChange={(e) =>
                       setEditUserForm({ ...editUserForm, name: e.target.value })
                     }
-                    className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
                   />
                 </div>
                 <div>
@@ -911,7 +911,7 @@ export function AdminOverview() {
                         email: e.target.value,
                       })
                     }
-                    className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
                   />
                 </div>
               </div>
@@ -924,7 +924,7 @@ export function AdminOverview() {
                   onChange={(e) =>
                     setEditUserForm({ ...editUserForm, role: e.target.value })
                   }
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
                 >
                   <option value="">
                     {t("platformAdmin.editUser.selectRole")}
@@ -983,7 +983,7 @@ export function AdminOverview() {
                     <select
                       value={selectedOrgToAdd}
                       onChange={(e) => setSelectedOrgToAdd(e.target.value)}
-                      className="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
                     >
                       <option value="">
                         {t("platformAdmin.editUser.addToOrg")}
@@ -998,7 +998,7 @@ export function AdminOverview() {
                       type="button"
                       onClick={handleAddOrganization}
                       disabled={!selectedOrgToAdd || addOrgLoading}
-                      className="px-3 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-400 text-sm"
+                      className="px-3 py-2 bg-orange-700 text-white rounded hover:bg-orange-800 disabled:bg-gray-400 text-sm"
                     >
                       {t("platformAdmin.editUser.add")}
                     </button>
@@ -1016,7 +1016,7 @@ export function AdminOverview() {
                     value={editResetPassword}
                     onChange={(e) => setEditResetPassword(e.target.value)}
                     placeholder="••••••"
-                    className="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
                   />
                   <button
                     type="button"
@@ -1031,7 +1031,7 @@ export function AdminOverview() {
               <div className="flex gap-2 border-t pt-4">
                 <button
                   type="submit"
-                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                  className="flex-1 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
                 >
                   {t("platformAdmin.editUser.save")}
                 </button>
@@ -1113,7 +1113,7 @@ export function AdminOverview() {
                   onChange={(e) =>
                     setEditOrgForm({ ...editOrgForm, name: e.target.value })
                   }
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
                 />
               </div>
               <div>
@@ -1125,7 +1125,7 @@ export function AdminOverview() {
                   onChange={(e) =>
                     setEditOrgForm({ ...editOrgForm, type: e.target.value })
                   }
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
                 >
                   <option value="">{t("organizationType.noType")}</option>
                   {ORG_TYPES.map((type) => (
@@ -1146,7 +1146,7 @@ export function AdminOverview() {
                   onChange={(e) =>
                     setEditOrgForm({ ...editOrgForm, slug: e.target.value })
                   }
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
                 />
               </div>
               <div>
@@ -1162,13 +1162,13 @@ export function AdminOverview() {
                     })
                   }
                   rows={3}
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
                 />
               </div>
               <div className="flex gap-2">
                 <button
                   type="submit"
-                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                  className="flex-1 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
                 >
                   {t("admin.organizations.form.save")}
                 </button>
@@ -1208,7 +1208,7 @@ export function AdminOverview() {
                   onChange={(e) =>
                     setCreateOrgForm({ ...createOrgForm, name: e.target.value })
                   }
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
                 />
               </div>
               <div>
@@ -1220,7 +1220,7 @@ export function AdminOverview() {
                   onChange={(e) =>
                     setCreateOrgForm({ ...createOrgForm, type: e.target.value })
                   }
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
                 >
                   <option value="">{t("organizationType.noType")}</option>
                   {ORG_TYPES.map((type) => (
@@ -1241,7 +1241,7 @@ export function AdminOverview() {
                   onChange={(e) =>
                     setCreateOrgForm({ ...createOrgForm, slug: e.target.value })
                   }
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
                 />
               </div>
               <div>
@@ -1257,13 +1257,13 @@ export function AdminOverview() {
                     })
                   }
                   rows={3}
-                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
                 />
               </div>
               <div className="flex gap-2">
                 <button
                   type="submit"
-                  className="flex-1 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                  className="flex-1 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
                 >
                   {t("admin.organizations.form.create")}
                 </button>

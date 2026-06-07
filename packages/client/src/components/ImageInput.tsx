@@ -108,7 +108,7 @@ export function ImageInput({
             onClick={() => handleModeSwitch("upload")}
             className={`px-3 py-1 text-xs rounded ${
               mode === "upload"
-                ? "bg-indigo-600 text-white"
+                ? "bg-orange-700 text-white"
                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
           >
@@ -119,7 +119,7 @@ export function ImageInput({
             onClick={() => handleModeSwitch("url")}
             className={`px-3 py-1 text-xs rounded ${
               mode === "url"
-                ? "bg-indigo-600 text-white"
+                ? "bg-orange-700 text-white"
                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
           >
@@ -136,11 +136,11 @@ export function ImageInput({
             accept="image/*"
             onChange={handleFileSelect}
             disabled={uploading}
-            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400 disabled:bg-gray-100 disabled:cursor-not-allowed"
           />
           {uploading && (
             <div className="flex items-center gap-2 text-sm text-gray-600">
-              <div className="animate-spin h-4 w-4 border-2 border-indigo-600 border-t-transparent rounded-full"></div>
+              <div className="animate-spin h-4 w-4 border-2 border-orange-500 border-t-transparent rounded-full"></div>
               Uploading...
             </div>
           )}
@@ -151,7 +151,7 @@ export function ImageInput({
           value={urlInput}
           onChange={handleUrlChange}
           placeholder="https://example.com/image.jpg"
-          className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
         />
       )}
 
