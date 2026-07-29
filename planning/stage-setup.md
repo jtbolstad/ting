@@ -32,6 +32,7 @@ Use the same user as `secrets.VPS_USER`, since the workflow SSHes in as that use
 ```bash
 sudo -u deploy tee /var/www/ting-stage/packages/server/.env >/dev/null <<EOF
 JWT_SECRET="$(openssl rand -hex 32)"
+DATABASE_URL="file:/var/data/stage/db.sqlite"
 EOF
 sudo chmod 600 /var/www/ting-stage/packages/server/.env
 ```
@@ -46,7 +47,9 @@ const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 
 so if the stage `.env` is missing, unreadable by the PM2 user, or has a typo, the app starts normally and signs every token with the publicly known string `"your-secret-key"`. Anyone could then forge a platform-admin token against a host that holds pseudonymized production data. This is finding **C1** in `planning/security-review.md`, still unremediated; adding a second deployment makes a second chance to trip over it. Verify after starting (step 7) rather than assuming.
 
-Do not add `SMTP_HOST` here. Its absence is what keeps stage from emailing real members (see `packages/server/src/services/email.ts`). `NODE_ENV`, `APP_ENV`, `PORT`, `DATABASE_URL` and `UPLOADS_DIR` all come from `ecosystem.config.js` — don't duplicate them.
+`DATABASE_URL` must also be here. `ecosystem.config.js` injects it into the PM2-managed server process, but the deploy workflow runs `prisma migrate deploy` as a plain shell command — Prisma CLI reads `.env` directly and never sees PM2's env. Omitting it causes every CI deploy to fail at the migrate step with `P1012: Environment variable not found: DATABASE_URL`.
+
+Do not add `SMTP_HOST` here. Its absence is what keeps stage from emailing real members (see `packages/server/src/services/email.ts`). `NODE_ENV`, `APP_ENV`, `PORT`, and `UPLOADS_DIR` all come from `ecosystem.config.js` — don't duplicate them.
 
 Note that this file gets loaded twice by two independent mechanisms: PM2's `env_file`, and `@prisma/client`, which reads `packages/server/.env` as an import side effect. Both resolve relative to the checkout, so stage only ever sees its own file — but it does mean the `.env` is read even if the PM2 `env_file` line is removed. Values already present in the environment win, so the `ecosystem.config.js` settings above are not overridden by it.
 
