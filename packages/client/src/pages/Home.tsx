@@ -62,18 +62,28 @@ export function Home() {
           <h2 className="text-3xl font-bold text-center text-gray-800 mb-3 text-balance">
             {t("home.available.title")}
           </h2>
-          <p className="text-center text-gray-500 mb-10 text-balance">{t("home.available.subtitle")}</p>
+          <p className="text-center text-gray-500 mb-10 text-balance">
+            {t("home.available.subtitle")}
+          </p>
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            {(["tents", "speakers", "smoke", "projector"] as const).map((item) => (
-              <div
-                key={item}
-                className="bg-white rounded-lg p-5 text-center shadow-sm border border-stone-200"
-              >
-                <div className="text-3xl mb-2">{t(`home.available.items.${item}.icon`)}</div>
-                <div className="font-semibold text-gray-800 text-balance">{t(`home.available.items.${item}.name`)}</div>
-                <div className="text-sm text-gray-500 mt-1 text-balance">{t(`home.available.items.${item}.detail`)}</div>
-              </div>
-            ))}
+            {(["tents", "speakers", "smoke", "projector"] as const).map(
+              (item) => (
+                <div
+                  key={item}
+                  className="bg-white rounded-lg p-5 text-center shadow-sm border border-stone-200"
+                >
+                  <div className="text-3xl mb-2">
+                    {t(`home.available.items.${item}.icon`)}
+                  </div>
+                  <div className="font-semibold text-gray-800 text-balance">
+                    {t(`home.available.items.${item}.name`)}
+                  </div>
+                  <div className="text-sm text-gray-500 mt-1 text-balance">
+                    {t(`home.available.items.${item}.detail`)}
+                  </div>
+                </div>
+              ),
+            )}
           </div>
           <div className="text-center">
             <Link
@@ -115,13 +125,21 @@ export function Home() {
         <div className="container mx-auto max-w-4xl grid md:grid-cols-2 gap-8">
           <div className="bg-white rounded-xl p-8 shadow-sm border border-stone-200">
             <div className="text-3xl mb-3">📦</div>
-            <h3 className="text-xl font-bold text-gray-800 mb-2 text-balance">{t("home.lendOut.title")}</h3>
-            <p className="text-gray-600 text-balance">{t("home.lendOut.description")}</p>
+            <h3 className="text-xl font-bold text-gray-800 mb-2 text-balance">
+              {t("home.lendOut.title")}
+            </h3>
+            <p className="text-gray-600 text-balance">
+              {t("home.lendOut.description")}
+            </p>
           </div>
           <div className="bg-white rounded-xl p-8 shadow-sm border border-stone-200">
             <div className="text-3xl mb-3">💡</div>
-            <h3 className="text-xl font-bold text-gray-800 mb-2 text-balance">{t("home.requestTip.title")}</h3>
-            <p className="text-gray-600 text-balance">{t("home.requestTip.description")}</p>
+            <h3 className="text-xl font-bold text-gray-800 mb-2 text-balance">
+              {t("home.requestTip.title")}
+            </h3>
+            <p className="text-gray-600 text-balance">
+              {t("home.requestTip.description")}
+            </p>
           </div>
         </div>
       </section>
@@ -129,7 +147,9 @@ export function Home() {
       {/* About HPV */}
       <section className="bg-orange-800 text-white py-16 px-4">
         <div className="container mx-auto max-w-2xl text-center">
-          <h2 className="text-3xl font-bold mb-4 text-balance">{t("home.about.title")}</h2>
+          <h2 className="text-3xl font-bold mb-4 text-balance">
+            {t("home.about.title")}
+          </h2>
           <p className="text-orange-100 text-lg leading-relaxed mb-6 text-balance">
             {t("home.about.description")}
           </p>
@@ -151,7 +171,9 @@ export function Home() {
             <h2 className="text-3xl font-bold text-gray-800 mb-3 text-balance">
               {t("home.cta.title")}
             </h2>
-            <p className="text-gray-600 mb-8 text-balance">{t("home.cta.description")}</p>
+            <p className="text-gray-600 mb-8 text-balance">
+              {t("home.cta.description")}
+            </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 to="/register"
