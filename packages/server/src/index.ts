@@ -21,18 +21,35 @@ const PORT = process.env.PORT || 3001;
 const clientDistPath = path.join(__dirname, "..", "..", "..", "client", "dist");
 const IS_PRODUCTION =
   process.env.NODE_ENV === "production" || process.env.RENDER === "true";
+// Which deployment this is: production | staging | development.
+// Staging runs with NODE_ENV=production, so IS_PRODUCTION cannot identify it.
+const APP_ENV =
+  process.env.APP_ENV || (IS_PRODUCTION ? "production" : "development");
+const GIT_COMMIT = process.env.GIT_COMMIT || null;
+const STARTED_AT = new Date().toISOString();
 
 // Initialize server
 async function startServer() {
   // Ensure uploads directory exists
-  const UPLOADS_DIR = IS_PRODUCTION
-    ? path.join("/var/data", "uploads")
-    : path.join(process.cwd(), "uploads");
+  const UPLOADS_DIR =
+    process.env.UPLOADS_DIR ||
+    (IS_PRODUCTION
+      ? path.join("/var/data", "uploads")
+      : path.join(process.cwd(), "uploads"));
   await fs.mkdir(UPLOADS_DIR, { recursive: true });
   console.log(`📁 Uploads directory: ${UPLOADS_DIR}`);
 
   app.use(cors());
   app.use(express.json());
+
+  // Keep non-production deployments out of search indexes. Staging is on a
+  // public subdomain with a valid certificate, so it is crawlable otherwise.
+  if (APP_ENV !== "production") {
+    app.use((req, res, next) => {
+      res.set("X-Robots-Tag", "noindex, nofollow");
+      next();
+    });
+  }
 
   // Serve uploaded files statically - BEFORE other routes
   app.use(
@@ -68,13 +85,22 @@ async function startServer() {
   app.use("/api/reviews", reviewsRoutes);
   app.use("/api/uploads", uploadsRoutes);
 
-  // Health check
+  // Health check — also used by the deploy workflows to verify which commit is live
   app.get("/health", (req, res) => {
-    res.json({ status: "ok" });
+    res.json({
+      status: "ok",
+      env: APP_ENV,
+      commit: GIT_COMMIT,
+      startedAt: STARTED_AT,
+    });
   });
 
-  // Debug endpoint for checking uploads directory
+  // Debug endpoint for checking uploads directory (non-production only —
+  // it lists the contents of the uploads directory without authentication)
   app.get("/api/debug/uploads", async (req, res) => {
+    if (APP_ENV === "production") {
+      return res.status(404).json({ error: "Not found" });
+    }
     try {
       const files = await fs.readdir(UPLOADS_DIR, {
         recursive: true,
@@ -118,7 +144,7 @@ async function startServer() {
   app.listen(PORT, () => {
     console.log(`🚀 Server running on http://localhost:${PORT}`);
     console.log(
-      `📦 Environment: ${IS_PRODUCTION ? "production" : "development"}`,
+      `📦 Environment: ${APP_ENV}${GIT_COMMIT ? ` (${GIT_COMMIT})` : ""}`,
     );
   });
 }

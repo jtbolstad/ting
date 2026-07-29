@@ -162,6 +162,52 @@ npx prisma migrate deploy              # apply pending migrations
 pm2 reload ting                        # zero-downtime restart
 ```
 
+## Staging
+
+Staging runs on the same VPS as production, with its own port, checkout, database and uploads directory. Nothing is shared between the two.
+
+```
+nginx (443, Let's Encrypt)
+ ├─ ting.hpvel.no          → :3001   PM2 "ting"          /var/www/ting          (branch main)
+ └─ staging.ting.hpvel.no  → :3002   PM2 "ting-staging"  /var/www/ting-staging  (branch staging)
+
+/var/data/db.sqlite              prod DB          /var/data/uploads/
+/var/data/staging/db.sqlite      staging DB       /var/data/staging/uploads/
+```
+
+Branch flow: `feature → staging → main`. Pushing to `staging` triggers `.github/workflows/deploy-staging.yml`; merging `staging` into `main` deploys to production. Both PM2 apps are defined in `ecosystem.config.js`, so **every `pm2` command must be scoped** — `pm2 startOrRestart ecosystem.config.js --only ting-staging` — or a deploy to one environment will restart the other.
+
+Staging differs from production in three ways, all driven by `APP_ENV=staging`:
+
+- an amber "STAGING" banner in the UI (`VITE_APP_ENV=staging` at build time)
+- `X-Robots-Tag: noindex, nofollow` on every response, so the public subdomain stays out of search results
+- `/health` reports `{ env, commit }`, which the deploy workflow asserts against before declaring success
+
+Its `.env` deliberately has **no `SMTP_HOST`**. The email service then logs messages and records them in `EmailLog` with `status: "dev"` instead of sending, so test runs cannot mail real members.
+
+### Refreshing staging data
+
+```bash
+# on the VPS, as the deploy user
+/var/www/ting-staging/scripts/refresh-staging-db.sh
+```
+
+Snapshots the production database (via SQLite's online backup API, safe on a live DB), replaces personal data, and swaps the result into `/var/data/staging/db.sqlite`. The previous staging DB is kept as a timestamped `.bak`. Add `SYNC_UPLOADS=1` to copy item photos too.
+
+Afterwards every user is `userN@staging.invalid` with the password `staging123` (override with `STAGING_PASSWORD`), and the first platform admin becomes `admin@staging.invalid`.
+
+> **The refreshed data is pseudonymized, not anonymous.** Names, emails, comments and email logs are replaced, but real reservation history, loan history, organization names and item catalogues remain — enough to identify people by inference. Treat staging access as internal.
+
+### E2E tests against staging
+
+```bash
+PLAYWRIGHT_BASE_URL=https://staging.ting.hpvel.no \
+E2E_EMAIL=user1@staging.invalid E2E_PASSWORD=staging123 \
+pnpm test:e2e
+```
+
+Setting `PLAYWRIGHT_BASE_URL` skips the local dev servers that `playwright.config.ts` would otherwise start.
+
 ## Syncing Production DB to Local
 
 Pull the live SQLite database to your local dev environment:

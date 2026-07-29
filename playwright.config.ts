@@ -1,5 +1,11 @@
 import { defineConfig, devices } from '@playwright/test';
 
+// Point the suite at a deployed environment instead of a local dev stack, e.g.
+//   PLAYWRIGHT_BASE_URL=https://staging.ting.hpvel.no pnpm test:e2e
+// When set, no local servers are started — the tests run against that URL.
+const baseURL = process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000';
+const useLocalServers = !process.env.PLAYWRIGHT_BASE_URL;
+
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
@@ -9,7 +15,7 @@ export default defineConfig({
   reporter: 'html',
   
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
@@ -29,18 +35,20 @@ export default defineConfig({
     },
   ],
 
-  webServer: [
-    {
-      command: 'pnpm run dev:server',
-      url: 'http://localhost:3001/health',
-      reuseExistingServer: !process.env.CI,
-      timeout: 120000,
-    },
-    {
-      command: 'pnpm run dev:client',
-      url: 'http://localhost:3000',
-      reuseExistingServer: !process.env.CI,
-      timeout: 120000,
-    },
-  ],
+  webServer: useLocalServers
+    ? [
+        {
+          command: 'pnpm run dev:server',
+          url: 'http://localhost:3001/health',
+          reuseExistingServer: !process.env.CI,
+          timeout: 120000,
+        },
+        {
+          command: 'pnpm run dev:client',
+          url: 'http://localhost:3000',
+          reuseExistingServer: !process.env.CI,
+          timeout: 120000,
+        },
+      ]
+    : undefined,
 });

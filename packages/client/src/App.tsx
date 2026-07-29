@@ -6,6 +6,7 @@ import { Navbar } from "./components/Navbar";
 import { ToastProvider } from "./components/ui/Toast";
 import { ConfirmProvider } from "./components/ui/ConfirmModal";
 import { WelcomeBanner } from "./components/WelcomeBanner";
+import { EnvironmentBanner } from "./components/EnvironmentBanner";
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { ForgotPassword } from "./pages/ForgotPassword";
@@ -32,6 +33,7 @@ function App() {
           <ConfirmProvider>
           <div className="min-h-screen bg-gray-50">
             <a href="#main-content" className="skip-link">Hopp til innhold</a>
+            <EnvironmentBanner />
             <Navbar />
             <WelcomeBanner />
             <main id="main-content">
