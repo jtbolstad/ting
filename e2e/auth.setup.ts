@@ -3,8 +3,8 @@ import { test as setup } from '@playwright/test';
 const authFile = 'e2e/.auth/user.json';
 
 // Defaults match the local seed data (prisma/seed.ts). Override when running
-// against a deployed environment — staging users are userN@staging.invalid
-// with the password set by scripts/refresh-staging-db.sh.
+// against a deployed environment — stage users are userN@stage.invalid
+// with the password set by scripts/refresh-stage-db.sh.
 const email = process.env.E2E_EMAIL || 'lars@ting.com';
 const password = process.env.E2E_PASSWORD || 'user123';
 

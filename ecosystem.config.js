@@ -28,22 +28,22 @@ module.exports = {
       max_restarts: 10,
     },
     {
-      // Staging: same VPS, own port, own checkout, own database and uploads.
+      // Stage: same VPS, own port, own checkout, own database and uploads.
       // Runs NODE_ENV=production so the built client is served, but APP_ENV
-      // marks it as staging (noindex header, banner, /health reporting).
+      // marks it as stage (noindex header, banner, /health reporting).
       // SMTP_HOST is deliberately absent from its .env — the email service
       // then logs instead of sending, so tests never mail real members.
-      name: "ting-staging",
+      name: "ting-stage",
       script: "./packages/server/dist/src/index.js",
-      cwd: "/var/www/ting-staging",
+      cwd: "/var/www/ting-stage",
       env: {
         NODE_ENV: "production",
-        APP_ENV: "staging",
+        APP_ENV: "stage",
         PORT: 3002,
-        DATABASE_URL: "file:/var/data/staging/db.sqlite",
-        UPLOADS_DIR: "/var/data/staging/uploads",
+        DATABASE_URL: "file:/var/data/stage/db.sqlite",
+        UPLOADS_DIR: "/var/data/stage/uploads",
       },
-      env_file: "/var/www/ting-staging/packages/server/.env",
+      env_file: "/var/www/ting-stage/packages/server/.env",
       restart_delay: 3000,
       max_restarts: 10,
     },

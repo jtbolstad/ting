@@ -28,6 +28,6 @@ jobs:
             pnpm --filter @ting/server exec prisma migrate deploy
             pnpm --filter @ting/server build
             pnpm --filter @ting/client build
-            # --only: ecosystem.config.js also defines ting-staging and webhook.
-            # Without it a production deploy would restart the staging app too.
+            # --only: ecosystem.config.js also defines ting-stage and webhook.
+            # Without it a production deploy would restart the stage app too.
             pm2 startOrRestart ecosystem.config.js --only ting --env production || pm2 start ecosystem.config.js --only ting

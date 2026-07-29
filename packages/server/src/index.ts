@@ -21,8 +21,8 @@ const PORT = process.env.PORT || 3001;
 const clientDistPath = path.join(__dirname, "..", "..", "..", "client", "dist");
 const IS_PRODUCTION =
   process.env.NODE_ENV === "production" || process.env.RENDER === "true";
-// Which deployment this is: production | staging | development.
-// Staging runs with NODE_ENV=production, so IS_PRODUCTION cannot identify it.
+// Which deployment this is: production | stage | development.
+// Stage runs with NODE_ENV=production, so IS_PRODUCTION cannot identify it.
 const APP_ENV =
   process.env.APP_ENV || (IS_PRODUCTION ? "production" : "development");
 const GIT_COMMIT = process.env.GIT_COMMIT || null;
@@ -42,7 +42,7 @@ async function startServer() {
   app.use(cors());
   app.use(express.json());
 
-  // Keep non-production deployments out of search indexes. Staging is on a
+  // Keep non-production deployments out of search indexes. Stage is on a
   // public subdomain with a valid certificate, so it is crawlable otherwise.
   if (APP_ENV !== "production") {
     app.use((req, res, next) => {

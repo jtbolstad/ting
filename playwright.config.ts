@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
 // Point the suite at a deployed environment instead of a local dev stack, e.g.
-//   PLAYWRIGHT_BASE_URL=https://staging.ting.hpvel.no pnpm test:e2e
+//   PLAYWRIGHT_BASE_URL=https://stage.ting.hpvel.no pnpm test:e2e
 // When set, no local servers are started — the tests run against that URL.
 const baseURL = process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000';
 const useLocalServers = !process.env.PLAYWRIGHT_BASE_URL;
