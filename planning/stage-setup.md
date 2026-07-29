@@ -54,8 +54,11 @@ Note that this file gets loaded twice by two independent mechanisms: PM2's `env_
 
 Mirror the production block, changing only the server name and upstream port:
 
+Create it as **HTTP only**. Certbot adds the `listen 443`, the certificate paths and the HTTPS redirect itself in the next step.
+
 ```nginx
 server {
+    listen 80;
     server_name stage.ting.hpvel.no;
     client_max_body_size 25M;          # PDF manuals are up to 20 MB; match whatever prod uses
 
@@ -74,9 +77,35 @@ Do **not** copy the production `/deploy` webhook route into this vhost — one w
 
 ```bash
 sudo ln -s /etc/nginx/sites-available/ting-stage /etc/nginx/sites-enabled/
-sudo nginx -t && sudo systemctl reload nginx
-sudo certbot --nginx -d stage.ting.hpvel.no
+sudo nginx -t                       # check BEFORE reloading — the reload also affects prod
+sudo systemctl reload nginx
 ```
+
+### Certificate (Let's Encrypt)
+
+The vhost above must exist and be reloaded first. Two reasons:
+
+1. Without a server block matching `stage.ting.hpvel.no`, requests fall through to the default server — which is production. Verified on 2026-07-30: `https://stage.ting.hpvel.no/health` returned production's response while presenting prod's certificate (`CN=ting.hpvel.no`, SAN `ting.hpvel.no` only).
+2. That default server 301-redirects HTTP to HTTPS, which can intercept the `/.well-known/acme-challenge/` fetch that HTTP-01 validation depends on. An exact `server_name` match takes precedence over `default_server`, so the stage vhost fixes it.
+
+With no matching vhost, `certbot --nginx` may also offer to add the name to **production's** certificate. Don't — a shared lineage means one renewal failure affects both hosts.
+
+Dry run first. Let's Encrypt permits 5 duplicate certificates per week for an identical name set, and 5 failed validations per hostname per hour, so a retry loop can lock you out for the week:
+
+```bash
+sudo certbot certonly --nginx --dry-run -d stage.ting.hpvel.no
+```
+
+Then the real issuance:
+
+```bash
+sudo certbot --nginx -d stage.ting.hpvel.no --redirect -n --agree-tos -m jtbolstad@gmail.com
+sudo certbot certificates                      # expect a lineage separate from ting.hpvel.no
+sudo systemctl list-timers | grep -i certbot    # renewal timer active
+sudo certbot renew --dry-run
+```
+
+The certificate will validate before anything is listening on :3002, so the vhost returns 502 until step 6 starts `ting-stage`. That is expected and not a certificate problem.
 
 ## 6. First build and start
 
