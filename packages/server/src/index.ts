@@ -2,6 +2,7 @@ import cors from "cors";
 import express from "express";
 import fs from "node:fs/promises";
 import path from "node:path";
+import passport, { initializePassport } from "./config/passport.js";
 import adminRoutes from "./routes/admin.js";
 import authRoutes from "./routes/auth.js";
 import categoriesRoutes from "./routes/categories.js";
@@ -9,6 +10,7 @@ import commentsRoutes from "./routes/comments.js";
 import itemsRoutes from "./routes/items.js";
 import loansRoutes from "./routes/loans.js";
 import locationsRoutes from "./routes/locations.js";
+import oauthRoutes from "./routes/oauth.js";
 import organizationsRoutes from "./routes/organizations.js";
 import reservationsRoutes from "./routes/reservations.js";
 import reviewsRoutes from "./routes/reviews.js";
@@ -42,6 +44,10 @@ async function startServer() {
   app.use(cors());
   app.use(express.json());
 
+  // Initialize Passport for OAuth
+  initializePassport();
+  app.use(passport.initialize());
+
   // Keep non-production deployments out of search indexes. Stage is on a
   // public subdomain with a valid certificate, so it is crawlable otherwise.
   if (APP_ENV !== "production") {
@@ -74,6 +80,7 @@ async function startServer() {
   // API Routes
   app.use("/api/admin", adminRoutes);
   app.use("/api/auth", authRoutes);
+  app.use("/api/auth", oauthRoutes); // OAuth routes (mounted on /api/auth for /google, /google/callback)
   app.use("/api/users", usersRoutes);
   app.use("/api/categories", categoriesRoutes);
   app.use("/api/items", itemsRoutes);

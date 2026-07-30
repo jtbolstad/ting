@@ -8,21 +8,34 @@ datasource db {
 }
 
 model User {
-  id                     String        @id @default(cuid())
-  email                  String        @unique
-  passwordHash           String
+  id                     String         @id @default(cuid())
+  email                  String         @unique
+  passwordHash           String?        // nullable for OAuth-only users
   name                   String
-  role                   String        @default("MEMBER") // platform role (e.g. SUPERADMIN)
-  resetPasswordToken     String?       @unique
+  role                   String         @default("MEMBER") // platform role (e.g. SUPERADMIN)
+  resetPasswordToken     String?        @unique
   resetPasswordExpiresAt DateTime?
-  createdAt              DateTime      @default(now())
-  updatedAt              DateTime      @updatedAt
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt
   reservations           Reservation[]
   loans                  Loan[]
   memberships            Membership[]
-  auditLogs              AuditLog[]    @relation("AuditActor")
+  auditLogs              AuditLog[]     @relation("AuditActor")
   comments               Comment[]
   reviews                Review[]
+  oauthAccounts          OAuthAccount[]
+}
+
+model OAuthAccount {
+  id                String   @id @default(cuid())
+  provider          String   // 'google', 'microsoft', etc.
+  providerAccountId String   // Provider's unique user ID (e.g., Google's sub claim)
+  userId            String
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt         DateTime @default(now())
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Organization {

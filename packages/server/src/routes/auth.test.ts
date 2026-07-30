@@ -139,6 +139,28 @@ describe('Auth Routes', () => {
 
       expect(response.status).toBe(401);
     });
+
+    it('should tell an OAuth-only user to sign in with Google', async () => {
+      await prisma.user.create({
+        data: {
+          email: 'oauthonly@test.com',
+          passwordHash: null,
+          name: 'OAuth Only',
+          role: 'MEMBER',
+        },
+      });
+
+      const response = await request(app)
+        .post('/auth/login')
+        .send({
+          email: 'oauthonly@test.com',
+          password: 'anything',
+        });
+
+      expect(response.status).toBe(401);
+      expect(response.body.success).toBe(false);
+      expect(response.body.error).toBe('Please sign in with Google');
+    });
   });
 
   describe('GET /auth/me', () => {

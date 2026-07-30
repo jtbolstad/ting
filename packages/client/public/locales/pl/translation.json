@@ -114,6 +114,17 @@
       "acceptTerms": "Przeczytałem i akceptuję",
       "termsLink": "Regulamin",
       "termsRequired": "Musisz zaakceptować regulamin, aby się zarejestrować"
+    },
+    "oauth": {
+      "signInWithGoogle": "Zaloguj się przez Google",
+      "or": "lub",
+      "processing": "Logowanie...",
+      "errorTitle": "Logowanie nie powiodło się",
+      "backToLogin": "Powrót do logowania",
+      "notConfigured": "Logowanie Google nie jest skonfigurowane na tym serwerze.",
+      "failed": "Logowanie przez Google nie powiodło się. Spróbuj ponownie.",
+      "noToken": "Nie zwrócono tokenu logowania. Spróbuj ponownie.",
+      "genericError": "Coś poszło nie tak podczas logowania."
     }
   },
   "catalog": {
