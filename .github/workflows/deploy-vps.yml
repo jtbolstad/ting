@@ -39,6 +39,9 @@ jobs:
             git fetch origin main
             git checkout main
             git reset --hard origin/main
+            # --short=7 explicitly: core.abbrev=auto can pick a longer length,
+            # and the verify step below compares against ${GITHUB_SHA:0:7}.
+            GIT_COMMIT=$(git rev-parse --short=7 HEAD)
             pnpm install --frozen-lockfile
             pnpm --filter @ting/shared build
             pnpm --filter @ting/server exec prisma generate
@@ -50,21 +53,24 @@ jobs:
             # so an unprivileged `pm2 restart ting` here started a *second*
             # ting that crash-looped on EADDRINUSE while the real one kept
             # serving stale code — invisibly, because pm2 still exited 0.
-            # sudo resets HOME to /root, so PM2_HOME lands on /root/.pm2 and
-            # this reaches the right daemon. The sudoers rule for deploy grants
-            # exactly this command; keep the two in step if you change it.
-            # It restarts in place rather than re-reading ecosystem.config.js,
-            # so env changes there still need a root-side start.
-            sudo -n /usr/local/bin/pm2 restart ting
+            #
+            # The wrapper is root-owned, pins PM2_HOME=/root/.pm2, and starts
+            # the app *from ecosystem.config.js* so its env{} block is
+            # re-evaluated. That matters: a bare `pm2 restart` reuses the stored
+            # environment, which is why production ran for months with no
+            # JWT_SECRET (falling back to the hardcoded value in auth.ts) and no
+            # GIT_COMMIT. See /usr/local/sbin/ting-deploy-restart and the
+            # sudoers rule in /etc/sudoers.d/ting-deploy.
+            sudo -n /usr/local/sbin/ting-deploy-restart "$GIT_COMMIT"
 
-      # Deliberately version-agnostic: it asserts only what every build of
-      # /health has ever returned, so it works before and after the commit/
-      # startedAt fields reach main. The restart above is what proves the
-      # process was replaced — with set -e, `pm2 restart` exits non-zero if
-      # `ting` isn't registered in root's daemon, so a no-op can't pass.
+      # Now that the restart goes through ecosystem.config.js, GIT_COMMIT reaches
+      # the process and /health can be held to the commit being deployed — the
+      # same assertion the stage workflow makes. A restart that silently failed
+      # to replace the process no longer passes this step.
       - name: Verify deployment
         run: |
           set -e
+          expected="${GITHUB_SHA:0:7}"
           body=""
           for attempt in 1 2 3 4 5 6 7 8 9 10; do
             body=$(curl -fsS --max-time 10 https://ting.hpvel.no/health) && break
@@ -78,4 +84,8 @@ jobs:
           echo "Health response: $body"
           echo "$body" | grep -q '"status":"ok"' \
             || { echo "::error::/health did not report status=ok"; exit 1; }
-          echo "Production is live"
+          echo "$body" | grep -q '"env":"production"' \
+            || { echo "::error::/health did not report env=production"; exit 1; }
+          echo "$body" | grep -q "\"commit\":\"$expected\"" \
+            || { echo "::error::/health reports a different commit than $expected — did the app restart?"; exit 1; }
+          echo "Production is live on $expected"

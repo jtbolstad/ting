@@ -1,0 +1,70 @@
+#!/bin/sh
+# Deployed copy lives at /usr/local/sbin/ting-deploy-restart (root:root, 0755).
+# This copy is tracked so the privileged part of the deploy is reviewable. To
+# install or update it on the VPS:
+#     sudo install -o root -g root -m 0755 scripts/ting-deploy-restart \
+#         /usr/local/sbin/ting-deploy-restart
+# The matching sudoers rule is in /etc/sudoers.d/ting-deploy:
+#     deploy ALL=(root) NOPASSWD: /usr/local/sbin/ting-deploy-restart *
+# Restart production `ting` from ecosystem.config.js so its env{} block is
+# re-evaluated.
+#
+# Why this exists: a bare `pm2 restart ting` reuses the environment stored when
+# the app was first started. That is how production ran for months with no
+# JWT_SECRET in its environment, silently falling back to the hardcoded
+# "your-secret-key" in packages/server/src/services/auth.ts, and with no
+# GIT_COMMIT for /health to report.
+#
+# Invoked by .github/workflows/deploy-vps.yml as:
+#     sudo -n /usr/local/sbin/ting-deploy-restart <commit>
+# The sudoers rule in /etc/sudoers.d/ting-deploy names exactly this path — keep
+# the two in step. This file is root-owned and not writable by the deploy user,
+# so granting the rule does not let that user hand root an arbitrary command.
+set -eu
+
+commit="${1:-}"
+case "$commit" in
+	"" | *[!0-9a-f]*)
+		echo "usage: ting-deploy-restart <commit sha, 7-40 lowercase hex chars>" >&2
+		exit 64
+		;;
+esac
+if [ "${#commit}" -lt 7 ] || [ "${#commit}" -gt 40 ]; then
+	echo "commit must be 7-40 hex chars, got ${#commit}" >&2
+	exit 64
+fi
+
+# Be explicit rather than relying on sudo's HOME handling: production lives in
+# root's pm2 daemon and the deploy user has a separate one of its own.
+PM2_HOME=/root/.pm2
+export PM2_HOME
+GIT_COMMIT="$commit"
+export GIT_COMMIT
+
+cd /var/www/ting
+
+# delete + start, deliberately not `restart` and not `startOrRestart
+# --update-env`:
+#   - `pm2 restart` reuses the stored environment, which is the original bug.
+#   - `startOrRestart --update-env` only re-reads this config when pm2's stored
+#     definition was created from it. Production's definition predated the file,
+#     so pm2 restarted the old definition instead, lost track of the process,
+#     and the replacement crash-looped on EADDRINUSE while an orphaned process
+#     kept serving the old environment. Verified the hard way on 2026-07-30.
+# Deleting the definition outright means `start` always builds a fresh one from
+# this file.
+/usr/local/bin/pm2 delete ting >/dev/null 2>&1 || true
+
+# Wait for port 3001 to actually be released. Without this the new process can
+# lose the race against the old one's socket teardown and enter the very restart
+# loop described above.
+i=0
+while [ "$i" -lt 20 ]; do
+	if ! /usr/bin/ss -tlnH 2>/dev/null | awk '{print $4}' | grep -qE ':3001$'; then
+		break
+	fi
+	i=$((i + 1))
+	sleep 1
+done
+
+exec /usr/local/bin/pm2 start /var/www/ting/ecosystem.config.js --only ting
