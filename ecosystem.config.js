@@ -42,6 +42,8 @@ module.exports = {
         PORT: 3002,
         DATABASE_URL: "file:/var/data/stage/db.sqlite",
         UPLOADS_DIR: "/var/data/stage/uploads",
+        // Read from the deploying shell; set by deploy-stage.yml before pm2 start.
+        GIT_COMMIT: process.env.GIT_COMMIT || "",
       },
       env_file: "/var/www/ting-stage/packages/server/.env",
       restart_delay: 3000,
