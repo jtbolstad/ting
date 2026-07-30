@@ -115,3 +115,108 @@ Production moved from `e705911` (2026-06-23) to `5a3134c`, a clean fast-forward.
 Migration sets were already identical, so `prisma migrate deploy` was a no-op and the
 database was not written to. `UPLOADS_DIR`'s production fallback resolves to
 `/var/data/uploads`, matching where uploads already live.
+
+---
+
+## 2026-07-30 — Stage environment
+
+Earlier the same day, before the pipeline work above. A second environment on the
+same VPS, so changes can be seen running before they reach production.
+
+### Added
+
+- **`ting-stage` on port 3002**, checkout at `/var/www/ting-stage`, with its own
+  SQLite database and uploads directory under `/var/data/stage`. Pushing to the
+  `stage` branch deploys it (`deploy-stage.yml`); merging into `main` still deploys
+  production.
+- **`/health` reports `env` and `commit`**, so a deploy can assert the expected build
+  is actually live instead of assuming the restart worked. Production was added to
+  this later in the day.
+- **`scripts/refresh-stage-db.sh`** snapshots the production database through
+  SQLite's online backup API and rewrites emails, names, comments and email logs
+  before installing it. The result is **pseudonymized, not anonymous** — reservation
+  history, loan history and organization names survive, so stage access should stay
+  internal. Its `.env` deliberately omits `SMTP_HOST`, which makes the email service
+  log instead of send.
+
+### Changed
+
+- **The uploads path comes from `UPLOADS_DIR`** rather than being derived from
+  `NODE_ENV`. Stage has to run `NODE_ENV=production` to serve the built client, which
+  under the old rule would have pointed it at production's uploads directory. A new
+  `APP_ENV` carries deployment identity separately, driving the `noindex` header, the
+  UI banner and `/health`. Fallbacks are unchanged when the variables are unset.
+- **The environment was renamed `staging` → `stage`** across branch, subdomain, pm2
+  app, and filesystem paths, one day after it was introduced.
+- `DATABASE_URL` documented as required in stage's `.env`, because
+  `prisma migrate deploy` reads it directly rather than through the app.
+
+### Security
+
+- **`/api/debug/uploads` is now gated to non-production.** It enumerated the uploads
+  directory to unauthenticated callers — H1 in the security review below.
+
+---
+
+## 2026-06-23 — Security review recorded
+
+`planning/security-review.md` — a static review of `packages/server`, deploy config,
+schema and the email service against the OWASP Top 10 (2021), dated 2026-06-09 and
+committed as `e705911`. **The commit adds documentation only; no code was changed by
+it.** 25 findings: 2 critical, 6 high, 9 medium, 8 low.
+
+Status of the ones that have moved since, as of 2026-07-30:
+
+- **C1 — hardcoded JWT fallback secret.** Mitigated operationally: `.env` now reaches
+  the process, so the real secret is used (see the entry at the top of this file for
+  what that means for tokens issued before then). **The fallback itself is still in
+  the code** — `packages/server/src/services/auth.ts:12` still reads
+  `process.env.JWT_SECRET || "your-secret-key"`, so a future environment regression
+  fails silently and insecurely again rather than refusing to start. The review's
+  remediation — throw on startup — has not been applied.
+- **C2 — world-writable `/var/data` in the production container.** Moot in practice:
+  deploys have run on the VPS via pm2 since 2026-03-28 and nothing builds the
+  `Dockerfile` any more. The file is still in the repo with the `chmod 777`.
+- **H1 — unauthenticated debug endpoint listing uploads.** Fixed 2026-07-30.
+- **L7 — webhook deploy endpoint relying on one shared secret.** Resolved by removing
+  the webhook entirely.
+
+The rest are open. Notably **H2 (open CORS), H3 (no rate limiting on auth) and H6 (no
+security headers)** are unaddressed — there is no `helmet` or `express-rate-limit` in
+`packages/server`.
+
+---
+
+## 2026-03-28 – 2026-03-29 — Fly.io out, VPS and pm2 in
+
+- **Deploys moved to the VPS over SSH with pm2** (`deploy-vps.yml`), replacing
+  `fly-deploy.yml`. This is the pipeline that everything in the 2026-07-30 entry is
+  fixing; it started as 25 lines with no `set -e` and no verification.
+- **`nvm`/`pnpm` were not on the PATH** in a non-interactive SSH session, and the
+  first deploy had no existing pm2 app to restart. Fixed by sourcing nvm and using
+  `startOrRestart`.
+- **Build order in the workflow corrected** — `@ting/shared` has to be built before
+  the server and client can compile against it. The same commit dropped the
+  `/api/locations` route by accident; it was restored the next day.
+- **No workflow runs the tests.** The three-layer test setup added in this period
+  (Vitest unit, Vitest browser, Playwright E2E) runs locally only — neither deploy
+  workflow invokes it, so a deploy can go green on code that fails its own suite.
+- Fly.io and Render leftovers deleted: `fly.toml`, `.flyignore`, `deploy.ps1`,
+  `DEPLOYMENT.md`, `FLY_QUICK_REF.md`. Remaining references in env examples and docs
+  were cleaned out later, on 2026-06-07.
+
+---
+
+## 2026-03-16 – 2026-03-17 — Container deploys (historical)
+
+The first deployment attempts, superseded within two weeks and kept here only so the
+`Dockerfile` and the `/var/data` layout have an origin.
+
+- Fly.io deploy via Docker, then a switch to Render.
+- **The database was moved to `/var/data`** so it would survive container replacement
+  on Render. Production still keeps its SQLite database and uploads there, which is
+  why that path appears throughout this file.
+- Prisma had to be a real dependency and be invoked with `npx`, `openssl` added to the
+  image, and the client build output directory corrected — the usual round of
+  container fixes.
+- Image upload and API calls were pointing at `localhost` in production.
