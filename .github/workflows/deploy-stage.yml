@@ -21,6 +21,9 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             set -e
+            # Same reason as deploy-vps.yml: keep pnpm from stopping on the
+            # interactive confirmModulesPurge prompt, which set -e turns fatal.
+            export CI=true
             export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
             export PATH="$HOME/.local/share/pnpm:$PATH"
             cd /var/www/ting-stage

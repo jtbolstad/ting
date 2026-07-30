@@ -21,6 +21,12 @@ jobs:
             # Without set -e every step below is advisory: a failed install,
             # migration or build just scrolls past and the job still goes green.
             set -e
+            # pnpm prompts for confirmation before purging a node_modules it
+            # considers stale (confirmModulesPurge). Over SSH there is nothing
+            # to answer the prompt, so it exits non-zero and — now that set -e
+            # is here — takes the whole deploy with it. CI=true makes pnpm
+            # non-interactive and assume yes.
+            export CI=true
             export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
             export PATH="$HOME/.local/share/pnpm:$PATH"
             cd /var/www/ting
