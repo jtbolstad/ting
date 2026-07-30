@@ -34,11 +34,22 @@ function envFile(file) {
 module.exports = {
   apps: [
     {
+      // Runs in ROOT's pm2 daemon. The secret lives in /etc/ting/webhook.env
+      // (root-only, 0600) because it was previously hardcoded here — in tracked
+      // source, so it was published to GitHub. nginx exposes this listener at
+      // https://ting.hpvel.no/deploy and the HMAC signature is the only thing
+      // guarding it, so anyone who read the repo could trigger a root-level
+      // deploy. That value has been rotated; this file no longer holds it.
+      //
+      // Only root can read the file. If the deploy user evaluates this config
+      // (it does, for ting-stage) envFile returns {} here — harmless, since
+      // nothing but root starts webhook, and webhook.js exits 1 outright when
+      // WEBHOOK_SECRET is missing rather than running unprotected.
       name: "webhook",
       script: "/home/deploy/webhook.js",
       cwd: "/home/deploy",
       env: {
-        WEBHOOK_SECRET: "f736d26461e685d28b849085ea0182b43ef67513e1004b0d5e6e900514a49c94",
+        ...envFile("/etc/ting/webhook.env"),
         WEBHOOK_PORT: 9000,
         WEBHOOK_BRANCH: "main",
       },
