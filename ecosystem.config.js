@@ -34,29 +34,18 @@ function envFile(file) {
 module.exports = {
   apps: [
     {
-      // Runs in ROOT's pm2 daemon. The secret lives in /etc/ting/webhook.env
-      // (root-only, 0600) because it was previously hardcoded here — in tracked
-      // source, so it was published to GitHub. nginx exposes this listener at
-      // https://ting.hpvel.no/deploy and the HMAC signature is the only thing
-      // guarding it, so anyone who read the repo could trigger a root-level
-      // deploy. That value has been rotated; this file no longer holds it.
+      // Retired 2026-07-30. There used to be a `webhook` app here: a listener
+      // on 127.0.0.1:9000, exposed by nginx at https://ting.hpvel.no/deploy,
+      // that ran /home/deploy/deploy.sh on a push to main. It duplicated
+      // .github/workflows/deploy-vps.yml — both fired on the same push, so
+      // every production deploy ran twice concurrently, deploy.sh restarting
+      // `ting` while the workflow was replacing the same process. That race
+      // orphaned production once. Its secret was also hardcoded in this file
+      // and therefore published to GitHub.
       //
-      // Only root can read the file. If the deploy user evaluates this config
-      // (it does, for ting-stage) envFile returns {} here — harmless, since
-      // nothing but root starts webhook, and webhook.js exits 1 outright when
-      // WEBHOOK_SECRET is missing rather than running unprotected.
-      name: "webhook",
-      script: "/home/deploy/webhook.js",
-      cwd: "/home/deploy",
-      env: {
-        ...envFile("/etc/ting/webhook.env"),
-        WEBHOOK_PORT: 9000,
-        WEBHOOK_BRANCH: "main",
-      },
-      restart_delay: 3000,
-      max_restarts: 10,
-    },
-    {
+      // The GitHub hook is deleted, the nginx location removed, and the pm2 app
+      // dropped. /home/deploy/webhook.js and deploy.sh are left on disk but
+      // nothing starts them. Deploys go through GitHub Actions only.
       // Production runs in ROOT's pm2 daemon. deploy-vps.yml reaches it through
       // sudo /usr/local/sbin/ting-deploy-restart, which starts this entry so
       // the env below is re-evaluated.
