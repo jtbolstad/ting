@@ -114,6 +114,17 @@
       "acceptTerms": "He leído y acepto los",
       "termsLink": "Términos de Servicio",
       "termsRequired": "Debes aceptar los términos de servicio para registrarte"
+    },
+    "oauth": {
+      "signInWithGoogle": "Iniciar sesión con Google",
+      "or": "o",
+      "processing": "Iniciando sesión...",
+      "errorTitle": "Error al iniciar sesión",
+      "backToLogin": "Volver al inicio de sesión",
+      "notConfigured": "El inicio de sesión con Google no está configurado en este servidor.",
+      "failed": "El inicio de sesión con Google falló. Inténtalo de nuevo.",
+      "noToken": "No se devolvió ningún token de inicio de sesión. Inténtalo de nuevo.",
+      "genericError": "Algo salió mal durante el inicio de sesión."
     }
   },
   "catalog": {

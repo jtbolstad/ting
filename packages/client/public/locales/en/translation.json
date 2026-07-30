@@ -114,6 +114,17 @@
       "acceptTerms": "I have read and accept the",
       "termsLink": "Terms of Service",
       "termsRequired": "You must accept the terms of service to register"
+    },
+    "oauth": {
+      "signInWithGoogle": "Sign in with Google",
+      "or": "or",
+      "processing": "Signing you in...",
+      "errorTitle": "Sign-in failed",
+      "backToLogin": "Back to login",
+      "notConfigured": "Google sign-in is not configured on this server.",
+      "failed": "Google sign-in failed. Please try again.",
+      "noToken": "No sign-in token was returned. Please try again.",
+      "genericError": "Something went wrong during sign-in."
     }
   },
   "catalog": {

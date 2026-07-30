@@ -161,6 +161,14 @@ router.post("/login", async (req: Request, res: Response) => {
       });
     }
 
+    // Check if user has a password (OAuth-only users don't)
+    if (!user.passwordHash) {
+      return res.status(401).json({
+        success: false,
+        error: "Please sign in with Google",
+      });
+    }
+
     const validPassword = await comparePassword(password, user.passwordHash);
     if (!validPassword) {
       return res.status(401).json({
@@ -242,6 +250,15 @@ router.post("/change-password", authenticate, async (req: AuthRequest, res: Resp
     const user = await prisma.user.findUnique({ where: { id: req.user!.id } });
     if (!user) {
       return res.status(404).json({ success: false, error: "User not found" });
+    }
+
+    // OAuth-only users have no password to compare against. Point them at the
+    // reset flow, which sets passwordHash via an emailed token.
+    if (!user.passwordHash) {
+      return res.status(400).json({
+        success: false,
+        error: "This account has no password. Use 'forgot password' to set one.",
+      });
     }
 
     const valid = await comparePassword(currentPassword, user.passwordHash);

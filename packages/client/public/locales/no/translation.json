@@ -114,6 +114,17 @@
       "acceptTerms": "Jeg har lest og aksepterer",
       "termsLink": "Medlemsavtalen",
       "termsRequired": "Du må akseptere medlemsavtalen for å registrere deg"
+    },
+    "oauth": {
+      "signInWithGoogle": "Logg inn med Google",
+      "or": "eller",
+      "processing": "Logger deg inn...",
+      "errorTitle": "Innlogging mislyktes",
+      "backToLogin": "Tilbake til innlogging",
+      "notConfigured": "Google-innlogging er ikke konfigurert på denne serveren.",
+      "failed": "Google-innlogging mislyktes. Prøv igjen.",
+      "noToken": "Ingen innloggingstoken ble returnert. Prøv igjen.",
+      "genericError": "Noe gikk galt under innlogging."
     }
   },
   "catalog": {

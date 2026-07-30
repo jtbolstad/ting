@@ -114,6 +114,17 @@
       "acceptTerms": "Jeg har læst og accepterer",
       "termsLink": "Medlemsaftalen",
       "termsRequired": "Du skal acceptere medlemsaftalen for at registrere dig"
+    },
+    "oauth": {
+      "signInWithGoogle": "Log ind med Google",
+      "or": "eller",
+      "processing": "Logger dig ind...",
+      "errorTitle": "Login mislykkedes",
+      "backToLogin": "Tilbage til login",
+      "notConfigured": "Google-login er ikke konfigureret på denne server.",
+      "failed": "Google-login mislykkedes. Prøv igen.",
+      "noToken": "Der blev ikke returneret noget login-token. Prøv igen.",
+      "genericError": "Noget gik galt under login."
     }
   },
   "catalog": {
