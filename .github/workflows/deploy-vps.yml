@@ -18,16 +18,58 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
+            # Without set -e every step below is advisory: a failed install,
+            # migration or build just scrolls past and the job still goes green.
+            set -e
             export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
             export PATH="$HOME/.local/share/pnpm:$PATH"
             cd /var/www/ting
-            git pull origin main
+            # This checkout is a mirror of origin/main, never a place to commit.
+            # `git pull origin main` merged into whatever branch happened to be
+            # checked out here (it was left on `stage`), so production could end
+            # up running a stage+main merge. Check out main explicitly and hard
+            # reset: untracked files (packages/server/.env, node_modules) are
+            # left alone, and a stray tracked edit can no longer block the pull.
+            git fetch origin main
+            git checkout main
+            git reset --hard origin/main
             pnpm install --frozen-lockfile
             pnpm --filter @ting/shared build
             pnpm --filter @ting/server exec prisma generate
             pnpm --filter @ting/server exec prisma migrate deploy
             pnpm --filter @ting/server build
             pnpm --filter @ting/client build
-            # --only: ecosystem.config.js also defines ting-stage and webhook.
-            # Without it a production deploy would restart the stage app too.
-            pm2 startOrRestart ecosystem.config.js --only ting --env production || pm2 start ecosystem.config.js --only ting
+            # Production runs in ROOT's pm2 daemon. This script runs as
+            # VPS_USER, whose daemon is a separate instance that cannot see it,
+            # so an unprivileged `pm2 restart ting` here started a *second*
+            # ting that crash-looped on EADDRINUSE while the real one kept
+            # serving stale code — invisibly, because pm2 still exited 0.
+            # sudo resets HOME to /root, so PM2_HOME lands on /root/.pm2 and
+            # this reaches the right daemon. The sudoers rule for deploy grants
+            # exactly this command; keep the two in step if you change it.
+            # It restarts in place rather than re-reading ecosystem.config.js,
+            # so env changes there still need a root-side start.
+            sudo -n /usr/local/bin/pm2 restart ting
+
+      # Deliberately version-agnostic: it asserts only what every build of
+      # /health has ever returned, so it works before and after the commit/
+      # startedAt fields reach main. The restart above is what proves the
+      # process was replaced — with set -e, `pm2 restart` exits non-zero if
+      # `ting` isn't registered in root's daemon, so a no-op can't pass.
+      - name: Verify deployment
+        run: |
+          set -e
+          body=""
+          for attempt in 1 2 3 4 5 6 7 8 9 10; do
+            body=$(curl -fsS --max-time 10 https://ting.hpvel.no/health) && break
+            echo "Attempt $attempt: health endpoint not ready yet, retrying in 3s"
+            sleep 3
+          done
+          if [ -z "$body" ]; then
+            echo "::error::/health unreachable after 10 attempts — production may be down"
+            exit 1
+          fi
+          echo "Health response: $body"
+          echo "$body" | grep -q '"status":"ok"' \
+            || { echo "::error::/health did not report status=ok"; exit 1; }
+          echo "Production is live"
