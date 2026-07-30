@@ -1,5 +1,8 @@
 # Versjonering
 
+Funksjoner og releaser. Endringer i deploy, drift og hemmeligheter ligger i
+[CHANGELOG.md](CHANGELOG.md).
+
 ## v0.3 – Lokasjoner, manualer og brukereierskap
 *2026-03-21*
 
