@@ -29,6 +29,10 @@ module.exports = {
     },
     {
       // Stage: same VPS, own port, own checkout, own database and uploads.
+      // Started by deploy-stage.yml under the DEPLOY user's pm2 daemon, not
+      // root's — /var/data/stage is deploy-owned. Don't `pm2 start` this entry
+      // as root; two daemons fighting over port 3002 is invisible except as a
+      // stale commit in /health.
       // Runs NODE_ENV=production so the built client is served, but APP_ENV
       // marks it as stage (noindex header, banner, /health reporting).
       // SMTP_HOST is deliberately absent from its .env — the email service
