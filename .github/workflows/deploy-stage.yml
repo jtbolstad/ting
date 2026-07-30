@@ -28,6 +28,10 @@ jobs:
             # --short=7 explicitly: core.abbrev=auto can pick a longer length,
             # and the verify step below compares against ${GITHUB_SHA:0:7}.
             export GIT_COMMIT=$(git rev-parse --short=7 HEAD)
+            # Write GIT_COMMIT into the env file so PM2 picks it up on restart.
+            # --update-env alone doesn't inject variables absent from ecosystem.config.js.
+            grep -v "^GIT_COMMIT=" packages/server/.env > packages/server/.env.tmp && mv packages/server/.env.tmp packages/server/.env
+            echo "GIT_COMMIT=$GIT_COMMIT" >> packages/server/.env
             pnpm install --frozen-lockfile
             pnpm --filter @ting/shared build
             pnpm --filter @ting/server exec prisma generate
