@@ -1,7 +1,7 @@
 import { spawnSync } from 'child_process';
 
 export async function setup() {
-  for (const db of ['test-auth.db', 'test-items.db']) {
+  for (const db of ['test-auth.db', 'test-items.db', 'test-oauth.db']) {
     const result = spawnSync(
       'pnpm',
       ['exec', 'prisma', 'db', 'push', '--accept-data-loss'],
