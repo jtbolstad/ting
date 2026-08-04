@@ -27,19 +27,18 @@ set -eu
 # at /var/www/ting would migrate production instead.
 cd /var/www/ting-stage/packages/server
 
-# sudo resets HOME to root's, which moves node and pnpm out from under us.
-HOME=/home/deploy
-export HOME
-NVM_DIR="$HOME/.nvm"
-export NVM_DIR
-if [ -s "$NVM_DIR/nvm.sh" ]; then
-	# shellcheck disable=SC1091
-	. "$NVM_DIR/nvm.sh"
-else
-	echo "no nvm at $NVM_DIR — cannot find the node that pnpm needs" >&2
-	exit 69
-fi
-PATH="$HOME/.local/share/pnpm:$PATH"
-export PATH
-
-exec pnpm exec prisma migrate deploy
+# Absolute paths rather than anything PATH- or HOME-derived. This VPS has no
+# nvm: node is the system /usr/bin/node and pnpm is a global npm install at
+# /usr/bin/pnpm, so the deploy user's ~/.local/share/pnpm holds only the store,
+# not a binary. The NVM_DIR line in the deploy workflows is a no-op left over
+# from a different setup — it survives only because /usr/bin is already on PATH.
+# Under sudo, PATH comes from sudoers' secure_path, so nothing here should
+# depend on the caller's environment.
+#
+# The package's own prisma binary, not `pnpm exec prisma`: pnpm runs a
+# dependency-status check first and, finding the workspace out of date, tries to
+# `pnpm install` — which aborts with ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY
+# over SSH unless CI=true is in the environment, and sudo does not pass that
+# through. A root-owned wrapper should not be reinstalling dependencies anyway;
+# the workflow has already run `pnpm install --frozen-lockfile` by this point.
+exec ./node_modules/.bin/prisma migrate deploy
