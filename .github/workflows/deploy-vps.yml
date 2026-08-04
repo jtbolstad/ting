@@ -45,7 +45,14 @@ jobs:
             pnpm install --frozen-lockfile
             pnpm --filter @ting/shared build
             pnpm --filter @ting/server exec prisma generate
-            pnpm --filter @ting/server exec prisma migrate deploy
+            # Migrations go through a root-owned wrapper for the same reason the
+            # restart does: the privileged step is pinned to a reviewable script
+            # instead of an arbitrary command the deploy user can rewrite. The
+            # wrapper cds into packages/server so the Prisma CLI finds the .env
+            # holding DATABASE_URL, and restores HOME/PATH that sudo resets. See
+            # scripts/ting-deploy-migrate and /etc/sudoers.d/ting-deploy; the
+            # rule grants this exact path with no arguments.
+            sudo -n /usr/local/sbin/ting-deploy-migrate
             pnpm --filter @ting/server build
             pnpm --filter @ting/client build
             # Production runs in ROOT's pm2 daemon. This script runs as
