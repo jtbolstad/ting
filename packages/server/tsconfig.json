@@ -5,5 +5,9 @@
     "rootDir": "."
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  // Tests are not part of the deployable server: shipping them to dist/ also
+  // made every deploy hostage to their types, which is how a Vitest-only
+  // interop quirk in oauth.test.ts took stage down. Run `pnpm typecheck`
+  // (tsconfig.test.json) to type-check them.
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "src/test"]
 }

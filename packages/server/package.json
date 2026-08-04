@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
+    "typecheck": "tsc -p tsconfig.test.json",
     "start": "node dist/src/index.js",
     "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",

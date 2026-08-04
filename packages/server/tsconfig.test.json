@@ -1,0 +1,14 @@
+// Type-checks everything tsconfig.json builds *plus* the test files it
+// excludes, without emitting. `pnpm typecheck` uses this, so a type error in a
+// test fails CI on the pull request instead of the deploy.
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

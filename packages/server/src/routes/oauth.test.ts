@@ -1,12 +1,19 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import request from 'supertest';
-import express from 'express';
+import express, { type Router } from 'express';
 
 // oauth.ts reads GOOGLE_CLIENT_ID at module load, so each test re-imports the
 // module with a fresh module registry after setting the env it needs.
 async function buildApp() {
   vi.resetModules();
-  const { default: oauthRoutes } = await import('./oauth.js');
+  // The server package has no "type": "module", so under module: NodeNext tsc
+  // types this dynamic import the way Node's CJS interop resolves it: `default`
+  // is the whole module.exports object, with the router nested one level deeper
+  // at `.default.default`. Vitest transforms to ESM instead and hands back the
+  // router directly, which is the shape this file actually runs against — hence
+  // the cast. Only Vitest ever loads this file; tsconfig.json keeps *.test.ts
+  // out of the build.
+  const oauthRoutes = (await import('./oauth.js')).default as unknown as Router;
   const app = express();
   app.use(express.json());
   app.use('/auth', oauthRoutes);

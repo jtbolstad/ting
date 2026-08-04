@@ -13,6 +13,7 @@
     "dev:client": "pnpm --filter @ting/client dev",
     "dev:all": "concurrently \"pnpm run dev:server\" \"pnpm run dev:client\" --names \"server,client\" --prefix-colors \"blue,green\"",
     "build": "pnpm --filter \"./packages/*\" build",
+    "typecheck": "pnpm --filter \"./packages/*\" typecheck",
     "lint": "pnpm --filter \"./packages/*\" lint",
     "test:server": "pnpm --filter @ting/server test",
     "test:client": "pnpm --filter @ting/client test",
