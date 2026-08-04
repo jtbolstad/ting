@@ -45,7 +45,16 @@ jobs:
             pnpm install --frozen-lockfile
             pnpm --filter @ting/shared build
             pnpm --filter @ting/server exec prisma generate
-            pnpm --filter @ting/server exec prisma migrate deploy
+            # Migrations go through a root-owned wrapper for the same reason the
+            # restart does: /var/data/db.sqlite is owned by root, since the app
+            # runs in root's pm2 daemon. Running prisma as VPS_USER could only
+            # read it, and the first migration that needed to write failed the
+            # deploy with "attempt to write a readonly database". This was
+            # invisible until then — every earlier deploy shipped a migration
+            # set the database already had, so `migrate deploy` never wrote.
+            # See /usr/local/sbin/ting-deploy-migrate (tracked at
+            # scripts/ting-deploy-migrate) and /etc/sudoers.d/ting-deploy.
+            sudo -n /usr/local/sbin/ting-deploy-migrate
             pnpm --filter @ting/server build
             pnpm --filter @ting/client build
             # Production runs in ROOT's pm2 daemon. This script runs as

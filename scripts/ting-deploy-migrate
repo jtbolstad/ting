@@ -1,0 +1,52 @@
+#!/bin/sh
+# Deployed copy lives at /usr/local/sbin/ting-deploy-migrate (root:root, 0755).
+# This copy is tracked so the privileged part of the deploy is reviewable. To
+# install or update it on the VPS:
+#     sudo install -o root -g root -m 0755 scripts/ting-deploy-migrate \
+#         /usr/local/sbin/ting-deploy-migrate
+# The matching sudoers rule belongs in /etc/sudoers.d/ting-deploy, alongside the
+# restart one:
+#     deploy ALL=(root) NOPASSWD: /usr/local/sbin/ting-deploy-migrate
+# Apply migrations to the production database as root.
+#
+# Why this exists: production's SQLite database at /var/data/db.sqlite is owned
+# by root, because the app runs in root's pm2 daemon. The deploy workflow runs
+# as VPS_USER, so `prisma migrate deploy` could only read it —
+#
+#     Error: SQLite database error
+#     attempt to write a readonly database
+#        0: schema_core::commands::apply_migrations::Applying migration
+#                with migration_name="20260731000000_add_oauth_accounts"
+#
+# That went unnoticed for a while: every deploy after 2026-07-30 shipped a
+# migration set the database already had, so `migrate deploy` did nothing but
+# read. The first migration that actually needed to write failed the deploy.
+#
+# Stage does not have this problem — /var/data/stage is deploy-owned — so
+# deploy-stage.yml still calls prisma directly.
+#
+# Invoked by .github/workflows/deploy-vps.yml as:
+#     sudo -n /usr/local/sbin/ting-deploy-migrate
+# It takes no arguments, and the sudoers rule above grants exactly this command
+# with none. This file is root-owned and not writable by the deploy user, so the
+# rule does not let that user hand root anything of its own choosing.
+set -eu
+
+# Prisma CLI reads packages/server/.env directly for DATABASE_URL; it never sees
+# pm2's environment. Run from the package so that file is found.
+cd /var/www/ting/packages/server
+
+# sudo resets HOME to root's, which moves node and pnpm out from under us: both
+# are installed under the deploy user, not system-wide. Point HOME back and load
+# the same nvm and pnpm the rest of the workflow uses, so this runs against the
+# node_modules the preceding `pnpm install` just populated.
+HOME=/home/deploy
+export HOME
+NVM_DIR="$HOME/.nvm"
+export NVM_DIR
+# shellcheck disable=SC1091
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+PATH="$HOME/.local/share/pnpm:$PATH"
+export PATH
+
+exec pnpm exec prisma migrate deploy

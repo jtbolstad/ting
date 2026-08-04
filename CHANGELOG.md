@@ -9,6 +9,38 @@ changes to the server itself and are not reproducible from this repo alone.
 
 ---
 
+## 2026-08-04 — Migrations run as root on production
+
+### Fixed
+
+- **`prisma migrate deploy` could not write the production database.**
+  `/var/data/db.sqlite` is owned by root, because production runs in root's pm2
+  daemon, while the deploy workflow runs as `VPS_USER`. Every deploy since
+  2026-07-30 shipped a migration set the database already had, so `migrate
+  deploy` only ever read and the mismatch stayed hidden. The first migration
+  that actually needed to write — `20260731000000_add_oauth_accounts`, the
+  Google sign-in work — failed the deploy with `SQLite database error: attempt
+  to write a readonly database`. Nothing was written, not even a
+  `_prisma_migrations` row, so there is no failed migration to `resolve`; the
+  deploy stopped before build and restart, leaving production up on the previous
+  commit.
+  Migrations now go through `scripts/ting-deploy-migrate`, installed to
+  `/usr/local/sbin` and permitted by `/etc/sudoers.d/ting-deploy`, mirroring how
+  the restart is already handled. The deploy user still has no write access to
+  the production database outside that reviewed script.
+- Stage was never affected: `/var/data/stage` is deploy-owned, so
+  `deploy-stage.yml` still calls prisma directly.
+
+### VPS
+
+Not reproducible from this repo — recorded here so the server's state has a history.
+
+- Installed `/usr/local/sbin/ting-deploy-migrate` (root:root, 0755) and added
+  `deploy ALL=(root) NOPASSWD: /usr/local/sbin/ting-deploy-migrate` to
+  `/etc/sudoers.d/ting-deploy`.
+
+---
+
 ## 2026-07-30 — Deploy pipeline, process ownership, secrets
 
 Stage reported a stale commit in `/health` after a green deploy. The cause turned out
