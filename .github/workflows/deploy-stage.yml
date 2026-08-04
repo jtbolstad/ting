@@ -34,7 +34,16 @@ jobs:
             pnpm install --frozen-lockfile
             pnpm --filter @ting/shared build
             pnpm --filter @ting/server exec prisma generate
-            pnpm --filter @ting/server exec prisma migrate deploy
+            # Migrations go through a root-owned wrapper, matching production:
+            # the step that touches the database is pinned to a reviewable
+            # script rather than an arbitrary command. The wrapper cds into
+            # /var/www/ting-stage/packages/server so the Prisma CLI finds the
+            # .env holding the stage DATABASE_URL, and restores HOME/PATH that
+            # sudo resets. See scripts/ting-stage-migrate and
+            # /etc/sudoers.d/ting-deploy; the rule grants this exact path with
+            # no arguments. Everything else on stage stays unprivileged — the
+            # checkout and the ting-stage pm2 process belong to VPS_USER.
+            sudo -n /usr/local/sbin/ting-stage-migrate
             pnpm --filter @ting/server build
             # VITE_APP_ENV reaches the bundle via Vite's VITE_ prefix convention,
             # which reads prefixed variables from the build environment.
