@@ -1,0 +1,45 @@
+#!/bin/sh
+# Deployed copy lives at /usr/local/sbin/ting-stage-migrate (root:root, 0755).
+# This copy is tracked so the privileged part of the deploy is reviewable. To
+# install or update it on the VPS:
+#     sudo install -o root -g root -m 0755 scripts/ting-stage-migrate \
+#         /usr/local/sbin/ting-stage-migrate
+# The matching sudoers rule is in /etc/sudoers.d/ting-deploy:
+#     deploy ALL=(root) NOPASSWD: /usr/local/sbin/ting-stage-migrate
+# No trailing `*`: this wrapper takes no arguments, so the rule permits none.
+#
+# Unlike production, the rest of the stage deploy is unprivileged — the
+# /var/www/ting-stage checkout, its packages/server/.env, and the ting-stage pm2
+# process all belong to the deploy user. This wrapper exists for symmetry with
+# ting-deploy-migrate, so both environments apply migrations through the same
+# reviewable, root-owned path. It is deliberately the only root step on stage.
+#
+# Invoked by .github/workflows/deploy-stage.yml as:
+#     sudo -n /usr/local/sbin/ting-stage-migrate
+# The sudoers rule names exactly this path — keep the two in step. This file is
+# root-owned and not writable by the deploy user, so granting the rule does not
+# let that user hand root an arbitrary command.
+set -eu
+
+# Prisma CLI reads packages/server/.env directly for DATABASE_URL; it never sees
+# pm2's environment. Run from the package so that file is found — and note this
+# is the stage checkout, whose .env points at the stage database. Pointing this
+# at /var/www/ting would migrate production instead.
+cd /var/www/ting-stage/packages/server
+
+# sudo resets HOME to root's, which moves node and pnpm out from under us.
+HOME=/home/deploy
+export HOME
+NVM_DIR="$HOME/.nvm"
+export NVM_DIR
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+	# shellcheck disable=SC1091
+	. "$NVM_DIR/nvm.sh"
+else
+	echo "no nvm at $NVM_DIR — cannot find the node that pnpm needs" >&2
+	exit 69
+fi
+PATH="$HOME/.local/share/pnpm:$PATH"
+export PATH
+
+exec pnpm exec prisma migrate deploy
