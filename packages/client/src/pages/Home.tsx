@@ -1,12 +1,12 @@
+import type { Item } from "@ting/shared";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import type { Item } from "@ting/shared";
 import { apiClient } from "../api/client";
 import { ItemCard } from "../components/catalog/ItemCard";
 import { useAuth } from "../context/AuthContext";
-import { useOrganization } from "../context/OrganizationContext";
 import { useFeatureFlag } from "../context/FeatureFlagContext";
+import { useOrganization } from "../context/OrganizationContext";
 import { pickRandomItems } from "../utils/itemUtils";
 
 // How many catalog items the front page shows. Fetch a larger slice and pick
@@ -18,7 +18,7 @@ export function Home() {
   const { t } = useTranslation();
   const { isAuthenticated, isOrgManager } = useAuth();
   const { activeOrganizationId } = useOrganization();
-  const memberItemSubmission = useFeatureFlag('MEMBER_ITEM_SUBMISSION');
+  const memberItemSubmission = useFeatureFlag("MEMBER_ITEM_SUBMISSION");
   const canAddItem = isOrgManager || memberItemSubmission;
   const [showcaseItems, setShowcaseItems] = useState<Item[]>([]);
 
@@ -85,7 +85,9 @@ export function Home() {
         <div className="container mx-auto max-w-3xl text-center">
           <p className="text-orange-800 text-sm balance">
             {t("home.membersOnly.notice")}
-            {" "}
+          </p>
+          <p>
+            {t("home.membersOnly.notMemberYet")} {t("home.membersOnly.join")}{" "}
             <a
               href="https://hpvel.no"
               target="_blank"
@@ -151,7 +153,9 @@ export function Home() {
 
       {/* Lend your own + request tips */}
       <section className="py-16 px-4">
-        <div className={`container mx-auto max-w-4xl grid gap-8 ${canAddItem ? 'md:grid-cols-2' : 'max-w-xl'}`}>
+        <div
+          className={`container mx-auto max-w-4xl grid gap-8 ${canAddItem ? "md:grid-cols-2" : "max-w-xl"}`}
+        >
           {canAddItem && (
             <div className="bg-white rounded-xl p-8 shadow-sm border border-stone-200">
               <div className="text-3xl mb-3">📦</div>

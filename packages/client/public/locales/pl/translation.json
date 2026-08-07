@@ -823,7 +823,9 @@
       "login": "Zaloguj się"
     },
     "membersOnly": {
-      "notice": "Ta usługa jest obecnie dostępna tylko dla członków HPV. Rozważamy rozwiązania dla nieczłonków. Nie jesteś jeszcze członkiem? Zapisz się na"
+      "notice": "Ta usługa jest obecnie dostępna tylko dla członków HPV.",
+      "notMemberYet": "Nie jesteś jeszcze członkiem?",
+      "join": "Zapisz się na"
     },
     "available": {
       "title": "Oto niektóre rzeczy, które możesz wypożyczyć:",

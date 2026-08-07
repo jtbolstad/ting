@@ -823,7 +823,9 @@
       "login": "Log in"
     },
     "membersOnly": {
-      "notice": "This service is currently for HPV members only. We are considering solutions for non-members. Not a member yet? Sign up at"
+      "notice": "The service is currently for HPV members only.",
+      "notMemberYet": "Not a member yet?",
+      "join": "Sign up at"
     },
     "available": {
       "title": "Here are some of the things you can borrow:",

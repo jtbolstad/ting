@@ -823,7 +823,9 @@
       "login": "Iniciar Sesión"
     },
     "membersOnly": {
-      "notice": "Este servicio es actualmente solo para miembros de HPV. Estamos considerando soluciones para no miembros. ¿Aún no eres miembro? Regístrate en"
+      "notice": "Este servicio es actualmente solo para miembros de HPV.",
+      "notMemberYet": "¿Aún no eres miembro?",
+      "join": "Regístrate en"
     },
     "available": {
       "title": "Aquí hay algunas de las cosas que puedes tomar prestadas:",
