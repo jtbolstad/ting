@@ -824,7 +824,9 @@
       "login": "Logg inn"
     },
     "membersOnly": {
-      "notice": "Tjenesten er foreløpig for HPV-medlemmer. Vi vurderer løsninger for ikke-medlemmer. Ikke medlem ennå? Meld deg inn på"
+      "notice": "Tjenesten er foreløpig for HPV-medlemmer.",
+      "notMemberYet": "Ikke medlem ennå?",
+      "join": "Meld deg inn på"
     },
     "available": {
       "title": "Her er noen av tingene du kan låne:",
