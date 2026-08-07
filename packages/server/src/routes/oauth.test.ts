@@ -26,6 +26,7 @@ describe('OAuth routes', () => {
   beforeEach(() => {
     delete process.env.GOOGLE_CLIENT_ID;
     delete process.env.GOOGLE_CLIENT_SECRET;
+    delete process.env.GOOGLE_LOGIN_ENABLED;
   });
 
   afterEach(() => {
@@ -50,6 +51,18 @@ describe('OAuth routes', () => {
 
       expect(response.status).toBe(200);
       expect(response.body.data.google).toBe(true);
+    });
+
+    it('reports google as unavailable when feature flag is disabled', async () => {
+      process.env.GOOGLE_CLIENT_ID = 'test-client-id';
+      process.env.GOOGLE_CLIENT_SECRET = 'test-client-secret';
+      process.env.GOOGLE_LOGIN_ENABLED = 'false';
+
+      const app = await buildApp();
+      const response = await request(app).get('/auth/status');
+
+      expect(response.status).toBe(200);
+      expect(response.body.data.google).toBe(false);
     });
   });
 

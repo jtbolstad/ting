@@ -9,9 +9,16 @@ const router: ExpressRouter = Router();
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
 
-// Check if Google OAuth is configured
+// Feature flag: explicitly disable Google login even when credentials are set.
+// Set GOOGLE_LOGIN_ENABLED=false to hide the button and block the OAuth flow.
+// Defaults to enabled whenever credentials are present.
+function isGoogleLoginEnabled(): boolean {
+  return process.env.GOOGLE_LOGIN_ENABLED !== "false";
+}
+
+// Check if Google OAuth is configured and the feature flag allows it
 function isGoogleConfigured(): boolean {
-  return Boolean(GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET);
+  return Boolean(GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) && isGoogleLoginEnabled();
 }
 
 // GET /api/auth/oauth/status - Check which OAuth providers are available
