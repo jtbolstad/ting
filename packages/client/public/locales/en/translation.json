@@ -818,7 +818,7 @@
     "hero": {
       "byline": "Hauketo og Prinsdal Vel",
       "title": "Get what you need — without owning it",
-      "subtitle": "Tingbiblioteket is HPV's lending service for members in Hauketo og Prinsdal. Borrow equipment when you need it — free of charge.",
+      "subtitle": "Tingbiblioteket is HPV's lending service for members in Hauketo og Prinsdal Vel. Borrow equipment when you need it — free of charge.",
       "browseCatalog": "Browse Catalog",
       "login": "Log in"
     },
@@ -826,7 +826,7 @@
       "notice": "This service is currently for HPV members only. We are considering solutions for non-members. Not a member yet? Sign up at"
     },
     "available": {
-      "title": "Already available",
+      "title": "Here are some of the things you can borrow:",
       "subtitle": "And we're continuously adding more — tools, chairs, tables, PA systems, and lighting rigs.",
       "viewAll": "View full catalog"
     },
@@ -838,7 +838,7 @@
       },
       "step2": {
         "title": "Reserve it",
-        "description": "Pick your dates and reserve online. No phone calls needed."
+        "description": "Pick your dates and reserve online."
       },
       "step3": {
         "title": "Borrow and return",

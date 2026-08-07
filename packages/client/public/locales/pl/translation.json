@@ -532,8 +532,12 @@
       "title": "Organizacje",
       "createButton": "Utwórz Organizację",
       "type": "Typ",
-      "editModal": { "title": "Edytuj Organizację" },
-      "createModal": { "title": "Utwórz Organizację" },
+      "editModal": {
+        "title": "Edytuj Organizację"
+      },
+      "createModal": {
+        "title": "Utwórz Organizację"
+      },
       "form": {
         "name": "Nazwa",
         "type": "Typ",
@@ -814,7 +818,7 @@
     "hero": {
       "byline": "Hauketo og Prinsdal Vel",
       "title": "Zdobądź to, czego potrzebujesz — bez kupowania",
-      "subtitle": "Tingbiblioteket to serwis pożyczkowy HPV dla członków w Hauketo og Prinsdal. Pożyczaj sprzęt, gdy go potrzebujesz — bezpłatnie.",
+      "subtitle": "Tingbiblioteket to serwis pożyczkowy HPV dla członków w Hauketo og Prinsdal Vel. Pożyczaj sprzęt, gdy go potrzebujesz — bezpłatnie.",
       "browseCatalog": "Przeglądaj Katalog",
       "login": "Zaloguj się"
     },
@@ -822,7 +826,7 @@
       "notice": "Ta usługa jest obecnie dostępna tylko dla członków HPV. Rozważamy rozwiązania dla nieczłonków. Nie jesteś jeszcze członkiem? Zapisz się na"
     },
     "available": {
-      "title": "Już dostępne",
+      "title": "Oto niektóre rzeczy, które możesz wypożyczyć:",
       "subtitle": "I stale dodajemy więcej — narzędzia, krzesła, stoły, systemy nagłośnienia i oświetlenie.",
       "viewAll": "Zobacz pełny katalog"
     },
@@ -834,7 +838,7 @@
       },
       "step2": {
         "title": "Zarezerwuj",
-        "description": "Wybierz daty i zarezerwuj online. Bez telefonów."
+        "description": "Wybierz daty i zarezerwuj online."
       },
       "step3": {
         "title": "Pożycz i zwróć",

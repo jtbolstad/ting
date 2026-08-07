@@ -82,6 +82,7 @@ export function Home() {
         <div className="container mx-auto max-w-3xl text-center">
           <p className="text-orange-800 text-sm balance">
             {t("home.membersOnly.notice")}
+            {" "}
             <a
               href="https://hpvel.no"
               target="_blank"
