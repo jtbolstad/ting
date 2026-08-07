@@ -828,13 +828,7 @@
     "available": {
       "title": "Already available",
       "subtitle": "And we're continuously adding more — tools, chairs, tables, PA systems, and lighting rigs.",
-      "viewAll": "View full catalog",
-      "items": {
-        "tents": { "icon": "⛺", "name": "Garden Tents", "detail": "2 pcs, 3×3 m" },
-        "speakers": { "icon": "🔊", "name": "Speakers", "detail": "2× JBL Partybox 320" },
-        "smoke": { "icon": "💨", "name": "Smoke Machine", "detail": "For events" },
-        "projector": { "icon": "📽️", "name": "Projector", "detail": "Powerful, coming soon" }
-      }
+      "viewAll": "View full catalog"
     },
     "howItWorks": {
       "title": "How it works",

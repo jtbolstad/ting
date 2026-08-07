@@ -829,25 +829,7 @@
     "available": {
       "title": "Vi har allerede",
       "subtitle": "Og vi vurderer stadig mer – verktøy, stoler, bord, PA-anlegg og lysrigg.",
-      "viewAll": "Se hele katalogen",
-      "items": {
-        "tents": { "icon": "⛺", "name": "Hagetelt", "detail": "2 stk, 3×3 m" },
-        "speakers": {
-          "icon": "🔊",
-          "name": "Høyttalere",
-          "detail": "2× JBL Partybox 320"
-        },
-        "smoke": {
-          "icon": "💨",
-          "name": "Røykmaskin",
-          "detail": "Til arrangement"
-        },
-        "projector": {
-          "icon": "📽️",
-          "name": "Projektor",
-          "detail": "Kraftig, på vei"
-        }
-      }
+      "viewAll": "Se hele katalogen"
     },
     "howItWorks": {
       "title": "Slik fungerer ting",
