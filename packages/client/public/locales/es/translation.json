@@ -532,8 +532,12 @@
       "title": "Organizaciones",
       "createButton": "Crear Organización",
       "type": "Tipo",
-      "editModal": { "title": "Editar Organización" },
-      "createModal": { "title": "Crear Organización" },
+      "editModal": {
+        "title": "Editar Organización"
+      },
+      "createModal": {
+        "title": "Crear Organización"
+      },
       "form": {
         "name": "Nombre",
         "type": "Tipo",
@@ -814,7 +818,7 @@
     "hero": {
       "byline": "Hauketo og Prinsdal Vel",
       "title": "Obtén lo que necesitas — sin tener que comprarlo",
-      "subtitle": "Tingbiblioteket es el servicio de préstamo de HPV para miembros en Hauketo og Prinsdal. Toma prestado lo que necesitas — sin coste.",
+      "subtitle": "Tingbiblioteket es el servicio de préstamo de HPV para miembros en Hauketo og Prinsdal Vel. Toma prestado lo que necesitas — sin coste.",
       "browseCatalog": "Ver Catálogo",
       "login": "Iniciar Sesión"
     },
@@ -822,7 +826,7 @@
       "notice": "Este servicio es actualmente solo para miembros de HPV. Estamos considerando soluciones para no miembros. ¿Aún no eres miembro? Regístrate en"
     },
     "available": {
-      "title": "Ya disponible",
+      "title": "Aquí hay algunas de las cosas que puedes tomar prestadas:",
       "subtitle": "Y continuamos añadiendo más — herramientas, sillas, mesas, sistemas de sonido y equipos de iluminación.",
       "viewAll": "Ver catálogo completo"
     },
@@ -834,7 +838,7 @@
       },
       "step2": {
         "title": "Resérvalo",
-        "description": "Elige tus fechas y reserva online. Sin llamadas telefónicas."
+        "description": "Elige tus fechas y reserva online."
       },
       "step3": {
         "title": "Toma prestado y devuelve",
