@@ -22,10 +22,26 @@ async function buildApp() {
 
 const ORIGINAL_ENV = { ...process.env };
 
+// Mock prisma so tests don't need a real DB
+vi.mock('../prisma.js', () => ({
+  prisma: {
+    organization: {
+      findUnique: vi.fn().mockResolvedValue(null),
+    },
+    featureFlag: {
+      findUnique: vi.fn().mockResolvedValue(null),
+    },
+  },
+}));
+
 describe('OAuth routes', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     delete process.env.GOOGLE_CLIENT_ID;
     delete process.env.GOOGLE_CLIENT_SECRET;
+    // Reset prisma mocks to defaults (no org → flag defaults to enabled)
+    const { prisma } = await import('../prisma.js');
+    vi.mocked(prisma.organization.findUnique).mockResolvedValue(null);
+    vi.mocked(prisma.featureFlag.findUnique).mockResolvedValue(null);
   });
 
   afterEach(() => {
@@ -41,9 +57,10 @@ describe('OAuth routes', () => {
       expect(response.body.data.google).toBe(false);
     });
 
-    it('reports google as available when credentials are set', async () => {
+    it('reports google as available when credentials are set and flag defaults to enabled', async () => {
       process.env.GOOGLE_CLIENT_ID = 'test-client-id';
       process.env.GOOGLE_CLIENT_SECRET = 'test-client-secret';
+      // No org in DB → flag defaults to true
 
       const app = await buildApp();
       const response = await request(app).get('/auth/status');
@@ -51,10 +68,55 @@ describe('OAuth routes', () => {
       expect(response.status).toBe(200);
       expect(response.body.data.google).toBe(true);
     });
+
+    it('reports google as unavailable when admin has disabled the GOOGLE_LOGIN flag', async () => {
+      process.env.GOOGLE_CLIENT_ID = 'test-client-id';
+      process.env.GOOGLE_CLIENT_SECRET = 'test-client-secret';
+
+      // Simulate org + flag row with enabled=false
+      const { prisma } = await import('../prisma.js');
+      vi.mocked(prisma.organization.findUnique).mockResolvedValue({ id: 'org-1' } as any);
+      vi.mocked(prisma.featureFlag.findUnique).mockResolvedValue({
+        id: 'flag-1',
+        organizationId: 'org-1',
+        key: 'GOOGLE_LOGIN',
+        enabled: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      } as any);
+
+      const app = await buildApp();
+      const response = await request(app).get('/auth/status');
+
+      expect(response.status).toBe(200);
+      expect(response.body.data.google).toBe(false);
+    });
   });
 
   describe('GET /auth/google', () => {
     it('returns 501 when Google OAuth is not configured', async () => {
+      const app = await buildApp();
+      const response = await request(app).get('/auth/google');
+
+      expect(response.status).toBe(501);
+      expect(response.body.success).toBe(false);
+    });
+
+    it('returns 501 when admin has disabled the GOOGLE_LOGIN flag', async () => {
+      process.env.GOOGLE_CLIENT_ID = 'test-client-id';
+      process.env.GOOGLE_CLIENT_SECRET = 'test-client-secret';
+
+      const { prisma } = await import('../prisma.js');
+      vi.mocked(prisma.organization.findUnique).mockResolvedValue({ id: 'org-1' } as any);
+      vi.mocked(prisma.featureFlag.findUnique).mockResolvedValue({
+        id: 'flag-1',
+        organizationId: 'org-1',
+        key: 'GOOGLE_LOGIN',
+        enabled: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      } as any);
+
       const app = await buildApp();
       const response = await request(app).get('/auth/google');
 

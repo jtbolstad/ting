@@ -24,6 +24,7 @@ function flagDescription(key: string): string {
     MEMBER_ITEM_SUBMISSION: "Medlemmer kan foreslå nye gjenstander",
     REVIEWS_ENABLED: "Medlemmer kan gi anmeldelser av gjenstander",
     RESERVATIONS_ENABLED: "Reservasjoner er tilgjengelig for medlemmer",
+    GOOGLE_LOGIN: "Innlogging med Google er aktivert",
   };
   return descriptions[key] ?? key;
 }

@@ -8,18 +8,44 @@ const router: ExpressRouter = Router();
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
+const OAUTH_DEFAULT_ORG_SLUG = process.env.OAUTH_DEFAULT_ORG_SLUG ?? "hpv-tingbibliotek";
 
-// Check if Google OAuth is configured
-function isGoogleConfigured(): boolean {
+// Check if Google OAuth credentials are present on the server
+function hasGoogleCredentials(): boolean {
   return Boolean(GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET);
 }
 
-// GET /api/auth/oauth/status - Check which OAuth providers are available
-router.get("/status", (req: Request, res: Response) => {
+/**
+ * Look up the GOOGLE_LOGIN feature flag in the default organisation's DB row.
+ * Falls back to `true` (enabled) when no row exists so the feature works
+ * out-of-the-box without an admin needing to explicitly turn it on.
+ */
+async function isGoogleLoginFlagEnabled(): Promise<boolean> {
+  try {
+    const org = await prisma.organization.findUnique({
+      where: { slug: OAUTH_DEFAULT_ORG_SLUG },
+      select: { id: true },
+    });
+    if (!org) return true; // No default org yet — don't block login
+    const row = await prisma.featureFlag.findUnique({
+      where: { organizationId_key: { organizationId: org.id, key: "GOOGLE_LOGIN" } },
+    });
+    // When no row exists the flag has never been set; treat as enabled
+    return row ? row.enabled : true;
+  } catch {
+    return true; // Non-fatal: DB unavailable → don't block login
+  }
+}
+
+// GET /api/auth/status - Check which OAuth providers are available
+// Unauthenticated: checks both credentials AND the admin feature flag
+router.get("/status", async (req: Request, res: Response) => {
+  const credentialsOk = hasGoogleCredentials();
+  const flagEnabled = credentialsOk ? await isGoogleLoginFlagEnabled() : false;
   res.json({
     success: true,
     data: {
-      google: isGoogleConfigured(),
+      google: credentialsOk && flagEnabled,
     },
   });
 });
@@ -27,11 +53,17 @@ router.get("/status", (req: Request, res: Response) => {
 // GET /api/auth/google - Redirect to Google consent screen
 router.get(
   "/google",
-  (req: Request, res: Response, next: NextFunction) => {
-    if (!isGoogleConfigured()) {
+  async (req: Request, res: Response, next: NextFunction) => {
+    if (!hasGoogleCredentials()) {
       return res.status(501).json({
         success: false,
         error: "Google OAuth is not configured",
+      });
+    }
+    if (!await isGoogleLoginFlagEnabled()) {
+      return res.status(501).json({
+        success: false,
+        error: "Google login is disabled",
       });
     }
     next();
@@ -45,8 +77,8 @@ router.get(
 // GET /api/auth/google/callback - Handle Google's response
 router.get(
   "/google/callback",
-  (req: Request, res: Response, next: NextFunction) => {
-    if (!isGoogleConfigured()) {
+  async (req: Request, res: Response, next: NextFunction) => {
+    if (!hasGoogleCredentials() || !await isGoogleLoginFlagEnabled()) {
       return res.redirect(`${CLIENT_URL}/login?error=oauth_not_configured`);
     }
     next();
