@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { OrganizationProvider } from "./context/OrganizationContext";
+import { FeatureFlagProvider } from "./context/FeatureFlagContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Navbar } from "./components/Navbar";
 import { ToastProvider } from "./components/ui/Toast";
@@ -29,6 +30,7 @@ function App() {
   return (
     <BrowserRouter>
       <OrganizationProvider>
+        <FeatureFlagProvider>
         <AuthProvider>
           <ToastProvider>
           <ConfirmProvider>
@@ -104,6 +106,7 @@ function App() {
           </ConfirmProvider>
           </ToastProvider>
         </AuthProvider>
+        </FeatureFlagProvider>
       </OrganizationProvider>
     </BrowserRouter>
   );

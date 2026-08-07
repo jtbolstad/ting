@@ -3,7 +3,10 @@ import type {
   MemberGroup,
   Membership,
   Organization,
+  FeatureFlagKey,
+  FeatureFlagMap,
 } from "@ting/shared";
+import { FEATURE_FLAG_KEYS } from "@ting/shared";
 import type { Router as ExpressRouter, Response } from "express";
 import { Router } from "express";
 import crypto from "crypto";
@@ -945,6 +948,75 @@ router.post(
         success: false,
         error: "Failed to accept invitation",
       });
+    }
+  },
+);
+
+/**
+ * GET /api/organizations/feature-flags
+ * Returns the complete feature flag map for the active organization.
+ * Requires MEMBER role.
+ */
+router.get(
+  "/feature-flags",
+  withOrganizationContext(),
+  requireOrgRole("MEMBER"),
+  async (req: AuthRequest, res: Response) => {
+    const organizationId = req.organization!.id;
+    try {
+      const rows = await prisma.featureFlag.findMany({ where: { organizationId } });
+      const flagMap = Object.fromEntries(
+        FEATURE_FLAG_KEYS.map((key) => [
+          key,
+          rows.find((r) => r.key === key)?.enabled ?? false,
+        ]),
+      ) as FeatureFlagMap;
+      const response: ApiResponse<FeatureFlagMap> = { success: true, data: flagMap };
+      res.json(response);
+    } catch (err) {
+      console.error("Get feature flags error:", err);
+      res.status(500).json({ success: false, error: "Failed to fetch feature flags" });
+    }
+  },
+);
+
+/**
+ * PUT /api/organizations/feature-flags
+ * Body: { key: FeatureFlagKey; enabled: boolean }
+ * Requires ADMIN role.
+ */
+router.put(
+  "/feature-flags",
+  withOrganizationContext(),
+  requireOrgRole("ADMIN"),
+  async (req: AuthRequest, res: Response) => {
+    const organizationId = req.organization!.id;
+    const { key, enabled } = req.body as { key: FeatureFlagKey; enabled: boolean };
+
+    if (!FEATURE_FLAG_KEYS.includes(key as FeatureFlagKey)) {
+      return res.status(400).json({ success: false, error: `Unknown feature flag key: ${key}` });
+    }
+    if (typeof enabled !== "boolean") {
+      return res.status(400).json({ success: false, error: "`enabled` must be a boolean" });
+    }
+
+    try {
+      await prisma.featureFlag.upsert({
+        where: { organizationId_key: { organizationId, key } },
+        update: { enabled },
+        create: { organizationId, key, enabled },
+      });
+
+      const rows = await prisma.featureFlag.findMany({ where: { organizationId } });
+      const flagMap = Object.fromEntries(
+        FEATURE_FLAG_KEYS.map((k) => [k, rows.find((r) => r.key === k)?.enabled ?? false]),
+      ) as FeatureFlagMap;
+
+      const response: ApiResponse<FeatureFlagMap> = { success: true, data: flagMap };
+      res.json(response);
+    } catch (err) {
+      console.error("Update feature flag error:", err);
+      res.status(500).json({ success: false, error: "Failed to update feature flag" });
     }
   },
 );

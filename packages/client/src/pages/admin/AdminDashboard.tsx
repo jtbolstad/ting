@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { apiClient } from "../../api/client";
 import { useOrganization } from "../../context/OrganizationContext";
+import { useFeatureFlags } from "../../context/FeatureFlagContext";
 import { useToast } from "../../components/ui/Toast";
 import { useConfirm } from "../../components/ui/ConfirmModal";
 import { Spinner } from "../../components/ui/Spinner";
@@ -13,11 +14,24 @@ import type {
   Location,
   User,
   Reservation,
+  FeatureFlagKey,
 } from "@ting/shared";
+import { FEATURE_FLAG_KEYS } from "@ting/shared";
+
+function flagDescription(key: string): string {
+  const descriptions: Record<string, string> = {
+    LOAN_APPROVAL_REQUIRED: "Utlån krever godkjenning av en administrator",
+    MEMBER_ITEM_SUBMISSION: "Medlemmer kan foreslå nye gjenstander",
+    REVIEWS_ENABLED: "Medlemmer kan gi anmeldelser av gjenstander",
+    RESERVATIONS_ENABLED: "Reservasjoner er tilgjengelig for medlemmer",
+  };
+  return descriptions[key] ?? key;
+}
 
 export function AdminDashboard() {
   const { t } = useTranslation();
   const { activeOrganizationId, activeOrganization } = useOrganization();
+  const { flags: featureFlags, setFlag: setFeatureFlag, isLoading: flagsLoading } = useFeatureFlags();
   const toast = useToast();
   const confirm = useConfirm();
   const [loans, setLoans] = useState<Loan[]>([]);
@@ -40,6 +54,7 @@ export function AdminDashboard() {
     | "groups"
     | "email"
     | "auditlog"
+    | "featureflags"
   >("loans");
 
   // Checkout modal state
@@ -768,6 +783,16 @@ export function AdminDashboard() {
             }`}
           >
             E-post
+          </button>
+          <button
+            onClick={() => setActiveTab("featureflags")}
+            className={`pb-4 px-1 ${
+              activeTab === "featureflags"
+                ? "border-b-2 border-orange-500 text-orange-500 font-medium"
+                : "text-gray-500"
+            }`}
+          >
+            Feature-flagg
           </button>
         </div>
       </div>
@@ -1812,6 +1837,53 @@ export function AdminDashboard() {
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {/* Feature Flags Tab */}
+      {activeTab === "featureflags" && (
+        <div>
+          <h2 className="text-2xl font-bold mb-2">Feature-flagg</h2>
+          <p className="text-gray-500 mb-6 text-sm">
+            Slå av og på funksjoner for denne organisasjonen. Endringer trer i kraft umiddelbart.
+          </p>
+          {flagsLoading ? (
+            <Spinner />
+          ) : (
+            <div className="bg-white rounded-lg shadow divide-y">
+              {FEATURE_FLAG_KEYS.map((key) => (
+                <div key={key} className="flex items-center justify-between px-6 py-4">
+                  <div>
+                    <div className="font-medium text-gray-900">{key}</div>
+                    <div className="text-sm text-gray-500">{flagDescription(key)}</div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        await setFeatureFlag(key as FeatureFlagKey, !featureFlags[key as FeatureFlagKey]);
+                        toast.success(`${key} ${!featureFlags[key as FeatureFlagKey] ? "aktivert" : "deaktivert"}`);
+                      } catch (err: any) {
+                        toast.error(err.message || "Feil ved oppdatering");
+                      }
+                    }}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 ${
+                      featureFlags[key as FeatureFlagKey]
+                        ? "bg-orange-500"
+                        : "bg-gray-200"
+                    }`}
+                    aria-pressed={featureFlags[key as FeatureFlagKey]}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                        featureFlags[key as FeatureFlagKey] ? "translate-x-6" : "translate-x-1"
+                      }`}
+                    />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
