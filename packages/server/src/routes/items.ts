@@ -281,6 +281,17 @@ router.post(
       }
 
       const isManager = hasOrgRole(req, 'MANAGER');
+
+      // Non-managers need the MEMBER_ITEM_SUBMISSION feature flag enabled
+      if (!isManager) {
+        const flagRow = await prisma.featureFlag.findUnique({
+          where: { organizationId_key: { organizationId: req.organization!.id, key: 'MEMBER_ITEM_SUBMISSION' } },
+        });
+        if (!flagRow?.enabled) {
+          return res.status(403).json({ success: false, error: 'Item submission by members is currently disabled' });
+        }
+      }
+
       const approvalStatus = isManager ? 'APPROVED' : 'PENDING';
       const ownerType = isManager ? 'ORGANIZATION' : 'MEMBER';
       const ownerId = isManager ? null : req.user!.id;
