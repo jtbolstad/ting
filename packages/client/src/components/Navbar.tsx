@@ -3,13 +3,18 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
 import { useOrganization } from "../context/OrganizationContext";
+import { useFeatureFlag } from "../context/FeatureFlagContext";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export function Navbar() {
-  const { isAuthenticated, isAdmin, user, logout, activeMembership, isPlatformAdmin } = useAuth();
+  const { isAuthenticated, isAdmin, isOrgManager, user, logout, activeMembership, isPlatformAdmin } = useAuth();
   const { organizations, activeOrganizationId, setActiveOrganizationId } = useOrganization();
+  const memberItemSubmission = useFeatureFlag('MEMBER_ITEM_SUBMISSION');
   const { t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // Managers (MANAGER/ADMIN/OWNER) can always add items; regular members need the flag on
+  const canAddItem = isOrgManager || memberItemSubmission;
 
   const activeOrg = activeMembership
     ? organizations.find(org => org.id === activeMembership.organizationId)
@@ -46,7 +51,9 @@ export function Navbar() {
               <Link to="/catalog" className="hover:text-orange-200">{t("nav.catalog")}</Link>
               {isAuthenticated && (
                 <>
-                  <Link to="/items/add" className="hover:text-orange-200">{t("nav.addItem")}</Link>
+                  {canAddItem && (
+                    <Link to="/items/add" className="hover:text-orange-200">{t("nav.addItem")}</Link>
+                  )}
                   <Link to="/dashboard" className="hover:text-orange-200">{t("nav.dashboard")}</Link>
                   {isAdmin && (
                     <Link to="/admin" className="hover:text-orange-200">{t("nav.admin")}</Link>
@@ -100,7 +107,9 @@ export function Navbar() {
           {isAuthenticated ? (
             <>
               <Link to="/catalog" onClick={close} className="block py-2 hover:text-orange-200">{t("nav.catalog")}</Link>
-              <Link to="/items/add" onClick={close} className="block py-2 hover:text-orange-200">{t("nav.addItem")}</Link>
+              {canAddItem && (
+                <Link to="/items/add" onClick={close} className="block py-2 hover:text-orange-200">{t("nav.addItem")}</Link>
+              )}
               <Link to="/dashboard" onClick={close} className="block py-2 hover:text-orange-200">{t("nav.dashboard")}</Link>
               {isAdmin && (
                 <Link to="/admin" onClick={close} className="block py-2 hover:text-orange-200">{t("nav.admin")}</Link>

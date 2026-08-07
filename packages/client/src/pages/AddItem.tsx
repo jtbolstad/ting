@@ -6,12 +6,15 @@ import { apiClient } from "../api/client";
 import { TagInput } from "../components/TagInput";
 import { useAuth } from "../context/AuthContext";
 import { useOrganization } from "../context/OrganizationContext";
+import { useFeatureFlag } from "../context/FeatureFlagContext";
 
 export function AddItem() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isOrgManager } = useAuth();
   const { activeOrganizationId } = useOrganization();
+  const memberItemSubmission = useFeatureFlag('MEMBER_ITEM_SUBMISSION');
+  const canAddItem = isOrgManager || memberItemSubmission;
   const [categories, setCategories] = useState<Category[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
   const [loading, setLoading] = useState(false);
@@ -36,13 +39,18 @@ export function AddItem() {
       return;
     }
 
+    if (!canAddItem) {
+      navigate("/");
+      return;
+    }
+
     if (!activeOrganizationId) {
       setError(t("addItem.selectOrganization"));
       return;
     }
 
     loadCategories();
-  }, [isAuthenticated, activeOrganizationId]);
+  }, [isAuthenticated, canAddItem, activeOrganizationId]);
 
   const loadCategories = async () => {
     try {
