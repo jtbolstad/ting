@@ -6,6 +6,7 @@ import { apiClient } from "../api/client";
 import { ItemCard } from "../components/catalog/ItemCard";
 import { useAuth } from "../context/AuthContext";
 import { useOrganization } from "../context/OrganizationContext";
+import { useFeatureFlag } from "../context/FeatureFlagContext";
 import { pickRandomItems } from "../utils/itemUtils";
 
 // How many catalog items the front page shows. Fetch a larger slice and pick
@@ -15,8 +16,10 @@ const SHOWCASE_POOL = 50;
 
 export function Home() {
   const { t } = useTranslation();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isOrgManager } = useAuth();
   const { activeOrganizationId } = useOrganization();
+  const memberItemSubmission = useFeatureFlag('MEMBER_ITEM_SUBMISSION');
+  const canAddItem = isOrgManager || memberItemSubmission;
   const [showcaseItems, setShowcaseItems] = useState<Item[]>([]);
 
   useEffect(() => {
@@ -148,16 +151,18 @@ export function Home() {
 
       {/* Lend your own + request tips */}
       <section className="py-16 px-4">
-        <div className="container mx-auto max-w-4xl grid md:grid-cols-2 gap-8">
-          <div className="bg-white rounded-xl p-8 shadow-sm border border-stone-200">
-            <div className="text-3xl mb-3">📦</div>
-            <h3 className="text-xl font-bold text-gray-800 mb-2 text-balance">
-              {t("home.lendOut.title")}
-            </h3>
-            <p className="text-gray-600 text-balance">
-              {t("home.lendOut.description")}
-            </p>
-          </div>
+        <div className={`container mx-auto max-w-4xl grid gap-8 ${canAddItem ? 'md:grid-cols-2' : 'max-w-xl'}`}>
+          {canAddItem && (
+            <div className="bg-white rounded-xl p-8 shadow-sm border border-stone-200">
+              <div className="text-3xl mb-3">📦</div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2 text-balance">
+                {t("home.lendOut.title")}
+              </h3>
+              <p className="text-gray-600 text-balance">
+                {t("home.lendOut.description")}
+              </p>
+            </div>
+          )}
           <div className="bg-white rounded-xl p-8 shadow-sm border border-stone-200">
             <div className="text-3xl mb-3">💡</div>
             <h3 className="text-xl font-bold text-gray-800 mb-2 text-balance">
