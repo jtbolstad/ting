@@ -1,10 +1,48 @@
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import type { Item } from "@ting/shared";
+import { apiClient } from "../api/client";
+import { ItemCard } from "../components/catalog/ItemCard";
 import { useAuth } from "../context/AuthContext";
+import { useOrganization } from "../context/OrganizationContext";
+import { pickRandomItems } from "../utils/itemUtils";
+
+// How many catalog items the front page shows. Fetch a larger slice and pick
+// from it client-side; the list endpoint has no random ordering.
+const SHOWCASE_COUNT = 3;
+const SHOWCASE_POOL = 50;
 
 export function Home() {
   const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
+  const { activeOrganizationId } = useOrganization();
+  const [showcaseItems, setShowcaseItems] = useState<Item[]>([]);
+
+  useEffect(() => {
+    if (!activeOrganizationId) return;
+    let cancelled = false;
+
+    apiClient
+      .getItems({
+        organizationId: activeOrganizationId,
+        status: "AVAILABLE",
+        limit: SHOWCASE_POOL,
+      })
+      .then((response) => {
+        if (cancelled) return;
+        setShowcaseItems(pickRandomItems(response.items, SHOWCASE_COUNT));
+      })
+      .catch((error) => {
+        // The section is decorative: leave it out rather than break the page.
+        console.error("Failed to load catalog highlights:", error);
+        if (!cancelled) setShowcaseItems([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeOrganizationId]);
 
   return (
     <div className="min-h-screen bg-stone-50">
@@ -56,45 +94,32 @@ export function Home() {
         </div>
       </section>
 
-      {/* What's available */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-3 text-balance">
-            {t("home.available.title")}
-          </h2>
-          <p className="text-center text-gray-500 mb-10 text-balance">
-            {t("home.available.subtitle")}
-          </p>
-          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            {(["tents", "speakers", "smoke", "projector"] as const).map(
-              (item) => (
-                <div
-                  key={item}
-                  className="bg-white rounded-lg p-5 text-center shadow-sm border border-stone-200"
-                >
-                  <div className="text-3xl mb-2">
-                    {t(`home.available.items.${item}.icon`)}
-                  </div>
-                  <div className="font-semibold text-gray-800 text-balance">
-                    {t(`home.available.items.${item}.name`)}
-                  </div>
-                  <div className="text-sm text-gray-500 mt-1 text-balance">
-                    {t(`home.available.items.${item}.detail`)}
-                  </div>
-                </div>
-              ),
-            )}
+      {/* A few things from the catalog, picked at random on each visit */}
+      {showcaseItems.length > 0 && (
+        <section className="py-16 px-4">
+          <div className="container mx-auto max-w-4xl">
+            <h2 className="text-3xl font-bold text-center text-gray-800 mb-3 text-balance">
+              {t("home.available.title")}
+            </h2>
+            <p className="text-center text-gray-500 mb-10 text-balance">
+              {t("home.available.subtitle")}
+            </p>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
+              {showcaseItems.map((item) => (
+                <ItemCard key={item.id} item={item} />
+              ))}
+            </div>
+            <div className="text-center">
+              <Link
+                to="/catalog"
+                className="inline-block px-6 py-2 bg-orange-700 text-white rounded-lg hover:bg-orange-800 transition-colors font-medium"
+              >
+                {t("home.available.viewAll")}
+              </Link>
+            </div>
           </div>
-          <div className="text-center">
-            <Link
-              to="/catalog"
-              className="inline-block px-6 py-2 bg-orange-700 text-white rounded-lg hover:bg-orange-800 transition-colors font-medium"
-            >
-              {t("home.available.viewAll")}
-            </Link>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* How it works */}
       <section className="bg-white py-16 px-4">

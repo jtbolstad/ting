@@ -828,13 +828,7 @@
     "available": {
       "title": "Vi har allerede",
       "subtitle": "Og vi tilføjer løbende mere – værktøj, stole, borde, PA-anlæg og lysrig.",
-      "viewAll": "Se hele kataloget",
-      "items": {
-        "tents": { "icon": "⛺", "name": "Havetelte", "detail": "2 stk, 3×3 m" },
-        "speakers": { "icon": "🔊", "name": "Højttalere", "detail": "2× JBL Partybox 320" },
-        "smoke": { "icon": "💨", "name": "Røgmaskine", "detail": "Til arrangementer" },
-        "projector": { "icon": "📽️", "name": "Projektor", "detail": "Kraftig, på vej" }
-      }
+      "viewAll": "Se hele kataloget"
     },
     "howItWorks": {
       "title": "Sådan fungerer det",

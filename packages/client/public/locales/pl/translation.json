@@ -824,13 +824,7 @@
     "available": {
       "title": "Już dostępne",
       "subtitle": "I stale dodajemy więcej — narzędzia, krzesła, stoły, systemy nagłośnienia i oświetlenie.",
-      "viewAll": "Zobacz pełny katalog",
-      "items": {
-        "tents": { "icon": "⛺", "name": "Namioty Ogrodowe", "detail": "2 szt., 3×3 m" },
-        "speakers": { "icon": "🔊", "name": "Głośniki", "detail": "2× JBL Partybox 320" },
-        "smoke": { "icon": "💨", "name": "Wytwornica Dymu", "detail": "Na imprezy" },
-        "projector": { "icon": "📽️", "name": "Projektor", "detail": "Wydajny, wkrótce" }
-      }
+      "viewAll": "Zobacz pełny katalog"
     },
     "howItWorks": {
       "title": "Jak to działa",

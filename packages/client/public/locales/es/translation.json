@@ -824,13 +824,7 @@
     "available": {
       "title": "Ya disponible",
       "subtitle": "Y continuamos añadiendo más — herramientas, sillas, mesas, sistemas de sonido y equipos de iluminación.",
-      "viewAll": "Ver catálogo completo",
-      "items": {
-        "tents": { "icon": "⛺", "name": "Tiendas de Jardín", "detail": "2 uds., 3×3 m" },
-        "speakers": { "icon": "🔊", "name": "Altavoces", "detail": "2× JBL Partybox 320" },
-        "smoke": { "icon": "💨", "name": "Máquina de Humo", "detail": "Para eventos" },
-        "projector": { "icon": "📽️", "name": "Proyector", "detail": "Potente, próximamente" }
-      }
+      "viewAll": "Ver catálogo completo"
     },
     "howItWorks": {
       "title": "Cómo funciona",
