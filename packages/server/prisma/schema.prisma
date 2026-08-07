@@ -48,17 +48,18 @@ model Organization {
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
 
-  memberships Membership[]
-  groups      MemberGroup[]
-  categories  Category[]
-  items       Item[]
-  locations   Location[]
-  reservations Reservation[]
-  loans        Loan[]
-  comments     Comment[]
-  reviews      Review[]
-  auditLogs    AuditLog[]
-  invitations  OrganizationInvitation[]
+  memberships   Membership[]
+  groups        MemberGroup[]
+  categories    Category[]
+  items         Item[]
+  locations     Location[]
+  reservations  Reservation[]
+  loans         Loan[]
+  comments      Comment[]
+  reviews       Review[]
+  auditLogs     AuditLog[]
+  invitations   OrganizationInvitation[]
+  featureFlags  FeatureFlag[]
 }
 
 model OrganizationInvitation {
@@ -307,6 +308,20 @@ model AuditLog {
   actor        User?        @relation("AuditActor", fields: [actorUserId], references: [id])
 
   @@index([organizationId, createdAt])
+}
+
+model FeatureFlag {
+  id             String       @id @default(cuid())
+  organizationId String
+  key            String       // e.g. "LOAN_APPROVAL_REQUIRED"
+  enabled        Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, key])
+  @@index([organizationId])
 }
 
 model EmailLog {

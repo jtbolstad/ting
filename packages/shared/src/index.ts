@@ -21,3 +21,6 @@ export * from './types/api.js';
 
 // Organization & membership types
 export * from './types/organization.js';
+
+// Feature flag types
+export * from './types/featureFlag.js';
