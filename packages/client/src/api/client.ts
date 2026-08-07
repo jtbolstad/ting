@@ -849,6 +849,17 @@ class ApiClient {
       body: JSON.stringify({ to, subject, text }),
     });
   }
+
+  async getFeatureFlags(): Promise<import("@ting/shared").FeatureFlagMap> {
+    return this.request("/organizations/feature-flags");
+  }
+
+  async setFeatureFlag(key: import("@ting/shared").FeatureFlagKey, enabled: boolean): Promise<import("@ting/shared").FeatureFlagMap> {
+    return this.request("/organizations/feature-flags", {
+      method: "PUT",
+      body: JSON.stringify({ key, enabled }),
+    });
+  }
 }
 
 export const apiClient = new ApiClient();
