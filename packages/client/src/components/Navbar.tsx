@@ -37,8 +37,9 @@ export function Navbar() {
                 ))}
               </select>
             ) : (
-              <Link to="/" className="text-2xl font-bold" onClick={close}>
+              <Link to="/" className="text-2xl font-bold flex items-center gap-2" onClick={close}>
                 {title}
+                <span className="text-xs font-semibold bg-orange-200 text-orange-900 px-1.5 py-0.5 rounded">BETA</span>
               </Link>
             )}
             <div className="hidden md:flex items-center space-x-6">

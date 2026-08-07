@@ -819,7 +819,7 @@
     "hero": {
       "byline": "Hauketo og Prinsdal Vel",
       "title": "Ting du trenger – uten å eie",
-      "subtitle": "Tingbiblioteket er HPVs utlånstjeneste for medlemmer i Hauketo og Prinsdal. Lån utstyr når du trenger det – gratis.",
+      "subtitle": "Tingbiblioteket er HPVs utlånstjeneste for medlemmer i Hauketo og Prinsdal Vel. Lån utstyr når du trenger det – gratis.",
       "browseCatalog": "Se katalogen",
       "login": "Logg inn"
     },
@@ -827,7 +827,7 @@
       "notice": "Tjenesten er foreløpig for HPV-medlemmer. Vi vurderer løsninger for ikke-medlemmer. Ikke medlem ennå? Meld deg inn på"
     },
     "available": {
-      "title": "Vi har allerede",
+      "title": "Her er noen av tingene du kan låne:",
       "subtitle": "Og vi vurderer stadig mer – verktøy, stoler, bord, PA-anlegg og lysrigg.",
       "viewAll": "Se hele katalogen"
     },
@@ -839,7 +839,7 @@
       },
       "step2": {
         "title": "Reserver",
-        "description": "Velg datoer og reserver på nett. Ingen telefonsamtaler."
+        "description": "Velg datoer og reserver på nett."
       },
       "step3": {
         "title": "Lån og lever tilbake",
