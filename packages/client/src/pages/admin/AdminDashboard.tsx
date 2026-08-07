@@ -211,6 +211,7 @@ export function AdminDashboard() {
         locationsData,
         reservationsData,
         groupsData,
+        invitationsData,
       ] = await Promise.all([
         apiClient.getLoans(),
         apiClient.getItems({
@@ -222,6 +223,12 @@ export function AdminDashboard() {
         apiClient.getLocations(),
         apiClient.getReservations(),
         apiClient.getGroups(),
+        // A member without MANAGER rights gets 403 here; that must not blank
+        // out the rest of the dashboard, so this one call swallows its error.
+        apiClient.getInvitations().catch((error) => {
+          console.error("Failed to load invitations:", error);
+          return [];
+        }),
       ]);
       setLoans(loansData.filter((l) => !l.returnedAt));
       setOverdueLoans(
@@ -239,6 +246,7 @@ export function AdminDashboard() {
       setUsers(usersData);
       setLocations(locationsData);
       setGroups(groupsData);
+      setInvitations(invitationsData);
     } catch (error) {
       console.error("Failed to load admin data:", error);
     } finally {
@@ -576,15 +584,6 @@ export function AdminDashboard() {
       toast.success(t("admin.invitations.sendSuccess"));
     } catch (error: any) {
       toast.error(error.message || t("admin.invitations.sendFailed"));
-    }
-  };
-
-  const loadInvitations = async () => {
-    try {
-      const invitationsData = await apiClient.getInvitations();
-      setInvitations(invitationsData);
-    } catch (error) {
-      console.error("Failed to load invitations:", error);
     }
   };
 
@@ -1225,7 +1224,6 @@ export function AdminDashboard() {
                 onClick={() => {
                   setShowInviteModal(true);
                   setInviteLink("");
-                  loadInvitations();
                 }}
                 className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
               >
