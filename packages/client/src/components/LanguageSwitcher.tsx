@@ -1,27 +1,30 @@
 import { useTranslation } from "react-i18next";
 import { useState, useRef, useEffect } from "react";
 
-const FlagIcon = ({ code }: { code: string }) => {
-  const flags: Record<string, string> = {
-    en: "https://upload.wikimedia.org/wikipedia/en/a/ae/Flag_of_the_United_Kingdom.svg",
-    no: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Flag_of_Norway.svg",
-    da: "https://upload.wikimedia.org/wikipedia/commons/9/9c/Flag_of_Denmark.svg",
-    es: "https://upload.wikimedia.org/wikipedia/en/9/9a/Flag_of_Spain.svg",
-    pl: "https://upload.wikimedia.org/wikipedia/en/1/12/Flag_of_Poland.svg",
-    ur: "https://upload.wikimedia.org/wikipedia/commons/3/32/Flag_of_Pakistan.svg",
-  };
+// Maps i18n language code → local flag filename (in /flags/)
+const FLAG_FILES: Record<string, string> = {
+  en: "gb",
+  no: "no",
+  da: "dk",
+  es: "es",
+  pl: "pl",
+  ur: "pk",
+};
 
-  return flags[code] ? (
+const FlagIcon = ({ code }: { code: string }) => {
+  const file = FLAG_FILES[code];
+  return file ? (
     <img
-      src={flags[code]}
+      src={`/flags/${file}.png`}
       alt={code}
-      className="w-6 h-4 rounded-sm"
-      loading="lazy"
+      className="w-6 h-4 rounded-sm inline-block"
+      width={24}
+      height={16}
     />
   ) : null;
 };
 
-export function LanguageSwitcher() {
+export function LanguageSwitcher({ align = "right" }: { align?: "left" | "right" }) {
   const { i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -74,7 +77,7 @@ export function LanguageSwitcher() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 bg-white rounded-md shadow-lg z-50 border border-gray-200 w-40">
+        <div className={`absolute ${align === "left" ? "left-0" : "right-0"} mt-2 bg-white rounded-md shadow-lg z-50 border border-gray-200 w-40`}>
           {languages.map((lang) => (
             <button
               key={lang.code}
