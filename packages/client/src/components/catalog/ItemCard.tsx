@@ -1,7 +1,7 @@
-import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { ReviewStars } from "../ReviewStars";
 import type { Item } from "@ting/shared";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import { ReviewStars } from "../ReviewStars";
 
 interface ItemCardProps {
   item: Item;
@@ -15,12 +15,12 @@ export function ItemCard({ item }: ItemCardProps) {
       to={`/items/${item.slug ?? item.id}`}
       className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow overflow-hidden"
     >
-      <div className="h-48 bg-gray-200 flex items-center justify-center">
+      <div className="h-48 bg-white flex items-center justify-center">
         {item.images?.[0]?.url || item.imageUrl ? (
           <img
             src={item.images?.[0]?.url ?? item.imageUrl!}
             alt={item.name}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-fit"
           />
         ) : (
           <span className="text-gray-400 text-4xl">📦</span>
