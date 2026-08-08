@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useState, useRef, useEffect } from "react";
 
-// Map language code to ISO 3166-1 alpha-2 country code for flagcdn.com
+// Map language code to ISO 3166-1 alpha-2 country code for local flag images
 const LANG_TO_COUNTRY: Record<string, string> = {
   en: "gb",
   no: "no",
@@ -11,17 +11,16 @@ const LANG_TO_COUNTRY: Record<string, string> = {
   ur: "pk",
 };
 
-const FlagIcon = ({ code, size = 20 }: { code: string; size?: number }) => {
+const FlagIcon = ({ code }: { code: string }) => {
   const country = LANG_TO_COUNTRY[code];
   if (!country) return null;
   return (
     <img
-      src={`https://flagcdn.com/w${size}/${country}.png`}
-      srcSet={`https://flagcdn.com/w${size * 2}/${country}.png 2x`}
-      width={size}
-      height={Math.round(size * 0.75)}
+      src={`/flags/${country}.png`}
+      width={40}
+      height={30}
       alt={code}
-      className="rounded-sm inline-block"
+      className="rounded-sm inline-block w-6 h-auto"
     />
   );
 };
