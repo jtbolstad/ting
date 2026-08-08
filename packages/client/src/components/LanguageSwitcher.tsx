@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { useState, useRef, useEffect } from "react";
 
-// Maps i18n language code → local flag filename (in /flags/)
-const FLAG_FILES: Record<string, string> = {
+// Map language code to ISO 3166-1 alpha-2 country code for local flag images
+const LANG_TO_COUNTRY: Record<string, string> = {
   en: "gb",
   no: "no",
   da: "dk",
@@ -12,16 +12,17 @@ const FLAG_FILES: Record<string, string> = {
 };
 
 const FlagIcon = ({ code }: { code: string }) => {
-  const file = FLAG_FILES[code];
-  return file ? (
+  const country = LANG_TO_COUNTRY[code];
+  if (!country) return null;
+  return (
     <img
-      src={`/flags/${file}.png`}
+      src={`/flags/${country}.png`}
+      width={40}
+      height={30}
       alt={code}
-      className="w-6 h-4 rounded-sm inline-block"
-      width={24}
-      height={16}
+      className="rounded-sm inline-block w-6 h-auto"
     />
-  ) : null;
+  );
 };
 
 export function LanguageSwitcher({ align = "right" }: { align?: "left" | "right" }) {
