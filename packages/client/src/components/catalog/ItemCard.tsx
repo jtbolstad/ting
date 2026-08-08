@@ -20,7 +20,7 @@ export function ItemCard({ item }: ItemCardProps) {
           <img
             src={item.images?.[0]?.url ?? item.imageUrl!}
             alt={item.name}
-            className="h-full w-full object-fit"
+            className="h-full w-full object-contain"
           />
         ) : (
           <span className="text-gray-400 text-4xl">📦</span>
