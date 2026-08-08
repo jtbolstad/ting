@@ -3,21 +3,18 @@ import { useState, useRef, useEffect } from "react";
 
 const FlagIcon = ({ code }: { code: string }) => {
   const flags: Record<string, string> = {
-    en: "https://upload.wikimedia.org/wikipedia/en/a/ae/Flag_of_the_United_Kingdom.svg",
-    no: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Flag_of_Norway.svg",
-    da: "https://upload.wikimedia.org/wikipedia/commons/9/9c/Flag_of_Denmark.svg",
-    es: "https://upload.wikimedia.org/wikipedia/en/9/9a/Flag_of_Spain.svg",
-    pl: "https://upload.wikimedia.org/wikipedia/en/1/12/Flag_of_Poland.svg",
-    ur: "https://upload.wikimedia.org/wikipedia/commons/3/32/Flag_of_Pakistan.svg",
+    en: "🇬🇧",
+    no: "🇳🇴",
+    da: "🇩🇰",
+    es: "🇪🇸",
+    pl: "🇵🇱",
+    ur: "🇵🇰",
   };
 
   return flags[code] ? (
-    <img
-      src={flags[code]}
-      alt={code}
-      className="w-6 h-4 rounded-sm"
-      loading="lazy"
-    />
+    <span className="text-xl leading-none" aria-hidden="true">
+      {flags[code]}
+    </span>
   ) : null;
 };
 
