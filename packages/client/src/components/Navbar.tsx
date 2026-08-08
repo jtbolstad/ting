@@ -133,7 +133,7 @@ export function Navbar() {
             </>
           )}
           <div className="pt-3 border-t border-orange-700 flex items-center gap-4">
-            <LanguageSwitcher />
+            <LanguageSwitcher align="left" />
           </div>
         </div>
       )}

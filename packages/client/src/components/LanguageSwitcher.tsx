@@ -25,7 +25,7 @@ const FlagIcon = ({ code }: { code: string }) => {
   );
 };
 
-export function LanguageSwitcher() {
+export function LanguageSwitcher({ align = "right" }: { align?: "left" | "right" }) {
   const { i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -78,7 +78,7 @@ export function LanguageSwitcher() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 bg-white rounded-md shadow-lg z-50 border border-gray-200 w-40">
+        <div className={`absolute ${align === "left" ? "left-0" : "right-0"} mt-2 bg-white rounded-md shadow-lg z-50 border border-gray-200 w-40`}>
           {languages.map((lang) => (
             <button
               key={lang.code}
