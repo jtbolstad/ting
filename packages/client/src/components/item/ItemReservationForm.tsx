@@ -4,6 +4,11 @@ import { useTranslation } from "react-i18next";
 import { apiClient } from "../../api/client";
 import { useAuth } from "../../context/AuthContext";
 import { ItemAvailabilityCalendar } from "../calendar/ItemAvailabilityCalendar";
+import {
+  parseDateString,
+  toDateString,
+  todayDateString,
+} from "../../utils/calendar";
 
 interface ItemReservationFormProps {
   itemId: string;
@@ -26,8 +31,8 @@ export function ItemReservationForm({
   const [showCalendar, setShowCalendar] = useState(true);
 
   const handleDateSelect = (start: Date, end: Date) => {
-    setStartDate(start.toISOString().split("T")[0]);
-    setEndDate(end.toISOString().split("T")[0]);
+    setStartDate(toDateString(start));
+    setEndDate(toDateString(end));
     setError("");
   };
 
@@ -98,8 +103,10 @@ export function ItemReservationForm({
               <ItemAvailabilityCalendar
                 itemId={itemId}
                 onDateSelect={handleDateSelect}
-                selectedStart={startDate ? new Date(startDate) : undefined}
-                selectedEnd={endDate ? new Date(endDate) : undefined}
+                selectedStart={
+                  startDate ? parseDateString(startDate) : undefined
+                }
+                selectedEnd={endDate ? parseDateString(endDate) : undefined}
               />
             </div>
           )}
@@ -128,7 +135,7 @@ export function ItemReservationForm({
                     type="date"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    min={new Date().toISOString().split("T")[0]}
+                    min={todayDateString()}
                     required
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
                   />
@@ -142,7 +149,7 @@ export function ItemReservationForm({
                     type="date"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
-                    min={startDate || new Date().toISOString().split("T")[0]}
+                    min={startDate || todayDateString()}
                     required
                     className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
                   />
