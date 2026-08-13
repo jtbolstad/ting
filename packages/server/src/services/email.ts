@@ -92,6 +92,25 @@ class EmailService {
     await this.sendEmail({ to: userEmail, subject, text, html, event: 'overdue' });
   }
 
+  async sendReservationRequested(
+    userEmail: string,
+    userName: string,
+    itemName: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<void> {
+    const subject = `Reservasjonsforespørsel mottatt: ${itemName}`;
+    const text = `Hei ${userName},\n\nVi har mottatt din forespørsel om å reservere "${itemName}".\nPeriode: ${startDate.toLocaleDateString()} – ${endDate.toLocaleDateString()}\n\nEn administrator vil behandle forespørselen din. Du vil få beskjed når den er godkjent eller avvist.\n\nHilsen Ting`;
+    const html = `
+      <h2 style="color: #2563eb;">Reservasjonsforespørsel mottatt!</h2>
+      <p>Hei ${userName},</p>
+      <p>Vi har mottatt din forespørsel om å reservere <strong>${itemName}</strong>.</p>
+      <p><strong>Periode:</strong> ${startDate.toLocaleDateString()} – ${endDate.toLocaleDateString()}</p>
+      <p>En administrator vil behandle forespørselen din. Du vil få beskjed når den er godkjent eller avvist.</p>
+    `;
+    await this.sendEmail({ to: userEmail, subject, text, html, event: 'reservation_requested' });
+  }
+
   async sendReservationConfirmed(
     userEmail: string,
     userName: string,
