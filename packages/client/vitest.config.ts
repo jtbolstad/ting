@@ -4,6 +4,9 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
+    // Kjør tester i en sone øst for UTC, så tidssone-feil (f.eks. bruk av
+    // toISOString() på lokale datoer) faktisk slår ut i testene.
+    env: { TZ: 'Europe/Oslo' },
     include: ['src/**/*.test.ts'],
     setupFiles: ['./src/test/setup.ts'],
     coverage: {

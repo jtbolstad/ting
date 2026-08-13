@@ -17,6 +17,7 @@ import type {
   FeatureFlagKey,
 } from "@ting/shared";
 import { FEATURE_FLAG_KEYS } from "@ting/shared";
+import { toDateString, todayDateString } from "../../utils/calendar";
 
 function flagDescription(key: string): string {
   const descriptions: Record<string, string> = {
@@ -807,7 +808,7 @@ export function AdminDashboard() {
                 const days = activeOrganization?.loanDurationDays ?? 7;
                 const d = new Date();
                 d.setDate(d.getDate() + days);
-                setDueDate(d.toISOString().split("T")[0]);
+                setDueDate(toDateString(d));
                 setShowCheckout(true);
               }}
               className="px-4 py-2 bg-orange-700 text-white rounded hover:bg-orange-800"
@@ -1938,7 +1939,7 @@ export function AdminDashboard() {
                   type="date"
                   value={dueDate}
                   onChange={(e) => setDueDate(e.target.value)}
-                  min={new Date().toISOString().split("T")[0]}
+                  min={todayDateString()}
                   required
                   className="w-full px-3 py-2 border rounded"
                 />

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { DayPicker, DateRange } from "react-day-picker";
-import { WEEK_STARTS_ON } from "../../utils/calendar";
+import { WEEK_STARTS_ON, toDateString } from "../../utils/calendar";
 import "react-day-picker/dist/style.css";
 import { useTranslation } from "react-i18next";
 import { apiClient } from "../../api/client";
@@ -87,8 +87,8 @@ export function DateRangePicker({
     try {
       const result = await apiClient.checkAvailability(
         itemId,
-        start.toISOString().split("T")[0],
-        end.toISOString().split("T")[0],
+        toDateString(start),
+        toDateString(end),
       );
 
       if (result.available) {
