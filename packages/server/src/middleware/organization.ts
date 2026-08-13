@@ -96,7 +96,7 @@ export function withOrganizationContext(options?: OrgContextOptions) {
       }
 
       if (resolvedOptions.requireMembership && !membership && req.user?.role !== 'ADMIN') {
-        return res.status(403).json({ success: false, error: 'Organization membership required' });
+        return res.status(403).json({ success: false, error: 'Organization membership required: user has no active membership in this organization' });
       }
 
       req.organization = organization;
@@ -119,7 +119,7 @@ export function requireOrgRole(minRole: OrgRole | OrgRole[]) {
     }
 
     if (!req.membership) {
-      return res.status(403).json({ success: false, error: 'Organization membership required' });
+      return res.status(403).json({ success: false, error: 'Organization membership required: no membership attached to request' });
     }
 
     const hasRole = requiredRoles.some((role) => {

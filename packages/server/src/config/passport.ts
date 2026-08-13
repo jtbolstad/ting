@@ -1,62 +1,13 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy, Profile, VerifyCallback } from "passport-google-oauth20";
 import { prisma } from "../prisma.js";
+import { ensureDefaultMembership } from "../services/membership.js";
+
+export { ensureDefaultMembership };
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL || "http://localhost:3001/api/auth/google/callback";
-
-// Users signing in with Google are not invited to an organization, so they are
-// enrolled in this one. Override with OAUTH_DEFAULT_ORG_SLUG; set it to an empty
-// string to leave Google users without a membership.
-const DEFAULT_ORG_SLUG =
-  process.env.OAUTH_DEFAULT_ORG_SLUG ?? "hpv-tingbibliotek";
-
-/**
- * Give the user a membership in the default organization unless they already
- * have one. Never throws: a missing organization or a race with a concurrent
- * sign-in must not fail the login.
- */
-export async function ensureDefaultMembership(userId: string): Promise<void> {
-  if (!DEFAULT_ORG_SLUG) return;
-
-  try {
-    const organization = await prisma.organization.findUnique({
-      where: { slug: DEFAULT_ORG_SLUG },
-      select: { id: true },
-    });
-
-    if (!organization) {
-      console.warn(
-        `⚠️  Default OAuth organization "${DEFAULT_ORG_SLUG}" not found; user ${userId} signed in without a membership`,
-      );
-      return;
-    }
-
-    const existing = await prisma.membership.findUnique({
-      where: {
-        userId_organizationId: { userId, organizationId: organization.id },
-      },
-      select: { id: true },
-    });
-    if (existing) return;
-
-    // Only the user's first membership becomes the default one.
-    const membershipCount = await prisma.membership.count({ where: { userId } });
-
-    await prisma.membership.create({
-      data: {
-        userId,
-        organizationId: organization.id,
-        role: "MEMBER",
-        status: "ACTIVE",
-        isDefault: membershipCount === 0,
-      },
-    });
-  } catch (error) {
-    console.error("Failed to assign default OAuth membership:", error);
-  }
-}
 
 export function initializePassport() {
   // Only configure Google strategy if credentials are provided
