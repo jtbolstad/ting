@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { DayPicker, DateRange } from "react-day-picker";
+import { WEEK_STARTS_ON } from "../../utils/calendar";
 import "react-day-picker/dist/style.css";
 import { useTranslation } from "react-i18next";
 import { apiClient } from "../../api/client";
@@ -125,6 +126,7 @@ export function DateRangePicker({
             ...disabledDays,
           ]}
           numberOfMonths={2}
+          weekStartsOn={WEEK_STARTS_ON}
           className="border rounded-lg p-4"
           modifiersStyles={{
             selected: {

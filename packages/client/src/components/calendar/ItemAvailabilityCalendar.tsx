@@ -1,18 +1,15 @@
 import { useEffect, useState } from "react";
 import {
   format,
-  startOfMonth,
-  endOfMonth,
   eachDayOfInterval,
   isSameDay,
   isWithinInterval,
   addMonths,
   subMonths,
-  startOfWeek,
-  endOfWeek,
 } from "date-fns";
 import { useTranslation } from "react-i18next";
 import { apiClient } from "../../api/client";
+import { WEEKDAY_KEYS, getCalendarDays } from "../../utils/calendar";
 import type { Reservation, Loan } from "@ting/shared";
 
 interface ItemAvailabilityCalendarProps {
@@ -145,11 +142,7 @@ export function ItemAvailabilityCalendar({
   };
 
   const renderCalendar = () => {
-    const monthStart = startOfMonth(currentMonth);
-    const monthEnd = endOfMonth(currentMonth);
-    const calendarStart = startOfWeek(monthStart);
-    const calendarEnd = endOfWeek(monthEnd);
-    const days = eachDayOfInterval({ start: calendarStart, end: calendarEnd });
+    const days = getCalendarDays(currentMonth);
 
     const weeks: Date[][] = [];
     let currentWeek: Date[] = [];
@@ -187,7 +180,7 @@ export function ItemAvailabilityCalendar({
 
         {/* Weekday Headers */}
         <div className="grid grid-cols-7 gap-1 mb-2">
-          {["sun", "mon", "tue", "wed", "thu", "fri", "sat"].map((day) => (
+          {WEEKDAY_KEYS.map((day) => (
             <div
               key={day}
               className="text-center text-xs font-medium text-gray-500 py-2"
