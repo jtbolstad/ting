@@ -14,6 +14,13 @@ vi.mock('../prisma.js', async () => {
   };
 });
 
+// Mock membership service so ensureDefaultMembership is a no-op in most tests
+// but can be overridden per-test when needed.
+vi.mock('../services/membership.js', () => ({
+  ensureDefaultMembership: vi.fn().mockResolvedValue(undefined),
+}));
+
+import { ensureDefaultMembership } from '../services/membership.js';
 import authRoutes from './auth';
 
 const prisma = new PrismaClient({
@@ -87,6 +94,46 @@ describe('Auth Routes', () => {
         });
 
       expect(response.status).toBe(400);
+    });
+
+    it('should call ensureDefaultMembership when no organizationId is provided', async () => {
+      const mockEnsure = ensureDefaultMembership as ReturnType<typeof vi.fn>;
+      mockEnsure.mockClear();
+
+      const response = await request(app)
+        .post('/auth/register')
+        .send({
+          email: 'no-org-user@test.com',
+          password: 'password123',
+          name: 'No Org User',
+          // intentionally omitting organizationId
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body.success).toBe(true);
+      expect(mockEnsure).toHaveBeenCalledOnce();
+      const calledUserId = mockEnsure.mock.calls[0][0] as string;
+      expect(typeof calledUserId).toBe('string');
+      expect(calledUserId.length).toBeGreaterThan(0);
+    });
+
+    it('should NOT call ensureDefaultMembership when organizationId is provided', async () => {
+      const mockEnsure = ensureDefaultMembership as ReturnType<typeof vi.fn>;
+      mockEnsure.mockClear();
+
+      const response = await request(app)
+        .post('/auth/register')
+        .send({
+          email: 'with-org-user@test.com',
+          password: 'password123',
+          name: 'With Org User',
+          organizationId,
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body.success).toBe(true);
+      // Explicit org provided → membership created directly, ensureDefaultMembership not called
+      expect(mockEnsure).not.toHaveBeenCalled();
     });
   });
 

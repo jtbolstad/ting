@@ -19,6 +19,7 @@ import {
 } from "../services/auth.js";
 import { emailService } from "../services/email.js";
 import { audit } from "../services/auditLog.js";
+import { ensureDefaultMembership } from "../services/membership.js";
 
 const router: ExpressRouter = Router();
 const membershipInclude = {
@@ -102,7 +103,8 @@ router.post("/register", async (req: Request, res: Response) => {
       },
     });
 
-    // Create membership only if organizationId provided
+    // Create membership only if organizationId provided; otherwise enroll in
+    // the default organization so the user can immediately book items.
     if (organizationId) {
       await prisma.membership.create({
         data: {
@@ -113,6 +115,8 @@ router.post("/register", async (req: Request, res: Response) => {
           isDefault: true,
         },
       });
+    } else {
+      await ensureDefaultMembership(user.id);
     }
 
     const membershipsData = await getMemberships(user.id);
