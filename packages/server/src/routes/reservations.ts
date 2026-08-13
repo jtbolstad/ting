@@ -213,7 +213,17 @@ router.post("/", async (req: AuthRequest, res: Response) => {
     }
 
     const isManager = hasOrgRole(req, 'MANAGER') || req.user!.role === 'ADMIN';
-    const initialStatus = isManager ? "CONFIRMED" : "PENDING";
+
+    // Check RESERVATION_APPROVAL_REQUIRED feature flag (default off = direct CONFIRMED for all)
+    let initialStatus: 'CONFIRMED' | 'PENDING' = 'CONFIRMED';
+    if (!isManager) {
+      const approvalFlag = await prisma.featureFlag.findUnique({
+        where: { organizationId_key: { organizationId: req.organization!.id, key: 'RESERVATION_APPROVAL_REQUIRED' } },
+      });
+      if (approvalFlag?.enabled) {
+        initialStatus = 'PENDING';
+      }
+    }
 
     const reservation = await prisma.reservation.create({
       data: {
@@ -235,14 +245,24 @@ router.post("/", async (req: AuthRequest, res: Response) => {
       data: serializeReservation(reservation),
     };
 
-    // Send confirmation email (fire and forget)
-    emailService.sendReservationConfirmed(
-      req.user!.email,
-      reservation.user.name,
-      reservation.item.name,
-      start,
-      end,
-    ).catch((e) => console.error('Failed to send reservation email:', e));
+    // Send email based on actual reservation status (fire and forget)
+    if (initialStatus === 'CONFIRMED') {
+      emailService.sendReservationConfirmed(
+        req.user!.email,
+        reservation.user.name,
+        reservation.item.name,
+        start,
+        end,
+      ).catch((e) => console.error('Failed to send reservation email:', e));
+    } else {
+      emailService.sendReservationRequested(
+        req.user!.email,
+        reservation.user.name,
+        reservation.item.name,
+        start,
+        end,
+      ).catch((e) => console.error('Failed to send reservation email:', e));
+    }
 
     audit({ organizationId: req.organization!.id, actorUserId: req.user!.id, action: "reservation.created", entityType: "Reservation", entityId: reservation.id, metadata: { itemId, startDate, endDate } });
 
