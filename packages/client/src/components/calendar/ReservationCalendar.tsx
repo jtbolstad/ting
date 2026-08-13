@@ -1,19 +1,15 @@
 import { useState } from "react";
 import {
   format,
-  startOfMonth,
-  endOfMonth,
-  eachDayOfInterval,
   isSameDay,
   isWithinInterval,
   addMonths,
   subMonths,
-  startOfWeek,
-  endOfWeek,
 } from "date-fns";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import type { Reservation, Loan } from "@ting/shared";
+import { WEEKDAY_KEYS, getCalendarDays } from "../../utils/calendar";
 
 interface ReservationCalendarProps {
   reservations: Reservation[];
@@ -33,11 +29,7 @@ export function ReservationCalendar({
     id: string;
   } | null>(null);
 
-  const monthStart = startOfMonth(currentMonth);
-  const monthEnd = endOfMonth(currentMonth);
-  const calStart = startOfWeek(monthStart, { weekStartsOn: 1 });
-  const calEnd = endOfWeek(monthEnd, { weekStartsOn: 1 });
-  const days = eachDayOfInterval({ start: calStart, end: calEnd });
+  const days = getCalendarDays(currentMonth);
 
   const getDayEntries = (date: Date) => {
     const entries: Array<{
@@ -121,12 +113,12 @@ export function ReservationCalendar({
 
       {/* Day headers */}
       <div className="grid grid-cols-7 mb-1">
-        {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => (
+        {WEEKDAY_KEYS.map((d) => (
           <div
             key={d}
             className="text-center text-xs font-medium text-gray-500 py-1"
           >
-            {t(`calendar.weekdays.${d.toLowerCase()}`, d)}
+            {t(`calendar.weekdays.${d}`)}
           </div>
         ))}
       </div>
