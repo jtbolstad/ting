@@ -80,6 +80,12 @@ export function Navbar() {
             ) : (
               <>
                 <Link to="/login" className="px-4 py-2 hover:text-orange-200">{t("nav.login")}</Link>
+                <Link
+                  to="/register"
+                  className="px-4 py-2 bg-orange-700 rounded hover:bg-orange-900"
+                >
+                  {t("nav.register")}
+                </Link>
               </>
             )}
           </div>

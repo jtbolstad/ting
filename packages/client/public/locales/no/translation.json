@@ -116,7 +116,7 @@
       "termsRequired": "Du må akseptere medlemsavtalen for å registrere deg"
     },
     "oauth": {
-      "signInWithGoogle": "Logg inn med Google",
+      "signInWithGoogle": "Fortsett med Google",
       "or": "eller",
       "processing": "Logger deg inn...",
       "errorTitle": "Innlogging mislyktes",
@@ -125,6 +125,11 @@
       "failed": "Google-innlogging mislyktes. Prøv igjen.",
       "noToken": "Ingen innloggingstoken ble returnert. Prøv igjen.",
       "genericError": "Noe gikk galt under innlogging."
+    },
+    "membershipNotice": {
+      "text": "For å låne på ting.hpvel.no må man ha gyldig medlemskap i Hauketo og Prinsdal Vel.",
+      "cta": "Innmelding og betaling av medlemsavgift kan gjøres på",
+      "linkLabel": "hpvel.no/bli-medlem"
     }
   },
   "catalog": {
@@ -821,7 +826,8 @@
       "title": "Ting du trenger – uten å eie",
       "subtitle": "Tingbiblioteket er HPVs utlånstjeneste for medlemmer i Hauketo og Prinsdal Vel. Lån utstyr når du trenger det – gratis.",
       "browseCatalog": "Se katalogen",
-      "login": "Logg inn"
+      "login": "Logg inn",
+      "register": "Registrer deg"
     },
     "membersOnly": {
       "notice": "Tjenesten er foreløpig for HPV-medlemmer.",

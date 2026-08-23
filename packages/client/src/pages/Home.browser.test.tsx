@@ -108,4 +108,9 @@ describe('Home – tilfeldige ting fra katalogen', () => {
     renderHome();
     expect(screen.getByText('home.hero.title')).toBeInTheDocument();
   });
+
+  it('viser registrer-knapp i heltebanneret for ikke-innloggede', async () => {
+    renderHome();
+    expect(screen.getByText('home.hero.register')).toBeInTheDocument();
+  });
 });

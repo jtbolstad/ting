@@ -3,6 +3,7 @@ import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
 import { TermsPopover } from "../components/TermsPopover";
+import { MembershipNotice } from "../components/MembershipNotice";
 import { apiClient } from "../api/client";
 
 export function Register() {
@@ -72,6 +73,8 @@ export function Register() {
         <h2 className="text-3xl font-bold text-center mb-6">
           {t("auth.register.title")}
         </h2>
+
+        <MembershipNotice />
 
         {inviteOrgName && (
           <div className="mb-4 p-3 bg-orange-50 border border-orange-200 text-orange-700 rounded">

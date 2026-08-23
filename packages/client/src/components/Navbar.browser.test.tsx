@@ -69,7 +69,7 @@ describe('Navbar', () => {
   it('viser login og register for ikke-innloggede brukere', () => {
     renderNavbar();
     expect(screen.getByText('Login')).toBeInTheDocument();
-    expect(screen.getByText('Register')).toBeInTheDocument();
+    expect(screen.getAllByText('Register').length).toBeGreaterThan(0);
     expect(screen.queryByText('Logout')).not.toBeInTheDocument();
   });
 
