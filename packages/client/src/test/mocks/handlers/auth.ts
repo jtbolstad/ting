@@ -2,6 +2,13 @@ import { http, HttpResponse } from 'msw';
 import { mockUser, mockMembership } from '../fixtures/auth';
 
 export const authHandlers = [
+  http.get('*/api/auth/status', () => {
+    return HttpResponse.json({
+      success: true,
+      data: { google: true },
+    });
+  }),
+
   http.get('*/api/auth/me', () => {
     return HttpResponse.json({
       success: true,
