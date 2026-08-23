@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
+import { MembershipNotice } from '../components/MembershipNotice';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
@@ -42,6 +43,8 @@ export function Login() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
         <h2 className="text-3xl font-bold text-center mb-6">{t('auth.login.title')}</h2>
+
+        <MembershipNotice />
 
         {error && (
           <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">

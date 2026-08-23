@@ -116,7 +116,7 @@
       "termsRequired": "Debes aceptar los términos de servicio para registrarte"
     },
     "oauth": {
-      "signInWithGoogle": "Iniciar sesión con Google",
+      "signInWithGoogle": "Continuar con Google",
       "or": "o",
       "processing": "Iniciando sesión...",
       "errorTitle": "Error al iniciar sesión",
@@ -125,6 +125,11 @@
       "failed": "El inicio de sesión con Google falló. Inténtalo de nuevo.",
       "noToken": "No se devolvió ningún token de inicio de sesión. Inténtalo de nuevo.",
       "genericError": "Algo salió mal durante el inicio de sesión."
+    },
+    "membershipNotice": {
+      "text": "Para tomar prestado de ting.hpvel.no necesitas una membresía activa de Hauketo og Prinsdal Vel.",
+      "cta": "Puedes inscribirte y pagar la cuota de socio en",
+      "linkLabel": "hpvel.no/bli-medlem"
     }
   },
   "catalog": {
@@ -820,7 +825,8 @@
       "title": "Obtén lo que necesitas — sin tener que comprarlo",
       "subtitle": "Tingbiblioteket es el servicio de préstamo de HPV para miembros en Hauketo og Prinsdal Vel. Toma prestado lo que necesitas — sin coste.",
       "browseCatalog": "Ver Catálogo",
-      "login": "Iniciar Sesión"
+      "login": "Iniciar Sesión",
+      "register": "Regístrate"
     },
     "membersOnly": {
       "notice": "Este servicio es actualmente solo para miembros de HPV.",

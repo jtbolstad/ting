@@ -69,12 +69,20 @@ export function Home() {
               {t("home.hero.browseCatalog")}
             </Link>
             {!isAuthenticated && (
-              <Link
-                to="/login"
-                className="px-8 py-3 bg-orange-700 text-white font-semibold rounded-lg hover:bg-orange-900 transition-colors border border-orange-500"
-              >
-                {t("home.hero.login")}
-              </Link>
+              <>
+                <Link
+                  to="/login"
+                  className="px-8 py-3 bg-orange-700 text-white font-semibold rounded-lg hover:bg-orange-900 transition-colors border border-orange-500"
+                >
+                  {t("home.hero.login")}
+                </Link>
+                <Link
+                  to="/register"
+                  className="px-8 py-3 text-white font-semibold rounded-lg border border-orange-200 hover:bg-orange-700 transition-colors"
+                >
+                  {t("home.hero.register")}
+                </Link>
+              </>
             )}
           </div>
         </div>
