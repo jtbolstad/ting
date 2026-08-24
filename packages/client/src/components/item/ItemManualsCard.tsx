@@ -87,56 +87,59 @@ export function ItemManualsCard({ itemId }: ItemManualsCardProps) {
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
-      <div className="flex justify-between items-center mb-4">
+      <div className="mb-4">
         <h2 className="text-xl font-bold">{t("item.manuals.title")}</h2>
-        {isAdmin && !showForm && (
-          <button
-            onClick={() => setShowForm(true)}
-            className="px-3 py-1 text-sm bg-orange-700 text-white rounded hover:bg-orange-800"
-          >
-            {t("item.manuals.addManual")}
-          </button>
-        )}
       </div>
 
       {manuals.length === 0 && !showForm && (
         <p className="text-gray-500 text-sm">{t("item.manuals.noManuals")}</p>
       )}
 
-      <ul className="space-y-2 mb-4">
-        {manuals.map((manual) => (
-          <li key={manual.id} className="flex items-center justify-between border rounded px-4 py-3">
-            <div className="flex items-center gap-3">
-              <span className="text-xs px-2 py-0.5 rounded bg-gray-100 text-gray-600 uppercase">
-                {manual.type}
-              </span>
-              {manual.type === "TEXT" ? (
-                <details className="text-sm">
-                  <summary className="cursor-pointer font-medium text-gray-800">{manual.label}</summary>
-                  <p className="mt-2 text-gray-600 whitespace-pre-wrap">{manual.content}</p>
-                </details>
-              ) : (
-                <a
-                  href={manual.url!}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm font-medium text-orange-500 hover:underline"
+      {manuals.length > 0 && (
+        <ul className="space-y-2 mb-4">
+          {manuals.map((manual) => (
+            <li key={manual.id} className="flex items-center justify-between border rounded px-4 py-3">
+              <div className="flex items-center gap-3">
+                <span className="text-xs px-2 py-0.5 rounded bg-gray-100 text-gray-600 uppercase">
+                  {manual.type}
+                </span>
+                {manual.type === "TEXT" ? (
+                  <details className="text-sm">
+                    <summary className="cursor-pointer font-medium text-gray-800">{manual.label}</summary>
+                    <p className="mt-2 text-gray-600 whitespace-pre-wrap">{manual.content}</p>
+                  </details>
+                ) : (
+                  <a
+                    href={manual.url!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-medium text-orange-500 hover:underline"
+                  >
+                    {manual.label}
+                  </a>
+                )}
+              </div>
+              {isAdmin && (
+                <button
+                  onClick={() => handleDelete(manual.id)}
+                  className="text-red-500 hover:text-red-700 text-sm ml-4"
                 >
-                  {manual.label}
-                </a>
+                  {t("item.manuals.delete")}
+                </button>
               )}
-            </div>
-            {isAdmin && (
-              <button
-                onClick={() => handleDelete(manual.id)}
-                className="text-red-500 hover:text-red-700 text-sm ml-4"
-              >
-                {t("item.manuals.delete")}
-              </button>
-            )}
-          </li>
-        ))}
-      </ul>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {isAdmin && !showForm && (
+        <button
+          onClick={() => setShowForm(true)}
+          className="mt-4 px-3 py-1 text-sm bg-orange-700 text-white rounded hover:bg-orange-800"
+        >
+          {t("item.manuals.addManual")}
+        </button>
+      )}
 
       {showForm && isAdmin && (
         <form onSubmit={handleSubmit} className="border rounded p-4 space-y-3">
