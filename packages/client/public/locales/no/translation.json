@@ -178,7 +178,7 @@
     "reserving": "Oppretter reservasjon...",
     "startDate": "Startdato",
     "endDate": "Sluttdato",
-    "loginToReserve": "Vennligst logg inn for å reservere dette tinget",
+    "loginToReserve": "Vennligst logg inn for å reservere denne tingen",
     "edit": "Rediger Ting",
     "manuals": {
       "title": "Bruksanvisninger",
@@ -225,10 +225,10 @@
       "title": "Tilgjengelighet (neste {{days}} dager)"
     },
     "reserve": {
-      "title": "Reserver dette tinget",
+      "title": "Reserver denne tingen",
       "showCalendar": "Vis kalender",
       "hideCalendar": "Skjul kalender",
-      "loginRequired": "Vennligst logg inn for å reservere dette tinget.",
+      "loginRequired": "Vennligst logg inn for å reservere denne tingen.",
       "loginLink": "Logg inn her",
       "startDate": "Startdato",
       "endDate": "Sluttdato",
@@ -425,8 +425,8 @@
       "delete": "Slett",
       "approve": "Godkjenn",
       "reject": "Avvis",
-      "confirmDelete": "Er du sikker på at du vil slette dette tinget?",
-      "confirmApprove": "Godkjenn dette tinget?",
+      "confirmDelete": "Er du sikker på at du vil slette denne tingen?",
+      "confirmApprove": "Godkjenn denne tingen?",
       "rejectNote": "Begrunnelse for avvisning (valgfritt)",
       "filterCategory": "Filtrer etter kategori",
       "filterStatus": "Filtrer etter status",
@@ -512,7 +512,7 @@
       "itemLabel": "Ting",
       "userLabel": "Bruker",
       "dueDate": "Forfallsdato",
-      "selectItem": "Velg et ting",
+      "selectItem": "Velg en ting",
       "selectUser": "Velg en bruker",
       "submit": "Lån ut",
       "cancel": "Avbryt"
@@ -663,12 +663,12 @@
     "yourRating": "Din vurdering",
     "comment": "Kommentar",
     "optional": "valgfritt",
-    "commentPlaceholder": "Del din erfaring med dette tinget...",
+    "commentPlaceholder": "Del din erfaring med denne tingen...",
     "submit": "Send inn anmeldelse",
     "submitting": "Sender inn...",
     "yourReview": "Din anmeldelse",
     "allReviews": "Alle anmeldelser",
-    "noReviews": "Ingen anmeldelser ennå. Vær den første til å anmelde dette tinget!",
+    "noReviews": "Ingen anmeldelser ennå. Vær den første til å anmelde denne tingen!",
     "anonymous": "Anonym",
     "confirmDelete": "Er du sikker på at du vil slette din anmeldelse?",
     "totalCount": "{{count}} anmeldelse",
@@ -681,7 +681,7 @@
   },
   "addItem": {
     "title": "Legg til nytt ting",
-    "description": "Del et ting med fellesskapet",
+    "description": "Del en ting med fellesskapet",
     "name": "Tingnavn",
     "namePlaceholder": "f.eks., Elektrisk drill, Campingtelt, osv.",
     "category": "Kategori",
@@ -690,10 +690,10 @@
     "selectLocation": "Velg en lokasjon",
     "noLocation": "Ingen lokasjon",
     "descriptionLabel": "Beskrivelse",
-    "descriptionPlaceholder": "Beskriv tinget, tilstand og viktige detaljer...",
+    "descriptionPlaceholder": "Beskriv tingen, tilstand og viktige detaljer...",
     "imageUrl": "Bilde-URL (valgfritt)",
     "imageUrlPlaceholder": "https://eksempel.no/bilde.jpg",
-    "imageUrlHint": "Oppgi en lenke til et bilde av tinget",
+    "imageUrlHint": "Oppgi en lenke til et bilde av tingen",
     "submit": "Legg til ting",
     "creating": "Legger til...",
     "selectOrganization": "Vennligst velg en organisasjon først",
@@ -701,7 +701,7 @@
     "manualLabel": "Brukerveiledning (PDF, valgfritt)",
     "manualChooseFile": "Velg PDF-fil",
     "manualNoFile": "Ingen fil valgt",
-    "manualHint": "Last opp en PDF-brukerveiledning for tinget",
+    "manualHint": "Last opp en PDF-brukerveiledning for tingen",
     "uploadingManual": "Laster opp PDF..."
   },
   "editItem": {
@@ -715,7 +715,7 @@
     "noLocation": "Ingen lokasjon",
     "status": "Status",
     "descriptionLabel": "Beskrivelse",
-    "descriptionPlaceholder": "Beskriv tinget, tilstand og viktige detaljer...",
+    "descriptionPlaceholder": "Beskriv tingen, tilstand og viktige detaljer...",
     "imageUrl": "Bilde",
     "submit": "Lagre endringer",
     "updating": "Oppdaterer...",
@@ -763,7 +763,7 @@
     "itemReturned": "Ting levert inn",
     "confirmCancel": "Er du sikker på at du vil avbryte denne reservasjonen?",
     "confirmReturn": "Bekreft innlevering?",
-    "confirmDelete": "Er du sikker på at du vil slette dette tinget?"
+    "confirmDelete": "Er du sikker på at du vil slette denne tingen?"
   },
   "calendar": {
     "loading": "Laster tilgjengelighet...",
@@ -811,7 +811,7 @@
   },
   "notFound": {
     "title": "Oops!",
-    "message": "Ser ut til at dette tinget har fløyet av. Siden du leter etter finnes ikke.",
+    "message": "Ser ut til at denne tingen har fløyet av. Siden du leter etter finnes ikke.",
     "backToCatalog": "Tilbake til katalog"
   },
   "organizationType": {
