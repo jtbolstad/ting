@@ -1,4 +1,5 @@
-export type ItemStatus = 'AVAILABLE' | 'CHECKED_OUT' | 'MAINTENANCE' | 'RETIRED';
+export type ItemStatus = 'AVAILABLE' | 'CHECKED_OUT' | 'MAINTENANCE' | 'RETIRED' | 'COMING' | 'CONSIDERING';
+export const NON_RESERVABLE_STATUSES: ItemStatus[] = ['COMING', 'CONSIDERING'];
 export type ItemOwnerType = 'ORGANIZATION' | 'MEMBER';
 export type ItemApprovalStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
 export type ItemCondition = 'GOOD' | 'FAIR' | 'NEEDS_REPAIR';

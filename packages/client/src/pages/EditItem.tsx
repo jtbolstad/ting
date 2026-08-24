@@ -212,6 +212,8 @@ export function EditItem() {
                 {t("catalog.status.maintenance")}
               </option>
               <option value="RETIRED">{t("catalog.status.retired")}</option>
+              <option value="COMING">{t("catalog.status.coming")}</option>
+              <option value="CONSIDERING">{t("catalog.status.considering")}</option>
             </select>
           </div>
           )}

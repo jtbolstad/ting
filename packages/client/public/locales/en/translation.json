@@ -145,7 +145,9 @@
       "available": "Available",
       "checkedOut": "Checked Out",
       "maintenance": "Maintenance",
-      "retired": "Retired"
+      "retired": "Retired",
+      "coming": "Coming Soon",
+      "considering": "Under Consideration"
     },
     "availability": {
       "availableNow": "Available now",

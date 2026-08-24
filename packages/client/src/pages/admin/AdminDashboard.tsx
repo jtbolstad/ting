@@ -1032,6 +1032,8 @@ export function AdminDashboard() {
                 <option value="CHECKED_OUT">CHECKED_OUT</option>
                 <option value="MAINTENANCE">MAINTENANCE</option>
                 <option value="RETIRED">RETIRED</option>
+                <option value="COMING">COMING</option>
+                <option value="CONSIDERING">CONSIDERING</option>
               </select>
             </div>
           </div>
