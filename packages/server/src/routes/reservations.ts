@@ -1,9 +1,11 @@
 import type {
   ApiResponse,
   CreateReservationInput,
+  ItemStatus,
   Reservation,
   UpdateReservationInput,
 } from "@ting/shared";
+import { NON_RESERVABLE_STATUSES } from "@ting/shared";
 import type { Router as ExpressRouter, Response } from "express";
 import { Router } from "express";
 import { authenticate, type AuthRequest } from "../middleware/auth.js";
@@ -171,6 +173,12 @@ router.post("/", async (req: AuthRequest, res: Response) => {
       return res.status(403).json({
         success: false,
         error: "Item does not belong to this organization",
+      });
+    }
+    if (NON_RESERVABLE_STATUSES.includes(item.status as ItemStatus)) {
+      return res.status(409).json({
+        success: false,
+        error: "Item is not available for reservation",
       });
     }
 

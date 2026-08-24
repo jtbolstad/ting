@@ -5,7 +5,7 @@
   },
   "nav": {
     "catalog": "Katalog",
-    "addItem": "Legg til verktøy",
+    "addItem": "Legg til ting",
     "dashboard": "Min Oversikt",
     "admin": "Admin",
     "terms": "Medlemsavtale",
@@ -146,7 +146,9 @@
       "checkedOut": "Utlånt",
       "checked_out": "Utlånt",
       "maintenance": "Vedlikehold",
-      "retired": "Utgått"
+      "retired": "Utgått",
+      "coming": "Kommer",
+      "considering": "Vurderes"
     },
     "availability": {
       "availableNow": "Tilgjengelig nå",
@@ -169,15 +171,15 @@
     "category": "Kategori",
     "status": "Status",
     "location": "Lokasjon",
-    "loading": "Laster verktøy...",
-    "notFound": "Verktøy ikke funnet",
+    "loading": "Laster ting...",
+    "notFound": "Ting ikke funnet",
     "noDescription": "Ingen beskrivelse tilgjengelig.",
     "reserveNow": "Reserver Nå",
     "reserving": "Oppretter reservasjon...",
     "startDate": "Startdato",
     "endDate": "Sluttdato",
-    "loginToReserve": "Vennligst logg inn for å reservere dette verktøyet",
-    "edit": "Rediger Verktøy",
+    "loginToReserve": "Vennligst logg inn for å reservere dette tinget",
+    "edit": "Rediger Ting",
     "manuals": {
       "title": "Bruksanvisninger",
       "noManuals": "Ingen bruksanvisninger lagt til.",
@@ -223,15 +225,15 @@
       "title": "Tilgjengelighet (neste {{days}} dager)"
     },
     "reserve": {
-      "title": "Reserver dette verktøyet",
+      "title": "Reserver dette tinget",
       "showCalendar": "Vis kalender",
       "hideCalendar": "Skjul kalender",
-      "loginRequired": "Vennligst logg inn for å reservere dette verktøyet.",
+      "loginRequired": "Vennligst logg inn for å reservere dette tinget.",
       "loginLink": "Logg inn her",
       "startDate": "Startdato",
       "endDate": "Sluttdato",
       "creating": "Oppretter reservasjon...",
-      "submit": "Reserver verktøy"
+      "submit": "Reserver ting"
     }
   },
   "dashboard": {
@@ -247,7 +249,7 @@
     "myReservations": "Mine reservasjoner",
     "noLoans": "Ingen aktive utlån",
     "noReservations": "Ingen aktive reservasjoner",
-    "item": "Verktøy",
+    "item": "Ting",
     "checkedOut": "Utlånt",
     "dueDate": "Forfallsdato",
     "overdue": "FORSINKET",
@@ -258,7 +260,7 @@
     "loans": {
       "title": "Aktive utlån",
       "noLoans": "Du har ingen aktive utlån",
-      "item": "Verktøy",
+      "item": "Ting",
       "checkedOut": "Lånt ut",
       "dueDate": "Forfallsdato",
       "overdue": "FORSINKET",
@@ -272,7 +274,7 @@
     "reservations": {
       "title": "Mine reservasjoner",
       "noReservations": "Du har ingen aktive reservasjoner",
-      "item": "Verktøy",
+      "item": "Ting",
       "startDate": "Startdato",
       "endDate": "Sluttdato",
       "status": "Status",
@@ -331,7 +333,7 @@
     "title": "Administrasjonspanel",
     "loading": "Laster...",
     "stats": {
-      "totalItems": "Totalt verktøy",
+      "totalItems": "Totalt ting",
       "available": "Tilgjengelig",
       "activeLoans": "Aktive utlån",
       "overdue": "Forsinkede"
@@ -391,14 +393,14 @@
     },
     "loans": {
       "title": "Aktive utlån",
-      "checkoutItem": "Lån ut verktøy",
-      "item": "Verktøy",
+      "checkoutItem": "Lån ut ting",
+      "item": "Ting",
       "user": "Bruker",
       "checkedOut": "Lånt ut",
       "dueDate": "Forfallsdato",
       "actions": "Handlinger",
       "checkin": "Lever inn",
-      "checkinTitle": "Lever inn verktøy",
+      "checkinTitle": "Lever inn ting",
       "confirmCheckin": "Bekreft innlevering?",
       "damageNote": "Skadenotat (valgfritt)",
       "damageNotePlaceholder": "Beskriv eventuelle skader...",
@@ -409,9 +411,9 @@
       "statusOverdue": "Forsinket"
     },
     "items": {
-      "title": "Verktøy",
-      "addItem": "Legg til verktøy",
-      "newItem": "Legg til nytt verktøy",
+      "title": "Ting",
+      "addItem": "Legg til ting",
+      "newItem": "Legg til nytt ting",
       "name": "Navn",
       "category": "Kategori",
       "description": "Beskrivelse",
@@ -423,8 +425,8 @@
       "delete": "Slett",
       "approve": "Godkjenn",
       "reject": "Avvis",
-      "confirmDelete": "Er du sikker på at du vil slette dette verktøyet?",
-      "confirmApprove": "Godkjenn dette verktøyet?",
+      "confirmDelete": "Er du sikker på at du vil slette dette tinget?",
+      "confirmApprove": "Godkjenn dette tinget?",
       "rejectNote": "Begrunnelse for avvisning (valgfritt)",
       "filterCategory": "Filtrer etter kategori",
       "filterStatus": "Filtrer etter status",
@@ -506,11 +508,11 @@
       "removeFailed": "Kunne ikke fjerne bruker"
     },
     "checkout": {
-      "title": "Lån ut verktøy",
-      "itemLabel": "Verktøy",
+      "title": "Lån ut ting",
+      "itemLabel": "Ting",
       "userLabel": "Bruker",
       "dueDate": "Forfallsdato",
-      "selectItem": "Velg et verktøy",
+      "selectItem": "Velg et ting",
       "selectUser": "Velg en bruker",
       "submit": "Lån ut",
       "cancel": "Avbryt"
@@ -521,13 +523,13 @@
       "editCategory": "Rediger kategori",
       "name": "Navn",
       "description": "Beskrivelse",
-      "itemCount": "Verktøy",
+      "itemCount": "Ting",
       "actions": "Handlinger",
       "edit": "Rediger",
       "delete": "Slett",
       "create": "Opprett kategori",
       "update": "Oppdater kategori",
-      "confirmDelete": "Er du sikker på at du vil slette denne kategorien? Dette vil feile hvis kategorien har verktøy."
+      "confirmDelete": "Er du sikker på at du vil slette denne kategorien? Dette vil feile hvis kategorien har ting."
     },
     "userRole": {
       "member": "Medlem",
@@ -556,7 +558,7 @@
       "table": {
         "name": "Navn",
         "members": "Medlemmer",
-        "items": "Verktøy",
+        "items": "Ting",
         "actions": "Handlinger",
         "view": "Vis",
         "edit": "Rediger",
@@ -565,7 +567,7 @@
       "details": {
         "slug": "Slug",
         "description": "Beskrivelse",
-        "items": "Verktøy",
+        "items": "Ting",
         "members": "Medlemmer",
         "role": "Rolle"
       }
@@ -593,7 +595,7 @@
     "stats": {
       "totalOrganizations": "Totalt organisasjoner",
       "totalUsers": "Totalt brukere",
-      "totalItems": "Totalt verktøy"
+      "totalItems": "Totalt ting"
     },
     "users": {
       "title": "Alle brukere",
@@ -661,12 +663,12 @@
     "yourRating": "Din vurdering",
     "comment": "Kommentar",
     "optional": "valgfritt",
-    "commentPlaceholder": "Del din erfaring med dette verktøyet...",
+    "commentPlaceholder": "Del din erfaring med dette tinget...",
     "submit": "Send inn anmeldelse",
     "submitting": "Sender inn...",
     "yourReview": "Din anmeldelse",
     "allReviews": "Alle anmeldelser",
-    "noReviews": "Ingen anmeldelser ennå. Vær den første til å anmelde dette verktøyet!",
+    "noReviews": "Ingen anmeldelser ennå. Vær den første til å anmelde dette tinget!",
     "anonymous": "Anonym",
     "confirmDelete": "Er du sikker på at du vil slette din anmeldelse?",
     "totalCount": "{{count}} anmeldelse",
@@ -678,9 +680,9 @@
     }
   },
   "addItem": {
-    "title": "Legg til nytt verktøy",
-    "description": "Del et verktøy eller gjenstand med fellesskapet",
-    "name": "Verktøynavn",
+    "title": "Legg til nytt ting",
+    "description": "Del et ting med fellesskapet",
+    "name": "Tingnavn",
     "namePlaceholder": "f.eks., Elektrisk drill, Campingtelt, osv.",
     "category": "Kategori",
     "selectCategory": "Velg en kategori",
@@ -688,24 +690,24 @@
     "selectLocation": "Velg en lokasjon",
     "noLocation": "Ingen lokasjon",
     "descriptionLabel": "Beskrivelse",
-    "descriptionPlaceholder": "Beskriv verktøyet, tilstand og viktige detaljer...",
+    "descriptionPlaceholder": "Beskriv tinget, tilstand og viktige detaljer...",
     "imageUrl": "Bilde-URL (valgfritt)",
     "imageUrlPlaceholder": "https://eksempel.no/bilde.jpg",
-    "imageUrlHint": "Oppgi en lenke til et bilde av verktøyet",
-    "submit": "Legg til verktøy",
+    "imageUrlHint": "Oppgi en lenke til et bilde av tinget",
+    "submit": "Legg til ting",
     "creating": "Legger til...",
     "selectOrganization": "Vennligst velg en organisasjon først",
     "loadCategoriesError": "Kunne ikke laste kategorier",
     "manualLabel": "Brukerveiledning (PDF, valgfritt)",
     "manualChooseFile": "Velg PDF-fil",
     "manualNoFile": "Ingen fil valgt",
-    "manualHint": "Last opp en PDF-brukerveiledning for verktøyet",
+    "manualHint": "Last opp en PDF-brukerveiledning for tinget",
     "uploadingManual": "Laster opp PDF..."
   },
   "editItem": {
-    "title": "Rediger verktøy",
-    "description": "Oppdater verktøydetaljer",
-    "name": "Verktøynavn",
+    "title": "Rediger ting",
+    "description": "Oppdater tingdetaljer",
+    "name": "Tingnavn",
     "category": "Kategori",
     "selectCategory": "Velg en kategori",
     "location": "Lokasjon",
@@ -713,16 +715,16 @@
     "noLocation": "Ingen lokasjon",
     "status": "Status",
     "descriptionLabel": "Beskrivelse",
-    "descriptionPlaceholder": "Beskriv verktøyet, tilstand og viktige detaljer...",
+    "descriptionPlaceholder": "Beskriv tinget, tilstand og viktige detaljer...",
     "imageUrl": "Bilde",
     "submit": "Lagre endringer",
     "updating": "Oppdaterer...",
     "selectOrganization": "Vennligst velg en organisasjon først",
-    "loadError": "Kunne ikke laste verktøy"
+    "loadError": "Kunne ikke laste ting"
   },
   "welcome": {
     "title": "Velkommen til Ting!",
-    "subtitle": "Bla gjennom katalogen for å finne verktøy du kan låne, eller legg til dine egne.",
+    "subtitle": "Bla gjennom katalogen for å finne ting du kan låne, eller legg til dine egne.",
     "browseCatalog": "Se katalog",
     "dismiss": "Lukk"
   },
@@ -747,21 +749,21 @@
     "emailInvalid": "Ugyldig e-postadresse",
     "reservationFailed": "Kunne ikke opprette reservasjon",
     "cancelFailed": "Kunne ikke avbryte reservasjon",
-    "returnFailed": "Kunne ikke levere inn verktøy",
+    "returnFailed": "Kunne ikke levere inn ting",
     "extendFailed": "Kunne ikke forlenge lån",
     "commentFailed": "Kunne ikke publisere kommentar",
     "updateCommentFailed": "Kunne ikke oppdatere kommentar",
     "deleteCommentFailed": "Kunne ikke slette kommentar",
-    "createItemFailed": "Kunne ikke opprette verktøy",
-    "updateItemFailed": "Kunne ikke oppdatere verktøy"
+    "createItemFailed": "Kunne ikke opprette ting",
+    "updateItemFailed": "Kunne ikke oppdatere ting"
   },
   "messages": {
     "reservationSuccess": "Reservasjon opprettet!",
     "reservationCancelled": "Reservasjon avbrutt",
-    "itemReturned": "Verktøy levert inn",
+    "itemReturned": "Ting levert inn",
     "confirmCancel": "Er du sikker på at du vil avbryte denne reservasjonen?",
     "confirmReturn": "Bekreft innlevering?",
-    "confirmDelete": "Er du sikker på at du vil slette dette verktøyet?"
+    "confirmDelete": "Er du sikker på at du vil slette dette tinget?"
   },
   "calendar": {
     "loading": "Laster tilgjengelighet...",
@@ -809,7 +811,7 @@
   },
   "notFound": {
     "title": "Oops!",
-    "message": "Ser ut til at dette verktøyet har fløyet av. Siden du leter etter finnes ikke.",
+    "message": "Ser ut til at dette tinget har fløyet av. Siden du leter etter finnes ikke.",
     "backToCatalog": "Tilbake til katalog"
   },
   "organizationType": {
@@ -836,7 +838,7 @@
     },
     "available": {
       "title": "Her er noen av tingene du kan låne:",
-      "subtitle": "Og vi vurderer stadig mer – verktøy, stoler, bord, PA-anlegg og lysrigg.",
+      "subtitle": "Og vi vurderer stadig mer – ting, stoler, bord, PA-anlegg og lysrigg.",
       "viewAll": "Se hele katalogen"
     },
     "howItWorks": {

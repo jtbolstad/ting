@@ -145,7 +145,9 @@
       "available": "Tilgængelig",
       "checkedOut": "Udlånt",
       "maintenance": "Vedligeholdelse",
-      "retired": "Udgået"
+      "retired": "Udgået",
+      "coming": "Kommer",
+      "considering": "Overvejes"
     },
     "availability": {
       "availableNow": "Tilgængelig nu",
